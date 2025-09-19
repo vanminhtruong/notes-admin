@@ -1,0 +1,21 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Admin control panel overview",
+  "cards": {
+    "totalUsers": "Total users",
+    "activeUsers": "Active users",
+    "totalNotes": "Total notes",
+    "todayActivity": "Today's activity"
+  },
+  "actions": {
+    "title": "Quick actions",
+    "users": { "title": "User management", "desc": "View and manage accounts" },
+    "notes": { "title": "Notes management", "desc": "CRUD user notes" },
+    "activity": { "title": "User activity", "desc": "Track messages and groups" },
+    "createNote": { "title": "Create note", "desc": "Create a note for a user" }
+  },
+  "recent": {
+    "title": "Recent activity",
+    "empty": "No recent activity"
+  }
+}

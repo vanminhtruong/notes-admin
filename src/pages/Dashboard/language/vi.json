@@ -1,0 +1,22 @@
+{
+  "title": "Bảng điều khiển",
+  "subtitle": "Tổng quan bảng điều khiển quản trị",
+  "welcome": "Chào mừng đến với bảng quản trị",
+  "cards": {
+    "totalUsers": "Tổng số người dùng",
+    "activeUsers": "Người dùng hoạt động",
+    "totalNotes": "Tổng số ghi chú",
+    "todayActivity": "Hoạt động hôm nay"
+  },
+  "actions": {
+    "title": "Thao tác nhanh",
+    "users": { "title": "Quản lý người dùng", "desc": "Xem và quản lý tài khoản" },
+    "notes": { "title": "Quản lý ghi chú", "desc": "CRUD ghi chú người dùng" },
+    "activity": { "title": "Hoạt động người dùng", "desc": "Theo dõi tin nhắn và nhóm" },
+    "createNote": { "title": "Tạo ghi chú", "desc": "Tạo ghi chú cho người dùng" }
+  },
+  "recent": {
+    "title": "Hoạt động gần đây",
+    "empty": "Chưa có hoạt động nào"
+  }
+}

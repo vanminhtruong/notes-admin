@@ -1,0 +1,10 @@
+{
+  "login": {
+    "title": "로그인",
+    "subtitle": "관리자 패널에 로그인",
+    "email": "이메일",
+    "password": "비밀번호",
+    "loginButton": "로그인",
+    "rememberMe": "로그인 상태 유지"
+  }
+}

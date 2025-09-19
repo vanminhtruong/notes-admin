@@ -1,0 +1,79 @@
+{
+  "buttons": {
+    "cancel": "취소",
+    "confirm": "확인"
+  },
+  "userActivity": {
+    "title": "사용자 활동",
+    "subtitle": "사용자의 메시지, 그룹 및 친구 추적",
+    "searchUser": "사용자 검색",
+    "searchPlaceholder": "사용자 이름 또는 이메일 입력...",
+    "userList": "사용자 목록",
+    "loadingUsers": "사용자 목록 로딩 중...",
+    "noUsersFound": "일치하는 사용자를 찾을 수 없습니다",
+    "enterKeywordToSearch": "사용자를 검색하려면 키워드를 입력하세요",
+    "cannotLoadUserInfo": "사용자 정보를 로드할 수 없습니다",
+    "lastActivity": "마지막 활동",
+    "tabs": {
+      "messages": "메시지",
+      "groups": "그룹",
+      "friends": "친구",
+      "notifications": "알림",
+      "monitor": "모니터"
+    },
+    "messages": {
+      "noMessages": "메시지 없음",
+      "sentTo": "전송됨",
+      "receivedFrom": "수신됨"
+    },
+    "groups": {
+      "noGroups": "가입한 그룹 없음",
+      "groupOwner": "그룹 소유자",
+      "joined": "가입됨"
+    },
+    "friends": {
+      "noFriends": "친구 없음",
+      "activity": "활동"
+    },
+    "notifications": {
+      "noNotifications": "알림이 없습니다",
+      "unknown": "알 수 없음",
+      "types": {
+        "message": "메시지",
+        "friend_request": "친구 요청",
+        "group_invite": "그룹 초대"
+      },
+      "message": {
+        "title": "{{name}} 님으로부터 새 메시지",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "{{name}} 님의 친구 요청"
+      },
+      "groupInvite": {
+        "title": "그룹 {{name}} 초대"
+      }
+    },
+    "typing": {
+      "typingWith": "{{name}} 님과 대화 중...",
+      "typingInGroup": "그룹에서 입력 중..."
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "1:1",
+        "groups": "그룹"
+      },
+      "friendsList": "친구",
+      "selectFriendToView": "볼 친구를 선택하세요",
+      "chatWith": "{{name}} 님과의 채팅",
+      "noMessages": "메시지가 없습니다",
+      "groupsList": "그룹",
+      "selectGroupToView": "볼 그룹을 선택하세요",
+      "groupChat": "그룹 채팅"
+    },
+    "errors": {
+      "cannotLoadUsers": "사용자 목록을 로드할 수 없습니다. 다시 시도해 주세요.",
+      "serverError": "서버 오류 (500). 백엔드가 응답하지 않습니다. 백엔드 서버를 확인해 주세요."
+    }
+  }
+}

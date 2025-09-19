@@ -1,0 +1,132 @@
+{
+  "title": "User list",
+  "subtitle": "Manage all users in the system",
+  "searchUser": "Search user",
+  "searchPlaceholder": "Name or email...",
+  "userList": "User list",
+  "loadingUsers": "Loading user list...",
+  "noUsersFound": "No matching users found",
+  "enterKeywordToSearch": "Enter keyword to search users",
+  "cannotLoadUserInfo": "Cannot load user information",
+  "lastActivity": "Last activity",
+  "createdAt": "Created at",
+  "actions": "Actions",
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled"
+  },
+  "roles": {
+    "admin": "Admin",
+    "user": "User"
+  },
+  "filters": {
+    "role": "Role",
+    "status": "Status",
+    "all": "All",
+    "clear": "Clear filters"
+  },
+  "pagination": {
+    "title": "Page {{currentPage}} / {{totalPages}}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "action": {
+    "enable": "Enable",
+    "disable": "Disable",
+    "enableAccount": "Enable account",
+    "disableAccount": "Disable account"
+  },
+  "alerts": {
+    "cannotChangeAdminStatus": "Cannot change admin account status",
+    "confirmToggleStatus": "Are you sure you want to {{action}} account \"{{name}}\"?",
+    "cannotToggleStatus": "Unable to {{action}} account",
+    "cannotDeleteAdmin": "Cannot delete admin account",
+    "confirmDeletePermanent1": "⚠️ WARNING: Are you sure you want to PERMANENTLY DELETE account \"{{name}}\"?\n\nThis action CANNOT BE UNDONE!",
+    "confirmDeletePermanent2": "Final confirmation: Permanently delete account \"{{email}}\"?",
+    "cannotDeleteUser": "Unable to delete account"
+  },
+  "online": "Online",
+  "offline": "Offline",
+  "neverLoggedIn": "Never logged in",
+  "userActivity": {
+    "tabs": {
+      "messages": "Messages",
+      "groups": "Groups",
+      "friends": "Friends",
+      "notifications": "Notifications",
+      "monitor": "Monitor"
+    },
+    "errors": {
+      "cannotLoadUsers": "Cannot load users.",
+      "serverError": "Server error."
+    },
+    "messages": {
+      "noMessages": "No messages yet",
+      "sentTo": "Sent to",
+      "receivedFrom": "Received from"
+    },
+    "groups": {
+      "noGroups": "No groups",
+      "groupOwner": "Owner",
+      "joined": "Joined"
+    },
+    "friends": {
+      "noFriends": "No friends",
+      "activity": "Last seen"
+    },
+    "typing": {
+      "typingWith": "Typing with {{name}}...",
+      "typingInGroup": "Typing in group..."
+    },
+    "notifications": {
+      "noNotifications": "No notifications",
+      "unknown": "Unknown",
+      "types": {
+        "message": "Message",
+        "friend_request": "Friend request",
+        "group_invite": "Group invite"
+      },
+      "message": {
+        "title": "New message from {{name}}",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "Friend request from {{name}}"
+      },
+      "groupInvite": {
+        "title": "Invitation to join group {{name}}"
+      }
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "Direct",
+        "groups": "Groups"
+      },
+      "friendsList": "Friends",
+      "selectFriendToView": "Select a friend to view",
+      "chatWith": "Chat with {{name}}",
+      "noMessages": "No messages",
+      "groupsList": "Groups",
+      "selectGroupToView": "Select a group to view",
+      "groupChat": "Group chat",
+      "actions": {
+        "viewMembers": "View members & roles",
+        "close": "Close"
+      },
+      "members": {
+        "title": "Members & roles",
+        "empty": "No members",
+        "id": "ID",
+        "roles": {
+          "owner": "Owner",
+          "admin": "Admin",
+          "member": "Member"
+        }
+      }
+    }
+  }
+}

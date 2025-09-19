@@ -1,0 +1,36 @@
+{
+  "userList": "사용자 목록",
+  "subtitle": "실시간으로 사용자 활동을 조회하고 모니터링합니다",
+  "searchUser": "사용자 검색",
+  "searchPlaceholder": "이름 또는 이메일 입력...",
+  "loadingUsers": "사용자 불러오는 중...",
+  "noUsersFound": "사용자를 찾을 수 없습니다",
+  "enterKeywordToSearch": "검색할 키워드를 입력하세요",
+  "lastActivity": "최근 활동",
+  "cannotLoadUserInfo": "사용자 정보를 불러올 수 없습니다",
+  "userActivity": {
+    "tabs": {
+      "messages": "메시지",
+      "groups": "그룹",
+      "friends": "친구"
+    },
+    "errors": {
+      "cannotLoadUsers": "사용자 목록을 불러올 수 없습니다.",
+      "serverError": "서버 오류가 발생했습니다."
+    },
+    "messages": {
+      "noMessages": "아직 메시지가 없습니다",
+      "sentTo": "에게 보냄",
+      "receivedFrom": "로부터 받음"
+    },
+    "groups": {
+      "noGroups": "그룹이 없습니다",
+      "groupOwner": "소유자",
+      "joined": "참여일"
+    },
+    "friends": {
+      "noFriends": "친구가 없습니다",
+      "activity": "마지막 접속"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "userList": "User list",
+  "subtitle": "Browse and monitor user activity in real time",
+  "searchUser": "Search user",
+  "searchPlaceholder": "Enter name or email...",
+  "loadingUsers": "Loading users...",
+  "noUsersFound": "No users found",
+  "enterKeywordToSearch": "Enter a keyword to search",
+  "lastActivity": "Last activity",
+  "cannotLoadUserInfo": "Cannot load user information",
+  "userActivity": {
+    "tabs": {
+      "messages": "Messages",
+      "groups": "Groups",
+      "friends": "Friends"
+    },
+    "errors": {
+      "cannotLoadUsers": "Cannot load users.",
+      "serverError": "Server error."
+    },
+    "messages": {
+      "noMessages": "No messages yet",
+      "sentTo": "Sent to",
+      "receivedFrom": "Received from"
+    },
+    "groups": {
+      "noGroups": "No groups",
+      "groupOwner": "Owner",
+      "joined": "Joined"
+    },
+    "friends": {
+      "noFriends": "No friends",
+      "activity": "Last seen"
+    }
+  }
+}

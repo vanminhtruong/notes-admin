@@ -1,0 +1,43 @@
+{
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "loading": "Loading...",
+    "tryAgain": "Try again"
+  },
+  "messages": {
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "noData": "No data available",
+    "loading": "Loading data..."
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "users": "User Management",
+    "notes": "Notes Management",
+    "login": "Login",
+    "usersList": "User List",
+    "usersActivity": "User Activity",
+    "notesList": "Notes List",
+    "notesCreate": "Create Note"
+  },
+  "layout": {
+    "adminPanel": "Admin Panel",
+    "admin": "Admin",
+    "logout": "Logout",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "pageInfo": "Page {{current}} of {{total}}",
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "results": "results"
+  }
+}

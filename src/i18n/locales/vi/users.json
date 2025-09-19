@@ -1,0 +1,36 @@
+{
+  "userList": "Danh sách người dùng",
+  "subtitle": "Xem và theo dõi hoạt động người dùng theo thời gian thực",
+  "searchUser": "Tìm kiếm người dùng",
+  "searchPlaceholder": "Nhập tên hoặc email...",
+  "loadingUsers": "Đang tải người dùng...",
+  "noUsersFound": "Không tìm thấy người dùng",
+  "enterKeywordToSearch": "Vui lòng nhập từ khóa để tìm kiếm",
+  "lastActivity": "Hoạt động gần nhất",
+  "cannotLoadUserInfo": "Không thể tải thông tin người dùng",
+  "userActivity": {
+    "tabs": {
+      "messages": "Tin nhắn",
+      "groups": "Nhóm",
+      "friends": "Bạn bè"
+    },
+    "errors": {
+      "cannotLoadUsers": "Không thể tải danh sách người dùng.",
+      "serverError": "Lỗi máy chủ."
+    },
+    "messages": {
+      "noMessages": "Chưa có tin nhắn",
+      "sentTo": "Đã gửi đến",
+      "receivedFrom": "Nhận từ"
+    },
+    "groups": {
+      "noGroups": "Chưa tham gia nhóm nào",
+      "groupOwner": "Chủ nhóm",
+      "joined": "Tham gia lúc"
+    },
+    "friends": {
+      "noFriends": "Chưa có bạn bè",
+      "activity": "Hoạt động"
+    }
+  }
+}

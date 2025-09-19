@@ -1,0 +1,86 @@
+{
+  "title": "Quản lý ghi chú",
+  "subtitle": "Quản lý ghi chú và nội dung người dùng",
+  "createNote": "Tạo ghi chú",
+  "editNote": "Chỉnh sửa ghi chú",
+  "deleteNote": "Xóa ghi chú",
+  "noNotes": "Không có ghi chú",
+  "actions": {
+    "createNew": "Tạo ghi chú mới",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "cancel": "Hủy",
+    "update": "Cập nhật",
+    "creating": "Đang tạo..."
+  },
+  "filters": {
+    "search": { "label": "Tìm kiếm", "placeholder": "Tiêu đề hoặc nội dung..." },
+    "userId": { "label": "User ID", "placeholder": "ID người dùng..." },
+    "category": { "label": "Danh mục", "placeholder": "Danh mục..." },
+    "priority": { "label": "Ưu tiên" },
+    "status": { "label": "Trạng thái" },
+    "all": "Tất cả",
+    "active": "Hoạt động",
+    "archived": "Lưu trữ",
+    "clear": "Xóa bộ lọc"
+  },
+  "table": {
+    "note": "Ghi chú",
+    "user": "Người dùng",
+    "category": "Danh mục",
+    "priority": "Ưu tiên",
+    "status": "Trạng thái",
+    "createdAt": "Ngày tạo",
+    "actions": "Thao tác"
+  },
+  "badges": {
+    "status": { "active": "Hoạt động", "archived": "Lưu trữ" }
+  },
+  "empty": {
+    "title": "Không có ghi chú",
+    "hint": "Hãy thay đổi bộ lọc hoặc tạo ghi chú mới."
+  },
+  "pagination": {
+    "title": "Trang {{currentPage}} / {{totalPages}}",
+    "prev": "Trước",
+    "next": "Sau"
+  },
+  "modal": {
+    "editTitle": "Chỉnh sửa ghi chú"
+  },
+  "form": {
+    "title": { "label": "Tiêu đề *" },
+    "content": { "label": "Nội dung" },
+    "category": { "label": "Danh mục" },
+    "priority": { "label": "Mức độ ưu tiên" },
+    "archive": { "label": "Lưu trữ ghi chú" },
+    "imageUrl": { "label": "URL hình ảnh" },
+    "reminder": { "label": "Nhắc nhở" },
+    "placeholders": {
+      "title": "Nhập tiêu đề ghi chú...",
+      "content": "Nhập nội dung ghi chú...",
+      "category": "Ví dụ: Công việc, Cá nhân...",
+      "imageUrl": "https://example.com/image.jpg",
+      "searchUser": "Tìm kiếm người dùng..."
+    }
+  },
+  "constants": {
+    "priority": { "low": "Thấp", "medium": "Trung bình", "high": "Cao" }
+  },
+  "create": {
+    "title": "Tạo ghi chú mới",
+    "subtitle": "Tạo ghi chú cho người dùng cụ thể",
+    "selectUserLabel": "Chọn người dùng *",
+    "searchUserPlaceholder": "Tìm kiếm người dùng...",
+    "changeUser": "Thay đổi",
+    "noUsers": "Không tìm thấy người dùng"
+  },
+  "alerts": {
+    "confirmDelete": "Bạn có chắc muốn xóa ghi chú này?",
+    "updateFailed": "Không thể cập nhật ghi chú",
+    "deleteFailed": "Không thể xóa ghi chú",
+    "missingUserOrTitle": "Vui lòng chọn người dùng và nhập tiêu đề",
+    "createSuccess": "Tạo ghi chú thành công",
+    "createFailed": "Không thể tạo ghi chú"
+  }
+}

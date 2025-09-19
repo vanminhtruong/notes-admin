@@ -1,0 +1,8 @@
+{
+  "title": "Login",
+  "subtitle": "Sign in to admin panel",
+  "email": "Email",
+  "password": "Password",
+  "loginButton": "Sign In",
+  "rememberMe": "Remember me"
+}

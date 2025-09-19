@@ -1,0 +1,132 @@
+{
+  "title": "Danh sách người dùng",
+  "subtitle": "Quản lý tất cả người dùng trong hệ thống",
+  "searchUser": "Tìm kiếm người dùng",
+  "searchPlaceholder": "Tên hoặc email...",
+  "userList": "Danh sách người dùng",
+  "loadingUsers": "Đang tải danh sách người dùng...",
+  "noUsersFound": "Không tìm thấy người dùng phù hợp",
+  "enterKeywordToSearch": "Nhập từ khóa để tìm kiếm người dùng",
+  "cannotLoadUserInfo": "Không thể tải thông tin người dùng",
+  "lastActivity": "Hoạt động cuối",
+  "createdAt": "Ngày tạo",
+  "actions": "Thao tác",
+  "status": {
+    "active": "Hoạt động",
+    "disabled": "Vô hiệu hóa"
+  },
+  "roles": {
+    "admin": "Admin",
+    "user": "User"
+  },
+  "filters": {
+    "role": "Vai trò",
+    "status": "Trạng thái",
+    "all": "Tất cả",
+    "clear": "Xóa bộ lọc"
+  },
+  "pagination": {
+    "title": "Trang {{currentPage}} / {{totalPages}}",
+    "prev": "Trước",
+    "next": "Sau"
+  },
+  "buttons": {
+    "cancel": "Hủy",
+    "confirm": "Xác nhận"
+  },
+  "action": {
+    "enable": "Kích hoạt",
+    "disable": "Vô hiệu hóa",
+    "enableAccount": "Kích hoạt tài khoản",
+    "disableAccount": "Vô hiệu hóa tài khoản"
+  },
+  "alerts": {
+    "cannotChangeAdminStatus": "Không thể thay đổi trạng thái tài khoản admin",
+    "confirmToggleStatus": "Bạn có chắc muốn {{action}} tài khoản \"{{name}}\"?",
+    "cannotToggleStatus": "Không thể {{action}} tài khoản",
+    "cannotDeleteAdmin": "Không thể xóa tài khoản admin",
+    "confirmDeletePermanent1": "⚠️ CẢNH BÁO: Bạn có chắc muốn XÓA VĨNH VIỄN tài khoản \"{{name}}\"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!",
+    "confirmDeletePermanent2": "Xác nhận lần cuối: Xóa vĩnh viễn tài khoản \"{{email}}\"?",
+    "cannotDeleteUser": "Không thể xóa tài khoản"
+  },
+  "online": "Online",
+  "offline": "Offline",
+  "neverLoggedIn": "Chưa truy cập",
+  "userActivity": {
+    "tabs": {
+      "messages": "Tin nhắn",
+      "groups": "Nhóm",
+      "friends": "Bạn bè",
+      "notifications": "Thông báo",
+      "monitor": "Giám sát"
+    },
+    "errors": {
+      "cannotLoadUsers": "Không thể tải danh sách người dùng.",
+      "serverError": "Lỗi máy chủ."
+    },
+    "messages": {
+      "noMessages": "Chưa có tin nhắn",
+      "sentTo": "Đã gửi đến",
+      "receivedFrom": "Nhận từ"
+    },
+    "groups": {
+      "noGroups": "Chưa tham gia nhóm nào",
+      "groupOwner": "Chủ nhóm",
+      "joined": "Tham gia lúc"
+    },
+    "friends": {
+      "noFriends": "Chưa có bạn bè",
+      "activity": "Hoạt động"
+    },
+    "typing": {
+      "typingWith": "Đang gõ với {{name}}...",
+      "typingInGroup": "Đang gõ trong nhóm..."
+    },
+    "notifications": {
+      "noNotifications": "Chưa có thông báo",
+      "unknown": "Không rõ",
+      "types": {
+        "message": "Tin nhắn",
+        "friend_request": "Kết bạn",
+        "group_invite": "Mời nhóm"
+      },
+      "message": {
+        "title": "Tin nhắn mới từ {{name}}",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "Lời mời kết bạn từ {{name}}"
+      },
+      "groupInvite": {
+        "title": "Lời mời vào nhóm {{name}}"
+      }
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "1-1",
+        "groups": "Nhóm"
+      },
+      "friendsList": "Bạn bè",
+      "selectFriendToView": "Chọn một bạn bè để xem",
+      "chatWith": "Chat với {{name}}",
+      "noMessages": "Chưa có tin nhắn",
+      "groupsList": "Nhóm",
+      "selectGroupToView": "Chọn một nhóm để xem",
+      "groupChat": "Chat nhóm",
+      "actions": {
+        "viewMembers": "Xem thành viên & vai trò",
+        "close": "Đóng"
+      },
+      "members": {
+        "title": "Thành viên & vai trò",
+        "empty": "Chưa có thành viên",
+        "id": "ID",
+        "roles": {
+          "owner": "Chủ nhóm",
+          "admin": "Admin",
+          "member": "Thành viên"
+        }
+      }
+    }
+  }
+}

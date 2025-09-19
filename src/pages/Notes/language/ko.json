@@ -1,0 +1,10 @@
+{
+  "notes": {
+    "title": "메모 관리",
+    "subtitle": "사용자 메모 및 콘텐츠 관리",
+    "createNote": "메모 생성",
+    "editNote": "메모 편집",
+    "deleteNote": "메모 삭제",
+    "noNotes": "메모가 없습니다"
+  }
+}

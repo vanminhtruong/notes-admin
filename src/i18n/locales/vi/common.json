@@ -1,0 +1,43 @@
+{
+  "buttons": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "search": "Tìm kiếm",
+    "loading": "Đang tải...",
+    "tryAgain": "Thử lại"
+  },
+  "messages": {
+    "error": "Đã xảy ra lỗi",
+    "success": "Thao tác thành công",
+    "noData": "Không có dữ liệu",
+    "loading": "Đang tải dữ liệu..."
+  },
+  "navigation": {
+    "dashboard": "Bảng điều khiển",
+    "users": "Quản lý người dùng",
+    "notes": "Quản lý ghi chú",
+    "login": "Đăng nhập",
+    "usersList": "Danh sách người dùng",
+    "usersActivity": "Hoạt động người dùng",
+    "notesList": "Danh sách ghi chú",
+    "notesCreate": "Tạo ghi chú"
+  },
+  "layout": {
+    "adminPanel": "Bảng quản trị",
+    "admin": "Quản trị viên",
+    "logout": "Đăng xuất",
+    "switchToLight": "Chuyển sang chế độ sáng",
+    "switchToDark": "Chuyển sang chế độ tối"
+  },
+  "pagination": {
+    "previous": "Trước",
+    "next": "Tiếp",
+    "pageInfo": "Trang {{current}} / {{total}}",
+    "showing": "Hiển thị",
+    "to": "đến",
+    "of": "trong tổng số",
+    "results": "kết quả"
+  }
+}
