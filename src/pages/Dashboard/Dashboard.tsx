@@ -94,119 +94,119 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">{t('subtitle')}</p>
+    <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
+      <div className="mb-8 xl-down:mb-6 sm-down:mb-4">
+        <h1 className="text-3xl xl-down:text-2xl md-down:text-xl sm-down:text-lg font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2 xl-down:mt-1 text-sm xl-down:text-xs sm-down:text-xs">{t('subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl-down:grid-cols-2 md-down:grid-cols-1 gap-6 xl-down:gap-4 sm-down:gap-3">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">👥</span>
+              <div className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <span className="text-2xl xl-down:text-xl sm-down:text-lg">👥</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('cards.totalUsers')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalUsers}</p>
+            <div className="ml-4 xl-down:ml-3 sm-down:ml-2">
+              <p className="text-sm xl-down:text-xs font-medium text-gray-600 dark:text-gray-400 truncate">{t('cards.totalUsers')}</p>
+              <p className="text-2xl xl-down:text-xl sm-down:text-lg font-bold text-gray-900 dark:text-gray-100">{stats.totalUsers}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">✅</span>
+              <div className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                <span className="text-2xl xl-down:text-xl sm-down:text-lg">✅</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('cards.activeUsers')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.activeUsers}</p>
+            <div className="ml-4 xl-down:ml-3 sm-down:ml-2">
+              <p className="text-sm xl-down:text-xs font-medium text-gray-600 dark:text-gray-400 truncate">{t('cards.activeUsers')}</p>
+              <p className="text-2xl xl-down:text-xl sm-down:text-lg font-bold text-gray-900 dark:text-gray-100">{stats.activeUsers}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📝</span>
+              <div className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <span className="text-2xl xl-down:text-xl sm-down:text-lg">📝</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('cards.totalNotes')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.totalNotes}</p>
+            <div className="ml-4 xl-down:ml-3 sm-down:ml-2">
+              <p className="text-sm xl-down:text-xs font-medium text-gray-600 dark:text-gray-400 truncate">{t('cards.totalNotes')}</p>
+              <p className="text-2xl xl-down:text-xl sm-down:text-lg font-bold text-gray-900 dark:text-gray-100">{stats.totalNotes}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📊</span>
+              <div className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                <span className="text-2xl xl-down:text-xl sm-down:text-lg">📊</span>
               </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('cards.todayActivity')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">0</p>
+            <div className="ml-4 xl-down:ml-3 sm-down:ml-2">
+              <p className="text-sm xl-down:text-xs font-medium text-gray-600 dark:text-gray-400 truncate">{t('cards.todayActivity')}</p>
+              <p className="text-2xl xl-down:text-xl sm-down:text-lg font-bold text-gray-900 dark:text-gray-100">0</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('actions.title')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
+        <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">{t('actions.title')}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl-down:grid-cols-2 md-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
           <button 
             onClick={() => window.location.href = '/users'}
-            className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-left"
+            className="p-4 xl-down:p-3 sm-down:p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-left"
           >
-            <div className="text-2xl mb-2">👥</div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('actions.users.title')}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('actions.users.desc')}</p>
+            <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">👥</div>
+            <h3 className="font-medium xl-down:text-sm sm-down:text-xs text-gray-900 dark:text-gray-100 truncate">{t('actions.users.title')}</h3>
+            <p className="text-sm xl-down:text-xs sm-down:text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{t('actions.users.desc')}</p>
           </button>
 
           <button 
             onClick={() => window.location.href = '/notes'}
-            className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-left"
+            className="p-4 xl-down:p-3 sm-down:p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-left"
           >
-            <div className="text-2xl mb-2">📝</div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('actions.notes.title')}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('actions.notes.desc')}</p>
+            <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">📝</div>
+            <h3 className="font-medium xl-down:text-sm sm-down:text-xs text-gray-900 dark:text-gray-100 truncate">{t('actions.notes.title')}</h3>
+            <p className="text-sm xl-down:text-xs sm-down:text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{t('actions.notes.desc')}</p>
           </button>
 
           <button 
             onClick={() => window.location.href = '/users/activity'}
-            className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-left"
+            className="p-4 xl-down:p-3 sm-down:p-2 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-left"
           >
-            <div className="text-2xl mb-2">📈</div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('actions.activity.title')}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('actions.activity.desc')}</p>
+            <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">📈</div>
+            <h3 className="font-medium xl-down:text-sm sm-down:text-xs text-gray-900 dark:text-gray-100 truncate">{t('actions.activity.title')}</h3>
+            <p className="text-sm xl-down:text-xs sm-down:text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{t('actions.activity.desc')}</p>
           </button>
 
           <button 
             onClick={() => window.location.href = '/notes/create'}
-            className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-left"
+            className="p-4 xl-down:p-3 sm-down:p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-left"
           >
-            <div className="text-2xl mb-2">✨</div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">{t('actions.createNote.title')}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('actions.createNote.desc')}</p>
+            <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">✨</div>
+            <h3 className="font-medium xl-down:text-sm sm-down:text-xs text-gray-900 dark:text-gray-100 truncate">{t('actions.createNote.title')}</h3>
+            <p className="text-sm xl-down:text-xs sm-down:text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{t('actions.createNote.desc')}</p>
           </button>
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('recent.title')}</h2>
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <span className="text-4xl mb-4 block">📊</span>
-          <p>{t('recent.empty')}</p>
+      <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
+        <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">{t('recent.title')}</h2>
+        <div className="text-center py-8 xl-down:py-6 sm-down:py-4 text-gray-500 dark:text-gray-400">
+          <span className="text-4xl xl-down:text-3xl sm-down:text-2xl mb-4 xl-down:mb-3 sm-down:mb-2 block">📊</span>
+          <p className="text-sm xl-down:text-xs">{t('recent.empty')}</p>
         </div>
       </div>
     </div>

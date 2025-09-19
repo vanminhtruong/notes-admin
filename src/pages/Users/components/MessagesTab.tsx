@@ -24,41 +24,41 @@ const MessagesTab: React.FC<MessagesTabProps> = ({ activityData, typingInfo, for
   } = usePagination<any>({ data: messages, itemsPerPage: 10 });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 xl-down:space-y-3 sm-down:space-y-2">
       {typingInfo && (
-        <div className="flex items-center text-sm text-blue-600 dark:text-blue-400">
-          <span className="mr-2">⌨️</span>
+        <div className="flex items-center text-sm xl-down:text-xs text-blue-600 dark:text-blue-400">
+          <span className="mr-2 xl-down:mr-1">⌨️</span>
           <span>{t('userActivity.typing.typingWith', { name: typingInfo.withUserName })}</span>
         </div>
       )}
       
       {messages.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <span className="text-4xl mb-4 block">💬</span>
-          <p>{t('userActivity.messages.noMessages')}</p>
+        <div className="text-center py-8 xl-down:py-6 sm-down:py-4 text-gray-500 dark:text-gray-400">
+          <span className="text-4xl xl-down:text-3xl sm-down:text-2xl mb-4 xl-down:mb-3 sm-down:mb-2 block">💬</span>
+          <p className="text-sm xl-down:text-xs">{t('userActivity.messages.noMessages')}</p>
         </div>
       ) : (
         <>
-          <div className="space-y-3">
+          <div className="space-y-3 xl-down:space-y-2">
             {currentMessages.map((message) => (
-              <div key={message.id} className="bg-gray-50 dark:bg-neutral-800 rounded-lg p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
+              <div key={message.id} className="bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2">
+                <div className="flex items-start justify-between xl-down:flex-col xl-down:space-y-2">
+                  <div className="flex items-center space-x-3 xl-down:space-x-2 flex-1">
                     <div className="flex-shrink-0">
-                      <span className="text-lg">
+                      <span className="text-lg xl-down:text-base sm-down:text-sm">
                         {message.sender.id === activityData?.user.id ? '📤' : '📥'}
                       </span>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">
                         {message.sender.id === activityData?.user.id 
                           ? `${t('userActivity.messages.sentTo')} ${message.receiver.name}` 
                           : `${t('userActivity.messages.receivedFrom')} ${message.sender.name}`}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 break-words line-clamp-2 overflow-hidden">{message.content}</p>
+                      <p className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 break-words line-clamp-2 overflow-hidden">{message.content}</p>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{formatDate(message.createdAt)}</span>
+                  <span className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 flex-shrink-0 xl-down:self-end">{formatDate(message.createdAt)}</span>
                 </div>
               </div>
             ))}

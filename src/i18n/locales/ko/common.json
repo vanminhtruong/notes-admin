@@ -28,6 +28,10 @@
     "adminPanel": "관리자 패널",
     "admin": "관리자",
     "logout": "로그아웃",
+    "language": "언어",
+    "theme": "테마",
+    "lightMode": "라이트 모드",
+    "darkMode": "다크 모드",
     "switchToLight": "라이트 모드로 전환",
     "switchToDark": "다크 모드로 전환"
   },

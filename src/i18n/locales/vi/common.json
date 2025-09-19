@@ -28,6 +28,10 @@
     "adminPanel": "Bảng quản trị",
     "admin": "Quản trị viên",
     "logout": "Đăng xuất",
+    "language": "Ngôn ngữ",
+    "theme": "Chủ đề",
+    "lightMode": "Chế độ sáng",
+    "darkMode": "Chế độ tối",
     "switchToLight": "Chuyển sang chế độ sáng",
     "switchToDark": "Chuyển sang chế độ tối"
   },

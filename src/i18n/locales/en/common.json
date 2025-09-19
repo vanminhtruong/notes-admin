@@ -28,6 +28,10 @@
     "adminPanel": "Admin Panel",
     "admin": "Admin",
     "logout": "Logout",
+    "language": "Language",
+    "theme": "Theme",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode"
   },

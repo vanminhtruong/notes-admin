@@ -63,10 +63,10 @@ const UserActivity: React.FC = () => {
 
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl xl-down:max-w-full mx-auto space-y-6 xl-down:space-y-4 sm-down:space-y-3">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('userList')}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{t('subtitle')}</p>
+        <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('userList')}</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
       </div>
 
       <UserSelector selectedUserId={selectedUserId} onUserSelect={setSelectedUserId} />
@@ -82,9 +82,10 @@ const UserActivity: React.FC = () => {
               <UserInfoCard activityData={activityData} formatDate={formatDate} />
 
               {/* Tabs */}
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700">
+              <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700">
                 <div className="border-b border-gray-200 dark:border-neutral-700">
-                  <nav className="flex space-x-8 px-6">
+                  {/* Desktop Tabs */}
+                  <nav className="flex space-x-8 xl-down:space-x-6 md-down:space-x-4 sm-down:space-x-2 px-6 xl-down:px-4 sm-down:px-3 lg-down:hidden overflow-x-auto">
                     {[
                       { key: 'messages', label: t('userActivity.tabs.messages'), icon: '💬' },
                       { key: 'groups', label: t('userActivity.tabs.groups'), icon: '👥' },
@@ -95,27 +96,49 @@ const UserActivity: React.FC = () => {
                       <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key as any)}
-                        className={`relative py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                        className={`relative py-4 xl-down:py-3 sm-down:py-2 px-1 border-b-2 font-medium text-sm xl-down:text-xs transition-colors whitespace-nowrap ${
                           activeTab === tab.key
                             ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                             : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-neutral-600'
                         }`}
                       >
-                        <span className="relative mr-2">
-                          {tab.icon}
+                        <span className="relative mr-2 xl-down:mr-1">
+                          <span className="xl-down:text-sm sm-down:text-xs">{tab.icon}</span>
                           {tab.key === 'notifications' && unreadNotificationsCount > 0 && (
-                            <span className="absolute -top-2 -right-2 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-bold leading-none text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-lg border-2 border-white dark:border-gray-800 animate-pulse">
+                            <span className="absolute -top-2 -right-2 inline-flex items-center justify-center min-w-[18px] h-[18px] xl-down:min-w-[16px] xl-down:h-[16px] px-1 text-xs xl-down:text-xs font-bold leading-none text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-lg border-2 border-white dark:border-gray-800 animate-pulse">
                               {unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}
                             </span>
                           )}
                         </span>
-                        {tab.label}
+                        <span className="xl-down:hidden">{tab.label}</span>
                       </button>
                     ))}
                   </nav>
+
+                  {/* Mobile Tabs - Dropdown */}
+                  <div className="hidden lg-down:block px-4 py-3">
+                    <select
+                      value={activeTab}
+                      onChange={(e) => setActiveTab(e.target.value as any)}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      {[
+                        { key: 'messages', label: t('userActivity.tabs.messages'), icon: '💬' },
+                        { key: 'groups', label: t('userActivity.tabs.groups'), icon: '👥' },
+                        { key: 'friends', label: t('userActivity.tabs.friends'), icon: '👫' },
+                        { key: 'notifications', label: t('userActivity.tabs.notifications'), icon: '🔔' },
+                        { key: 'monitor', label: t('userActivity.tabs.monitor'), icon: '🕵️' }
+                      ].map((tab) => (
+                        <option key={tab.key} value={tab.key}>
+                          {tab.icon} {tab.label}
+                          {tab.key === 'notifications' && unreadNotificationsCount > 0 && ` (${unreadNotificationsCount})`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                <div className="p-6">
+                <div className="p-6 xl-down:p-4 md-down:p-3 sm-down:p-2">
                   {activeTab === 'messages' && <MessagesTab activityData={activityData} typingInfo={typingInfo} formatDate={formatDate} />}
                   {activeTab === 'groups' && <GroupsTab activityData={activityData} formatDate={formatDate} />}
                   {activeTab === 'friends' && <FriendsTab activityData={activityData} formatDate={formatDate} />}
