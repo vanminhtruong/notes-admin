@@ -8,6 +8,7 @@
   "noUsersFound": "Không tìm thấy người dùng phù hợp",
   "enterKeywordToSearch": "Nhập từ khóa để tìm kiếm người dùng",
   "cannotLoadUserInfo": "Không thể tải thông tin người dùng",
+  "noPermissionForUserActivity": "Bạn không có quyền truy cập vào bất kỳ tab nào trong User Activity",
   "lastActivity": "Hoạt động cuối",
   "createdAt": "Ngày tạo",
   "actions": "Thao tác",
@@ -41,6 +42,7 @@
     "disableAccount": "Vô hiệu hóa tài khoản"
   },
   "alerts": {
+    "noPermission": "Bạn không có quyền thực hiện hành động này",
     "cannotChangeAdminStatus": "Không thể thay đổi trạng thái tài khoản admin",
     "confirmToggleStatus": "Bạn có chắc muốn {{action}} tài khoản \"{{name}}\"?",
     "cannotToggleStatus": "Không thể {{action}} tài khoản",

@@ -33,7 +33,14 @@
     "lightMode": "Chế độ sáng",
     "darkMode": "Chế độ tối",
     "switchToLight": "Chuyển sang chế độ sáng",
-    "switchToDark": "Chuyển sang chế độ tối"
+    "switchToDark": "Chuyển sang chế độ tối",
+    "logoutConfirm": {
+      "title": "Xác nhận đăng xuất",
+      "message": "Bạn có chắc muốn đăng xuất?"
+    }
+  },
+  "actions": {
+    "cancel": "Hủy"
   },
   "pagination": {
     "previous": "Trước",

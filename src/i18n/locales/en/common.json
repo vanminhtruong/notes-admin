@@ -33,7 +33,14 @@
     "lightMode": "Light mode",
     "darkMode": "Dark mode",
     "switchToLight": "Switch to light mode",
-    "switchToDark": "Switch to dark mode"
+    "switchToDark": "Switch to dark mode",
+    "logoutConfirm": {
+      "title": "Logout confirmation",
+      "message": "Are you sure you want to logout?"
+    }
+  },
+  "actions": {
+    "cancel": "Cancel"
   },
   "pagination": {
     "previous": "Previous",

@@ -1,0 +1,190 @@
+{
+  "title": "Quản lý Admin",
+  "subtitle": "Quản lý quyền hạn và trạng thái của các admin trong hệ thống",
+  "addAdmin": "Thêm Phó Admin",
+  "searchPlaceholder": "Tìm kiếm theo tên hoặc email...",
+  "filterByLevel": "Lọc theo cấp độ",
+  "allLevels": "Tất cả cấp độ",
+  "superAdmin": "Super Admin",
+  "subAdmin": "Phó Admin",
+  "dev": "Dev",
+  "mod": "Mod",
+  "refresh": "Làm mới",
+  "loading": "Đang tải...",
+  "noAdminsFound": "Không tìm thấy admin nào",
+  "createNewAdmin": "Hãy bắt đầu bằng việc tạo một phó admin mới.",
+  "active": "Hoạt động",
+  "inactive": "Vô hiệu hóa",
+  "edit": "Chỉnh sửa",
+  "activate": "Kích hoạt",
+  "deactivate": "Vô hiệu hóa",
+  "delete": "Xóa",
+  "permissionsLabel": "Quyền hạn",
+  "createdAt": "Tạo",
+  "status": "Trạng thái",
+  "level": "Cấp độ",
+  "actions": "Thao tác",
+  "showingResults": "Hiển thị {{start}} đến {{end}} trong tổng số {{total}} kết quả",
+  "itemsPerPage": "/ trang",
+  "previous": "Trước",
+  "next": "Sau",
+  "createModal": {
+    "title": "Tạo Phó Admin Mới",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "emailRequired": "Email không được để trống",
+    "emailInvalid": "Email không hợp lệ",
+    "name": "Họ tên",
+    "namePlaceholder": "Nguyễn Văn A",
+    "nameRequired": "Tên không được để trống",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "Tối thiểu 6 ký tự",
+    "passwordRequired": "Mật khẩu không được để trống",
+    "passwordMinLength": "Mật khẩu tối thiểu 6 ký tự",
+    "permissions": "Quyền hạn",
+    "cancel": "Hủy",
+    "create": "Tạo Admin",
+    "creating": "Đang tạo..."
+  },
+  "editModal": {
+    "title": "Chỉnh sửa quyền: {{name}}",
+    "permissions": "Quyền hạn",
+    "cancel": "Hủy",
+    "save": "Lưu thay đổi",
+    "saving": "Đang lưu..."
+  },
+  "confirmDialog": {
+    "changeStatus": "Thay đổi trạng thái",
+    "confirmDelete": "Xác nhận xóa",
+    "changeStatusMessage": "Bạn có chắc muốn thay đổi trạng thái của admin \"{{name}}\"?",
+    "deleteMessage": "Bạn có chắc muốn xóa admin \"{{name}}\"? Hành động này không thể hoàn tác.",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận"
+  },
+  "permissions": {
+    "manage_users": {
+      "label": "Quản lý người dùng",
+      "description": "Quản lý tài khoản và thông tin người dùng",
+      "view": {
+        "label": "Xem thông tin người dùng",
+        "description": "Xem danh sách và thông tin chi tiết người dùng"
+      },
+      "activate": {
+        "label": "Kích hoạt/Vô hiệu hóa",
+        "description": "Kích hoạt hoặc vô hiệu hóa tài khoản người dùng"
+      },
+      "view_active_accounts": {
+        "label": "Xem tài khoản hoạt động",
+        "description": "Xem danh sách các tài khoản đang hoạt động"
+      },
+      "delete_permanently": {
+        "label": "Xóa tài khoản vĩnh viễn",
+        "description": "Xóa hoàn toàn tài khoản người dùng khỏi hệ thống"
+      },
+      "activity": {
+        "label": "Xem hoạt động người dùng",
+        "description": "Truy cập trang User Activity để xem hoạt động chi tiết",
+        "messages": {
+          "label": "Tab tin nhắn",
+          "description": "Xem và quản lý tin nhắn của người dùng"
+        },
+        "groups": {
+          "label": "Tab nhóm",
+          "description": "Xem và quản lý nhóm mà người dùng tham gia"
+        },
+        "friends": {
+          "label": "Tab bạn bè",
+          "description": "Xem danh sách bạn bè của người dùng"
+        },
+        "notifications": {
+          "label": "Tab thông báo",
+          "description": "Xem thông báo của người dùng"
+        },
+        "monitor": {
+          "label": "Tab giám sát",
+          "description": "Giám sát hoạt động real-time của người dùng"
+        }
+      }
+    },
+    "manage_notes": {
+      "label": "Quản lý ghi chú",
+      "description": "Quản lý ghi chú của người dùng",
+      "create": {
+        "label": "Tạo ghi chú",
+        "description": "Tạo ghi chú mới cho người dùng"
+      },
+      "edit": {
+        "label": "Sửa ghi chú",
+        "description": "Chỉnh sửa ghi chú hiện có"
+      },
+      "delete": {
+        "label": "Xóa ghi chú",
+        "description": "Xóa ghi chú của người dùng"
+      },
+      "view": {
+        "label": "Xem ghi chú",
+        "description": "Xem tất cả ghi chú của người dùng"
+      }
+    },
+    "manage_admins": {
+      "label": "Quản lý admin",
+      "description": "Quản lý tài khoản admin khác (Chỉ Super Admin)",
+      "create": {
+        "label": "Tạo admin",
+        "description": "Tạo tài khoản admin mới"
+      },
+      "edit": {
+        "label": "Sửa quyền admin",
+        "description": "Chỉnh sửa quyền hạn admin khác"
+      },
+      "delete": {
+        "label": "Xóa admin",
+        "description": "Xóa tài khoản admin"
+      }
+    },
+    "view_analytics": {
+      "label": "Xem thống kê",
+      "description": "Truy cập dashboard và thống kê hệ thống"
+    },
+    "manage_groups": {
+      "label": "Quản lý nhóm",
+      "description": "Quản lý các nhóm chat",
+      "view": {
+        "label": "Xem nhóm",
+        "description": "Xem danh sách và thông tin nhóm"
+      },
+      "moderate": {
+        "label": "Kiểm duyệt nhóm",
+        "description": "Kiểm duyệt nội dung và thành viên nhóm"
+      }
+    },
+    "view_messages": {
+      "label": "Xem tin nhắn",
+      "description": "Xem tin nhắn và thông báo của người dùng"
+    },
+    "delete_content": {
+      "label": "Xóa nội dung",
+      "description": "Xóa tin nhắn, nội dung không phù hợp"
+    },
+    "system_settings": {
+      "label": "Cài đặt hệ thống",
+      "description": "Thay đổi cài đặt và cấu hình hệ thống"
+    }
+  },
+  "revokePermission": "Xóa quyền",
+  "confirmRevokePermission": "Xác nhận xóa quyền",
+  "revokePermissionMessage": "Bạn có chắc muốn xóa quyền \"{{permission}}\" khỏi admin \"{{name}}\"?",
+  "messages": {
+    "createSuccess": "Tạo phó admin thành công",
+    "createError": "Không thể tạo phó admin",
+    "updateSuccess": "Cập nhật quyền admin thành công",
+    "updateError": "Không thể cập nhật quyền admin",
+    "revokeSuccess": "Xóa quyền thành công",
+    "revokeError": "Không thể xóa quyền",
+    "toggleStatusSuccess": "Thay đổi trạng thái admin thành công",
+    "toggleStatusError": "Không thể thay đổi trạng thái admin",
+    "deleteSuccess": "Xóa admin thành công",
+    "deleteError": "Không thể xóa admin",
+    "loadError": "Không thể tải danh sách admin"
+  }
+}

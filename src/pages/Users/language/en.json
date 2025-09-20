@@ -8,6 +8,7 @@
   "noUsersFound": "No matching users found",
   "enterKeywordToSearch": "Enter keyword to search users",
   "cannotLoadUserInfo": "Cannot load user information",
+  "noPermissionForUserActivity": "You don't have permission to access any tab in User Activity",
   "lastActivity": "Last activity",
   "createdAt": "Created at",
   "actions": "Actions",
@@ -41,6 +42,7 @@
     "disableAccount": "Disable account"
   },
   "alerts": {
+    "noPermission": "You do not have permission to perform this action",
     "cannotChangeAdminStatus": "Cannot change admin account status",
     "confirmToggleStatus": "Are you sure you want to {{action}} account \"{{name}}\"?",
     "cannotToggleStatus": "Unable to {{action}} account",

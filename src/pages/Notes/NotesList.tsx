@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import type { TFunction } from 'i18next';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
+import { hasPermission } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -33,19 +34,38 @@ type EditNoteModalProps = {
   setEditingNote: React.Dispatch<React.SetStateAction<Note | null>>;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
-  t: TFunction<'notes'>;
 };
 
-const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEditingNote, onClose, onSubmit, t }) => {
+const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEditingNote, onClose, onSubmit }) => {
   if (!show || !editingNote) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-50">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md max-w-md xl-down:max-w-sm sm-down:max-w-xs w-full max-h-[90vh] overflow-y-auto">
+  const { t } = useTranslation('notes');
+
+  // Lock body scroll while modal is open and avoid layout shift
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, []);
+
+  return createPortal(
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-[9999]">
+      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md max-w-2xl xl-down:max-w-xl md-down:max-w-lg sm-down:max-w-sm w-full max-h-[90vh] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <div className="p-6 xl-down:p-4 sm-down:p-3">
-          <h3 className="text-lg xl-down:text-base sm-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">{t('modal.editTitle')}</h3>
-          
-          <form onSubmit={onSubmit} className="space-y-4 xl-down:space-y-3 sm-down:space-y-2">
+          <style>
+            {`.scrollbar-hide::-webkit-scrollbar { display: none; }`}
+          </style>
+          <h3 className="text-lg xl-down:text-base sm-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-3 xl-down:mb-2 sm-down:mb-2">{t('modal.editTitle')}</h3>
+
+          <form onSubmit={onSubmit} className="space-y-3 xl-down:space-y-2 sm-down:space-y-2">
             <div>
               <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
                 {t('form.title.label')}
@@ -100,6 +120,51 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               </div>
             </div>
 
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t('form.imageUrl.label')}
+              </label>
+              <div className="flex items-start gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      // Import uploadService dynamically
+                      const { uploadService } = await import('@services/uploadService');
+                      const { url } = await uploadService.uploadImage(file);
+                      setEditingNote({ ...editingNote, imageUrl: url });
+                    } catch (error) {
+                      console.error('Error uploading image:', error);
+                      toast.error(t('toasts.uploadImageError', { defaultValue: 'Không thể tải lên ảnh' }));
+                    }
+                  }}
+                  className="flex-1 block w-full text-sm text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                {editingNote.imageUrl && (
+                  <div className="flex-shrink-0">
+                    <img src={editingNote.imageUrl} alt="preview" className="w-12 h-12 rounded-md object-cover border" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Reminder DateTime */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t('form.reminder.label')}
+              </label>
+              <input
+                type="datetime-local"
+                value={editingNote.reminderAt ? new Date(editingNote.reminderAt).toISOString().slice(0, 16) : ''}
+                onChange={(e) => setEditingNote({ ...editingNote, reminderAt: e.target.value ? new Date(e.target.value).toISOString() : undefined })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+              />
+            </div>
+
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -113,7 +178,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               </label>
             </div>
 
-            <div className="flex justify-end space-x-3 xl-down:space-x-2 pt-4 xl-down:pt-3 sm-down:pt-2">
+            <div className="flex justify-end space-x-3 xl-down:space-x-2 pt-3 xl-down:pt-2 sm-down:pt-2">
               <button
                 type="button"
                 onClick={onClose}
@@ -131,7 +196,8 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -233,30 +299,91 @@ const NotesList: React.FC = () => {
       await adminService.updateUserNote(editingNote.id, {
         title: editingNote.title,
         content: editingNote.content,
+        imageUrl: editingNote.imageUrl,
         category: editingNote.category,
         priority: editingNote.priority,
         isArchived: editingNote.isArchived,
+        reminderAt: editingNote.reminderAt,
       });
 
       setShowEditModal(false);
       setEditingNote(null);
       await loadNotes();
+      toast.success(t('toasts.updateSuccess', { defaultValue: 'Cập nhật ghi chú thành công!' }));
     } catch (error) {
       console.error('Error updating note:', error);
-      toast.error('Không thể cập nhật ghi chú');
+      toast.error(t('toasts.updateError', { defaultValue: 'Không thể cập nhật ghi chú' }));
     }
   };
 
   const handleDeleteNote = async (noteId: number) => {
-    if (!confirm('Bạn có chắc muốn xóa ghi chú này?')) return;
-
-    try {
-      await adminService.deleteUserNote(noteId);
-      await loadNotes();
-    } catch (error) {
-      console.error('Error deleting note:', error);
-      toast.error('Không thể xóa ghi chú');
-    }
+    toast.warn(
+      <div className="flex flex-col items-center p-2">
+        {/* Warning Icon */}
+        <div className="mb-3 flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full">
+          <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+        </div>
+        
+        {/* Title and Message */}
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('delete.confirm.title', { defaultValue: 'Xác nhận xóa' })}</h3>
+          <p className="text-gray-600 dark:text-gray-400">{t('delete.confirm.message', { defaultValue: 'Bạn có chắc muốn xóa ghi chú này không?' })}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{t('delete.confirm.irreversible', { defaultValue: 'Hành động này không thể hoàn tác.' })}</p>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex gap-3 w-full">
+          <button
+            onClick={() => toast.dismiss()}
+            className="flex-1 px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm"
+          >
+            {t('actions.cancel', { defaultValue: 'Hủy' })}
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss();
+              try {
+                await adminService.deleteUserNote(noteId);
+                await loadNotes();
+                toast.success(
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>{t('toasts.deleteSuccess', { defaultValue: 'Xóa ghi chú thành công!' })}</span>
+                  </div>
+                );
+              } catch (error) {
+                console.error('Error deleting note:', error);
+                toast.error(
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <span>{t('toasts.deleteError', { defaultValue: 'Không thể xóa ghi chú' })}</span>
+                  </div>
+                );
+              }
+            }}
+            className="flex-1 px-4 py-2.5 text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 rounded-lg transition-colors font-medium text-sm flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            {t('actions.delete', { defaultValue: 'Xóa' })}
+          </button>
+        </div>
+      </div>,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        className: 'custom-confirm-toast',
+      }
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -278,12 +405,14 @@ const NotesList: React.FC = () => {
           <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
         </div>
-        <button
-          onClick={() => window.location.href = '/notes/create'}
-          className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
-        >
-          {t('createNote')}
-        </button>
+        {hasPermission('manage_notes.create') && (
+          <button
+            onClick={() => window.location.href = '/notes/create'}
+            className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
+          >
+            {t('createNote')}
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -420,9 +549,11 @@ const NotesList: React.FC = () => {
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
                           {t('table.createdAt')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          {t('table.actions')}
-                        </th>
+                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                          <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            {t('table.actions')}
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -489,34 +620,40 @@ const NotesList: React.FC = () => {
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
                             {formatDate(note.createdAt)}
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
-                            <div className="flex items-center gap-2 xl-down:gap-1">
-                              <button
-                                onClick={() => {
-                                  setEditingNote(note);
-                                  setShowEditModal(true);
-                                }}
-                                aria-label={t('actions.edit')}
-                                title={t('actions.edit') as string}
-                                className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4">
-                                  <path d="M16.862 3.487a1.75 1.75 0 0 1 2.476 2.476l-9.8 9.8a4.5 4.5 0 0 1-1.89 1.134l-3.003.9a.75.75 0 0 1-.93-.93l.9-3.002a4.5 4.5 0 0 1 1.134-1.89l9.8-9.8Z" />
-                                  <path d="M5.25 19.5h13.5a.75.75 0 0 1 0 1.5H5.25a.75.75 0 0 1 0-1.5Z" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => handleDeleteNote(note.id)}
-                                aria-label={t('actions.delete')}
-                                title={t('actions.delete') as string}
-                                className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4">
-                                  <path fillRule="evenodd" d="M9.042 3.75A2.25 2.25 0 0 1 11.17 2.5h1.66a2.25 2.25 0 0 1 2.128 1.25l.223.45h3.069a.75.75 0 0 1 0 1.5h-.68l-1.016 12.2a3 3 0 0 1-2.988 2.8H9.401a3 3 0 0 1-2.988-2.8L5.397 5.7h-.68a.75.75 0 0 1 0-1.5h3.069l.223-.45ZM9.65 5.7l-.857 12.2a1.5 1.5 0 0 0 1.5 1.6h4.165a1.5 1.5 0 0 0 1.5-1.6L15.1 5.7H9.65Zm2.6 3a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-                                </svg>
-                              </button>
-                            </div>
-                          </td>
+                          {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                            <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
+                              <div className="flex items-center gap-2 xl-down:gap-1">
+                                {hasPermission('manage_notes.update') && (
+                                  <button
+                                    onClick={() => {
+                                      setEditingNote(note);
+                                      setShowEditModal(true);
+                                    }}
+                                    aria-label={t('actions.edit')}
+                                    title={t('actions.edit') as string}
+                                    className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4">
+                                      <path d="M16.862 3.487a1.75 1.75 0 0 1 2.476 2.476l-9.8 9.8a4.5 4.5 0 0 1-1.89 1.134l-3.003.9a.75.75 0 0 1-.93-.93l.9-3.002a4.5 4.5 0 0 1 1.134-1.89l9.8-9.8Z" />
+                                      <path d="M5.25 19.5h13.5a.75.75 0 0 1 0 1.5H5.25a.75.75 0 0 1 0-1.5Z" />
+                                    </svg>
+                                  </button>
+                                )}
+                                {hasPermission('manage_notes.delete') && (
+                                  <button
+                                    onClick={() => handleDeleteNote(note.id)}
+                                    aria-label={t('actions.delete')}
+                                    title={t('actions.delete') as string}
+                                    className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4">
+                                      <path fillRule="evenodd" d="M9.042 3.75A2.25 2.25 0 0 1 11.17 2.5h1.66a2.25 2.25 0 0 1 2.128 1.25l.223.45h3.069a.75.75 0 0 1 0 1.5h-.68l-1.016 12.2a3 3 0 0 1-2.988 2.8H9.401a3 3 0 0 1-2.988-2.8L5.397 5.7h-.68a.75.75 0 0 1 0-1.5h3.069l.223-.45ZM9.65 5.7l-.857 12.2a1.5 1.5 0 0 0 1.5 1.6h4.165a1.5 1.5 0 0 0 1.5-1.6L15.1 5.7H9.65Zm2.6 3a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -593,34 +730,39 @@ const NotesList: React.FC = () => {
                           <span>📅 {formatDate(note.createdAt)}</span>
                         </div>
                         
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => {
-                              setEditingNote(note);
-                              setShowEditModal(true);
-                            }}
-                            className="p-1.5 xl-down:p-1 rounded xl-down:rounded-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 xl-down:w-3.5 xl-down:h-3.5">
-                              <path d="M16.862 3.487a1.75 1.75 0 0 1 2.476 2.476l-9.8 9.8a4.5 4.5 0 0 1-1.89 1.134l-3.003.9a.75.75 0 0 1-.93-.93l.9-3.002a4.5 4.5 0 0 1 1.134-1.89l9.8-9.8Z" />
-                              <path d="M5.25 19.5h13.5a.75.75 0 0 1 0 1.5H5.25a.75.75 0 0 1 0-1.5Z" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => handleDeleteNote(note.id)}
-                            className="p-1.5 xl-down:p-1 rounded xl-down:rounded-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 xl-down:w-3.5 xl-down:h-3.5">
-                              <path fillRule="evenodd" d="M9.042 3.75A2.25 2.25 0 0 1 11.17 2.5h1.66a2.25 2.25 0 0 1 2.128 1.25l.223.45h3.069a.75.75 0 0 1 0 1.5h-.68l-1.016 12.2a3 3 0 0 1-2.988 2.8H9.401a3 3 0 0 1-2.988-2.8L5.397 5.7h-.68a.75.75 0 0 1 0-1.5h3.069l.223-.45ZM9.65 5.7l-.857 12.2a1.5 1.5 0 0 0 1.5 1.6h4.165a1.5 1.5 0 0 0 1.5-1.6L15.1 5.7H9.65Zm2.6 3a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-                            </svg>
-                          </button>
-                        </div>
+                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                          <div className="flex items-center gap-1">
+                            {hasPermission('manage_notes.update') && (
+                              <button
+                                onClick={() => {
+                                  setEditingNote(note);
+                                  setShowEditModal(true);
+                                }}
+                                className="p-1.5 rounded text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                  <path d="M16.862 3.487a1.75 1.75 0 0 1 2.476 2.476l-9.8 9.8a4.5 4.5 0 0 1-1.89 1.134l-3.003.9a.75.75 0 0 1-.93-.93l.9-3.002a4.5 4.5 0 0 1 1.134-1.89l9.8-9.8Z" />
+                                  <path d="M5.25 19.5h13.5a.75.75 0 0 1 0 1.5H5.25a.75.75 0 0 1 0-1.5Z" />
+                                </svg>
+                              </button>
+                            )}
+                            {hasPermission('manage_notes.delete') && (
+                              <button
+                                onClick={() => handleDeleteNote(note.id)}
+                                className="p-1.5 rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                  <path fillRule="evenodd" d="M9.042 3.75A2.25 2.25 0 0 1 11.17 2.5h1.66a2.25 2.25 0 0 1 2.128 1.25l.223.45h3.069a.75.75 0 0 1 0 1.5h-.68l-1.016 12.2a3 3 0 0 1-2.988 2.8H9.401a3 3 0 0 1-2.988-2.8L5.397 5.7h-.68a.75.75 0 0 1 0-1.5h3.069l.223-.45ZM9.65 5.7l-.857 12.2a1.5 1.5 0 0 0 1.5 1.6h4.165a1.5 1.5 0 0 0 1.5-1.6L15.1 5.7H9.65Zm2.6 3a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="px-6 py-3 xl-down:px-4 xl-down:py-2 sm-down:px-3 sm-down:py-2 bg-gray-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-neutral-700">
                     <div className="flex items-center justify-between xl-down:flex-col xl-down:space-y-2 xl-down:items-center">
@@ -662,7 +804,6 @@ const NotesList: React.FC = () => {
           setEditingNote(null);
         }}
         onSubmit={handleUpdateNote}
-        t={t}
       />
     </div>
   );

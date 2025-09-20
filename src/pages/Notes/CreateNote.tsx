@@ -4,6 +4,7 @@ import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { hasPermission } from '@utils/auth';
 
 interface User {
   id: number;
@@ -28,6 +29,15 @@ const CreateNote: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const navigate = useNavigate();
+
+  // Check permission
+  useEffect(() => {
+    if (!hasPermission('manage_notes.create')) {
+      toast.error('Bạn không có quyền tạo ghi chú');
+      navigate('/notes');
+      return;
+    }
+  }, [navigate]);
 
   useEffect(() => {
     loadUsers();
@@ -275,18 +285,33 @@ const CreateNote: React.FC = () => {
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
               {t('form.imageUrl.label')}
             </label>
-            <input
-              type="url"
-              value={formData.imageUrl}
-              onChange={(e) => handleInputChange('imageUrl', e.target.value)}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-              placeholder={t('form.placeholders.imageUrl')}
-            />
+            <div className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const { uploadService } = await import('@services/uploadService');
+                    const { url } = await uploadService.uploadImage(file);
+                    handleInputChange('imageUrl', url);
+                  } catch (error) {
+                    console.error('Error uploading image:', error);
+                    toast.error('Không thể tải lên ảnh');
+                  }
+                }}
+                className="block w-full text-sm xl-down:text-xs text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {formData.imageUrl && (
+                <img src={formData.imageUrl} alt="preview" className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 rounded-md object-cover border" />
+              )}
+            </div>
             {formData.imageUrl && (
               <div className="mt-2 xl-down:mt-1.5">
                 <img

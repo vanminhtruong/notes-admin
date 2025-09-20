@@ -1,4 +1,4 @@
-import { getAdminToken } from '@utils/auth';
+import { getAdminToken, setAdminToken } from '@utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
 
@@ -88,7 +88,14 @@ class AdminService {
       throw new Error(error.message || 'Đăng nhập thất bại');
     }
 
-    return response.json();
+    const data = await response.json();
+    
+    // Lưu token vào localStorage để sử dụng cho các API call tiếp theo
+    if (data.token) {
+      setAdminToken(data.token);
+    }
+
+    return data;
   }
 
   // Users management
@@ -273,6 +280,126 @@ class AdminService {
     return response.json();
   }
 
+  // Admin Permissions Management
+  async getMyPermissions() {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions/me`, {
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể lấy thông tin quyền hạn');
+    }
+
+    return response.json();
+  }
+
+  async getAllAdmins(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    adminLevel?: string;
+  } = {}) {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        queryParams.append(key, value.toString());
+      }
+    });
+
+    const response = await fetch(`${API_BASE_URL}/admin/admins?${queryParams}`, {
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể tải danh sách admin');
+    }
+
+    return response.json();
+  }
+
+  async createSubAdmin(adminData: {
+    email: string;
+    password: string;
+    name: string;
+    permissions?: string[];
+  }) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(adminData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể tạo phó admin');
+    }
+
+    return response.json();
+  }
+
+  async updateAdminPermissions(adminId: number, data: {
+    permissions?: string[];
+    adminLevel?: string;
+  }) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}/permissions`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể cập nhật quyền admin');
+    }
+
+    return response.json();
+  }
+
+  async toggleAdminStatus(adminId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}/toggle-status`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể thay đổi trạng thái admin');
+    }
+
+    return response.json();
+  }
+
+  async revokeAdminPermission(adminId: number, permission: string) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}/permissions`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ permission }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể xóa quyền admin');
+    }
+
+    return response.json();
+  }
+
+  async deleteAdmin(adminId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể xóa admin');
+    }
+
+    return response.json();
+  }
+
   // Settings - Language (persist on backend, no local storage)
   async getLanguage() {
     const response = await fetch(`${API_BASE_URL}/settings/language`, {
@@ -302,6 +429,28 @@ class AdminService {
       throw err;
     }
     return response.json(); // { message, language }
+  }
+
+  // Refresh token để get permissions mới
+  async refreshToken() {
+    const response = await fetch(`${API_BASE_URL}/admin/refresh-token`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể làm mới token');
+    }
+
+    const data = await response.json();
+    
+    // Cập nhật token mới vào localStorage
+    if (data.token) {
+      setAdminToken(data.token);
+    }
+
+    return data;
   }
 }
 

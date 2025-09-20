@@ -1,10 +1,100 @@
 {
-  "notes": {
-    "title": "메모 관리",
-    "subtitle": "사용자 메모 및 콘텐츠 관리",
-    "createNote": "메모 생성",
-    "editNote": "메모 편집",
-    "deleteNote": "메모 삭제",
-    "noNotes": "메모가 없습니다"
+  "title": "메모 관리",
+  "subtitle": "사용자 메모와 콘텐츠를 관리합니다",
+  "createNote": "메모 생성",
+  "editNote": "메모 편집",
+  "deleteNote": "메모 삭제",
+  "noNotes": "메모가 없습니다",
+  "actions": {
+    "createNew": "새 메모 만들기",
+    "edit": "편집",
+    "delete": "삭제",
+    "cancel": "취소",
+    "update": "업데이트",
+    "creating": "생성 중..."
+  },
+  "filters": {
+    "search": { "label": "검색", "placeholder": "제목 또는 내용..." },
+    "userId": { "label": "사용자 ID", "placeholder": "사용자 ID..." },
+    "category": { "label": "카테고리", "placeholder": "카테고리..." },
+    "priority": { "label": "우선순위" },
+    "status": { "label": "상태" },
+    "all": "전체",
+    "active": "활성",
+    "archived": "보관됨",
+    "clear": "필터 지우기"
+  },
+  "table": {
+    "note": "메모",
+    "user": "사용자",
+    "category": "카테고리",
+    "priority": "우선순위",
+    "status": "상태",
+    "createdAt": "생성 일자",
+    "actions": "작업"
+  },
+  "badges": {
+    "status": { "active": "활성", "archived": "보관됨" }
+  },
+  "empty": {
+    "title": "메모가 없습니다",
+    "hint": "필터를 변경하거나 새 메모를 생성해 보세요."
+  },
+  "pagination": {
+    "title": "페이지 {{currentPage}} / {{totalPages}}",
+    "prev": "이전",
+    "next": "다음"
+  },
+  "modal": {
+    "editTitle": "메모 편집"
+  },
+  "form": {
+    "title": { "label": "제목 *" },
+    "content": { "label": "내용" },
+    "category": { "label": "카테고리" },
+    "priority": { "label": "우선순위" },
+    "archive": { "label": "메모 보관" },
+    "imageUrl": { "label": "이미지 URL" },
+    "reminder": { "label": "리마인더" },
+    "placeholders": {
+      "title": "메모 제목을 입력하세요...",
+      "content": "메모 내용을 입력하세요...",
+      "category": "예: 업무, 개인...",
+      "imageUrl": "https://example.com/image.jpg",
+      "searchUser": "사용자 검색..."
+    }
+  },
+  "constants": {
+    "priority": { "low": "낮음", "medium": "보통", "high": "높음" }
+  },
+  "create": {
+    "title": "새 메모 만들기",
+    "subtitle": "특정 사용자를 위한 메모를 생성합니다",
+    "selectUserLabel": "사용자 선택 *",
+    "searchUserPlaceholder": "사용자 검색...",
+    "changeUser": "변경",
+    "noUsers": "사용자를 찾을 수 없습니다"
+  },
+  "delete": {
+    "confirm": {
+      "title": "삭제 확인",
+      "message": "이 메모를 정말 삭제하시겠습니까?",
+      "irreversible": "이 작업은 되돌릴 수 없습니다."
+    }
+  },
+  "alerts": {
+    "confirmDelete": "정말로 이 메모를 삭제하시겠습니까?",
+    "updateFailed": "메모를 업데이트할 수 없습니다",
+    "deleteFailed": "메모를 삭제할 수 없습니다",
+    "missingUserOrTitle": "사용자를 선택하고 제목을 입력해 주세요",
+    "createSuccess": "메모가 성공적으로 생성되었습니다",
+    "createFailed": "메모를 생성할 수 없습니다"
+  },
+  "toasts": {
+    "deleteSuccess": "메모를 성공적으로 삭제했습니다!",
+    "deleteError": "메모를 삭제할 수 없습니다",
+    "updateSuccess": "메모가 성공적으로 업데이트되었습니다!",
+    "updateError": "메모를 업데이트할 수 없습니다",
+    "uploadImageError": "이미지를 업로드할 수 없습니다"
   }
 }

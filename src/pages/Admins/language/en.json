@@ -1,0 +1,190 @@
+{
+  "title": "Admin Management",
+  "subtitle": "Manage admin permissions and status in the system",
+  "addAdmin": "Add Sub Admin",
+  "searchPlaceholder": "Search by name or email...",
+  "filterByLevel": "Filter by level",
+  "allLevels": "All levels",
+  "superAdmin": "Super Admin",
+  "subAdmin": "Sub Admin",
+  "dev": "Dev",
+  "mod": "Mod",
+  "refresh": "Refresh",
+  "loading": "Loading...",
+  "noAdminsFound": "No admins found",
+  "createNewAdmin": "Start by creating a new sub admin.",
+  "active": "Active",
+  "inactive": "Inactive",
+  "edit": "Edit",
+  "activate": "Activate",
+  "deactivate": "Deactivate",
+  "delete": "Delete",
+  "permissionsLabel": "Permissions",
+  "createdAt": "Created",
+  "status": "Status",
+  "level": "Level",
+  "actions": "Actions",
+  "showingResults": "Showing {{start}} to {{end}} of {{total}} results",
+  "itemsPerPage": "/ page",
+  "previous": "Previous",
+  "next": "Next",
+  "createModal": {
+    "title": "Create New Deputy Admin",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "emailRequired": "Email cannot be empty",
+    "emailInvalid": "Invalid email",
+    "name": "Full Name",
+    "namePlaceholder": "John Doe",
+    "nameRequired": "Name cannot be empty",
+    "password": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "passwordRequired": "Password cannot be empty",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "permissions": "Permissions",
+    "cancel": "Cancel",
+    "create": "Create Admin",
+    "creating": "Creating..."
+  },
+  "editModal": {
+    "title": "Edit permissions: {{name}}",
+    "permissions": "Permissions",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "saving": "Saving..."
+  },
+  "confirmDialog": {
+    "changeStatus": "Change Status",
+    "confirmDelete": "Confirm Delete",
+    "changeStatusMessage": "Are you sure you want to change the status of admin \"{{name}}\"?",
+    "deleteMessage": "Are you sure you want to delete admin \"{{name}}\"? This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "permissions": {
+    "manage_users": {
+      "label": "Manage Users",
+      "description": "Manage user accounts and information",
+      "view": {
+        "label": "View User Info",
+        "description": "View user list and detailed information"
+      },
+      "activate": {
+        "label": "Activate/Deactivate",
+        "description": "Activate or deactivate user accounts"
+      },
+      "view_active_accounts": {
+        "label": "View Active Accounts",
+        "description": "View the list of currently active accounts"
+      },
+      "delete_permanently": {
+        "label": "Permanently Delete Account",
+        "description": "Permanently remove a user account from the system"
+      },
+      "activity": {
+        "label": "View User Activity",
+        "description": "Access User Activity page to view detailed user activities",
+        "messages": {
+          "label": "Messages Tab",
+          "description": "View and manage user's messages"
+        },
+        "groups": {
+          "label": "Groups Tab",
+          "description": "View and manage groups that user participates in"
+        },
+        "friends": {
+          "label": "Friends Tab",
+          "description": "View user's friends list"
+        },
+        "notifications": {
+          "label": "Notifications Tab",
+          "description": "View user's notifications"
+        },
+        "monitor": {
+          "label": "Monitor Tab",
+          "description": "Monitor user's real-time activities"
+        }
+      }
+    },
+    "manage_notes": {
+      "label": "Manage Notes",
+      "description": "Manage user notes",
+      "create": {
+        "label": "Create Notes",
+        "description": "Create new notes for users"
+      },
+      "edit": {
+        "label": "Edit Notes",
+        "description": "Edit existing notes"
+      },
+      "delete": {
+        "label": "Delete Notes",
+        "description": "Delete user notes"
+      },
+      "view": {
+        "label": "View Notes",
+        "description": "View all user notes"
+      }
+    },
+    "manage_admins": {
+      "label": "Manage Admins",
+      "description": "Manage other admin accounts (Super Admin only)",
+      "create": {
+        "label": "Create Admin",
+        "description": "Create new admin accounts"
+      },
+      "edit": {
+        "label": "Edit Admin Permissions",
+        "description": "Edit permissions of other admins"
+      },
+      "delete": {
+        "label": "Delete Admin",
+        "description": "Delete admin accounts"
+      }
+    },
+    "view_analytics": {
+      "label": "View Analytics",
+      "description": "Access dashboard and system analytics"
+    },
+    "manage_groups": {
+      "label": "Manage Groups",
+      "description": "Manage chat groups",
+      "view": {
+        "label": "View Groups",
+        "description": "View group list and information"
+      },
+      "moderate": {
+        "label": "Moderate Groups",
+        "description": "Moderate group content and members"
+      }
+    },
+    "view_messages": {
+      "label": "View Messages",
+      "description": "View user messages and notifications"
+    },
+    "delete_content": {
+      "label": "Delete Content",
+      "description": "Delete messages and inappropriate content"
+    },
+    "system_settings": {
+      "label": "System Settings",
+      "description": "Change system settings and configuration"
+    }
+  },
+  "revokePermission": "Revoke Permission",
+  "confirmRevokePermission": "Confirm Revoke Permission",
+  "revokePermissionMessage": "Are you sure you want to revoke permission \"{{permission}}\" from admin \"{{name}}\"?",
+  "messages": {
+    "createSuccess": "Sub-admin created successfully",
+    "createError": "Failed to create sub-admin",
+    "updateSuccess": "Admin permissions updated successfully",
+    "updateError": "Failed to update admin permissions",
+    "revokeSuccess": "Permission revoked successfully",
+    "revokeError": "Failed to revoke permission",
+    "toggleStatusSuccess": "Admin status changed successfully",
+    "toggleStatusError": "Failed to change admin status",
+    "deleteSuccess": "Admin deleted successfully",
+    "deleteError": "Failed to delete admin",
+    "loadError": "Failed to load admin list"
+  }
+}

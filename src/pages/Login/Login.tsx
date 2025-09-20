@@ -47,9 +47,9 @@ const Login: React.FC = () => {
     try {
       const response = await adminService.login(email, password);
       
-      // Validate token và kiểm tra role
+      // Validate token và kiểm tra quyền admin
       const adminData = validateAdminToken(response.token);
-      if (!adminData || adminData.role !== 'admin') {
+      if (!adminData || (adminData.role !== 'admin' && !adminData.adminLevel)) {
         throw new Error('Không có quyền truy cập admin');
       }
 

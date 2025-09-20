@@ -19,6 +19,10 @@ import usersEn from '@pages/Users/language/en.json';
 import usersKo from '@pages/Users/language/ko.json';
 import usersVi from '@pages/Users/language/vi.json';
 
+import adminsEn from '@pages/Admins/language/en.json';
+import adminsKo from '@pages/Admins/language/ko.json';
+import adminsVi from '@pages/Admins/language/vi.json';
+
 // Common translations
 import commonEn from './locales/en/common.json';
 import commonKo from './locales/ko/common.json';
@@ -30,21 +34,24 @@ const resources = {
     dashboard: dashboardEn,
     login: loginEn,
     notes: notesEn,
-    users: usersEn
+    users: usersEn,
+    admins: adminsEn
   },
   ko: {
     common: commonKo,
     dashboard: dashboardKo,
     login: loginKo,
     notes: notesKo,
-    users: usersKo
+    users: usersKo,
+    admins: adminsKo
   },
   vi: {
     common: commonVi,
     dashboard: dashboardVi,
     login: loginVi,
     notes: notesVi,
-    users: usersVi
+    users: usersVi,
+    admins: adminsVi
   }
 };
 
@@ -59,7 +66,7 @@ const initI18n = async () => {
       
       // Namespace mặc định
       defaultNS: 'common',
-      ns: ['common', 'dashboard', 'login', 'notes', 'users'],
+      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins'],
 
       interpolation: {
         escapeValue: false, // React đã escape

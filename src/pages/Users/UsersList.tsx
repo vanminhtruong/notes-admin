@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { hasPermission } from '@utils/auth';
 
 import { useUsersList } from './hooks/useUsersList';
 import UsersTable from './components/UsersTable';
@@ -7,6 +8,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 
 const UsersList: React.FC = () => {
   const { t } = useTranslation('users');
+  const canViewActive = hasPermission('manage_users.view_active_accounts') || hasPermission('manage_users');
   const {
     users,
     loading,
@@ -107,7 +109,7 @@ const UsersList: React.FC = () => {
               className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm xl-down:text-xs"
             >
               <option value="">{t('filters.all')}</option>
-              <option value="true">{t('status.active')}</option>
+              <option value="true" disabled={!canViewActive} title={!canViewActive ? t('alerts.noPermission') : undefined}>{t('status.active')}</option>
               <option value="false">{t('status.disabled')}</option>
             </select>
           </div>

@@ -1,19 +1,59 @@
 {
+  "title": "사용자 목록",
+  "subtitle": "시스템의 모든 사용자 관리",
+  "searchUser": "사용자 검색",
+  "searchPlaceholder": "이름 또는 이메일...",
+  "userList": "사용자 목록",
+  "loadingUsers": "사용자 목록 로딩 중...",
+  "noUsersFound": "일치하는 사용자를 찾을 수 없습니다",
+  "enterKeywordToSearch": "사용자를 검색하려면 키워드를 입력하세요",
+  "cannotLoadUserInfo": "사용자 정보를 로드할 수 없습니다",
+  "noPermissionForUserActivity": "User Activity의 어떤 탭에도 접근할 권한이 없습니다",
+  "lastActivity": "마지막 활동",
+  "createdAt": "생성일",
+  "actions": "작업",
+  "status": {
+    "active": "활성",
+    "disabled": "비활성화"
+  },
+  "roles": {
+    "admin": "관리자",
+    "user": "사용자"
+  },
+  "filters": {
+    "role": "역할",
+    "status": "상태",
+    "all": "전체",
+    "clear": "필터 지우기"
+  },
+  "pagination": {
+    "title": "페이지 {{currentPage}} / {{totalPages}}",
+    "prev": "이전",
+    "next": "다음"
+  },
   "buttons": {
     "cancel": "취소",
     "confirm": "확인"
   },
+  "action": {
+    "enable": "활성화",
+    "disable": "비활성화",
+    "enableAccount": "계정 활성화",
+    "disableAccount": "계정 비활성화"
+  },
+  "alerts": {
+    "cannotChangeAdminStatus": "관리자 계정 상태를 변경할 수 없습니다",
+    "confirmToggleStatus": "정말로 \"{{name}}\" 계정을 {{action}}하시겠습니까?",
+    "cannotToggleStatus": "계정을 {{action}}할 수 없습니다",
+    "cannotDeleteAdmin": "관리자 계정을 삭제할 수 없습니다",
+    "confirmDeletePermanent1": "⚠️ 경고: 정말로 \"{{name}}\" 계정을 영구 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!",
+    "confirmDeletePermanent2": "최종 확인: \"{{email}}\" 계정을 영구 삭제하시겠습니까?",
+    "cannotDeleteUser": "계정을 삭제할 수 없습니다"
+  },
+  "online": "온라인",
+  "offline": "오프라인",
+  "neverLoggedIn": "로그인한 적 없음",
   "userActivity": {
-    "title": "사용자 활동",
-    "subtitle": "사용자의 메시지, 그룹 및 친구 추적",
-    "searchUser": "사용자 검색",
-    "searchPlaceholder": "사용자 이름 또는 이메일 입력...",
-    "userList": "사용자 목록",
-    "loadingUsers": "사용자 목록 로딩 중...",
-    "noUsersFound": "일치하는 사용자를 찾을 수 없습니다",
-    "enterKeywordToSearch": "사용자를 검색하려면 키워드를 입력하세요",
-    "cannotLoadUserInfo": "사용자 정보를 로드할 수 없습니다",
-    "lastActivity": "마지막 활동",
     "tabs": {
       "messages": "메시지",
       "groups": "그룹",
@@ -21,19 +61,27 @@
       "notifications": "알림",
       "monitor": "모니터"
     },
+    "errors": {
+      "cannotLoadUsers": "사용자를 로드할 수 없습니다.",
+      "serverError": "서버 오류입니다."
+    },
     "messages": {
-      "noMessages": "메시지 없음",
-      "sentTo": "전송됨",
-      "receivedFrom": "수신됨"
+      "noMessages": "아직 메시지가 없습니다",
+      "sentTo": "에게 보냄",
+      "receivedFrom": "로부터 받음"
     },
     "groups": {
-      "noGroups": "가입한 그룹 없음",
-      "groupOwner": "그룹 소유자",
-      "joined": "가입됨"
+      "noGroups": "그룹이 없습니다",
+      "groupOwner": "소유자",
+      "joined": "참여일"
     },
     "friends": {
-      "noFriends": "친구 없음",
-      "activity": "활동"
+      "noFriends": "친구가 없습니다",
+      "activity": "마지막 접속"
+    },
+    "typing": {
+      "typingWith": "{{name}} 님과 대화 중...",
+      "typingInGroup": "그룹에서 입력 중..."
     },
     "notifications": {
       "noNotifications": "알림이 없습니다",
@@ -54,10 +102,6 @@
         "title": "그룹 {{name}} 초대"
       }
     },
-    "typing": {
-      "typingWith": "{{name}} 님과 대화 중...",
-      "typingInGroup": "그룹에서 입력 중..."
-    },
     "monitor": {
       "tabs": {
         "dm": "1:1",
@@ -69,11 +113,21 @@
       "noMessages": "메시지가 없습니다",
       "groupsList": "그룹",
       "selectGroupToView": "볼 그룹을 선택하세요",
-      "groupChat": "그룹 채팅"
-    },
-    "errors": {
-      "cannotLoadUsers": "사용자 목록을 로드할 수 없습니다. 다시 시도해 주세요.",
-      "serverError": "서버 오류 (500). 백엔드가 응답하지 않습니다. 백엔드 서버를 확인해 주세요."
+      "groupChat": "그룹 채팅",
+      "actions": {
+        "viewMembers": "멤버 및 역할 보기",
+        "close": "닫기"
+      },
+      "members": {
+        "title": "멤버 및 역할",
+        "empty": "멤버가 없습니다",
+        "id": "ID",
+        "roles": {
+          "owner": "소유자",
+          "admin": "관리자",
+          "member": "멤버"
+        }
+      }
     }
   }
 }

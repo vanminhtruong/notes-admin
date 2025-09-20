@@ -33,7 +33,14 @@
     "lightMode": "라이트 모드",
     "darkMode": "다크 모드",
     "switchToLight": "라이트 모드로 전환",
-    "switchToDark": "다크 모드로 전환"
+    "switchToDark": "다크 모드로 전환",
+    "logoutConfirm": {
+      "title": "로그아웃 확인",
+      "message": "정말 로그아웃하시겠습니까?"
+    }
+  },
+  "actions": {
+    "cancel": "취소"
   },
   "pagination": {
     "previous": "이전",

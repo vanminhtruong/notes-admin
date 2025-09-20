@@ -1,0 +1,190 @@
+{
+  "title": "관리자 관리",
+  "subtitle": "시스템 내 관리자 권한 및 상태 관리",
+  "addAdmin": "부관리자 추가",
+  "searchPlaceholder": "이름 또는 이메일로 검색...",
+  "filterByLevel": "레벨별 필터",
+  "allLevels": "모든 레벨",
+  "superAdmin": "슈퍼 관리자",
+  "subAdmin": "부관리자",
+  "dev": "개발자",
+  "mod": "모더레이터",
+  "refresh": "새로고침",
+  "loading": "로딩 중...",
+  "noAdminsFound": "관리자를 찾을 수 없습니다",
+  "createNewAdmin": "새 부관리자를 생성하여 시작하세요.",
+  "active": "활성",
+  "inactive": "비활성",
+  "edit": "편집",
+  "activate": "활성화",
+  "deactivate": "비활성화",
+  "delete": "삭제",
+  "permissionsLabel": "권한",
+  "createdAt": "생성",
+  "status": "상태",
+  "level": "레벨",
+  "actions": "작업",
+  "showingResults": "총 {{total}}개 중 {{start}}~{{end}} 표시",
+  "itemsPerPage": "/ 페이지",
+  "previous": "이전",
+  "next": "다음",
+  "createModal": {
+    "title": "새 부관리자 생성",
+    "email": "이메일",
+    "emailPlaceholder": "admin@example.com",
+    "emailRequired": "이메일은 비워둘 수 없습니다",
+    "emailInvalid": "유효하지 않은 이메일",
+    "name": "이름",
+    "namePlaceholder": "홍길동",
+    "nameRequired": "이름은 비워둘 수 없습니다",
+    "password": "비밀번호",
+    "passwordPlaceholder": "최소 6자 이상",
+    "passwordRequired": "비밀번호는 비워둘 수 없습니다",
+    "passwordMinLength": "비밀번호는 최소 6자 이상이어야 합니다",
+    "permissions": "권한",
+    "cancel": "취소",
+    "create": "관리자 생성",
+    "creating": "생성 중..."
+  },
+  "editModal": {
+    "title": "권한 편집: {{name}}",
+    "permissions": "권한",
+    "cancel": "취소",
+    "save": "저장",
+    "saving": "저장 중..."
+  },
+  "confirmDialog": {
+    "changeStatus": "상태 변경",
+    "confirmDelete": "삭제 확인",
+    "changeStatusMessage": "관리자 \"{{name}}\"의 상태를 변경하시겠습니까?",
+    "deleteMessage": "관리자 \"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "cancel": "취소",
+    "confirm": "확인"
+  },
+  "permissions": {
+    "manage_users": {
+      "label": "사용자 관리",
+      "description": "사용자 계정 및 정보 관리",
+      "view": {
+        "label": "사용자 정보 보기",
+        "description": "사용자 목록 및 상세 정보 조회"
+      },
+      "activate": {
+        "label": "활성화/비활성화",
+        "description": "사용자 계정을 활성화하거나 비활성화"
+      },
+      "view_active_accounts": {
+        "label": "활성 계정 보기",
+        "description": "현재 활성 상태인 계정 목록 보기"
+      },
+      "delete_permanently": {
+        "label": "계정 영구 삭제",
+        "description": "시스템에서 사용자 계정을 완전히 제거"
+      },
+      "activity": {
+        "label": "사용자 활동 보기",
+        "description": "사용자 활동 페이지에 접근하여 상세한 활동 내역 확인",
+        "messages": {
+          "label": "메시지 탭",
+          "description": "사용자의 메시지 보기 및 관리"
+        },
+        "groups": {
+          "label": "그룹 탭",
+          "description": "사용자가 참여한 그룹 보기 및 관리"
+        },
+        "friends": {
+          "label": "친구 탭",
+          "description": "사용자의 친구 목록 보기"
+        },
+        "notifications": {
+          "label": "알림 탭",
+          "description": "사용자의 알림 보기"
+        },
+        "monitor": {
+          "label": "모니터링 탭",
+          "description": "사용자의 실시간 활동 모니터링"
+        }
+      }
+    },
+    "manage_notes": {
+      "label": "노트 관리",
+      "description": "사용자 노트 관리",
+      "create": {
+        "label": "노트 생성",
+        "description": "사용자를 위한 새 노트 생성"
+      },
+      "edit": {
+        "label": "노트 편집",
+        "description": "기존 노트 편집"
+      },
+      "delete": {
+        "label": "노트 삭제",
+        "description": "사용자 노트 삭제"
+      },
+      "view": {
+        "label": "노트 보기",
+        "description": "모든 사용자 노트 조회"
+      }
+    },
+    "manage_admins": {
+      "label": "관리자 관리",
+      "description": "다른 관리자 계정 관리 (슈퍼 관리자만)",
+      "create": {
+        "label": "관리자 생성",
+        "description": "새 관리자 계정 생성"
+      },
+      "edit": {
+        "label": "관리자 권한 편집",
+        "description": "다른 관리자의 권한 편집"
+      },
+      "delete": {
+        "label": "관리자 삭제",
+        "description": "관리자 계정 삭제"
+      }
+    },
+    "view_analytics": {
+      "label": "분석 보기",
+      "description": "대시보드 및 시스템 분석 접근"
+    },
+    "manage_groups": {
+      "label": "그룹 관리",
+      "description": "채팅 그룹 관리",
+      "view": {
+        "label": "그룹 보기",
+        "description": "그룹 목록 및 정보 조회"
+      },
+      "moderate": {
+        "label": "그룹 조정",
+        "description": "그룹 콘텐츠 및 구성원 조정"
+      }
+    },
+    "view_messages": {
+      "label": "메시지 보기",
+      "description": "사용자 메시지 및 알림 조회"
+    },
+    "delete_content": {
+      "label": "콘텐츠 삭제",
+      "description": "메시지 및 부적절한 콘텐츠 삭제"
+    },
+    "system_settings": {
+      "label": "시스템 설정",
+      "description": "시스템 설정 및 구성 변경"
+    }
+  },
+  "revokePermission": "권한 취소",
+  "confirmRevokePermission": "권한 취소 확인",
+  "revokePermissionMessage": "관리자 \"{{name}}\"에서 \"{{permission}}\" 권한을 취소하시겠습니까?",
+  "messages": {
+    "createSuccess": "서브 관리자가 성공적으로 생성되었습니다",
+    "createError": "서브 관리자 생성에 실패했습니다",
+    "updateSuccess": "관리자 권한이 성공적으로 업데이트되었습니다",
+    "updateError": "관리자 권한 업데이트에 실패했습니다",
+    "revokeSuccess": "권한이 성공적으로 취소되었습니다",
+    "revokeError": "권한 취소에 실패했습니다",
+    "toggleStatusSuccess": "관리자 상태가 성공적으로 변경되었습니다",
+    "toggleStatusError": "관리자 상태 변경에 실패했습니다",
+    "deleteSuccess": "관리자가 성공적으로 삭제되었습니다",
+    "deleteError": "관리자 삭제에 실패했습니다",
+    "loadError": "관리자 목록 로드에 실패했습니다"
+  }
+}

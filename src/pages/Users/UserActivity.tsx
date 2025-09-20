@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getVisibleUserActivityTabs } from '@utils/auth';
 
 import { useUserActivity } from './hooks/useUserActivity';
 import { useNotifications } from './hooks/useNotifications';
@@ -16,7 +17,14 @@ import MonitorTab from './components/MonitorTab';
 const UserActivity: React.FC = () => {
   const { t } = useTranslation('users');
   const { userId } = useParams<{ userId: string }>();
-  const [activeTab, setActiveTab] = useState<'messages' | 'groups' | 'friends' | 'notifications' | 'monitor'>('messages');
+  
+  // Get visible tabs based on permissions
+  const visibleTabs = useMemo(() => getVisibleUserActivityTabs(), []);
+  
+  // Set default active tab to first visible tab
+  const [activeTab, setActiveTab] = useState<'messages' | 'groups' | 'friends' | 'notifications' | 'monitor'>(() => {
+    return visibleTabs.length > 0 ? visibleTabs[0].key as any : 'messages';
+  });
   
   // Sử dụng custom hooks
   const {
@@ -61,6 +69,29 @@ const UserActivity: React.FC = () => {
     }
   }, [userId, setSelectedUserId]);
 
+  // Ensure active tab is always visible to current user
+  useEffect(() => {
+    if (visibleTabs.length > 0 && !visibleTabs.some(tab => tab.key === activeTab)) {
+      setActiveTab(visibleTabs[0].key as any);
+    }
+  }, [visibleTabs, activeTab]);
+
+  // If no tabs are visible, show access denied message
+  if (visibleTabs.length === 0) {
+    return (
+      <div className="max-w-7xl xl-down:max-w-full mx-auto space-y-6">
+        <div>
+          <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('userList')}</h1>
+        </div>
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 text-gray-500">
+            {t('noPermissionForUserActivity')}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="max-w-7xl xl-down:max-w-full mx-auto space-y-6 xl-down:space-y-4 sm-down:space-y-3">
@@ -86,13 +117,7 @@ const UserActivity: React.FC = () => {
                 <div className="border-b border-gray-200 dark:border-neutral-700">
                   {/* Desktop Tabs */}
                   <nav className="flex space-x-8 xl-down:space-x-6 md-down:space-x-4 sm-down:space-x-2 px-6 xl-down:px-4 sm-down:px-3 lg-down:hidden overflow-x-auto">
-                    {[
-                      { key: 'messages', label: t('userActivity.tabs.messages'), icon: '💬' },
-                      { key: 'groups', label: t('userActivity.tabs.groups'), icon: '👥' },
-                      { key: 'friends', label: t('userActivity.tabs.friends'), icon: '👫' },
-                      { key: 'notifications', label: t('userActivity.tabs.notifications'), icon: '🔔' },
-                      { key: 'monitor', label: t('userActivity.tabs.monitor'), icon: '🕵️' }
-                    ].map((tab) => (
+                    {visibleTabs.map((tab) => (
                       <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key as any)}
@@ -110,7 +135,7 @@ const UserActivity: React.FC = () => {
                             </span>
                           )}
                         </span>
-                        <span className="xl-down:hidden">{tab.label}</span>
+                        <span className="xl-down:hidden">{t(tab.label)}</span>
                       </button>
                     ))}
                   </nav>
@@ -122,15 +147,9 @@ const UserActivity: React.FC = () => {
                       onChange={(e) => setActiveTab(e.target.value as any)}
                       className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      {[
-                        { key: 'messages', label: t('userActivity.tabs.messages'), icon: '💬' },
-                        { key: 'groups', label: t('userActivity.tabs.groups'), icon: '👥' },
-                        { key: 'friends', label: t('userActivity.tabs.friends'), icon: '👫' },
-                        { key: 'notifications', label: t('userActivity.tabs.notifications'), icon: '🔔' },
-                        { key: 'monitor', label: t('userActivity.tabs.monitor'), icon: '🕵️' }
-                      ].map((tab) => (
+                      {visibleTabs.map((tab) => (
                         <option key={tab.key} value={tab.key}>
-                          {tab.icon} {tab.label}
+                          {tab.icon} {t(tab.label)}
                           {tab.key === 'notifications' && unreadNotificationsCount > 0 && ` (${unreadNotificationsCount})`}
                         </option>
                       ))}
@@ -139,11 +158,19 @@ const UserActivity: React.FC = () => {
                 </div>
 
                 <div className="p-6 xl-down:p-4 md-down:p-3 sm-down:p-2">
-                  {activeTab === 'messages' && <MessagesTab activityData={activityData} typingInfo={typingInfo} formatDate={formatDate} />}
-                  {activeTab === 'groups' && <GroupsTab activityData={activityData} formatDate={formatDate} />}
-                  {activeTab === 'friends' && <FriendsTab activityData={activityData} formatDate={formatDate} />}
-                  {activeTab === 'notifications' && <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} />}
-                  {activeTab === 'monitor' && (
+                  {activeTab === 'messages' && visibleTabs.some(tab => tab.key === 'messages') && (
+                    <MessagesTab activityData={activityData} typingInfo={typingInfo} formatDate={formatDate} />
+                  )}
+                  {activeTab === 'groups' && visibleTabs.some(tab => tab.key === 'groups') && (
+                    <GroupsTab activityData={activityData} formatDate={formatDate} />
+                  )}
+                  {activeTab === 'friends' && visibleTabs.some(tab => tab.key === 'friends') && (
+                    <FriendsTab activityData={activityData} formatDate={formatDate} />
+                  )}
+                  {activeTab === 'notifications' && visibleTabs.some(tab => tab.key === 'notifications') && (
+                    <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} />
+                  )}
+                  {activeTab === 'monitor' && visibleTabs.some(tab => tab.key === 'monitor') && (
                     <MonitorTab
                       activityData={activityData}
                       selectedUserId={selectedUserId}

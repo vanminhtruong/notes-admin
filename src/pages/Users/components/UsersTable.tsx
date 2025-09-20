@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { hasPermission } from '@utils/auth';
 import type { User } from '../interfaces';
 
 interface UsersTableProps {
@@ -128,55 +129,63 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 </td>
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center gap-2 xl-down:gap-1">
-                    <button
-                      onClick={() => window.location.href = `/users/${user.id}/activity`}
-                      className="p-2 xl-down:p-1.5 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors"
-                      title="Xem hoạt động"
-                    >
-                      <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => window.location.href = `/notes?userId=${user.id}`}
-                      className="p-2 xl-down:p-1.5 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
-                      title="Xem ghi chú"
-                    >
-                      <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </button>
+                    {hasPermission('manage_users.view') && (
+                      <button
+                        onClick={() => window.location.href = `/users/${user.id}/activity`}
+                        className="p-2 xl-down:p-1.5 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors"
+                        title="Xem hoạt động"
+                      >
+                        <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </button>
+                    )}
+                    {hasPermission('manage_notes') && (
+                      <button
+                        onClick={() => window.location.href = `/notes?userId=${user.id}`}
+                        className="p-2 xl-down:p-1.5 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
+                        title="Xem ghi chú"
+                      >
+                        <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </button>
+                    )}
                     {user.role !== 'admin' && (
                       <>
-                        <button
-                          onClick={() => onToggleStatus(user)}
-                          className={`p-2 xl-down:p-1.5 rounded-md transition-colors ${
-                            user.isActive 
-                              ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
-                              : 'text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
-                          }`}
-                          title={user.isActive ? t('action.disableAccount') : t('action.enableAccount')}
-                        >
-                          {user.isActive ? (
+                        {hasPermission('manage_users.activate') && (
+                          <button
+                            onClick={() => onToggleStatus(user)}
+                            className={`p-2 xl-down:p-1.5 rounded-md transition-colors ${
+                              user.isActive 
+                                ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                : 'text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
+                            }`}
+                            title={user.isActive ? t('action.disableAccount') : t('action.enableAccount')}
+                          >
+                            {user.isActive ? (
+                              <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            ) : (
+                              <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                          </button>
+                        )}
+                        {hasPermission('manage_users.delete_permanently') && (
+                          <button
+                            onClick={() => onDeletePermanently(user)}
+                            className="p-2 xl-down:p-1.5 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                            title="Xóa vĩnh viễn - Không thể hoàn tác!"
+                          >
                             <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
-                          ) : (
-                            <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => onDeletePermanently(user)}
-                          className="p-2 xl-down:p-1.5 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
-                          title="Xóa vĩnh viễn - Không thể hoàn tác!"
-                        >
-                          <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                          </button>
+                        )}
                       </>
                     )}
                   </div>
@@ -228,55 +237,63 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 </div>
               </div>
               <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
-                <button
-                  onClick={() => window.location.href = `/users/${user.id}/activity`}
-                  className="p-1.5 sm-down:p-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
-                  title="Xem hoạt động"
-                >
-                  <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => window.location.href = `/notes?userId=${user.id}`}
-                  className="p-1.5 sm-down:p-1 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
-                  title="Xem ghi chú"
-                >
-                  <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </button>
+                {hasPermission('manage_users.view') && (
+                  <button
+                    onClick={() => window.location.href = `/users/${user.id}/activity`}
+                    className="p-1.5 sm-down:p-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+                    title="Xem hoạt động"
+                  >
+                    <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </button>
+                )}
+                {hasPermission('manage_notes') && (
+                  <button
+                    onClick={() => window.location.href = `/notes?userId=${user.id}`}
+                    className="p-1.5 sm-down:p-1 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
+                    title="Xem ghi chú"
+                  >
+                    <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </button>
+                )}
                 {user.role !== 'admin' && (
                   <>
-                    <button
-                      onClick={() => onToggleStatus(user)}
-                      className={`p-1.5 sm-down:p-1 rounded transition-colors ${
-                        user.isActive 
-                          ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
-                          : 'text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
-                      }`}
-                      title={user.isActive ? t('action.disableAccount') : t('action.enableAccount')}
-                    >
-                      {user.isActive ? (
+                    {hasPermission('manage_users.activate') && (
+                      <button
+                        onClick={() => onToggleStatus(user)}
+                        className={`p-1.5 sm-down:p-1 rounded transition-colors ${
+                          user.isActive 
+                            ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
+                            : 'text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
+                        }`}
+                        title={user.isActive ? t('action.disableAccount') : t('action.enableAccount')}
+                      >
+                        {user.isActive ? (
+                          <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        )}
+                      </button>
+                    )}
+                    {hasPermission('manage_users.delete_permanently') && (
+                      <button
+                        onClick={() => onDeletePermanently(user)}
+                        className="p-1.5 sm-down:p-1 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                        title="Xóa vĩnh viễn - Không thể hoàn tác!"
+                      >
                         <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                      ) : (
-                        <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => onDeletePermanently(user)}
-                      className="p-1.5 sm-down:p-1 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
-                      title="Xóa vĩnh viễn - Không thể hoàn tác!"
-                    >
-                      <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                      </button>
+                    )}
                   </>
                 )}
               </div>

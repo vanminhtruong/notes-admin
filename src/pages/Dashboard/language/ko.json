@@ -1,24 +1,22 @@
 {
-  "dashboard": {
-    "title": "대시보드",
-    "subtitle": "관리자 제어판 개요",
-    "welcome": "관리자 패널에 오신 것을 환영합니다",
-    "cards": {
-      "totalUsers": "총 사용자 수",
-      "activeUsers": "활성 사용자",
-      "totalNotes": "총 메모 수",
-      "todayActivity": "오늘의 활동"
-    },
-    "actions": {
-      "title": "빠른 작업",
-      "users": { "title": "사용자 관리", "desc": "계정 보기 및 관리" },
-      "notes": { "title": "메모 관리", "desc": "사용자 메모 CRUD" },
-      "activity": { "title": "사용자 활동", "desc": "메시지와 그룹 추적" },
-      "createNote": { "title": "메모 생성", "desc": "사용자에게 메모 생성" }
-    },
-    "recent": {
-      "title": "최근 활동",
-      "empty": "최근 활동이 없습니다"
-    }
+  "title": "대시보드",
+  "subtitle": "관리자 제어판 개요",
+  "welcome": "관리자 패널에 오신 것을 환영합니다",
+  "cards": {
+    "totalUsers": "총 사용자 수",
+    "activeUsers": "활성 사용자",
+    "totalNotes": "총 메모 수",
+    "todayActivity": "오늘의 활동"
+  },
+  "actions": {
+    "title": "빠른 작업",
+    "users": { "title": "사용자 관리", "desc": "계정 보기 및 관리" },
+    "notes": { "title": "메모 관리", "desc": "사용자 메모 CRUD" },
+    "activity": { "title": "사용자 활동", "desc": "메시지와 그룹 추적" },
+    "createNote": { "title": "메모 생성", "desc": "사용자에게 메모 생성" }
+  },
+  "recent": {
+    "title": "최근 활동",
+    "empty": "최근 활동이 없습니다"
   }
 }

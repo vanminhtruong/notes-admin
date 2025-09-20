@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import type { User, ConfirmState, UsersListFilters } from '../interfaces';
+import { hasPermission } from '@utils/auth';
 
 export const useUsersList = () => {
   const { t } = useTranslation('users');
@@ -105,6 +106,10 @@ export const useUsersList = () => {
   };
 
   const handleDeletePermanently = async (user: User) => {
+    if (!hasPermission('manage_users.delete_permanently')) {
+      toast.error(t('alerts.noPermission') || 'Bạn không có quyền thực hiện hành động này');
+      return;
+    }
     if (user.role === 'admin') {
       toast.error(t('alerts.cannotDeleteAdmin'));
       return;
