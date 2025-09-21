@@ -69,6 +69,10 @@
         "label": "Xem thông tin người dùng",
         "description": "Xem danh sách và thông tin chi tiết người dùng"
       },
+      "view_detail": {
+        "label": "Xem chi tiết người dùng",
+        "description": "Cho phép mở modal chi tiết người dùng trong danh sách Users"
+      },
       "activate": {
         "label": "Kích hoạt/Vô hiệu hóa",
         "description": "Kích hoạt hoặc vô hiệu hóa tài khoản người dùng"
@@ -86,11 +90,27 @@
         "description": "Truy cập trang User Activity để xem hoạt động chi tiết",
         "messages": {
           "label": "Tab tin nhắn",
-          "description": "Xem và quản lý tin nhắn của người dùng"
+          "description": "Xem và quản lý tin nhắn của người dùng",
+          "recall": {
+            "label": "Thu hồi tin nhắn (DM)",
+            "description": "Cho phép thu hồi tin nhắn 1-1 theo thời gian thực"
+          },
+          "delete": {
+            "label": "Xóa tin nhắn (DM)",
+            "description": "Cho phép xóa tin nhắn 1-1 theo thời gian thực (xóa một phía hoặc cả hai)"
+          }
         },
         "groups": {
           "label": "Tab nhóm",
-          "description": "Xem và quản lý nhóm mà người dùng tham gia"
+          "description": "Xem và quản lý nhóm mà người dùng tham gia",
+          "recall": {
+            "label": "Thu hồi tin nhắn nhóm",
+            "description": "Cho phép thu hồi tin nhắn trong nhóm theo thời gian thực"
+          },
+          "delete": {
+            "label": "Xóa tin nhắn nhóm",
+            "description": "Cho phép xóa tin nhắn trong nhóm theo thời gian thực"
+          }
         },
         "friends": {
           "label": "Tab bạn bè",

@@ -6,27 +6,23 @@ import type { User } from '../interfaces';
 interface UsersTableProps {
   users: User[];
   loading: boolean;
-  totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
   onToggleStatus: (user: User) => void;
   onDeletePermanently: (user: User) => void;
   formatDate: (date: string) => string;
   getStatusBadge: (isActive: boolean) => React.ReactNode;
   getRoleBadge: (role: string) => React.ReactNode;
+  onRowClick?: (user: User) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
   users,
   loading,
-  totalPages,
-  currentPage,
-  onPageChange,
   onToggleStatus,
   onDeletePermanently,
   formatDate,
   getStatusBadge,
-  getRoleBadge
+  getRoleBadge,
+  onRowClick
 }) => {
   const { t } = useTranslation('users');
 
@@ -70,7 +66,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
           </thead>
           <tbody className="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-neutral-700">
             {users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800">
+              <tr
+                key={user.id}
+                className={`hover:bg-gray-50 dark:hover:bg-neutral-800 ${onRowClick ? 'cursor-pointer' : ''}`}
+                onClick={() => onRowClick?.(user)}
+              >
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10 xl-down:h-8 xl-down:w-8">
@@ -131,7 +131,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   <div className="flex items-center gap-2 xl-down:gap-1">
                     {hasPermission('manage_users.view') && (
                       <button
-                        onClick={() => window.location.href = `/users/${user.id}/activity`}
+                        onClick={(e) => { e.stopPropagation(); window.location.href = `/users/${user.id}/activity`; }}
                         className="p-2 xl-down:p-1.5 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors"
                         title="Xem hoạt động"
                       >
@@ -143,7 +143,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     )}
                     {hasPermission('manage_notes') && (
                       <button
-                        onClick={() => window.location.href = `/notes?userId=${user.id}`}
+                        onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
                         className="p-2 xl-down:p-1.5 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
                         title="Xem ghi chú"
                       >
@@ -156,7 +156,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                       <>
                         {hasPermission('manage_users.activate') && (
                           <button
-                            onClick={() => onToggleStatus(user)}
+                            onClick={(e) => { e.stopPropagation(); onToggleStatus(user); }}
                             className={`p-2 xl-down:p-1.5 rounded-md transition-colors ${
                               user.isActive 
                                 ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
@@ -177,7 +177,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         )}
                         {hasPermission('manage_users.delete_permanently') && (
                           <button
-                            onClick={() => onDeletePermanently(user)}
+                            onClick={(e) => { e.stopPropagation(); onDeletePermanently(user); }}
                             className="p-2 xl-down:p-1.5 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
                             title="Xóa vĩnh viễn - Không thể hoàn tác!"
                           >
@@ -199,7 +199,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
       {/* Mobile Card View */}
       <div className="hidden lg-down:block space-y-3 sm-down:space-y-2">
         {users.map((user) => (
-          <div key={user.id} className="bg-white dark:bg-neutral-900 rounded-lg sm-down:rounded-md border border-gray-200 dark:border-neutral-700 p-4 sm-down:p-3">
+          <div
+            key={user.id}
+            className={`bg-white dark:bg-neutral-900 rounded-lg sm-down:rounded-md border border-gray-200 dark:border-neutral-700 p-4 sm-down:p-3 ${onRowClick ? 'cursor-pointer' : ''}`}
+            onClick={() => onRowClick?.(user)}
+          >
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-3 sm-down:space-x-2 flex-1 min-w-0">
                 <div className="flex-shrink-0">
@@ -239,7 +243,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
               <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                 {hasPermission('manage_users.view') && (
                   <button
-                    onClick={() => window.location.href = `/users/${user.id}/activity`}
+                    onClick={(e) => { e.stopPropagation(); window.location.href = `/users/${user.id}/activity`; }}
                     className="p-1.5 sm-down:p-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
                     title="Xem hoạt động"
                   >
@@ -251,7 +255,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 )}
                 {hasPermission('manage_notes') && (
                   <button
-                    onClick={() => window.location.href = `/notes?userId=${user.id}`}
+                    onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
                     className="p-1.5 sm-down:p-1 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
                     title="Xem ghi chú"
                   >
@@ -264,7 +268,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   <>
                     {hasPermission('manage_users.activate') && (
                       <button
-                        onClick={() => onToggleStatus(user)}
+                        onClick={(e) => { e.stopPropagation(); onToggleStatus(user); }}
                         className={`p-1.5 sm-down:p-1 rounded transition-colors ${
                           user.isActive 
                             ? 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
@@ -285,7 +289,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     )}
                     {hasPermission('manage_users.delete_permanently') && (
                       <button
-                        onClick={() => onDeletePermanently(user)}
+                        onClick={(e) => { e.stopPropagation(); onDeletePermanently(user); }}
                         className="p-1.5 sm-down:p-1 text-red-700 hover:text-red-900 dark:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                         title="Xóa vĩnh viễn - Không thể hoàn tác!"
                       >
@@ -302,32 +306,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
         ))}
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="bg-white dark:bg-neutral-900 px-4 py-3 xl-down:px-3 sm-down:px-2 border-t border-gray-200 dark:border-neutral-700 sm:px-6">
-          <div className="flex justify-between items-center sm-down:flex-col sm-down:space-y-2">
-            <div className="text-sm xl-down:text-xs text-gray-700 dark:text-gray-300">
-              {t('pagination.title', { currentPage, totalPages })}
-            </div>
-            <div className="flex space-x-2 sm-down:space-x-1">
-              <button
-                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 sm-down:px-2 sm-down:py-0.5 text-sm xl-down:text-xs border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 rounded hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {t('pagination.prev', { defaultValue: 'Trước' })}
-              </button>
-              <button
-                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 sm-down:px-2 sm-down:py-0.5 text-sm xl-down:text-xs border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 rounded hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {t('pagination.next', { defaultValue: 'Sau' })}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Pagination được render ở UsersList */}
     </>
   );
 };

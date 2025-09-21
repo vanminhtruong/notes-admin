@@ -13,9 +13,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const AdminLayout: React.FC = () => {
   const { t, i18n } = useTranslation('common');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Mặc định: Desktop (>=1280px) mở, Mobile (<1280px) đóng
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => (typeof window !== 'undefined' ? window.innerWidth > 1279 : true));
   const navigate = useNavigate();
   const location = useLocation();
+  // Trạng thái mở/đóng cho menu cha có submenu
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   
   // Theme state
   const mode = useAppSelector((s: RootState) => s.theme.mode);
@@ -160,7 +163,7 @@ const AdminLayout: React.FC = () => {
     },
     ...(isSuper ? [{
       id: 'admins',
-      label: 'Quản lý Admin',
+      label: t('navigation.admins'),
       icon: '👨‍💼',
       path: '/admins',
       permission: 'manage_admins',
@@ -170,6 +173,18 @@ const AdminLayout: React.FC = () => {
   const isActiveRoute = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
+
+  // Khởi tạo/đồng bộ openMenus theo route hiện tại để tự động mở menu cha đang active
+  useEffect(() => {
+    const next: Record<string, boolean> = {};
+    for (const item of menuItems) {
+      if ((item as any).submenu) {
+        next[item.id] = isActiveRoute(item.path);
+      }
+    }
+    setOpenMenus((prev) => ({ ...prev, ...next }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Maintain admin socket connection based on token
   useEffect(() => {
@@ -233,15 +248,20 @@ const AdminLayout: React.FC = () => {
                 <li key={item.id}>
                   <button
                     onClick={() => {
-                      navigate(item.path);
-                      // Auto-close sidebar on mobile after navigation
-                      if (window.innerWidth <= 1279) {
-                        setSidebarOpen(false);
+                      if (item.submenu && sidebarOpen) {
+                        // Toggle accordion cho menu có submenu khi sidebar đang mở
+                        setOpenMenus((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
+                      } else {
+                        // Điều hướng bình thường cho menu không có submenu hoặc khi sidebar đóng (icon-only)
+                        navigate(item.path);
+                        if (window.innerWidth <= 1279) {
+                          setSidebarOpen(false);
+                        }
                       }
                     }}
                     className={`w-full transition-colors ${
                       sidebarOpen
-                        ? 'flex items-center px-3 py-2 xl-down:px-2 sm-down:px-2 sm-down:py-1.5 rounded-lg'
+                        ? 'flex items-center justify-between px-3 py-2 xl-down:px-2 sm-down:px-2 sm-down:py-1.5 rounded-lg'
                         : 'xl:flex hidden items-center justify-center py-3 xl-down:py-2'
                     } text-left ${
                       isActiveRoute(item.path)
@@ -253,8 +273,15 @@ const AdminLayout: React.FC = () => {
                   >
                     {sidebarOpen ? (
                       <>
-                        <span className="text-xl xl-down:text-lg sm-down:text-base mr-3 xl-down:mr-2 flex-shrink-0">{item.icon}</span>
-                        <span className="font-medium xl-down:text-sm sm-down:text-xs truncate">{item.label}</span>
+                        <div className="flex items-center min-w-0">
+                          <span className="text-xl xl-down:text-lg sm-down:text-base mr-3 xl-down:mr-2 flex-shrink-0">{item.icon}</span>
+                          <span className="font-medium xl-down:text-sm sm-down:text-xs truncate">{item.label}</span>
+                        </div>
+                        {item.submenu && (
+                          <svg className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${openMenus[item.id] ? 'rotate-90' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01-.02-1.06L10.94 10 7.19 6.29a.75.75 0 111.06-1.06l4.24 4.24a.75.75 0 010 1.06l-4.24 4.24a.75.75 0 01-1.04 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
                       </>
                     ) : (
                       <span
@@ -270,7 +297,7 @@ const AdminLayout: React.FC = () => {
                   </button>
 
                   {/* Submenu */}
-                  {item.submenu && sidebarOpen && isActiveRoute(item.path) && (
+                  {item.submenu && sidebarOpen && openMenus[item.id] && (
                     <ul className="ml-8 xl-down:ml-6 sm-down:ml-4 mt-2 space-y-1">
                       {item.submenu.map((subItem) => (
                         <li key={subItem.id}>

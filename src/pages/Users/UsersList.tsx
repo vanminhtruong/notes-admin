@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
+import Pagination from '@components/common/Pagination';
 
 import { useUsersList } from './hooks/useUsersList';
 import UsersTable from './components/UsersTable';
 import ConfirmDialog from './components/ConfirmDialog';
+import UserDetailModal from './components/UserDetailModal';
+import type { User } from './interfaces';
 
 const UsersList: React.FC = () => {
   const { t } = useTranslation('users');
@@ -13,6 +16,7 @@ const UsersList: React.FC = () => {
     users,
     loading,
     totalPages,
+    totalItems,
     filters,
     confirmState,
     updateFilters,
@@ -23,6 +27,12 @@ const UsersList: React.FC = () => {
     setConfirmState
   } = useUsersList();
 
+  // Modal chi tiết user (hoist state)
+  const [openDetail, setOpenDetail] = useState(false);
+  const [detailUser, setDetailUser] = useState<User | null>(null);
+  const openUserModal = (user: User) => { setDetailUser(user); setOpenDetail(true); };
+  const canViewDetail = hasPermission('manage_users.view_detail');
+  const closeUserModal = () => { setOpenDetail(false); setDetailUser(null); };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -33,6 +43,14 @@ const UsersList: React.FC = () => {
       minute: '2-digit'
     });
   };
+
+  // Đóng modal khi thay đổi phân trang/bộ lọc để tránh flicker
+  useEffect(() => {
+    if (openDetail) {
+      setOpenDetail(false);
+      setDetailUser(null);
+    }
+  }, [filters.currentPage, filters.searchTerm, filters.roleFilter, filters.activeFilter]);
 
   const getStatusBadge = (isActive: boolean) => {
     return isActive ? (
@@ -130,16 +148,31 @@ const UsersList: React.FC = () => {
         <UsersTable
           users={users}
           loading={loading}
-          totalPages={totalPages}
-          currentPage={filters.currentPage}
-          onPageChange={(page: number) => updateFilters({ currentPage: page })}
           onToggleStatus={handleToggleStatus}
           onDeletePermanently={handleDeletePermanently}
           formatDate={formatDate}
           getStatusBadge={getStatusBadge}
           getRoleBadge={getRoleBadge}
+          onRowClick={canViewDetail ? openUserModal : undefined}
         />
       </div>
+      {/* User Detail Modal (render tại UsersList để bền vững khi loading/pagination) */}
+      <UserDetailModal
+        open={openDetail}
+        user={detailUser}
+        onClose={closeUserModal}
+        formatDate={formatDate}
+        getStatusBadge={getStatusBadge}
+        getRoleBadge={getRoleBadge}
+      />
+      {/* Pagination (common) - đặt ngoài thẻ card để đảm bảo không bị ẩn bởi overflow */}
+      <Pagination
+        currentPage={filters.currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        itemsPerPage={5}
+        onPageChange={(page) => updateFilters({ currentPage: page })}
+      />
       {/* Confirm Dialog */}
       <ConfirmDialog state={confirmState} onClose={closeConfirm} setState={setConfirmState} />
     </div>

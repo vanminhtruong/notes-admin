@@ -21,7 +21,12 @@
     "messages": {
       "noMessages": "Chưa có tin nhắn",
       "sentTo": "Đã gửi đến",
-      "receivedFrom": "Nhận từ"
+      "receivedFrom": "Nhận từ",
+      "actions": {
+        "menu": "Menu",
+        "recall": "Thu hồi tin nhắn",
+        "delete": "Xóa tin nhắn"
+      }
     },
     "groups": {
       "noGroups": "Chưa tham gia nhóm nào",
@@ -31,6 +36,45 @@
     "friends": {
       "noFriends": "Chưa có bạn bè",
       "activity": "Hoạt động"
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "Tin nhắn riêng",
+        "groups": "Nhóm"
+      },
+      "friendsList": "Danh sách bạn bè",
+      "groupsList": "Danh sách nhóm",
+      "selectFriendToView": "Chọn bạn bè để xem tin nhắn",
+      "selectGroupToView": "Chọn nhóm để xem tin nhắn",
+      "chatWith": "Chat với {{name}}",
+      "groupChat": "Chat nhóm",
+      "noMessages": "Chưa có tin nhắn",
+      "actions": {
+        "viewMembers": "Xem thành viên",
+        "close": "Đóng"
+      },
+      "members": {
+        "title": "Thành viên",
+        "empty": "Không có thành viên",
+        "id": "ID",
+        "roles": {
+          "owner": "Chủ nhóm",
+          "admin": "Quản trị viên",
+          "member": "Thành viên"
+        }
+      }
+    },
+    "typing": {
+      "typingWith": "Đang nhắn tin với {{name}}",
+      "typingInGroup": "Có người đang nhắn tin trong nhóm"
     }
+  },
+  "messageActions": {
+    "recallSuccess": "Đã thu hồi tin nhắn thành công",
+    "deleteSuccess": "Đã xóa tin nhắn thành công",
+    "recallError": "Không thể thu hồi tin nhắn",
+    "deleteError": "Không thể xóa tin nhắn",
+    "confirmRecall": "Bạn có chắc chắn muốn thu hồi tin nhắn này?",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa tin nhắn này?"
   }
 }

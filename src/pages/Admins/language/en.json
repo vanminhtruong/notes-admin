@@ -69,6 +69,10 @@
         "label": "View User Info",
         "description": "View user list and detailed information"
       },
+      "view_detail": {
+        "label": "View User Detail",
+        "description": "Allow opening user detail modal in Users list"
+      },
       "activate": {
         "label": "Activate/Deactivate",
         "description": "Activate or deactivate user accounts"
@@ -86,11 +90,27 @@
         "description": "Access User Activity page to view detailed user activities",
         "messages": {
           "label": "Messages Tab",
-          "description": "View and manage user's messages"
+          "description": "View and manage user's messages",
+          "recall": {
+            "label": "Recall messages (DM)",
+            "description": "Allow recalling 1-1 messages in real time"
+          },
+          "delete": {
+            "label": "Delete messages (DM)",
+            "description": "Allow deleting 1-1 messages in real time (delete for one side or both)"
+          }
         },
         "groups": {
           "label": "Groups Tab",
-          "description": "View and manage groups that user participates in"
+          "description": "View and manage groups that user participates in",
+          "recall": {
+            "label": "Recall group messages",
+            "description": "Allow recalling messages in group chats in real time"
+          },
+          "delete": {
+            "label": "Delete group messages",
+            "description": "Allow deleting messages in group chats in real time"
+          }
         },
         "friends": {
           "label": "Friends Tab",

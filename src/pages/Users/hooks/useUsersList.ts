@@ -11,6 +11,7 @@ export const useUsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState<number | undefined>(undefined);
   
   // Filters state
   const [filters, setFilters] = useState<UsersListFilters>({
@@ -44,7 +45,7 @@ export const useUsersList = () => {
       setLoading(true);
       const response = await adminService.getAllUsers({
         page: filters.currentPage,
-        limit: 20,
+        limit: 5,
         search: filters.searchTerm || undefined,
         role: filters.roleFilter || undefined,
         isActive: filters.activeFilter ? filters.activeFilter === 'true' : undefined,
@@ -52,8 +53,44 @@ export const useUsersList = () => {
         sortOrder: 'DESC'
       });
 
-      setUsers(response.users || []);
-      setTotalPages(response.pagination?.totalPages || 1);
+      const rawList: User[] = response.users || [];
+      const apiTotal = response?.pagination?.total;
+      const apiTotalPages = response?.pagination?.totalPages;
+
+      // Trường hợp backend có phân trang chuẩn
+      if (typeof apiTotal === 'number' || typeof apiTotalPages === 'number') {
+        setUsers(rawList);
+        const total = typeof apiTotal === 'number' ? apiTotal : undefined;
+        let computedTotalPages = typeof apiTotalPages === 'number' ? apiTotalPages : (typeof total === 'number' ? Math.ceil(total / 5) : 1);
+        // Nếu API trả totalPages không hợp lệ (<= currentPage) nhưng list có đủ 5 item, suy ra còn trang tiếp theo
+        if ((computedTotalPages <= filters.currentPage) && rawList.length === 5) {
+          computedTotalPages = filters.currentPage + 1;
+        }
+        setTotalPages(computedTotalPages || 1);
+        setTotalItems(total);
+      } else {
+        // Fallback khi backend không trả pagination/limit
+        if (rawList.length > 5) {
+          // Backend trả full danh sách: phân trang client-side đầy đủ
+          const total = rawList.length;
+          const start = (filters.currentPage - 1) * 5;
+          const end = start + 5;
+          const paged = rawList.slice(start, end);
+          setUsers(paged);
+          setTotalPages(Math.max(1, Math.ceil(total / 5)));
+          setTotalItems(total);
+        } else if (rawList.length === 5) {
+          // Backend chỉ trả đúng 5 item mà không có total => giả định còn trang tiếp theo để hiển thị nút chuyển trang
+          setUsers(rawList);
+          setTotalPages(filters.currentPage + 1);
+          setTotalItems(undefined);
+        } else {
+          // Ít hơn 5 => có thể là trang cuối
+          setUsers(rawList);
+          setTotalPages(Math.max(1, filters.currentPage));
+          setTotalItems(rawList.length);
+        }
+      }
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {
@@ -180,6 +217,7 @@ export const useUsersList = () => {
     users,
     loading,
     totalPages,
+    totalItems,
     filters,
     confirmState,
     updateFilters,

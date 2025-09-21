@@ -18,17 +18,23 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
     if (!socket) return;
 
     // Admin được tạo mới
-    const handleAdminCreated = (_data: any) => {
-      toast.success(t('messages.createSuccess'));
+    const handleAdminCreated = (data: any) => {
+      // Tránh double toast: nếu do chính current admin tạo thì bỏ toast ở socket
+      if (data?.createdBy !== currentAdminId) {
+        toast.success(t('messages.createSuccess'));
+      }
       onAdminListChange?.();
     };
 
     // Quyền admin được cập nhật
     const handleAdminPermissionsUpdated = (data: any) => {
-      toast.success(t('messages.updateSuccess'));
+      // Tránh double toast: nếu do chính current admin cập nhật thì bỏ toast success chung
+      if (data?.updatedBy !== currentAdminId) {
+        toast.success(t('messages.updateSuccess'));
+      }
       onAdminListChange?.();
       
-      // Nếu là admin hiện tại bị cập nhật quyền
+      // Nếu là admin hiện tại bị cập nhật quyền vẫn thông báo riêng
       if (data.admin?.id === currentAdminId) {
         toast.info(`Quyền của bạn đã được cập nhật`);
       }
@@ -48,7 +54,10 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
 
     // Trạng thái admin thay đổi
     const handleAdminStatusChanged = (data: any) => {
-      toast.success(t('messages.toggleStatusSuccess'));
+      // Tránh double toast nếu do chính current admin thực hiện
+      if (data?.changedBy !== currentAdminId) {
+        toast.success(t('messages.toggleStatusSuccess'));
+      }
       onAdminListChange?.();
       
       // Nếu là admin hiện tại bị thay đổi trạng thái
@@ -68,8 +77,11 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
     };
 
     // Admin bị xóa
-    const handleAdminRemoved = (_data: any) => {
-      toast.success(t('messages.deleteSuccess'));
+    const handleAdminRemoved = (data: any) => {
+      // Tránh double toast nếu do chính current admin thực hiện
+      if (data?.removedBy !== currentAdminId) {
+        toast.success(t('messages.deleteSuccess'));
+      }
       onAdminListChange?.();
     };
 

@@ -18,6 +18,7 @@
     "dashboard": "Dashboard",
     "users": "User Management",
     "notes": "Notes Management",
+    "admins": "Admin Management",
     "login": "Login",
     "usersList": "User List",
     "usersActivity": "User Activity",

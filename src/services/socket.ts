@@ -45,6 +45,8 @@ export function getAdminSocket(): Socket {
     'admin_user_online', 'admin_user_offline', 'admin_user_typing', 'admin_group_typing', 'admin_group_message_created',
     'note_created_by_admin', 'note_updated_by_admin', 'note_deleted_by_admin',
     'user_note_created', 'user_note_updated', 'user_note_deleted', 'user_note_archived',
+    // Admin message management events
+    'message_recalled_by_admin', 'message_deleted_by_admin', 'group_message_recalled_by_admin', 'group_message_deleted_by_admin',
     // Admin permissions management events
     'admin_created', 'admin_permissions_updated', 'admin_permission_revoked', 
     'admin_status_changed', 'admin_removed', 'permissions_changed', 'permission_revoked',

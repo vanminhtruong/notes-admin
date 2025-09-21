@@ -35,6 +35,10 @@
     "cancel": "취소",
     "confirm": "확인"
   },
+  "detail": {
+    "title": "사용자 상세 정보",
+    "close": "닫기"
+  },
   "action": {
     "enable": "활성화",
     "disable": "비활성화",

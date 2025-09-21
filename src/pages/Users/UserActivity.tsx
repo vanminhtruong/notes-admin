@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { getVisibleUserActivityTabs } from '@utils/auth';
+import adminService from '@services/adminService';
+import { getAdminSocket } from '@services/socket';
 
 import { useUserActivity } from './hooks/useUserActivity';
 import { useNotifications } from './hooks/useNotifications';
@@ -33,6 +36,7 @@ const UserActivity: React.FC = () => {
     selectedUserId,
     setSelectedUserId,
     typingInfo,
+    loadUserActivity,
     formatDate
   } = useUserActivity();
   
@@ -59,6 +63,112 @@ const UserActivity: React.FC = () => {
     setOpenGroupMenuId,
     updateMonitorState
   } = useMonitor(selectedUserId);
+
+  // Confirmation toast helper
+  const showConfirmationToast = (message: string, onConfirm: () => void) => {
+    const confirmAction = () => {
+      toast.dismiss();
+      onConfirm();
+    };
+
+    const cancelAction = () => {
+      toast.dismiss();
+    };
+
+    toast.info(
+      <div className="flex flex-col space-y-3">
+        <div className="text-sm text-gray-800 dark:text-gray-200">
+          {message}
+        </div>
+        <div className="flex space-x-2 justify-end">
+          <button
+            onClick={cancelAction}
+            className="px-3 py-1.5 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+          >
+            {t('common:cancel')}
+          </button>
+          <button
+            onClick={confirmAction}
+            className="px-3 py-1.5 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            {t('common:confirm')}
+          </button>
+        </div>
+      </div>,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+        hideProgressBar: true,
+      }
+    );
+  };
+
+  // Message action handlers
+  const handleRecallMessage = async (messageId: number, isGroup?: boolean) => {
+    console.log('🔄 Admin RECALL message:', messageId, 'isGroup:', isGroup);
+    showConfirmationToast(
+      t('messageActions.confirmRecall'),
+      async () => {
+        try {
+          if (isGroup) {
+            console.log('🔄 Calling recallGroupMessage API');
+            await adminService.recallGroupMessage(messageId);
+          } else {
+            console.log('🔄 Calling recallDMMessage API');
+            await adminService.recallDMMessage(messageId);
+          }
+          toast.success(t('messageActions.recallSuccess'));
+          // Reload all activity data to sync between tabs
+          if (selectedUserId) {
+            loadUserActivity(selectedUserId);
+          }
+          // Also reload current monitor data if any
+          if (isGroup && monitorState.selectedGroupId) {
+            loadGroup(monitorState.selectedGroupId);
+          } else if (monitorState.selectedFriendId) {
+            loadDm(monitorState.selectedFriendId);
+          }
+        } catch (error: any) {
+          console.error('Error recalling message:', error);
+          toast.error(error.message || t('messageActions.recallError'));
+        }
+      }
+    );
+  };
+
+  const handleDeleteMessage = async (messageId: number, isGroup?: boolean) => {
+    console.log('🗑️ Admin DELETE message:', messageId, 'isGroup:', isGroup);
+    showConfirmationToast(
+      t('messageActions.confirmDelete'),
+      async () => {
+        try {
+          if (isGroup) {
+            console.log('🗑️ Calling deleteGroupMessage API');
+            await adminService.deleteGroupMessage(messageId);
+          } else {
+            console.log('🗑️ Calling deleteDMMessage API with targetUserId:', selectedUserId);
+            await adminService.deleteDMMessage(messageId, Number(selectedUserId));
+          }
+          toast.success(t('messageActions.deleteSuccess'));
+          // Reload all activity data to sync between tabs
+          if (selectedUserId) {
+            loadUserActivity(selectedUserId);
+          }
+          // Also reload current monitor data if any
+          if (isGroup && monitorState.selectedGroupId) {
+            loadGroup(monitorState.selectedGroupId);
+          } else if (monitorState.selectedFriendId) {
+            loadDm(monitorState.selectedFriendId);
+          }
+        } catch (error: any) {
+          console.error('Error deleting message:', error);
+          toast.error(error.message || t('messageActions.deleteError'));
+        }
+      }
+    );
+  };
   
   // Không cần destructure monitorState nữa vì đã được truyền trực tiếp vào MonitorTab component
 
@@ -68,6 +178,52 @@ const UserActivity: React.FC = () => {
       setSelectedUserId(parseInt(userId));
     }
   }, [userId, setSelectedUserId]);
+
+  // Setup socket listeners for real-time message updates
+  useEffect(() => {
+    const socket = getAdminSocket();
+
+    // Listen for message recalled by admin
+    const handleMessageRecalled = () => {
+      // Reload current chat to show recalled message
+      if (monitorState.selectedFriendId) {
+        loadDm(monitorState.selectedFriendId);
+      }
+    };
+
+    const handleMessageDeleted = () => {
+      // Reload current chat to remove deleted message
+      if (monitorState.selectedFriendId) {
+        loadDm(monitorState.selectedFriendId);
+      }
+    };
+
+    const handleGroupMessageRecalled = () => {
+      // Reload current group chat to show recalled message
+      if (monitorState.selectedGroupId) {
+        loadGroup(monitorState.selectedGroupId);
+      }
+    };
+
+    const handleGroupMessageDeleted = () => {
+      // Reload current group chat to remove deleted message
+      if (monitorState.selectedGroupId) {
+        loadGroup(monitorState.selectedGroupId);
+      }
+    };
+
+    socket.on('message_recalled_by_admin', handleMessageRecalled);
+    socket.on('message_deleted_by_admin', handleMessageDeleted);
+    socket.on('group_message_recalled_by_admin', handleGroupMessageRecalled);
+    socket.on('group_message_deleted_by_admin', handleGroupMessageDeleted);
+
+    return () => {
+      socket.off('message_recalled_by_admin', handleMessageRecalled);
+      socket.off('message_deleted_by_admin', handleMessageDeleted);
+      socket.off('group_message_recalled_by_admin', handleGroupMessageRecalled);
+      socket.off('group_message_deleted_by_admin', handleGroupMessageDeleted);
+    };
+  }, [monitorState.selectedFriendId, monitorState.selectedGroupId, loadDm, loadGroup]);
 
   // Ensure active tab is always visible to current user
   useEffect(() => {
@@ -159,7 +315,13 @@ const UserActivity: React.FC = () => {
 
                 <div className="p-6 xl-down:p-4 md-down:p-3 sm-down:p-2">
                   {activeTab === 'messages' && visibleTabs.some(tab => tab.key === 'messages') && (
-                    <MessagesTab activityData={activityData} typingInfo={typingInfo} formatDate={formatDate} />
+                    <MessagesTab 
+                      activityData={activityData} 
+                      typingInfo={typingInfo} 
+                      formatDate={formatDate}
+                      onRecallMessage={(messageId) => handleRecallMessage(messageId, false)}
+                      onDeleteMessage={(messageId) => handleDeleteMessage(messageId, false)}
+                    />
                   )}
                   {activeTab === 'groups' && visibleTabs.some(tab => tab.key === 'groups') && (
                     <GroupsTab activityData={activityData} formatDate={formatDate} />
@@ -191,6 +353,8 @@ const UserActivity: React.FC = () => {
                       closeGroupMembersModal={closeGroupMembersModal}
                       setOpenGroupMenuId={setOpenGroupMenuId}
                       updateMonitorState={updateMonitorState}
+                      onRecallMessage={handleRecallMessage}
+                      onDeleteMessage={handleDeleteMessage}
                     />
                   )}
                 </div>

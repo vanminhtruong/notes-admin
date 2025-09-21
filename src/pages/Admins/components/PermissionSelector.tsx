@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NESTED_PERMISSIONS, type NestedPermission } from '../interfaces/admin.types';
 
@@ -17,6 +17,16 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
 }) => {
   const { t } = useTranslation('admins');
   const [expandedPermissions, setExpandedPermissions] = useState<Set<string>>(new Set());
+
+  // Auto-expand important branches so granular permissions are visible by default
+  useEffect(() => {
+    const defaults = [
+      'manage_users.activity',
+      'manage_users.activity.messages',
+      'manage_users.activity.groups'
+    ];
+    setExpandedPermissions(prev => new Set([...prev, ...defaults]));
+  }, []);
 
   const handlePermissionChange = (permission: string, checked: boolean) => {
     let newPermissions = [...selectedPermissions];

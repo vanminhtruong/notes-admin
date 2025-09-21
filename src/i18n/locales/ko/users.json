@@ -21,7 +21,12 @@
     "messages": {
       "noMessages": "아직 메시지가 없습니다",
       "sentTo": "에게 보냄",
-      "receivedFrom": "로부터 받음"
+      "receivedFrom": "로부터 받음",
+      "actions": {
+        "menu": "메뉴",
+        "recall": "메시지 회수",
+        "delete": "메시지 삭제"
+      }
     },
     "groups": {
       "noGroups": "그룹이 없습니다",
@@ -31,6 +36,45 @@
     "friends": {
       "noFriends": "친구가 없습니다",
       "activity": "마지막 접속"
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "개인 메시지",
+        "groups": "그룹"
+      },
+      "friendsList": "친구 목록",
+      "groupsList": "그룹 목록",
+      "selectFriendToView": "메시지를 보려면 친구를 선택하세요",
+      "selectGroupToView": "메시지를 보려면 그룹을 선택하세요",
+      "chatWith": "{{name}}와 채팅",
+      "groupChat": "그룹 채팅",
+      "noMessages": "메시지가 없습니다",
+      "actions": {
+        "viewMembers": "멤버 보기",
+        "close": "닫기"
+      },
+      "members": {
+        "title": "멤버",
+        "empty": "멤버가 없습니다",
+        "id": "ID",
+        "roles": {
+          "owner": "소유자",
+          "admin": "관리자",
+          "member": "멤버"
+        }
+      }
+    },
+    "typing": {
+      "typingWith": "{{name}}와 입력 중",
+      "typingInGroup": "그룹에서 누군가 입력 중"
     }
+  },
+  "messageActions": {
+    "recallSuccess": "메시지가 성공적으로 회수되었습니다",
+    "deleteSuccess": "메시지가 성공적으로 삭제되었습니다",
+    "recallError": "메시지를 회수할 수 없습니다",
+    "deleteError": "메시지를 삭제할 수 없습니다",
+    "confirmRecall": "이 메시지를 회수하시겠습니까?",
+    "confirmDelete": "이 메시지를 삭제하시겠습니까?"
   }
 }

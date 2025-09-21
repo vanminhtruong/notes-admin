@@ -124,20 +124,37 @@ export const useUserActivity = () => {
     const onDmCreated = (p: any) => { if (shouldReloadDM(p)) reload(); };
     const onDmEdited = (p: any) => { if (shouldReloadDM(p)) reload(); };
     const onDmRecalledAll = (p: any) => { if (shouldReloadDM(p)) reload(); };
+    const onDmDeletedAll = (p: any) => { if (shouldReloadDM(p)) reload(); };
     const onDmDeletedForUser = (p: any) => { if (shouldReloadDM(p)) reload(); };
     const onGroupCreated = (p: any) => { if (shouldReloadGroup(p)) reload(); };
     const onGroupEdited = (p: any) => { if (shouldReloadGroup(p)) reload(); };
     const onUserOnline = (p: any) => { if (shouldReloadByUserId(p)) reload(); };
     const onUserOffline = (p: any) => { if (shouldReloadByUserId(p)) reload(); };
 
+    // Admin: listen for user actions (recall/delete messages)
+    const onAdminMessagesRecalled = (p: any) => {
+      if (p && (p.senderId === selectedUserId || p.receiverId === selectedUserId)) {
+        reload();
+      }
+    };
+
+    const onAdminMessagesDeleted = (p: any) => {
+      if (p && (p.senderId === selectedUserId || p.receiverId === selectedUserId)) {
+        reload();
+      }
+    };
+
     s.on('admin_dm_created', onDmCreated);
     s.on('admin_dm_edited', onDmEdited);
     s.on('admin_dm_recalled_all', onDmRecalledAll);
+    s.on('admin_dm_deleted_all', onDmDeletedAll);
     s.on('admin_dm_deleted_for_user', onDmDeletedForUser);
     s.on('admin_group_message_created', onGroupCreated);
     s.on('admin_group_message_edited', onGroupEdited);
     s.on('admin_user_online', onUserOnline);
     s.on('admin_user_offline', onUserOffline);
+    s.on('admin_messages_recalled', onAdminMessagesRecalled);
+    s.on('admin_messages_deleted', onAdminMessagesDeleted);
 
     return () => {
       try {
@@ -145,11 +162,14 @@ export const useUserActivity = () => {
         s.off('admin_dm_created', onDmCreated);
         s.off('admin_dm_edited', onDmEdited);
         s.off('admin_dm_recalled_all', onDmRecalledAll);
+        s.off('admin_dm_deleted_all', onDmDeletedAll);
         s.off('admin_dm_deleted_for_user', onDmDeletedForUser);
         s.off('admin_group_message_created', onGroupCreated);
         s.off('admin_group_message_edited', onGroupEdited);
         s.off('admin_user_online', onUserOnline);
         s.off('admin_user_offline', onUserOffline);
+        s.off('admin_messages_recalled', onAdminMessagesRecalled);
+        s.off('admin_messages_deleted', onAdminMessagesDeleted);
         if (typingTimerRef.current) {
           window.clearTimeout(typingTimerRef.current);
           typingTimerRef.current = null;
@@ -172,6 +192,7 @@ export const useUserActivity = () => {
     loadingUsers,
     error,
     loadUsers,
+    loadUserActivity,
     formatDate,
     t
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Admin, UpdateAdminForm } from '../interfaces/admin.types';
+import type { Admin, UpdateAdminForm, AdminLevel } from '../interfaces/admin.types';
 import PermissionSelector from './PermissionSelector';
 
 interface EditAdminModalProps {
@@ -98,6 +98,21 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
             </div>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4" id="editAdminForm">
+            {/* Admin Level */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t('level')}
+              </label>
+              <select
+                value={formData.adminLevel}
+                onChange={(e) => setFormData({ ...formData, adminLevel: e.target.value as AdminLevel })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+              >
+                <option value="sub_admin">{t('subAdmin')}</option>
+                <option value="dev">{t('dev')}</option>
+                <option value="mod">{t('mod')}</option>
+              </select>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('editModal.permissions')}

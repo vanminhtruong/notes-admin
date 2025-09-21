@@ -40,6 +40,7 @@ const AdminsList: React.FC = () => {
   // Sử dụng socket để listen real-time events
   useAdminSocket({
     onAdminListChange: refreshList,
+    currentAdminId: currentAdmin?.id,
   });
 
   const {
@@ -124,25 +125,25 @@ const AdminsList: React.FC = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-gray-50 dark:bg-neutral-900">
-      <div className="max-w-7xl mx-auto">
+    <div className="p-6 xl-down:p-4 md-down:p-3 sm-down:p-2 min-h-screen bg-gray-50 dark:bg-neutral-900">
+      <div className="max-w-7xl xl-down:max-w-full mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 xl-down:mb-4 sm-down:mb-3 flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
+            <p className="text-sm xl-down:text-sm sm-down:text-xs text-gray-600 dark:text-gray-400 mt-1">
               {t('subtitle')}
             </p>
           </div>
           {isSuperAdmin() && (
             <button
               onClick={() => setCreateModalOpen(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="px-4 py-2 md-down:px-3 md-down:py-1.5 sm-down:px-2 sm-down:py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm sm-down:text-xs"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm-down:w-4 sm-down:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              {t('addAdmin')}
+              <span className="sm-down:hidden">{t('addAdmin')}</span>
             </button>
           )}
         </div>
@@ -183,7 +184,7 @@ const AdminsList: React.FC = () => {
         {/* Admins Grid */}
         {!loading && admins.length > 0 && (
           <div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700">
-            <div className="grid gap-4 p-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 xl-down:gap-3 sm-down:gap-2 p-4 xl-down:p-3 sm-down:p-2">
               {admins.map((admin) => (
                 <AdminCard
                   key={admin.id}

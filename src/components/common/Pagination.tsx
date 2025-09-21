@@ -20,9 +20,8 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const { t } = useTranslation('common');
 
-  if (totalPages <= 1) return null;
-
   const getVisiblePages = () => {
+    if (totalPages <= 1) return [1];
     const delta = 2; // Số trang hiển thị mỗi bên
     const range = [];
     const rangeWithDots = [];
@@ -42,7 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
     if (currentPage + delta < totalPages - 1) {
       rangeWithDots.push('...', totalPages);
     } else {
-      rangeWithDots.push(totalPages);
+      if (totalPages > 1) rangeWithDots.push(totalPages);
     }
 
     return rangeWithDots;
@@ -56,42 +55,45 @@ const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
-  const startItem = totalItems ? (currentPage - 1) * (itemsPerPage || 10) + 1 : null;
-  const endItem = totalItems ? Math.min(currentPage * (itemsPerPage || 10), totalItems) : null;
+  const pageSize = itemsPerPage || 10;
+  const startItem =
+    typeof totalItems === 'number'
+      ? (totalItems === 0 ? 0 : Math.min((currentPage - 1) * pageSize + 1, totalItems))
+      : null;
+  const endItem =
+    typeof totalItems === 'number'
+      ? Math.min(currentPage * pageSize, totalItems)
+      : null;
 
   return (
     <div className="flex items-center justify-between border-t border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-4 py-3 sm:px-6">
-      {/* Thông tin trang (Mobile) */}
-      {showInfo && totalItems && (
-        <div className="flex flex-1 justify-between sm:hidden">
-          <button
-            onClick={() => handlePageClick(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {t('pagination.previous')}
-          </button>
-          <span className="text-sm text-gray-700 dark:text-gray-300">
-            {t('pagination.pageInfo', { current: currentPage, total: totalPages })}
-          </span>
-          <button
-            onClick={() => handlePageClick(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {t('pagination.next')}
-          </button>
-        </div>
-      )}
+      {/* Mobile controls: luôn hiển thị nút Prev/Next; chỉ hiển thị info khi có totalItems */}
+      <div className="flex flex-1 items-center justify-between sm:hidden">
+        <button
+          onClick={() => handlePageClick(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {t('pagination.previous')}
+        </button>
+        <span className="text-sm text-gray-700 dark:text-gray-300">
+          {t('pagination.pageInfo', { current: currentPage, total: totalPages })}
+        </span>
+        <button
+          onClick={() => handlePageClick(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {t('pagination.next')}
+        </button>
+      </div>
 
-      {/* Thông tin chi tiết (Desktop) */}
+      {/* Thông tin chi tiết (Desktop) - đồng bộ: luôn hiển thị 'Page X of Y' */}
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        {showInfo && totalItems && (
+        {showInfo && (
           <div>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              {t('pagination.showing')} <span className="font-medium">{startItem}</span> {t('pagination.to')}{' '}
-              <span className="font-medium">{endItem}</span> {t('pagination.of')}{' '}
-              <span className="font-medium">{totalItems}</span> {t('pagination.results')}
+              {t('pagination.pageInfo', { current: currentPage, total: totalPages })}
             </p>
           </div>
         )}

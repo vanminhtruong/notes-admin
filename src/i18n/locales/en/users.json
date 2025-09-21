@@ -21,7 +21,12 @@
     "messages": {
       "noMessages": "No messages yet",
       "sentTo": "Sent to",
-      "receivedFrom": "Received from"
+      "receivedFrom": "Received from",
+      "actions": {
+        "menu": "Menu",
+        "recall": "Recall message",
+        "delete": "Delete message"
+      }
     },
     "groups": {
       "noGroups": "No groups",
@@ -31,6 +36,45 @@
     "friends": {
       "noFriends": "No friends",
       "activity": "Last seen"
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "Direct Messages",
+        "groups": "Groups"
+      },
+      "friendsList": "Friends List",
+      "groupsList": "Groups List",
+      "selectFriendToView": "Select a friend to view messages",
+      "selectGroupToView": "Select a group to view messages",
+      "chatWith": "Chat with {{name}}",
+      "groupChat": "Group Chat",
+      "noMessages": "No messages",
+      "actions": {
+        "viewMembers": "View Members",
+        "close": "Close"
+      },
+      "members": {
+        "title": "Members",
+        "empty": "No members",
+        "id": "ID",
+        "roles": {
+          "owner": "Owner",
+          "admin": "Admin",
+          "member": "Member"
+        }
+      }
+    },
+    "typing": {
+      "typingWith": "Typing with {{name}}",
+      "typingInGroup": "Someone is typing in group"
     }
+  },
+  "messageActions": {
+    "recallSuccess": "Message recalled successfully",
+    "deleteSuccess": "Message deleted successfully",
+    "recallError": "Cannot recall message",
+    "deleteError": "Cannot delete message",
+    "confirmRecall": "Are you sure you want to recall this message?",
+    "confirmDelete": "Are you sure you want to delete this message?"
   }
 }

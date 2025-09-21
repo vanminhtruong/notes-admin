@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { hasPermission } from '@utils/auth';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { UserActivityData, TypingInfo } from '../interfaces';
@@ -23,6 +24,8 @@ interface MonitorTabProps {
   closeGroupMembersModal: () => void;
   setOpenGroupMenuId: (id: number | null) => void;
   updateMonitorState: (update: any) => void;
+  onRecallMessage?: (messageId: number, isGroup?: boolean) => void;
+  onDeleteMessage?: (messageId: number, isGroup?: boolean) => void;
 }
 
 const MonitorTab: React.FC<MonitorTabProps> = ({
@@ -44,10 +47,15 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   openGroupMembersModal,
   closeGroupMembersModal,
   setOpenGroupMenuId,
-  updateMonitorState
+  updateMonitorState,
+  onRecallMessage,
+  onDeleteMessage
 }) => {
   const { t } = useTranslation('users');
+  const [openMessageMenuId, setOpenMessageMenuId] = useState<number | null>(null);
   const { monitorTab, selectedFriendId, selectedGroupId, dmMessages, groupMessages, loadingDm, loadingGroup } = monitorState;
+  // Prevent unused prop warnings for optional handlers we might not render depending on permissions
+  void openGroupMenuId; void openGroupMembersModal; void setOpenGroupMenuId;
 
   return (
     <div className="space-y-4 xl-down:space-y-3 sm-down:space-y-2">
@@ -107,14 +115,73 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   ) : dmMessages.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('userActivity.monitor.noMessages')}</div>
                   ) : (
-                    dmMessages.map((m: any) => (
-                      <div key={m.id} className={`flex ${Number(m.senderId) === Number(selectedUserId) ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${Number(m.senderId) === Number(selectedUserId) ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
-                          <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                          <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                    dmMessages.map((m: any) => {
+                      const isUserMessage = Number(m.senderId) === Number(selectedUserId);
+                      return (
+                        <div key={m.id} className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${isUserMessage ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
+                            <div className="flex items-start justify-between space-x-2">
+                              <div className="flex-1">
+                                <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                              </div>
+                              {((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete'))) && (
+                                <div className="relative flex-shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                    }}
+                                    className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
+                                    aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                  >
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                    </svg>
+                                  </button>
+                                  {openMessageMenuId === m.id && (
+                                    <div
+                                      className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      {onRecallMessage && hasPermission('manage_users.activity.messages.recall') && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            onRecallMessage(m.id, false);
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🔄</span>
+                                          <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
+                                        </button>
+                                      )}
+                                      {onDeleteMessage && hasPermission('manage_users.activity.messages.delete') && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            onDeleteMessage(m.id, false);
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🗑️</span>
+                                          <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>
@@ -145,37 +212,11 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                         <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{g.name}</p>
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={(e) => { e.stopPropagation(); setOpenGroupMenuId(openGroupMenuId === g.id ? null : g.id); }}
-                      className="p-1.5 xl-down:p-1 rounded-md xl-down:rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm xl-down:text-xs"
-                      aria-label={t('userActivity.monitor.actions.viewMembers')}
-                    >
-                      ⋮
-                    </button>
                   </div>
-                  {openGroupMenuId === g.id && (
-                    <div
-                      className="absolute right-2 top-10 xl-down:top-8 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-md xl-down:rounded shadow-lg py-1 min-w-[200px] xl-down:min-w-[150px]"
-                      onClick={(e) => e.stopPropagation()}
-                      role="menu"
-                    >
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); setOpenGroupMenuId(null); openGroupMembersModal(g); }}
-                        className="w-full text-left px-3 py-2 xl-down:px-2 xl-down:py-1.5 text-sm xl-down:text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
-                        role="menuitem"
-                      >
-                        👥 {t('userActivity.monitor.actions.viewMembers')}
-                      </button>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Group Viewer */}
           <div className="lg:col-span-2">
             {!selectedGroupId ? (
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700 text-sm xl-down:text-xs">
@@ -232,10 +273,70 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       return (
                         <div key={m.id} className={`flex items-end ${mine ? 'justify-end' : 'justify-start'}`}>
                           {!mine && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
-                          <div className={`max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
-                            <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
-                            <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                            <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                          <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
+                            <div className="flex items-start justify-between space-x-2">
+                              <div className="flex-1">
+                                <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
+                                <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                              </div>
+                              {mine && (onRecallMessage || onDeleteMessage) && (
+                                <div className="relative flex-shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                    }}
+                                    className={`p-1 rounded transition-colors ${
+                                      mine 
+                                        ? 'text-white/70 hover:text-white hover:bg-white/10 focus:ring-white/30' 
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:ring-blue-500'
+                                    } focus:outline-none focus:ring-1`}
+                                    aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                  >
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                    </svg>
+                                  </button>
+                                  {openMessageMenuId === m.id && (
+                                    <div
+                                      className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      {onRecallMessage && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            onRecallMessage(m.id, true);
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🔄</span>
+                                          <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
+                                        </button>
+                                      )}
+                                      {onDeleteMessage && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            onDeleteMessage(m.id, true);
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🗑️</span>
+                                          <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
                           {mine && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                         </div>

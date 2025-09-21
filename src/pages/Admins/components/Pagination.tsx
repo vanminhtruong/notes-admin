@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PaginationProps {
   current: number;
@@ -17,6 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({
   showSizeChanger = true,
   pageSizeOptions = [10, 20, 50]
 }) => {
+  const { t } = useTranslation('common');
   const totalPages = Math.ceil(total / pageSize);
   const startItem = (current - 1) * pageSize + 1;
   const endItem = Math.min(current * pageSize, total);
@@ -52,22 +54,25 @@ const Pagination: React.FC<PaginationProps> = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-neutral-800 border-t border-gray-200 dark:border-neutral-700 sm:px-6">
-      <div className="flex justify-between items-center w-full">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            Hiển thị <span className="font-medium">{startItem}</span> đến{' '}
-            <span className="font-medium">{endItem}</span> trong tổng số{' '}
-            <span className="font-medium">{total}</span> kết quả
+    <div className="flex items-center justify-between px-4 xl-down:px-3 sm-down:px-2 py-3 xl-down:py-2.5 sm-down:py-2 bg-white dark:bg-neutral-800 border-t border-gray-200 dark:border-neutral-700">
+      <div className="flex justify-between items-center w-full gap-3 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-sm sm-down:text-xs text-gray-700 dark:text-gray-300">
+            {t('pagination.showing')} <span className="font-medium">{startItem}</span> {t('pagination.to')}{' '}
+            <span className="font-medium">{endItem}</span> {t('pagination.of')}{' '}
+            <span className="font-medium">{total}</span> {t('pagination.results')}
           </p>
-          
+
           {showSizeChanger && (
-            <div className="flex items-center space-x-2 ml-4">
-              <span className="text-sm text-gray-700 dark:text-gray-300">Hiển thị:</span>
+            <div className="flex items-center gap-2 ml-2 sm-down:ml-0 sm-down:w-full sm-down:justify-between">
+              <span className="text-sm sm-down:text-xs text-gray-700 dark:text-gray-300 hidden sm-down:inline">
+                {t('pagination.showing')}
+              </span>
               <select
                 value={pageSize}
                 onChange={(e) => onPageChange(1, Number(e.target.value))}
-                className="px-2 py-1 text-sm border border-gray-300 dark:border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                className="px-2 py-1 sm-down:py-0.5 text-sm sm-down:text-xs border border-gray-300 dark:border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                aria-label={t('pagination.showing')}
               >
                 {pageSizeOptions.map(size => (
                   <option key={size} value={size}>
@@ -75,19 +80,19 @@ const Pagination: React.FC<PaginationProps> = ({
                   </option>
                 ))}
               </select>
-              <span className="text-sm text-gray-700 dark:text-gray-300">/ trang</span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 sm-down:space-x-0.5">
           {/* Previous button */}
           <button
             onClick={() => onPageChange(current - 1)}
             disabled={current === 1}
-            className="px-2 py-1 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-l-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label={t('pagination.previous')}
+            className="px-2 py-1 sm-down:px-1.5 sm-down:py-0.5 text-sm sm-down:text-xs font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-l-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Trước
+            {t('pagination.previous')}
           </button>
 
           {/* Page numbers */}
@@ -95,7 +100,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`px-3 py-1 text-sm font-medium border ${
+              className={`px-3 py-1 sm-down:px-2 sm-down:py-0.5 text-sm sm-down:text-xs font-medium border ${
                 page === current
                   ? 'bg-blue-50 dark:bg-blue-900 border-blue-500 text-blue-600 dark:text-blue-200'
                   : 'bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-neutral-700'
@@ -109,14 +114,16 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             onClick={() => onPageChange(current + 1)}
             disabled={current === totalPages}
-            className="px-2 py-1 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-r-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label={t('pagination.next')}
+            className="px-2 py-1 sm-down:px-1.5 sm-down:py-0.5 text-sm sm-down:text-xs font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-r-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sau
+            {t('pagination.next')}
           </button>
         </div>
       </div>
     </div>
   );
-};
+}
+;
 
 export default Pagination;

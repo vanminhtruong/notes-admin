@@ -324,6 +324,7 @@ class AdminService {
     password: string;
     name: string;
     permissions?: string[];
+    adminLevel?: string;
   }) {
     const response = await fetch(`${API_BASE_URL}/admin/admins`, {
       method: 'POST',
@@ -395,6 +396,69 @@ class AdminService {
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Không thể xóa admin');
+    }
+
+    return response.json();
+  }
+
+  // Message Management
+  async recallDMMessage(messageId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/messages/${messageId}/recall`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể thu hồi tin nhắn');
+    }
+
+    return response.json();
+  }
+
+  async deleteDMMessage(messageId: number, targetUserId?: number) {
+    const url = new URL(`${API_BASE_URL}/admin/messages/${messageId}`);
+    if (typeof targetUserId === 'number') {
+      url.searchParams.set('targetUserId', String(targetUserId));
+    }
+    console.log('🗑️ AdminService: DELETE request to ' + url.toString());
+    const response = await fetch(url.toString(), {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể xóa tin nhắn');
+    }
+
+    console.log('🗑️ AdminService: DELETE response:', response.status);
+    return response.json();
+  }
+
+  async recallGroupMessage(messageId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/group-messages/${messageId}/recall`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể thu hồi tin nhắn nhóm');
+    }
+
+    return response.json();
+  }
+
+  async deleteGroupMessage(messageId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/group-messages/${messageId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể xóa tin nhắn nhóm');
     }
 
     return response.json();

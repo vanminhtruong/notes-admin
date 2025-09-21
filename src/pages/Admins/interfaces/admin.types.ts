@@ -4,7 +4,7 @@ export interface Admin {
   email: string;
   role: string;
   adminLevel: 'super_admin' | 'sub_admin' | 'dev' | 'mod';
-  adminPermissions: AdminPermissions;
+  adminPermissions: string[];
   isActive: boolean;
   avatar?: string;
   lastSeenAt?: string;
@@ -81,7 +81,8 @@ export interface CreateAdminForm {
   email: string;
   name: string;
   password: string;
-  permissions: AdminPermissions;
+  permissions: string[];
+  adminLevel: AdminLevel;
 }
 
 export interface UpdateAdminForm {
@@ -108,7 +109,14 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
       {
         key: 'manage_users.view',
         label: 'Xem thông tin người dùng',
-        description: 'Xem danh sách và thông tin chi tiết người dùng'
+        description: 'Xem danh sách và thông tin chi tiết người dùng',
+        subPermissions: [
+          {
+            key: 'manage_users.view_detail',
+            label: 'Xem chi tiết người dùng',
+            description: 'Cho phép mở modal chi tiết người dùng trong danh sách Users'
+          }
+        ]
       },
       {
         key: 'manage_users.activate',
@@ -133,12 +141,36 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
           {
             key: 'manage_users.activity.messages',
             label: 'Tab tin nhắn',
-            description: 'Xem lịch sử tin nhắn của người dùng'
+            description: 'Xem lịch sử tin nhắn của người dùng',
+            subPermissions: [
+              {
+                key: 'manage_users.activity.messages.recall',
+                label: 'Thu hồi tin nhắn (DM)',
+                description: 'Cho phép thu hồi tin nhắn trong hội thoại 1-1 theo thời gian thực'
+              },
+              {
+                key: 'manage_users.activity.messages.delete',
+                label: 'Xóa tin nhắn (DM)',
+                description: 'Cho phép xóa tin nhắn ở phía người dùng hoặc cả hai phía theo thời gian thực'
+              }
+            ]
           },
           {
             key: 'manage_users.activity.groups',
             label: 'Tab nhóm',
-            description: 'Xem các nhóm mà người dùng tham gia'
+            description: 'Xem các nhóm mà người dùng tham gia',
+            subPermissions: [
+              {
+                key: 'manage_users.activity.groups.recall',
+                label: 'Thu hồi tin nhắn nhóm',
+                description: 'Cho phép thu hồi tin nhắn trong nhóm theo thời gian thực'
+              },
+              {
+                key: 'manage_users.activity.groups.delete',
+                label: 'Xóa tin nhắn nhóm',
+                description: 'Cho phép xóa tin nhắn trong nhóm theo thời gian thực'
+              }
+            ]
           },
           {
             key: 'manage_users.activity.friends',
