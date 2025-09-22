@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { User } from '../interfaces';
+import { hasPermission } from '@utils/auth';
 
 interface UserDetailModalProps {
   open: boolean;
@@ -14,6 +15,7 @@ interface UserDetailModalProps {
 
 const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, formatDate, getStatusBadge, getRoleBadge }) => {
   const { t } = useTranslation('users');
+  const canViewActiveAccounts = hasPermission('manage_users.view_active_accounts');
 
   // Close with ESC (chỉ khi modal mở)
   useEffect(() => {
@@ -72,10 +74,12 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                 <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 truncate">{user.name}</h4>
                 {getRoleBadge(user.role)}
                 {getStatusBadge(!!user.isActive)}
-                {user.isOnline ? (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">{t('online')}</span>
-                ) : (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300">{t('offline')}</span>
+                {canViewActiveAccounts && (
+                  user.isOnline ? (
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">{t('online')}</span>
+                  ) : (
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300">{t('offline')}</span>
+                  )
                 )}
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{user.email}</p>

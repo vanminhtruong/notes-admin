@@ -25,6 +25,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
   onRowClick
 }) => {
   const { t } = useTranslation('users');
+  const canViewActiveAccounts = hasPermission('manage_users.view_active_accounts');
 
   if (loading) {
     return (
@@ -50,9 +51,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
               <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 {t('filters.status')}
               </th>
-              <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider xl-down:hidden">
-                Online
-              </th>
+              {canViewActiveAccounts && (
+                <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider xl-down:hidden">
+                  {t('online')}
+                </th>
+              )}
               <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider xl-down:hidden">
                 {t('lastActivity')}
               </th>
@@ -104,23 +107,25 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
                   {getStatusBadge(user.isActive)}
                 </td>
-                <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap xl-down:hidden">
-                  {user.isOnline ? (
-                    <span className="flex items-center">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                      <span className="text-xs font-medium text-green-800 dark:text-green-200">
-                        {t('online')}
+                {canViewActiveAccounts && (
+                  <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap xl-down:hidden">
+                    {user.isOnline ? (
+                      <span className="flex items-center">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                        <span className="text-xs font-medium text-green-800 dark:text-green-200">
+                          {t('online')}
+                        </span>
                       </span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center">
-                      <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
-                      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                        {t('offline')}
+                    ) : (
+                      <span className="flex items-center">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                          {t('offline')}
+                        </span>
                       </span>
-                    </span>
-                  )}
-                </td>
+                    )}
+                  </td>
+                )}
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 xl-down:hidden">
                   {user.lastSeenAt ? formatDate(user.lastSeenAt) : t('neverLoggedIn')}
                 </td>
@@ -226,7 +231,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     <h3 className="text-sm sm-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
                       {user.name}
                     </h3>
-                    {user.isOnline && (
+                    {canViewActiveAccounts && user.isOnline && (
                       <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
                     )}
                   </div>

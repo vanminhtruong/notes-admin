@@ -69,7 +69,12 @@
     "messages": {
       "noMessages": "No messages yet",
       "sentTo": "Sent to",
-      "receivedFrom": "Received from"
+      "receivedFrom": "Received from",
+      "actions": {
+        "menu": "Menu",
+        "recall": "Recall message",
+        "delete": "Delete message"
+      }
     },
     "groups": {
       "noGroups": "No groups",

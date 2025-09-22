@@ -72,7 +72,12 @@
     "messages": {
       "noMessages": "아직 메시지가 없습니다",
       "sentTo": "에게 보냄",
-      "receivedFrom": "로부터 받음"
+      "receivedFrom": "로부터 받음",
+      "actions": {
+        "menu": "메뉴",
+        "recall": "메시지 회수",
+        "delete": "메시지 삭제"
+      }
     },
     "groups": {
       "noGroups": "그룹이 없습니다",

@@ -94,22 +94,33 @@ export const useUserActivity = () => {
     });
   };
 
-  // Realtime: listen typing info for selected user
+  // Realtime: listen typing info for selected user and their counterpart (both directions)
   useEffect(() => {
     if (!selectedUserId) return;
     const s = getAdminSocket();
 
     const onAdminTyping = (p: any) => {
       try {
-        if (!p || p.userId !== selectedUserId) return;
+        if (!p) return;
+        // Hỗ trợ cả 2 chiều: nếu user đang theo dõi gõ (p.userId === selectedUserId)
+        // hoặc bạn chat đang gõ với user đang theo dõi (p.withUserId === selectedUserId)
+        const a = Number(selectedUserId);
+        const userIdNum = Number(p.userId);
+        const withUserIdNum = Number(p.withUserId);
+        const relevant = userIdNum === a || withUserIdNum === a;
+        if (!relevant) return;
+
+        // Xác định "đối phương" để hiển thị trong typing bubble
+        const otherId = userIdNum === a ? withUserIdNum : userIdNum;
+        const otherName = userIdNum === a ? (p.withUserName || String(withUserIdNum)) : (p.userName || p.name || String(userIdNum));
+
         if (p.isTyping) {
-          const name = p.withUserName || String(p.withUserId);
-          setTypingInfo({ withUserId: Number(p.withUserId), withUserName: name });
+          setTypingInfo({ withUserId: otherId, withUserName: otherName });
           if (typingTimerRef.current) window.clearTimeout(typingTimerRef.current);
           // Auto-clear after 5s of inactivity to avoid stale state
           typingTimerRef.current = window.setTimeout(() => setTypingInfo(null), 5000);
         } else {
-          setTypingInfo(prev => (prev && prev.withUserId === Number(p.withUserId) ? null : prev));
+          setTypingInfo(prev => (prev && prev.withUserId === otherId ? null : prev));
         }
       } catch {}
     };
@@ -156,6 +167,30 @@ export const useUserActivity = () => {
     s.on('admin_messages_recalled', onAdminMessagesRecalled);
     s.on('admin_messages_deleted', onAdminMessagesDeleted);
 
+    // When user's profile is updated, if it's the selected user, refresh activity or merge basic fields
+    const onAdminUserUpdated = (p: any) => {
+      try {
+        const updated = p?.user;
+        if (!updated || updated.id !== selectedUserId) return;
+        // Lightweight merge to update header quickly
+        setActivityData(prev => prev ? ({
+          ...prev,
+          user: {
+            ...prev.user,
+            name: updated.name ?? prev.user.name,
+            avatar: updated.avatar ?? prev.user.avatar,
+            phone: updated.phone ?? prev.user.phone,
+            birthDate: updated.birthDate ?? prev.user.birthDate,
+            gender: updated.gender ?? prev.user.gender,
+            email: updated.email ?? prev.user.email,
+          }
+        }) : prev);
+        // Optionally reload to keep consistency across tabs
+        loadUserActivity(selectedUserId, false);
+      } catch {}
+    };
+    s.on('admin_user_updated', onAdminUserUpdated);
+
     return () => {
       try {
         s.off('admin_user_typing', onAdminTyping);
@@ -170,6 +205,7 @@ export const useUserActivity = () => {
         s.off('admin_user_offline', onUserOffline);
         s.off('admin_messages_recalled', onAdminMessagesRecalled);
         s.off('admin_messages_deleted', onAdminMessagesDeleted);
+        s.off('admin_user_updated', onAdminUserUpdated);
         if (typingTimerRef.current) {
           window.clearTimeout(typingTimerRef.current);
           typingTimerRef.current = null;

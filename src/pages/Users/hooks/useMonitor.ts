@@ -17,7 +17,10 @@ export const useMonitor = (selectedUserId: number | null) => {
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
   const [groupMemberInfo, setGroupMemberInfo] = useState<Record<number, GroupMemberInfo>>({});
   const [groupTyping, setGroupTyping] = useState<boolean>(false);
-  const groupTypingTimerRef = useRef<number | null>(null);
+  // Theo dõi danh sách thành viên đang gõ trong group: userId -> { name, avatar }
+  const [groupTypingUsers, setGroupTypingUsers] = useState<Record<number, { name?: string; avatar?: string }>>({});
+  // Lưu timer riêng cho từng user để auto clear sau 5s không hoạt động
+  const groupTypingTimersRef = useRef<Record<number, number>>({});
 
   // Group members modal state
   const [showGroupMembers, setShowGroupMembers] = useState(false);
@@ -165,18 +168,50 @@ export const useMonitor = (selectedUserId: number | null) => {
     // Realtime: group typing by the selected user
     const onAdminGroupTyping = (p: any) => {
       try {
-        if (!p || !selectedUserId) return;
+        if (!p) return;
         setMonitorState(prevState => {
           if (!prevState.selectedGroupId) return prevState;
           if (Number(p.groupId) !== Number(prevState.selectedGroupId)) return prevState;
-          if (Number(p.userId) !== Number(selectedUserId)) return prevState;
-          
+
+          const typingUserId = Number(p.userId);
+
           if (p.isTyping) {
+            // Cập nhật map typing users
+            setGroupTypingUsers(prev => {
+              const next = { ...prev };
+              next[typingUserId] = {
+                name: p.userName || p.name,
+                avatar: p.avatar
+              };
+              return next;
+            });
+            // Reset timer cho user này
+            const timers = groupTypingTimersRef.current;
+            if (timers[typingUserId]) window.clearTimeout(timers[typingUserId]);
+            timers[typingUserId] = window.setTimeout(() => {
+              setGroupTypingUsers(prev => {
+                const next = { ...prev };
+                delete next[typingUserId];
+                setGroupTyping(Object.keys(next).length > 0);
+                return next;
+              });
+              delete groupTypingTimersRef.current[typingUserId];
+            }, 5000) as unknown as number;
+
             setGroupTyping(true);
-            if (groupTypingTimerRef.current) window.clearTimeout(groupTypingTimerRef.current);
-            groupTypingTimerRef.current = window.setTimeout(() => setGroupTyping(false), 5000);
           } else {
-            setGroupTyping(false);
+            // Bỏ khỏi map ngay nếu user báo hết gõ
+            setGroupTypingUsers(prev => {
+              const next = { ...prev };
+              if (next[typingUserId]) delete next[typingUserId];
+              setGroupTyping(Object.keys(next).length > 0);
+              return next;
+            });
+            const timers = groupTypingTimersRef.current;
+            if (timers[typingUserId]) {
+              window.clearTimeout(timers[typingUserId]);
+              delete timers[typingUserId];
+            }
           }
           return prevState;
         });
@@ -189,10 +224,15 @@ export const useMonitor = (selectedUserId: number | null) => {
         s.off('admin_dm_created', onAdminDmCreated);
         s.off('admin_group_message_created', onAdminGroupMessageCreated);
         s.off('admin_group_typing', onAdminGroupTyping);
-        if (groupTypingTimerRef.current) {
-          window.clearTimeout(groupTypingTimerRef.current);
-          groupTypingTimerRef.current = null;
-        }
+        // Clear tất cả timers khi unmount/đổi user
+        const timers = groupTypingTimersRef.current;
+        Object.keys(timers).forEach((k) => {
+          const id = Number(k);
+          if (timers[id]) window.clearTimeout(timers[id]);
+        });
+        groupTypingTimersRef.current = {};
+        setGroupTypingUsers({});
+        setGroupTyping(false);
       } catch {}
     };
   }, [selectedUserId]);
@@ -206,6 +246,7 @@ export const useMonitor = (selectedUserId: number | null) => {
     groupInfo,
     groupMemberInfo,
     groupTyping,
+    groupTypingUsers,
     showGroupMembers,
     membersModalGroup,
     membersModalList,

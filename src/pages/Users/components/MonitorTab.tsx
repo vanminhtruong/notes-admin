@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ interface MonitorTabProps {
   groupInfo: any;
   groupMemberInfo: any;
   groupTyping: any;
+  groupTypingUsers?: Record<number, { name?: string; avatar?: string }>;
   showGroupMembers: boolean;
   membersModalGroup: any;
   membersModalList: any[];
@@ -37,6 +38,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   groupInfo,
   groupMemberInfo,
   groupTyping,
+  groupTypingUsers,
   showGroupMembers,
   membersModalGroup,
   membersModalList,
@@ -55,7 +57,47 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   const [openMessageMenuId, setOpenMessageMenuId] = useState<number | null>(null);
   const { monitorTab, selectedFriendId, selectedGroupId, dmMessages, groupMessages, loadingDm, loadingGroup } = monitorState;
   // Prevent unused prop warnings for optional handlers we might not render depending on permissions
-  void openGroupMenuId; void openGroupMembersModal; void setOpenGroupMenuId;
+  void openGroupMenuId; void openGroupMembersModal; void setOpenGroupMenuId; void groupTyping;
+
+  // Refs for auto-scroll to typing
+  const dmListRef = useRef<HTMLDivElement | null>(null);
+  const dmTypingRef = useRef<HTMLDivElement | null>(null);
+  const groupListRef = useRef<HTMLDivElement | null>(null);
+  const groupEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll when counterpart or monitored user is typing in DM
+  useEffect(() => {
+    try {
+      if (monitorTab !== 'dm') return;
+      if (!typingInfo || !selectedFriendId) return;
+      if (typingInfo.withUserId !== selectedFriendId) return;
+      // Scroll to typing bubble if available; fallback to bottom
+      setTimeout(() => {
+        if (dmTypingRef.current && dmTypingRef.current.scrollIntoView) {
+          dmTypingRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        } else if (dmListRef.current) {
+          dmListRef.current.scrollTop = dmListRef.current.scrollHeight;
+        }
+      }, 0);
+    } catch {}
+  }, [typingInfo, selectedFriendId, monitorTab]);
+
+  // Auto-scroll when any group member is typing in current group
+  useEffect(() => {
+    try {
+      if (monitorTab !== 'groups') return;
+      if (!selectedGroupId) return;
+      const hasTyping = !!(groupTypingUsers && Object.keys(groupTypingUsers).length > 0);
+      if (!hasTyping) return;
+      setTimeout(() => {
+        if (groupEndRef.current && groupEndRef.current.scrollIntoView) {
+          groupEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        } else if (groupListRef.current) {
+          groupListRef.current.scrollTop = groupListRef.current.scrollHeight;
+        }
+      }, 0);
+    } catch {}
+  }, [groupTypingUsers, selectedGroupId, monitorTab]);
 
   return (
     <div className="space-y-4 xl-down:space-y-3 sm-down:space-y-2">
@@ -105,11 +147,9 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex flex-col bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700">
                 <div className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border-b border-gray-200 dark:border-neutral-700 flex items-center justify-between xl-down:flex-col xl-down:items-start xl-down:space-y-1">
                   <div className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{t('userActivity.monitor.chatWith', { name: activityData?.activity.friends.find(f => f.id === selectedFriendId)?.name || selectedFriendId })}</div>
-                  {typingInfo && typingInfo.withUserId === selectedFriendId && (
-                    <div className="text-xs xl-down:text-2xs text-blue-600 dark:text-blue-400">{t('userActivity.typing.typingWith', { name: activityData?.activity.friends.find(f => f.id === selectedFriendId)?.name || typingInfo.withUserName })}</div>
-                  )}
+                  {/* Đưa typing xuống khung chat dưới dạng bubble, giữ header gọn gàng */}
                 </div>
-                <div className="flex-1 overflow-auto p-4 xl-down:p-3 sm-down:p-2 space-y-3 xl-down:space-y-2">
+                <div ref={dmListRef} className="flex-1 overflow-auto p-4 xl-down:p-3 sm-down:p-2 space-y-3 xl-down:space-y-2">
                   {loadingDm ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('common:loading')}</div>
                   ) : dmMessages.length === 0 ? (
@@ -117,11 +157,32 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   ) : (
                     dmMessages.map((m: any) => {
                       const isUserMessage = Number(m.senderId) === Number(selectedUserId);
+                      const userInfo = activityData?.user;
+                      const friendInfo = activityData?.activity.friends.find((f) => f.id === selectedFriendId);
+                      const avatarUrl = isUserMessage ? userInfo?.avatar : friendInfo?.avatar;
+                      const name = isUserMessage ? (userInfo?.name || '') : (friendInfo?.name || '');
+
+                      const Avatar = (
+                        <div className="relative flex-shrink-0">
+                          {avatarUrl ? (
+                            <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                          ) : (
+                            <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
+                              {(name || '?').charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                      );
+
                       return (
-                        <div key={m.id} className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                        <div key={m.id} className={`flex items-end ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                          {!isUserMessage && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
                           <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${isUserMessage ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
                             <div className="flex items-start justify-between space-x-2">
                               <div className="flex-1">
+                                {!isUserMessage && (
+                                  <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
+                                )}
                                 <div className="whitespace-pre-wrap break-words">{m.content}</div>
                                 <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
                               </div>
@@ -179,9 +240,41 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                               )}
                             </div>
                           </div>
+                          {isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                         </div>
                       );
                     })
+                  )}
+                  {/* Typing bubble hiển thị trong khung chat, ưu tiên phía bạn chat */}
+                  {typingInfo && typingInfo.withUserId === selectedFriendId && (
+                    <div ref={dmTypingRef} className="flex items-end justify-start">
+                      {/* Avatar bạn chat */}
+                      <div className="mr-2 xl-down:mr-1">
+                        {(() => {
+                          const friendInfo = activityData?.activity.friends.find((f) => f.id === selectedFriendId);
+                          const name = friendInfo?.name || typingInfo.withUserName || '';
+                          const avatarUrl = friendInfo?.avatar;
+                          return (
+                            <div className="relative flex-shrink-0">
+                              {avatarUrl ? (
+                                <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                              ) : (
+                                <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
+                                  {(name || '?').charAt(0).toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      <div className="relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
+                        <div className="flex items-center space-x-1 opacity-80">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -226,9 +319,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex flex-col bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700">
                 <div className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border-b border-gray-200 dark:border-neutral-700 flex items-center justify-between xl-down:flex-col xl-down:items-start xl-down:space-y-1">
                   <div className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{t('userActivity.monitor.groupChat')}</div>
-                  {groupTyping && (
-                    <div className="text-xs xl-down:text-2xs text-blue-600 dark:text-blue-400">{t('userActivity.typing.typingInGroup')}</div>
-                  )}
+                  {/* Đưa typing xuống khung chat dưới dạng bubble cho từng thành viên */}
                 </div>
                 <div className="flex-1 overflow-auto p-4 xl-down:p-3 sm-down:p-2 space-y-3 xl-down:space-y-2">
                   {loadingGroup ? (
@@ -343,13 +434,47 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       );
                     })
                   )}
+                  {/* Typing bubbles for group members (exclude monitored user to giảm nhiễu) */}
+                  {groupTypingUsers && Object.keys(groupTypingUsers).length > 0 && (
+                    Object.entries(groupTypingUsers).map(([uid, info]) => {
+                      const id = Number(uid);
+                      if (Number(selectedUserId) === id) return null;
+                      const member = groupMemberInfo[id] || {};
+                      const name = info?.name || member.name || '';
+                      const avatarUrl = info?.avatar || member.avatar;
+                      const Avatar = (
+                        <div className="relative flex-shrink-0">
+                          {avatarUrl ? (
+                            <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                          ) : (
+                            <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
+                              {(name || '?').charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                      );
+                      return (
+                        <div key={`typing-${id}`} className="flex items-end justify-start">
+                          <div className="mr-2 xl-down:mr-1">{Avatar}</div>
+                          <div className="relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100">
+                            <div className="flex items-center space-x-1 opacity-80">
+                              <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                              <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                              <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                  {/* Anchor to ensure we can scroll to the bottom (typing bubbles appended above) */}
+                  <div ref={groupEndRef} />
                 </div>
               </div>
             )}
           </div>
         </div>
       )}
-
       {showGroupMembers && typeof window !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[2147483647]">
           <div className="fixed inset-0 bg-black/40" onClick={closeGroupMembersModal} />

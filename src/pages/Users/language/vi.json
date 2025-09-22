@@ -69,7 +69,12 @@
     "messages": {
       "noMessages": "Chưa có tin nhắn",
       "sentTo": "Đã gửi đến",
-      "receivedFrom": "Nhận từ"
+      "receivedFrom": "Nhận từ",
+      "actions": {
+        "menu": "Menu",
+        "recall": "Thu hồi tin nhắn",
+        "delete": "Xóa tin nhắn"
+      }
     },
     "groups": {
       "noGroups": "Chưa tham gia nhóm nào",

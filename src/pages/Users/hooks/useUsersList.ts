@@ -201,6 +201,15 @@ export const useUsersList = () => {
     s.on('user_registered', onMajorChange);
     s.on('user_status_changed', onMajorChange);
     s.on('user_deleted_permanently', onMajorChange);
+    // When a user updates their profile info (name/avatar/phone/etc.), update the row in place
+    const onAdminUserUpdated = (payload: any) => {
+      try {
+        const updated = payload?.user;
+        if (!updated || typeof updated.id !== 'number') return;
+        setUsers(prev => prev.map(u => (u.id === updated.id ? { ...u, ...updated } : u)));
+      } catch {}
+    };
+    s.on('admin_user_updated', onAdminUserUpdated);
     
     return () => {
       try {
@@ -209,6 +218,7 @@ export const useUsersList = () => {
         s.off('user_registered', onMajorChange);
         s.off('user_status_changed', onMajorChange);
         s.off('user_deleted_permanently', onMajorChange);
+        s.off('admin_user_updated', onAdminUserUpdated);
       } catch {}
     };
   }, [filters.currentPage, filters.searchTerm, filters.roleFilter, filters.activeFilter]);

@@ -6,6 +6,10 @@ export interface User {
   isActive: boolean;
   isOnline?: boolean;
   avatar?: string;
+  // Optional profile fields
+  phone?: string | null;
+  birthDate?: string | null;
+  gender?: string;
   lastSeenAt?: string;
   createdAt: string;
 }

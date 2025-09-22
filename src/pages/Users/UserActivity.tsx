@@ -51,6 +51,7 @@ const UserActivity: React.FC = () => {
     groupInfo,
     groupMemberInfo,
     groupTyping,
+    groupTypingUsers,
     showGroupMembers,
     membersModalGroup,
     membersModalList,
@@ -333,15 +334,16 @@ const UserActivity: React.FC = () => {
                     <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} />
                   )}
                   {activeTab === 'monitor' && visibleTabs.some(tab => tab.key === 'monitor') && (
-                    <MonitorTab
-                      activityData={activityData}
-                      selectedUserId={selectedUserId}
-                      typingInfo={typingInfo}
+                    <MonitorTab 
+                      activityData={activityData} 
+                      selectedUserId={selectedUserId} 
+                      typingInfo={typingInfo} 
                       formatDate={formatDate}
                       monitorState={monitorState}
                       groupInfo={groupInfo}
                       groupMemberInfo={groupMemberInfo}
                       groupTyping={groupTyping}
+                      groupTypingUsers={groupTypingUsers}
                       showGroupMembers={showGroupMembers}
                       membersModalGroup={membersModalGroup}
                       membersModalList={membersModalList}
