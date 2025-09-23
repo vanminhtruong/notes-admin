@@ -3,15 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { usePagination } from '@hooks/usePagination';
 import Pagination from '@components/common/Pagination';
 import type { AdminNotification } from '../interfaces';
+import { hasPermission } from '@utils/auth';
 
 interface NotificationsTabProps {
   notifications: AdminNotification[];
   loadingNotifications: boolean;
   formatDate: (dateString: string) => string;
+  onDelete?: (notificationId: number) => void;
 }
 
-const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, loadingNotifications, formatDate }) => {
+const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, loadingNotifications, formatDate, onDelete }) => {
   const { t } = useTranslation('users');
+  const [openMenuId, setOpenMenuId] = React.useState<number | null>(null);
+  const canDelete = hasPermission('manage_users.activity.notifications.delete');
 
   const {
     currentItems: currentNotifications,
@@ -92,11 +96,35 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, load
                         <p className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 break-words">{desc}</p>
                       )}
                     </div>
-                    <div className="flex items-center space-x-2 xl-down:space-x-1 xl-down:self-end">
+                    <div className="flex items-center space-x-2 xl-down:space-x-1 xl-down:self-end relative">
                       <span className="inline-flex items-center px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 rounded-full text-[10px] xl-down:text-[9px] font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                         {typeBadge}
                       </span>
                       <span className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{ts}</span>
+                      {canDelete && onDelete && (
+                        <>
+                          <button
+                            aria-label={t('userActivity.notifications.actions.menu')}
+                            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            onClick={() => setOpenMenuId(openMenuId === n.id ? null : n.id)}
+                          >
+                            ⋯
+                          </button>
+                          {openMenuId === n.id && (
+                            <div className="absolute right-0 top-6 z-10 w-40 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg overflow-hidden">
+                              <button
+                                className="w-full text-left px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  onDelete(n.id);
+                                }}
+                              >
+                                {t('userActivity.notifications.actions.delete')}
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

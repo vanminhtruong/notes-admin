@@ -180,7 +180,14 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
           {
             key: 'manage_users.activity.notifications',
             label: 'Tab thông báo',
-            description: 'Xem thông báo của người dùng'
+            description: 'Xem thông báo của người dùng',
+            subPermissions: [
+              {
+                key: 'manage_users.activity.notifications.delete',
+                label: 'Xóa thông báo',
+                description: 'Cho phép xóa thông báo của người dùng theo thời gian thực'
+              }
+            ]
           },
           {
             key: 'manage_users.activity.monitor',

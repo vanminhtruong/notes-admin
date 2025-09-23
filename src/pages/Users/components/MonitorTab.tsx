@@ -59,6 +59,17 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   // Prevent unused prop warnings for optional handlers we might not render depending on permissions
   void openGroupMenuId; void openGroupMembersModal; void setOpenGroupMenuId; void groupTyping;
 
+  // Chuẩn hóa URL avatar để đảm bảo hiển thị được cả khi backend trả về đường dẫn tương đối
+  const API_BASE: string = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+  const BASE_ORIGIN: string = (() => { try { return new URL(API_BASE).origin; } catch { return ''; } })();
+  const resolveAvatar = (url?: string | null): string => {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (url.startsWith('//')) return `${window.location.protocol}${url}`;
+    if (url.startsWith('/')) return `${BASE_ORIGIN}${url}`;
+    return `${BASE_ORIGIN}/${url}`;
+  };
+
   // Refs for auto-scroll to typing
   const dmListRef = useRef<HTMLDivElement | null>(null);
   const dmTypingRef = useRef<HTMLDivElement | null>(null);
@@ -125,8 +136,12 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
             <div className="space-y-2 xl-down:space-y-1 max-h-[520px] xl-down:max-h-[300px] sm-down:max-h-[200px] overflow-auto pr-1">
               {activityData?.activity.friends.map((f) => (
                 <button key={f.id} onClick={() => { updateMonitorState({ selectedFriendId: f.id }); loadDm(f.id); }} className={`w-full flex items-center p-3 xl-down:p-2 sm-down:p-1.5 rounded-lg xl-down:rounded-md border text-left ${selectedFriendId === f.id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700' : 'bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700'}`}>
-                  <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white flex items-center justify-center">
-                    <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{f.name.charAt(0).toUpperCase()}</span>
+                  <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500 text-white flex items-center justify-center">
+                    {f.avatar ? (
+                      <img src={resolveAvatar(f.avatar)} alt={f.name || 'avatar'} className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{f.name.charAt(0).toUpperCase()}</span>
+                    )}
                   </div>
                   <div className="ml-3 xl-down:ml-2 flex-1 min-w-0">
                     <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{f.name}</p>
@@ -155,95 +170,118 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   ) : dmMessages.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('userActivity.monitor.noMessages')}</div>
                   ) : (
-                    dmMessages.map((m: any) => {
-                      const isUserMessage = Number(m.senderId) === Number(selectedUserId);
-                      const userInfo = activityData?.user;
-                      const friendInfo = activityData?.activity.friends.find((f) => f.id === selectedFriendId);
-                      const avatarUrl = isUserMessage ? userInfo?.avatar : friendInfo?.avatar;
-                      const name = isUserMessage ? (userInfo?.name || '') : (friendInfo?.name || '');
-
-                      const Avatar = (
-                        <div className="relative flex-shrink-0">
-                          {avatarUrl ? (
-                            <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
-                          ) : (
-                            <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
-                              {(name || '?').charAt(0).toUpperCase()}
+                    (() => {
+                      const fragments: React.ReactNode[] = [];
+                      let lastDayKey: string | null = null;
+                      const today = new Date();
+                      const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+                      (dmMessages as any[]).forEach((m: any) => {
+                        const d = new Date(m.createdAt);
+                        const dayKey = startOf(d).toISOString();
+                        if (lastDayKey !== dayKey) {
+                          const diffDays = Math.floor((startOf(today).getTime() - startOf(d).getTime()) / (24 * 60 * 60 * 1000));
+                          const sepLabel = diffDays === 0
+                            ? t('userActivity.monitor.daySeparator.today', 'Hôm nay')
+                            : diffDays === 1
+                              ? t('userActivity.monitor.daySeparator.yesterday', 'Hôm qua')
+                              : d.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
+                          fragments.push(
+                            <div key={`dm-sep-${dayKey}`} className="flex items-center justify-center my-1">
+                              <span className="text-[11px] xl-down:text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-neutral-700">{sepLabel}</span>
                             </div>
-                          )}
-                        </div>
-                      );
+                          );
+                          lastDayKey = dayKey;
+                        }
+                        const isUserMessage = Number(m.senderId) === Number(selectedUserId);
+                        const userInfo = activityData?.user;
+                        const friendInfo = activityData?.activity.friends.find((f) => f.id === selectedFriendId);
+                        const avatarUrl = isUserMessage ? userInfo?.avatar : friendInfo?.avatar;
+                        const name = isUserMessage ? (userInfo?.name || '') : (friendInfo?.name || '');
 
-                      return (
-                        <div key={m.id} className={`flex items-end ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
-                          {!isUserMessage && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
-                          <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${isUserMessage ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
-                            <div className="flex items-start justify-between space-x-2">
-                              <div className="flex-1">
-                                {!isUserMessage && (
-                                  <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
-                                )}
-                                <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                                <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                        const Avatar = (
+                          <div className="relative flex-shrink-0">
+                            {avatarUrl ? (
+                              <img src={resolveAvatar(avatarUrl)} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                            ) : (
+                              <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
+                                {(name || '?').charAt(0).toUpperCase()}
                               </div>
-                              {((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete'))) && (
-                                <div className="relative flex-shrink-0">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
-                                    }}
-                                    className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
-                                    aria-label={t('userActivity.messages.actions.menu', 'Menu')}
-                                  >
-                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                    </svg>
-                                  </button>
-                                  {openMessageMenuId === m.id && (
-                                    <div
-                                      className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      {onRecallMessage && hasPermission('manage_users.activity.messages.recall') && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenMessageMenuId(null);
-                                            onRecallMessage(m.id, false);
-                                          }}
-                                          className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
-                                        >
-                                          <span>🔄</span>
-                                          <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
-                                        </button>
-                                      )}
-                                      {onDeleteMessage && hasPermission('manage_users.activity.messages.delete') && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenMessageMenuId(null);
-                                            onDeleteMessage(m.id, false);
-                                          }}
-                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
-                                        >
-                                          <span>🗑️</span>
-                                          <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
-                                        </button>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
+                            )}
                           </div>
-                          {isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
-                        </div>
-                      );
-                    })
+                        );
+
+                        fragments.push(
+                          <div key={m.id} className={`flex items-end ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                            {!isUserMessage && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
+                            <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${isUserMessage ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
+                              <div className="flex items-start justify-between space-x-2">
+                                <div className="flex-1">
+                                  {!isUserMessage && (
+                                    <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
+                                  )}
+                                  <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                  <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
+                                </div>
+                                {((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete'))) && (
+                                  <div className="relative flex-shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                      }}
+                                      className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
+                                      aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                    >
+                                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                      </svg>
+                                    </button>
+                                    {openMessageMenuId === m.id && (
+                                      <div
+                                        className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        {onRecallMessage && hasPermission('manage_users.activity.messages.recall') && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onRecallMessage(m.id, false);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>🔄</span>
+                                            <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
+                                          </button>
+                                        )}
+                                        {onDeleteMessage && hasPermission('manage_users.activity.messages.delete') && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onDeleteMessage(m.id, false);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>🗑️</span>
+                                            <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
+                          </div>
+                        );
+                      });
+                      return fragments;
+                    })()
                   )}
                   {/* Typing bubble hiển thị trong khung chat, ưu tiên phía bạn chat */}
                   {typingInfo && typingInfo.withUserId === selectedFriendId && (
@@ -257,7 +295,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                           return (
                             <div className="relative flex-shrink-0">
                               {avatarUrl ? (
-                                <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                                <img src={resolveAvatar(avatarUrl)} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
                               ) : (
                                 <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
                                   {(name || '?').charAt(0).toUpperCase()}
@@ -298,8 +336,12 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center flex-1 min-w-0">
-                      <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full bg-gradient-to-r from-green-500 to-blue-500 text-white flex items-center justify-center">
-                        <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{(g.name || '?').charAt(0).toUpperCase()}</span>
+                      <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full overflow-hidden bg-gradient-to-r from-green-500 to-blue-500 text-white flex items-center justify-center">
+                        {g.avatar ? (
+                          <img src={resolveAvatar(g.avatar)} alt={g.name || 'group'} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{(g.name || '?').charAt(0).toUpperCase()}</span>
+                        )}
                       </div>
                       <div className="ml-3 xl-down:ml-2 flex-1 min-w-0">
                         <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{g.name}</p>
@@ -327,112 +369,136 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   ) : groupMessages.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('userActivity.monitor.noMessages')}</div>
                   ) : (
-                    groupMessages.map((m: any) => {
-                      const isSystem = m?.messageType === 'system' || (typeof m?.content === 'string' && m.content.toLowerCase().includes('joined the group'));
-                      if (isSystem) {
-                        return (
-                          <div key={m.id} className="flex justify-center">
-                            <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
-                              {m.content}
+                    (() => {
+                      const fragments: React.ReactNode[] = [];
+                      let lastDayKey: string | null = null;
+                      const today = new Date();
+                      const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+                      (groupMessages as any[]).forEach((m: any) => {
+                        const isSystem = m?.messageType === 'system' || (typeof m?.content === 'string' && m.content.toLowerCase().includes('joined the group'));
+                        const d = new Date(m.createdAt);
+                        const dayKey = startOf(d).toISOString();
+                        if (lastDayKey !== dayKey) {
+                          const diffDays = Math.floor((startOf(today).getTime() - startOf(d).getTime()) / (24 * 60 * 60 * 1000));
+                          const sepLabel = diffDays === 0
+                            ? t('userActivity.monitor.daySeparator.today', 'Hôm nay')
+                            : diffDays === 1
+                              ? t('userActivity.monitor.daySeparator.yesterday', 'Hôm qua')
+                              : d.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
+                          fragments.push(
+                            <div key={`group-sep-${dayKey}`} className="flex items-center justify-center my-1">
+                              <span className="text-[11px] xl-down:text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-neutral-700">{sepLabel}</span>
                             </div>
+                          );
+                          lastDayKey = dayKey;
+                        }
+                        if (isSystem) {
+                          fragments.push(
+                            <div key={m.id} className="flex justify-center">
+                              <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
+                                {m.content}
+                              </div>
+                            </div>
+                          );
+                          return;
+                        }
+                        const senderId = Number(m.senderId);
+                        const mine = Number(selectedUserId) === senderId;
+                        const info = groupMemberInfo[senderId] || {};
+                        const avatarUrl = m.senderAvatar || info.avatar;
+                        const role = info.role || (groupInfo?.ownerId && senderId === groupInfo.ownerId ? 'owner' : undefined);
+                        const name = m.senderName || info.name || '';
+                        const Avatar = (
+                          <div className="relative flex-shrink-0">
+                            {avatarUrl ? (
+                              <img src={resolveAvatar(avatarUrl)} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                            ) : (
+                              <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
+                                {(name || '?').charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                            {role === 'owner' && (
+                              <span className="absolute -bottom-1 -right-1 h-4 w-4 xl-down:h-3 xl-down:w-3 rounded-full bg-yellow-400 text-[10px] xl-down:text-[8px] flex items-center justify-center ring-2 ring-white dark:ring-neutral-900" title={t('userActivity.monitor.members.roles.owner')}>🔑</span>
+                            )}
+                            {role === 'admin' && (
+                              <span className="absolute -bottom-1 -right-1 h-4 w-4 xl-down:h-3 xl-down:w-3 rounded-full bg-blue-500 text-[10px] xl-down:text-[8px] flex items-center justify-center ring-2 ring-white dark:ring-neutral-900" title={t('userActivity.monitor.members.roles.admin')}>🛡️</span>
+                            )}
                           </div>
                         );
-                      }
-                      const senderId = Number(m.senderId);
-                      const mine = Number(selectedUserId) === senderId;
-                      const info = groupMemberInfo[senderId] || {};
-                      const avatarUrl = m.senderAvatar || info.avatar;
-                      const role = info.role || (groupInfo?.ownerId && senderId === groupInfo.ownerId ? 'owner' : undefined);
-                      const name = m.senderName || info.name || '';
-                      const Avatar = (
-                        <div className="relative flex-shrink-0">
-                          {avatarUrl ? (
-                            <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
-                          ) : (
-                            <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
-                              {(name || '?').charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                          {role === 'owner' && (
-                            <span className="absolute -bottom-1 -right-1 h-4 w-4 xl-down:h-3 xl-down:w-3 rounded-full bg-yellow-400 text-[10px] xl-down:text-[8px] flex items-center justify-center ring-2 ring-white dark:ring-neutral-900" title={t('userActivity.monitor.members.roles.owner')}>🔑</span>
-                          )}
-                          {role === 'admin' && (
-                            <span className="absolute -bottom-1 -right-1 h-4 w-4 xl-down:h-3 xl-down:w-3 rounded-full bg-blue-500 text-[10px] xl-down:text-[8px] flex items-center justify-center ring-2 ring-white dark:ring-neutral-900" title={t('userActivity.monitor.members.roles.admin')}>🛡️</span>
-                          )}
-                        </div>
-                      );
-                      return (
-                        <div key={m.id} className={`flex items-end ${mine ? 'justify-end' : 'justify-start'}`}>
-                          {!mine && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
-                          <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
-                            <div className="flex items-start justify-between space-x-2">
-                              <div className="flex-1">
-                                <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
-                                <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                                <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
-                              </div>
-                              {mine && (onRecallMessage || onDeleteMessage) && (
-                                <div className="relative flex-shrink-0">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
-                                    }}
-                                    className={`p-1 rounded transition-colors ${
-                                      mine 
-                                        ? 'text-white/70 hover:text-white hover:bg-white/10 focus:ring-white/30' 
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:ring-blue-500'
-                                    } focus:outline-none focus:ring-1`}
-                                    aria-label={t('userActivity.messages.actions.menu', 'Menu')}
-                                  >
-                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                    </svg>
-                                  </button>
-                                  {openMessageMenuId === m.id && (
-                                    <div
-                                      className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      {onRecallMessage && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenMessageMenuId(null);
-                                            onRecallMessage(m.id, true);
-                                          }}
-                                          className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
-                                        >
-                                          <span>🔄</span>
-                                          <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
-                                        </button>
-                                      )}
-                                      {onDeleteMessage && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenMessageMenuId(null);
-                                            onDeleteMessage(m.id, true);
-                                          }}
-                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
-                                        >
-                                          <span>🗑️</span>
-                                          <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
-                                        </button>
-                                      )}
-                                    </div>
-                                  )}
+                        fragments.push(
+                          <div key={m.id} className={`flex items-end ${mine ? 'justify-end' : 'justify-start'}`}>
+                            {!mine && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
+                            <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
+                              <div className="flex items-start justify-between space-x-2">
+                                <div className="flex-1">
+                                  <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
+                                  <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                  <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
                                 </div>
-                              )}
+                                {mine && (onRecallMessage || onDeleteMessage) && (
+                                  <div className="relative flex-shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                      }}
+                                      className={`p-1 rounded transition-colors ${
+                                        mine 
+                                          ? 'text-white/70 hover:text-white hover:bg-white/10 focus:ring-white/30' 
+                                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:ring-blue-500'
+                                      } focus:outline-none focus:ring-1`}
+                                      aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                    >
+                                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                      </svg>
+                                    </button>
+                                    {openMessageMenuId === m.id && (
+                                      <div
+                                        className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        {onRecallMessage && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onRecallMessage(m.id, true);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>🔄</span>
+                                            <span>{t('userActivity.messages.actions.recall', 'Thu hồi tin nhắn')}</span>
+                                          </button>
+                                        )}
+                                        {onDeleteMessage && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onDeleteMessage(m.id, true);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>🗑️</span>
+                                            <span>{t('userActivity.messages.actions.delete', 'Xóa tin nhắn')}</span>
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
                             </div>
+                            {mine && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                           </div>
-                          {mine && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
-                        </div>
-                      );
-                    })
+                        );
+                      });
+                      return fragments;
+                    })()
                   )}
                   {/* Typing bubbles for group members (exclude monitored user to giảm nhiễu) */}
                   {groupTypingUsers && Object.keys(groupTypingUsers).length > 0 && (
@@ -445,7 +511,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       const Avatar = (
                         <div className="relative flex-shrink-0">
                           {avatarUrl ? (
-                            <img src={avatarUrl} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
+                            <img src={resolveAvatar(avatarUrl)} alt={name || 'avatar'} className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full object-cover" />
                           ) : (
                             <div className="h-8 w-8 xl-down:h-6 xl-down:w-6 sm-down:h-5 sm-down:w-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs xl-down:text-2xs font-medium">
                               {(name || '?').charAt(0).toUpperCase()}

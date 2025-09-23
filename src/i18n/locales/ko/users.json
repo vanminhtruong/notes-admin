@@ -53,6 +53,10 @@
         "viewMembers": "멤버 보기",
         "close": "닫기"
       },
+      "daySeparator": {
+        "today": "오늘",
+        "yesterday": "어제"
+      },
       "members": {
         "title": "멤버",
         "empty": "멤버가 없습니다",
@@ -63,6 +67,31 @@
           "member": "멤버"
         }
       }
+    },
+    "notifications": {
+      "noNotifications": "알림이 없습니다",
+      "types": {
+        "message": "메시지",
+        "friend_request": "친구 요청",
+        "group_invite": "그룹 초대"
+      },
+      "actions": {
+        "menu": "메뉴",
+        "delete": "알림 삭제"
+      },
+      "message": {
+        "title": "{{name}}님의 새 메시지",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "{{name}}님이 친구 요청을 보냈습니다"
+      },
+      "groupInvite": {
+        "title": "{{name}} 그룹 초대"
+      },
+      "unknown": "알 수 없음",
+      "deleteSuccess": "알림이 삭제되었습니다",
+      "deleteError": "알림을 삭제할 수 없습니다"
     },
     "typing": {
       "typingWith": "{{name}}와 입력 중",

@@ -118,7 +118,11 @@
         },
         "notifications": {
           "label": "알림 탭",
-          "description": "사용자의 알림 보기"
+          "description": "사용자의 알림 보기",
+          "delete": {
+            "label": "알림 삭제",
+            "description": "실시간으로 사용자의 알림을 삭제할 수 있습니다"
+          }
         },
         "monitor": {
           "label": "모니터링 탭",

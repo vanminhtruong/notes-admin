@@ -41,7 +41,8 @@
     }
   },
   "actions": {
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "confirm": "Xác nhận"
   },
   "pagination": {
     "previous": "Trước",

@@ -53,6 +53,10 @@
         "viewMembers": "Xem thành viên",
         "close": "Đóng"
       },
+      "daySeparator": {
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua"
+      },
       "members": {
         "title": "Thành viên",
         "empty": "Không có thành viên",
@@ -63,6 +67,31 @@
           "member": "Thành viên"
         }
       }
+    },
+    "notifications": {
+      "noNotifications": "Chưa có thông báo",
+      "types": {
+        "message": "Tin nhắn",
+        "friend_request": "Lời mời kết bạn",
+        "group_invite": "Lời mời vào nhóm"
+      },
+      "actions": {
+        "menu": "Menu",
+        "delete": "Xóa thông báo"
+      },
+      "message": {
+        "title": "Tin nhắn mới từ {{name}}",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "{{name}} đã gửi lời mời kết bạn"
+      },
+      "groupInvite": {
+        "title": "Lời mời vào nhóm {{name}}"
+      },
+      "unknown": "Không xác định",
+      "deleteSuccess": "Đã xóa thông báo",
+      "deleteError": "Không thể xóa thông báo"
     },
     "typing": {
       "typingWith": "Đang nhắn tin với {{name}}",

@@ -53,6 +53,10 @@
         "viewMembers": "View Members",
         "close": "Close"
       },
+      "daySeparator": {
+        "today": "Today",
+        "yesterday": "Yesterday"
+      },
       "members": {
         "title": "Members",
         "empty": "No members",
@@ -63,6 +67,31 @@
           "member": "Member"
         }
       }
+    },
+    "notifications": {
+      "noNotifications": "No notifications",
+      "types": {
+        "message": "Message",
+        "friend_request": "Friend request",
+        "group_invite": "Group invite"
+      },
+      "actions": {
+        "menu": "Menu",
+        "delete": "Delete notification"
+      },
+      "message": {
+        "title": "New message from {{name}}",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "{{name}} sent you a friend request"
+      },
+      "groupInvite": {
+        "title": "Invitation to join {{name}}"
+      },
+      "unknown": "Unknown",
+      "deleteSuccess": "Notification deleted",
+      "deleteError": "Cannot delete notification"
     },
     "typing": {
       "typingWith": "Typing with {{name}}",

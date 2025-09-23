@@ -12,17 +12,25 @@ export const useNotifications = (selectedUserId: number | null) => {
     try {
       if (showLoading) setLoadingNotifications(true);
       
-      // Load collapsed notifications for display
-      const res = await adminService.adminGetUserNotifications(id, { limit: 50, collapse: 'message_by_other' });
-      const list = res?.data || res || [];
-      const notificationsList = Array.isArray(list) ? list : [];
-      setNotifications(notificationsList);
-      
+      // Prefer non-collapsed list first to ensure visibility
+      const res = await adminService.adminGetUserNotifications(id, { limit: 200 });
+      const normalize = (raw: any): AdminNotification[] => {
+        if (Array.isArray(raw)) return raw as AdminNotification[];
+        if (raw && Array.isArray(raw.data)) return raw.data as AdminNotification[];
+        if (raw && raw.data && Array.isArray(raw.data.items)) return raw.data.items as AdminNotification[];
+        if (raw && Array.isArray(raw.items)) return raw.items as AdminNotification[];
+        return [] as AdminNotification[];
+      };
+      const notificationsList = normalize(res);
       // Load ALL unread notifications separately for accurate count
       const countRes = await adminService.adminGetUserNotifications(id, { unreadOnly: true });
-      const unreadList = countRes?.data || countRes || [];
-      const unreadNotifications = Array.isArray(unreadList) ? unreadList : [];
-      setUnreadNotificationsCount(unreadNotifications.length);
+      const unreadList = normalize(countRes);
+      const unreadArr = Array.isArray(unreadList) ? unreadList : [];
+      setUnreadNotificationsCount(unreadArr.length);
+      // Luôn hiển thị danh sách chính (không-collapsed). Không override bằng danh sách unread-only để tránh hiện lại thông báo đã xóa.
+      const primaryList = Array.isArray(notificationsList) ? notificationsList : [];
+      setNotifications(primaryList);
+      
     } catch (e) {
       setNotifications([]);
       setUnreadNotificationsCount(0);
@@ -68,11 +76,21 @@ export const useNotifications = (selectedUserId: number | null) => {
 
     s.on('admin_notification_created', onAdminNotificationCreated);
     s.on('admin_notifications_marked_all_read', onAdminNotificationsMarkedAllRead);
+    const onAdminNotificationDeleted = (p: any) => {
+      try {
+        if (!p) return;
+        if (Number(p.userId) !== Number(selectedUserId)) return;
+        // Reload to reflect deletion in UI and count
+        loadNotifications(selectedUserId, false);
+      } catch {}
+    };
+    s.on('admin_notification_deleted', onAdminNotificationDeleted);
 
     return () => {
       try {
         s.off('admin_notification_created', onAdminNotificationCreated);
         s.off('admin_notifications_marked_all_read', onAdminNotificationsMarkedAllRead);
+        s.off('admin_notification_deleted', onAdminNotificationDeleted);
       } catch {}
     };
   }, [selectedUserId, loadNotifications]);

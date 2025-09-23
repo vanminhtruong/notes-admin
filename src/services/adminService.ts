@@ -11,6 +11,20 @@ class AdminService {
     };
   }
 
+  // Admin: Delete a specific notification of user
+  async adminDeleteUserNotification(userId: number, notificationId: number) {
+    const url = `${API_BASE_URL}/admin/users/${userId}/notifications/${notificationId}`;
+    const response = await fetch(url, { method: 'DELETE', headers: this.getHeaders() });
+    if (!response.ok) {
+      let message = 'Không thể xóa thông báo';
+      try { const data = await response.json(); message = data.message || message; } catch {}
+      const err = new Error(message);
+      (err as any).status = response.status;
+      throw err;
+    }
+    return response.json();
+  }
+
   // Admin: Fetch notifications of a specific user
   async adminGetUserNotifications(userId: number, params: { limit?: number; unreadOnly?: boolean; collapse?: string } = {}) {
     const queryParams = new URLSearchParams();

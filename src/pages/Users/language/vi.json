@@ -97,6 +97,10 @@
         "friend_request": "Kết bạn",
         "group_invite": "Mời nhóm"
       },
+      "actions": {
+        "menu": "Menu",
+        "delete": "Xóa thông báo"
+      },
       "message": {
         "title": "Tin nhắn mới từ {{name}}",
         "preview": "{{preview}}"
@@ -106,7 +110,9 @@
       },
       "groupInvite": {
         "title": "Lời mời vào nhóm {{name}}"
-      }
+      },
+      "deleteSuccess": "Đã xóa thông báo",
+      "deleteError": "Không thể xóa thông báo"
     },
     "monitor": {
       "tabs": {
@@ -123,6 +129,10 @@
       "actions": {
         "viewMembers": "Xem thành viên & vai trò",
         "close": "Đóng"
+      },
+      "daySeparator": {
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua"
       },
       "members": {
         "title": "Thành viên & vai trò",

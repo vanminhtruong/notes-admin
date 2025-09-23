@@ -118,7 +118,11 @@
         },
         "notifications": {
           "label": "Tab thông báo",
-          "description": "Xem thông báo của người dùng"
+          "description": "Xem thông báo của người dùng",
+          "delete": {
+            "label": "Xóa thông báo",
+            "description": "Cho phép xóa thông báo của người dùng theo thời gian thực"
+          }
         },
         "monitor": {
           "label": "Tab giám sát",

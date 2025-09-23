@@ -118,7 +118,11 @@
         },
         "notifications": {
           "label": "Notifications Tab",
-          "description": "View user's notifications"
+          "description": "View user's notifications",
+          "delete": {
+            "label": "Delete notifications",
+            "description": "Allow deleting user's notifications in real time"
+          }
         },
         "monitor": {
           "label": "Monitor Tab",

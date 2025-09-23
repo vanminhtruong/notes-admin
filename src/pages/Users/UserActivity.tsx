@@ -43,7 +43,8 @@ const UserActivity: React.FC = () => {
   const {
     notifications,
     loadingNotifications,
-    unreadNotificationsCount
+    unreadNotificationsCount,
+    loadNotifications,
   } = useNotifications(selectedUserId);
   
   const {
@@ -86,13 +87,13 @@ const UserActivity: React.FC = () => {
             onClick={cancelAction}
             className="px-3 py-1.5 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
           >
-            {t('common:cancel')}
+            {t('common:actions.cancel', 'Cancel')}
           </button>
           <button
             onClick={confirmAction}
             className="px-3 py-1.5 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
-            {t('common:confirm')}
+            {t('common:actions.confirm', 'Confirm')}
           </button>
         </div>
       </div>,
@@ -104,6 +105,19 @@ const UserActivity: React.FC = () => {
         hideProgressBar: true,
       }
     );
+  };
+
+  // Delete a specific notification of selected user
+  const handleDeleteNotification = async (notificationId: number) => {
+    try {
+      if (!selectedUserId) return;
+      await adminService.adminDeleteUserNotification(Number(selectedUserId), Number(notificationId));
+      toast.success(t('userActivity.notifications.deleteSuccess', 'Đã xóa thông báo'));
+      // Reload notifications after deletion to refresh list and count
+      try { await loadNotifications(Number(selectedUserId)); } catch {}
+    } catch (error: any) {
+      toast.error(error?.message || t('userActivity.notifications.deleteError', 'Không thể xóa thông báo'));
+    }
   };
 
   // Message action handlers
@@ -226,6 +240,15 @@ const UserActivity: React.FC = () => {
     };
   }, [monitorState.selectedFriendId, monitorState.selectedGroupId, loadDm, loadGroup]);
 
+  // Ensure notifications are (re)loaded when switching into the notifications tab
+  useEffect(() => {
+    try {
+      if (activeTab === 'notifications' && selectedUserId) {
+        loadNotifications(selectedUserId);
+      }
+    } catch {}
+  }, [activeTab, selectedUserId, loadNotifications]);
+
   // Ensure active tab is always visible to current user
   useEffect(() => {
     if (visibleTabs.length > 0 && !visibleTabs.some(tab => tab.key === activeTab)) {
@@ -331,7 +354,7 @@ const UserActivity: React.FC = () => {
                     <FriendsTab activityData={activityData} formatDate={formatDate} />
                   )}
                   {activeTab === 'notifications' && visibleTabs.some(tab => tab.key === 'notifications') && (
-                    <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} />
+                    <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} onDelete={handleDeleteNotification} />
                   )}
                   {activeTab === 'monitor' && visibleTabs.some(tab => tab.key === 'monitor') && (
                     <MonitorTab 

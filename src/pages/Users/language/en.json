@@ -97,6 +97,10 @@
         "friend_request": "Friend request",
         "group_invite": "Group invite"
       },
+      "actions": {
+        "menu": "Menu",
+        "delete": "Delete notification"
+      },
       "message": {
         "title": "New message from {{name}}",
         "preview": "{{preview}}"
@@ -105,8 +109,10 @@
         "title": "Friend request from {{name}}"
       },
       "groupInvite": {
-        "title": "Invitation to join group {{name}}"
-      }
+        "title": "Invitation to join {{name}}"
+      },
+      "deleteSuccess": "Notification deleted",
+      "deleteError": "Cannot delete notification"
     },
     "monitor": {
       "tabs": {
@@ -123,6 +129,10 @@
       "actions": {
         "viewMembers": "View members & roles",
         "close": "Close"
+      },
+      "daySeparator": {
+        "today": "Today",
+        "yesterday": "Yesterday"
       },
       "members": {
         "title": "Members & roles",
