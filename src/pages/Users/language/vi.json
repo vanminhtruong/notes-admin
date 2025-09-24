@@ -90,6 +90,18 @@
       "typingWith": "Đang gõ với {{name}}...",
       "typingInGroup": "Đang gõ trong nhóm..."
     },
+    "callLog": {
+      "video": "Cuộc gọi video",
+      "audio": "Cuộc gọi thoại",
+      "duration": "{{m}} phút {{s}} giây",
+      "incomingVideoFrom": "Cuộc gọi video đến từ {{name}}",
+      "incomingAudioFrom": "Cuộc gọi thoại đến từ {{name}}",
+      "outgoingVideoTo": "Cuộc gọi video đi tới {{name}}",
+      "outgoingAudioTo": "Cuộc gọi thoại đi tới {{name}}",
+      "toUserMissed": "Cuộc gọi tới {{name}} bị nhỡ",
+      "missedFromUser": "Cuộc gọi nhỡ từ {{name}}",
+      "userCancelled": "{{name}} đã hủy cuộc gọi"
+    },
     "notifications": {
       "noNotifications": "Chưa có thông báo",
       "unknown": "Không rõ",

@@ -93,6 +93,18 @@
       "typingWith": "Typing with {{name}}...",
       "typingInGroup": "Typing in group..."
     },
+    "callLog": {
+      "video": "Video call",
+      "audio": "Audio call",
+      "duration": "{{m}} minutes {{s}} seconds",
+      "incomingVideoFrom": "Incoming video call from {{name}}",
+      "incomingAudioFrom": "Incoming audio call from {{name}}",
+      "outgoingVideoTo": "Outgoing video call to {{name}}",
+      "outgoingAudioTo": "Outgoing audio call to {{name}}",
+      "toUserMissed": "Call to {{name}} missed",
+      "missedFromUser": "Missed call from {{name}}",
+      "userCancelled": "{{name}} cancelled the call"
+    },
     "notifications": {
       "noNotifications": "No notifications",
       "unknown": "Unknown",

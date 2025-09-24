@@ -93,6 +93,18 @@
       "typingWith": "{{name}} 님과 대화 중...",
       "typingInGroup": "그룹에서 입력 중..."
     },
+    "callLog": {
+      "video": "영상 통화",
+      "audio": "음성 통화",
+      "duration": "{{m}}분 {{s}}초",
+      "incomingVideoFrom": "{{name}} 님의 영상 통화",
+      "incomingAudioFrom": "{{name}} 님의 음성 통화",
+      "outgoingVideoTo": "{{name}} 님에게 영상 통화",
+      "outgoingAudioTo": "{{name}} 님에게 음성 통화",
+      "toUserMissed": "{{name}} 님에게 걸린 통화 부재중",
+      "missedFromUser": "{{name}} 님의 부재중 통화",
+      "userCancelled": "{{name}} 님이 통화를 취소했습니다"
+    },
     "notifications": {
       "noNotifications": "알림이 없습니다",
       "unknown": "알 수 없음",

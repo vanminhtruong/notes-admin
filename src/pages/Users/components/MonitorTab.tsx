@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { UserActivityData, TypingInfo } from '../interfaces';
 import adminService from '@services/adminService';
+import ReactionChips from './ReactionChips';
+import { onAdminEvent } from '@services/adminEvents';
 
 interface MonitorTabProps {
   activityData: UserActivityData | null;
@@ -80,11 +82,190 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
     return `${BASE_ORIGIN}/${url}`;
   };
 
+  // Helper: render nội dung tin nhắn, hỗ trợ CALL_LOG::<...>
+  const renderMessageContent = (
+    content: any,
+    options?: { isOwn?: boolean; senderName?: string; receiverName?: string }
+  ) => {
+    const text = typeof content === 'string' ? content : String(content ?? '');
+    const isOwn = !!options?.isOwn;
+    const senderName = options?.senderName || '';
+    const receiverName = options?.receiverName || '';
+    const callPrefix = 'CALL_LOG::';
+    if (typeof text === 'string' && text.startsWith(callPrefix)) {
+      try {
+        const raw = text.slice(callPrefix.length);
+        const obj = JSON.parse(decodeURIComponent(raw));
+        const media: 'audio' | 'video' = obj.media === 'video' ? 'video' : 'audio';
+        const direction: 'incoming' | 'outgoing' = obj.direction === 'incoming' ? 'incoming' : 'outgoing';
+        const viewDir: 'incoming' | 'outgoing' = isOwn ? direction : (direction === 'incoming' ? 'outgoing' : 'incoming');
+        const result: 'answered' | 'missed' | 'cancelled' = (['answered', 'missed', 'cancelled'].includes(obj.result) ? obj.result : 'answered');
+        const durationSec: number | undefined = typeof obj.durationSec === 'number' ? obj.durationSec : undefined;
+
+        const fmtDuration = (sec?: number) => {
+          if (!sec || sec <= 0) return null;
+          const m = Math.floor(sec / 60);
+          const s = sec % 60;
+          return (
+            <div className="mt-1 text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1.5">
+              <span>{media === 'video' ? '📹' : '📞'}</span>
+              <span>{t('userActivity.callLog.duration', { m, s, defaultValue: `${m} phút ${s} giây` })}</span>
+            </div>
+          );
+        };
+
+        const header = (() => {
+          if (result === 'missed') {
+            // Outgoing missed -> người nhận không bắt máy; Incoming missed -> cuộc gọi nhỡ từ sender
+            return (
+              viewDir === 'outgoing'
+                ? <span className="font-semibold text-red-600 dark:text-red-400">{t('userActivity.callLog.toUserMissed', { name: receiverName, defaultValue: `Cuộc gọi tới ${receiverName} bị nhỡ` })}</span>
+                : <span className="font-semibold text-red-600 dark:text-red-400">{t('userActivity.callLog.missedFromUser', { name: senderName, defaultValue: `Cuộc gọi nhỡ từ ${senderName}` })}</span>
+            );
+          }
+          if (result === 'cancelled') {
+            // Người gọi đã hủy
+            return (
+              <span className="font-semibold text-red-600 dark:text-red-400">
+                {t('userActivity.callLog.userCancelled', { name: senderName, defaultValue: `${senderName} đã hủy cuộc gọi` })}
+              </span>
+            );
+          }
+          if (viewDir === 'incoming') {
+            return (
+              <span className="font-semibold">
+                {media === 'video'
+                  ? t('userActivity.callLog.incomingVideoFrom', { name: senderName, defaultValue: `Cuộc gọi video đến từ ${senderName}` })
+                  : t('userActivity.callLog.incomingAudioFrom', { name: senderName, defaultValue: `Cuộc gọi thoại đến từ ${senderName}` })}
+              </span>
+            );
+          }
+          return (
+            <span className="font-semibold">
+              {media === 'video'
+                ? t('userActivity.callLog.outgoingVideoTo', { name: receiverName, defaultValue: `Cuộc gọi video đi tới ${receiverName}` })
+                : t('userActivity.callLog.outgoingAudioTo', { name: receiverName, defaultValue: `Cuộc gọi thoại đi tới ${receiverName}` })}
+            </span>
+          );
+        })();
+
+        const label = media === 'video' ? t('userActivity.callLog.video', 'Cuộc gọi video') : t('userActivity.callLog.audio', 'Cuộc gọi thoại');
+
+        return (
+          <div className={`w-[200px] md:w-[220px] bg-white/80 dark:bg-neutral-800/90 backdrop-blur rounded-xl p-3 border ${result === 'missed' ? 'border-red-200 dark:border-red-900/40' : 'border-white/20 dark:border-neutral-700/30'} shadow-sm`}
+               role="group" aria-label="call-log">
+            <div className="text-gray-900 dark:text-gray-100 mb-0.5 flex items-center gap-1.5 text-sm">
+              <span className={`${result==='missed' ? 'text-red-600 dark:text-red-400' : 'text-blue-600'}`}>{media === 'video' ? '📹' : '📞'}</span>
+              {header}
+            </div>
+            <div className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1.5">
+              <span className="opacity-70">{media === 'video' ? '📹' : '📞'}</span>
+              <span>{label}</span>
+            </div>
+            {fmtDuration(durationSec)}
+          </div>
+        );
+      } catch {
+        // fallthrough
+      }
+    }
+    // Mặc định hiển thị text
+    return <div className="whitespace-pre-wrap break-words">{text}</div>;
+  };
+
   // Refs for auto-scroll to typing
   const dmListRef = useRef<HTMLDivElement | null>(null);
   const dmTypingRef = useRef<HTMLDivElement | null>(null);
   const groupListRef = useRef<HTMLDivElement | null>(null);
   const groupEndRef = useRef<HTMLDivElement | null>(null);
+
+  // ========= Reactions realtime (DM & Group) =========
+  const [dmReactionsAgg, setDmReactionsAgg] = useState<Record<number, Record<string, number>>>({});
+  const [groupReactionsAgg, setGroupReactionsAgg] = useState<Record<number, Record<string, number>>>({});
+
+  const computeAgg = (reactions: any[]): Record<string, number> => {
+    const map: Record<string, number> = {};
+    if (Array.isArray(reactions)) {
+      for (const r of reactions) {
+        const k = String(r.type);
+        const c = Number(r.count || 1);
+        map[k] = (map[k] || 0) + c;
+      }
+    }
+    return map;
+  };
+
+  // Init aggregates when dmMessages change
+  useEffect(() => {
+    try {
+      const next: Record<number, Record<string, number>> = {};
+      for (const m of (dmMessages || [])) {
+        const arr = (m as any).Reactions;
+        if (Array.isArray(arr)) next[Number((m as any).id)] = computeAgg(arr);
+      }
+      setDmReactionsAgg(next);
+    } catch {}
+  }, [dmMessages]);
+
+  // Init aggregates when groupMessages change
+  useEffect(() => {
+    try {
+      const next: Record<number, Record<string, number>> = {};
+      for (const m of (groupMessages || [])) {
+        const arr = (m as any).Reactions;
+        if (Array.isArray(arr)) next[Number((m as any).id)] = computeAgg(arr);
+      }
+      setGroupReactionsAgg(next);
+    } catch {}
+  }, [groupMessages]);
+
+  // Listen admin reaction events and update aggregates
+  useEffect(() => {
+    const off1 = onAdminEvent('admin_dm_message_reacted', (p) => {
+      setDmReactionsAgg((prev) => {
+        const curMap = { ...(prev[p.messageId] || {}) };
+        const cur = Number(curMap[p.type] || 0);
+        const provided = Number(p.count || 0);
+        curMap[p.type] = Math.max(cur + 1, provided);
+        return { ...prev, [p.messageId]: curMap };
+      });
+    });
+    const off2 = onAdminEvent('admin_dm_message_unreacted', (p) => {
+      setDmReactionsAgg((prev) => {
+        const curMap = { ...(prev[p.messageId] || {}) };
+        if (p.type) {
+          const cur = Number(curMap[p.type] || 0) - 1;
+          if (cur > 0) curMap[p.type] = cur; else delete curMap[p.type];
+        } else {
+          // if no type specified, clear map (fallback)
+          return { ...prev, [p.messageId]: {} };
+        }
+        return { ...prev, [p.messageId]: curMap };
+      });
+    });
+    const off3 = onAdminEvent('admin_group_message_reacted', (p) => {
+      setGroupReactionsAgg((prev) => {
+        const curMap = { ...(prev[p.messageId] || {}) };
+        const cur = Number(curMap[p.type] || 0);
+        const provided = Number(p.count || 0);
+        curMap[p.type] = Math.max(cur + 1, provided);
+        return { ...prev, [p.messageId]: curMap };
+      });
+    });
+    const off4 = onAdminEvent('admin_group_message_unreacted', (p) => {
+      setGroupReactionsAgg((prev) => {
+        const curMap = { ...(prev[p.messageId] || {}) };
+        if (p.type) {
+          const cur = Number(curMap[p.type] || 0) - 1;
+          if (cur > 0) curMap[p.type] = cur; else delete curMap[p.type];
+        } else {
+          return { ...prev, [p.messageId]: {} };
+        }
+        return { ...prev, [p.messageId]: curMap };
+      });
+    });
+    return () => { off1(); off2(); off3(); off4(); };
+  }, []);
 
   // Auto-scroll when counterpart or monitored user is typing in DM
   useEffect(() => {
@@ -248,7 +429,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                   {!isUserMessage && (
                                     <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
                                   )}
-                                  <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                  {renderMessageContent(m.content, { isOwn: isUserMessage, senderName: (isUserMessage ? (userInfo?.name || '') : (friendInfo?.name || '')), receiverName: (isUserMessage ? (friendInfo?.name || '') : (userInfo?.name || '')) })}
                                 </div>
                                 {(((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete')) || (onEditMessage && hasPermission('manage_users.activity.messages.edit'))) && isUserMessage) && (
                                   <div className="relative flex-shrink-0">
@@ -373,6 +554,19 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                             {/* Ẩn avatar to cho tin nhắn của user đang theo dõi; trạng thái đã xem đã có avatar nhỏ bên dưới */}
                             {false && isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                           </div>
+                          {/* Reactions dưới bong bóng (DM) */}
+                          {(() => {
+                            const agg = dmReactionsAgg[Number(m.id)] || {};
+                            const list = Object.entries(agg)
+                              .map(([type, count]) => ({ type, count: Number(count) }))
+                              .filter((x) => x.count > 0);
+                            if (list.length === 0) return null;
+                            return (
+                              <div className={`mt-1 flex ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                                <ReactionChips reactions={list} align={isUserMessage ? 'end' : 'start'} />
+                              </div>
+                            );
+                          })()}
                           {/* Hàng trạng thái dưới bong bóng (DM) */}
                           {(() => {
                             const status: string = (dmStatusById as any)[Number(m.id)] || (m as any).status || 'sent';
@@ -543,7 +737,9 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                           fragments.push(
                             <div key={m.id} className="flex justify-center">
                               <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
-                                {m.content}
+                                {typeof m.content === 'string' && m.content.startsWith('CALL_LOG::')
+                                  ? renderMessageContent(m.content, { isOwn: false, senderName: '', receiverName: '' })
+                                  : m.content}
                               </div>
                             </div>
                           );
@@ -580,7 +776,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                               <div className="flex items-start justify-between space-x-2">
                                 <div className="flex-1">
                                   <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
-                                  <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                                  {renderMessageContent(m.content, { isOwn: mine, senderName: name || '', receiverName: '' })}
                                 </div>
                                 {mine && (onRecallMessage || onDeleteMessage || onEditMessage) && (
                                   <div className="relative flex-shrink-0">

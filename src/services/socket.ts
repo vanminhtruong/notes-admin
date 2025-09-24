@@ -2,6 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { getAdminToken } from '@utils/auth';
 import adminService from './adminService';
+import { emitAdminEvent } from './adminEvents';
 
 let socket: Socket | null = null;
 
@@ -60,6 +61,21 @@ export function getAdminSocket(): Socket {
       // eslint-disable-next-line no-console
       console.log(`[AdminSocket] RECEIVED EVENT: ${event}`, data);
     });
+  });
+
+  // Reactions (DM)
+  socket?.on('admin_dm_message_reacted', (payload) => {
+    emitAdminEvent('admin_dm_message_reacted', payload);
+  });
+  socket?.on('admin_dm_message_unreacted', (payload) => {
+    emitAdminEvent('admin_dm_message_unreacted', payload);
+  });
+  // Reactions (Group)
+  socket?.on('admin_group_message_reacted', (payload) => {
+    emitAdminEvent('admin_group_message_reacted', payload);
+  });
+  socket?.on('admin_group_message_unreacted', (payload) => {
+    emitAdminEvent('admin_group_message_unreacted', payload);
   });
 
   // Handle permissions changed event for real-time updates
