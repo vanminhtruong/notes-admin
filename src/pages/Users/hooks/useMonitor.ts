@@ -11,7 +11,13 @@ export const useMonitor = (selectedUserId: number | null) => {
     dmMessages: [],
     groupMessages: [],
     loadingDm: false,
-    loadingGroup: false
+    loadingGroup: false,
+    // Bổ sung map trạng thái theo messageId
+    dmStatusById: {},
+    groupStatusById: {},
+    // Người đã xem
+    dmReadBy: {},
+    groupReadBy: {}
   });
 
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
@@ -48,9 +54,28 @@ export const useMonitor = (selectedUserId: number | null) => {
     try {
       updateMonitorState({ loadingDm: true });
       const res = await adminService.adminGetDMMessages(selectedUserId, friendId, { limit: 50 });
+      const messages = res?.data || res || [];
+      // Khởi tạo map trạng thái từ dữ liệu trả về
+      const nextStatus: Record<number, string> = {};
+      // Khởi tạo map người đã xem từ readByUserIds để sau F5 vẫn giữ avatar "Đã xem"
+      const nextReadBy: Record<number, number> = {};
+      (Array.isArray(messages) ? messages : []).forEach((m: any) => {
+        if (m && m.id != null && typeof m.status === 'string') {
+          nextStatus[Number(m.id)] = m.status;
+        }
+        if (m && m.id != null && Array.isArray(m.readByUserIds) && m.readByUserIds.length > 0) {
+          // Với DM: chọn người đọc khác người gửi nếu có, nếu không lấy phần tử đầu tiên
+          const senderId = Number(m.senderId);
+          const reader = m.readByUserIds.find((uid: any) => Number(uid) !== senderId);
+          const rid = Number(reader ?? m.readByUserIds[0]);
+          if (!Number.isNaN(rid)) nextReadBy[Number(m.id)] = rid;
+        }
+      });
       updateMonitorState({ 
-        dmMessages: res?.data || res || [],
-        loadingDm: false
+        dmMessages: messages,
+        loadingDm: false,
+        dmStatusById: nextStatus,
+        dmReadBy: nextReadBy
       });
     } catch (e) {
       updateMonitorState({ 
@@ -69,12 +94,25 @@ export const useMonitor = (selectedUserId: number | null) => {
       ]);
       
       const messages = msgsRes?.data || msgsRes || [];
+      // Khởi tạo map trạng thái group từ dữ liệu
+      const nextGroupStatus: Record<number, string> = {};
+      const nextGroupReadBy: Record<number, number[]> = {};
+      (Array.isArray(messages) ? messages : []).forEach((m: any) => {
+        if (m && m.id != null && typeof m.status === 'string') {
+          nextGroupStatus[Number(m.id)] = m.status;
+        }
+        if (m && m.id != null && Array.isArray(m.readByUserIds)) {
+          nextGroupReadBy[Number(m.id)] = m.readByUserIds.map((x: any) => Number(x)).filter((x: number) => !Number.isNaN(x));
+        }
+      });
       const groupData = membersRes?.data?.group || membersRes?.group || null;
       const members = membersRes?.data?.members || membersRes?.members || [];
       
       updateMonitorState({ 
         groupMessages: messages,
-        loadingGroup: false
+        loadingGroup: false,
+        groupStatusById: nextGroupStatus,
+        groupReadBy: nextGroupReadBy
       });
       
       setGroupInfo(groupData ? { ownerId: Number(groupData.ownerId) } : null);
@@ -135,9 +173,14 @@ export const useMonitor = (selectedUserId: number | null) => {
           const messageExists = prevState.dmMessages.some(msg => msg.id === p.id);
           if (messageExists) return prevState;
           
+          const nextStatus = { ...(prevState.dmStatusById || {}) } as Record<number, string>;
+          if (p && p.id != null) {
+            nextStatus[Number(p.id)] = typeof p.status === 'string' ? p.status : 'sent';
+          }
           return { 
             ...prevState,
-            dmMessages: [...prevState.dmMessages, p] 
+            dmMessages: [...prevState.dmMessages, p],
+            dmStatusById: nextStatus
           };
         });
       } catch {}
@@ -156,9 +199,14 @@ export const useMonitor = (selectedUserId: number | null) => {
           const messageExists = prevState.groupMessages.some(msg => msg.id === p.id);
           if (messageExists) return prevState;
           
+          const nextStatus = { ...(prevState.groupStatusById || {}) } as Record<number, string>;
+          if (p && p.id != null) {
+            nextStatus[Number(p.id)] = typeof p.status === 'string' ? p.status : 'sent';
+          }
           return { 
             ...prevState,
-            groupMessages: [...prevState.groupMessages, p] 
+            groupMessages: [...prevState.groupMessages, p],
+            groupStatusById: nextStatus
           };
         });
       } catch {}
@@ -219,11 +267,77 @@ export const useMonitor = (selectedUserId: number | null) => {
     };
     s.on('admin_group_typing', onAdminGroupTyping);
 
+    // Realtime: trạng thái DM delivered
+    const onAdminMessageDelivered = (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => ({
+          ...prev,
+          dmStatusById: { ...prev.dmStatusById, [Number(p.messageId)]: 'delivered' }
+        }));
+      } catch {}
+    };
+    s.on('admin_message_delivered', onAdminMessageDelivered);
+
+    // Realtime: trạng thái DM read
+    const onAdminMessageRead = (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => {
+          const mid = Number(p.messageId);
+          const nextStatus = { ...prev.dmStatusById, [mid]: 'read' } as Record<number, string>;
+          const nextReadBy = { ...(prev.dmReadBy || {}) } as Record<number, number>;
+          if (p.readerId != null) nextReadBy[mid] = Number(p.readerId);
+          return {
+            ...prev,
+            dmStatusById: nextStatus,
+            dmReadBy: nextReadBy
+          };
+        });
+      } catch {}
+    };
+    s.on('admin_message_read', onAdminMessageRead);
+
+    // Realtime: trạng thái Group delivered
+    const onAdminGroupMessageDelivered = (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => ({
+          ...prev,
+          groupStatusById: { ...prev.groupStatusById, [Number(p.messageId)]: 'delivered' }
+        }));
+      } catch {}
+    };
+    s.on('admin_group_message_delivered', onAdminGroupMessageDelivered);
+
+    // Realtime: trạng thái Group read
+    const onAdminGroupMessageRead = (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => {
+          const mid = Number(p.messageId);
+          const nextStatus = { ...prev.groupStatusById, [mid]: 'read' } as Record<number, string>;
+          const prevReaders = prev.groupReadBy?.[mid] || [];
+          const readers = prevReaders.includes(Number(p.readerId)) ? prevReaders : [...prevReaders, Number(p.readerId)];
+          return {
+            ...prev,
+            groupStatusById: nextStatus,
+            groupReadBy: { ...(prev.groupReadBy || {}), [mid]: readers }
+          };
+        });
+      } catch {}
+    };
+    s.on('admin_group_message_read', onAdminGroupMessageRead);
+
     return () => {
       try {
         s.off('admin_dm_created', onAdminDmCreated);
         s.off('admin_group_message_created', onAdminGroupMessageCreated);
         s.off('admin_group_typing', onAdminGroupTyping);
+        s.off('admin_message_delivered', onAdminMessageDelivered);
+        s.off('admin_message_read', onAdminMessageRead);
+        s.off('admin_group_message_delivered', onAdminGroupMessageDelivered);
+        s.off('admin_group_message_read', onAdminGroupMessageRead);
         // Clear tất cả timers khi unmount/đổi user
         const timers = groupTypingTimersRef.current;
         Object.keys(timers).forEach((k) => {

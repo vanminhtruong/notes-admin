@@ -73,7 +73,8 @@
       "actions": {
         "menu": "Menu",
         "recall": "Thu hồi tin nhắn",
-        "delete": "Xóa tin nhắn"
+        "delete": "Xóa tin nhắn",
+        "edit": "Chỉnh sửa tin nhắn"
       }
     },
     "groups": {
@@ -121,6 +122,7 @@
       },
       "friendsList": "Bạn bè",
       "selectFriendToView": "Chọn một bạn bè để xem",
+      "noFriends": "Người này chưa kết bạn với ai",
       "chatWith": "Chat với {{name}}",
       "noMessages": "Chưa có tin nhắn",
       "groupsList": "Nhóm",
@@ -134,6 +136,11 @@
         "today": "Hôm nay",
         "yesterday": "Hôm qua"
       },
+      "status": {
+        "sent": "Đã gửi",
+        "delivered": "Đã nhận",
+        "read": "Đã xem"
+      },
       "members": {
         "title": "Thành viên & vai trò",
         "empty": "Chưa có thành viên",
@@ -144,6 +151,13 @@
           "member": "Thành viên"
         }
       }
+    }
+    ,
+    "messageActions": {
+      "editPrompt": "Nhập nội dung mới cho tin nhắn:",
+      "editEmpty": "Nội dung không được để trống",
+      "editSuccess": "Đã chỉnh sửa tin nhắn",
+      "editError": "Không thể chỉnh sửa tin nhắn"
     }
   }
 }

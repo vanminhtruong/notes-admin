@@ -126,7 +126,23 @@
         },
         "monitor": {
           "label": "모니터링 탭",
-          "description": "사용자의 실시간 활동 모니터링"
+          "description": "사용자의 실시간 활동 모니터링",
+          "message_status": {
+            "label": "메시지 상태 추적",
+            "description": "메시지 발송, 전달, 읽음 상태를 실시간으로 확인",
+            "sent": {
+              "label": "발송 상태",
+              "description": "메시지가 발송될 때 추적"
+            },
+            "delivered": {
+              "label": "전달 상태",
+              "description": "메시지가 수신자에게 전달될 때 추적"
+            },
+            "read": {
+              "label": "읽음 상태",
+              "description": "메시지가 수신자에 의해 읽힐 때 추적"
+            }
+          }
         }
       }
     },

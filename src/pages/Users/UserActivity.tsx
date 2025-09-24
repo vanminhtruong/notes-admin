@@ -73,6 +73,8 @@ const UserActivity: React.FC = () => {
       onConfirm();
     };
 
+  
+
     const cancelAction = () => {
       toast.dismiss();
     };
@@ -87,13 +89,13 @@ const UserActivity: React.FC = () => {
             onClick={cancelAction}
             className="px-3 py-1.5 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
           >
-            {t('common:actions.cancel', 'Cancel')}
+            {t('buttons.cancel', 'Cancel')}
           </button>
           <button
             onClick={confirmAction}
             className="px-3 py-1.5 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
-            {t('common:actions.confirm', 'Confirm')}
+            {t('buttons.confirm', 'Confirm')}
           </button>
         </div>
       </div>,
@@ -105,6 +107,69 @@ const UserActivity: React.FC = () => {
         hideProgressBar: true,
       }
     );
+  };
+  
+  // Edit a message (DM hoặc Group) cho user đang theo dõi (editor inline qua toast)
+  const handleEditMessage = async (messageId: number, isGroup?: boolean, currentContent?: string) => {
+    let newContent = currentContent || '';
+    const Editor = () => (
+      <div className="flex flex-col space-y-3">
+        <div className="text-sm text-gray-800 dark:text-gray-200">
+          {t('messageActions.editPrompt', 'Nhập nội dung mới cho tin nhắn:')}
+        </div>
+        <textarea
+          defaultValue={newContent}
+          onChange={(e) => { newContent = e.target.value; }}
+          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          rows={3}
+        />
+        <div className="flex space-x-2 justify-end">
+          <button
+            onClick={() => toast.dismiss()}
+            className="px-3 py-1.5 text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+          >
+            {t('buttons.cancel', 'Cancel')}
+          </button>
+          <button
+            onClick={async () => {
+              try {
+                if (!newContent || newContent.trim().length === 0) {
+                  toast.error(t('messageActions.editEmpty', 'Nội dung không được để trống'));
+                  return;
+                }
+                toast.dismiss();
+                if (isGroup) {
+                  await adminService.editGroupMessage(Number(messageId), newContent.trim());
+                } else {
+                  await adminService.editDMMessage(Number(messageId), newContent.trim());
+                }
+                toast.success(t('messageActions.editSuccess', 'Đã chỉnh sửa tin nhắn'));
+                if (selectedUserId) {
+                  loadUserActivity(selectedUserId);
+                }
+                if (isGroup && monitorState.selectedGroupId) {
+                  loadGroup(monitorState.selectedGroupId);
+                } else if (!isGroup && monitorState.selectedFriendId) {
+                  loadDm(monitorState.selectedFriendId);
+                }
+              } catch (error: any) {
+                toast.error(error?.message || t('messageActions.editError', 'Không thể chỉnh sửa tin nhắn'));
+              }
+            }}
+            className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            {t('buttons.confirm', 'Confirm')}
+          </button>
+        </div>
+      </div>
+    );
+    toast.info(<Editor />, {
+      position: 'top-center',
+      autoClose: false,
+      closeOnClick: false,
+      closeButton: false,
+      hideProgressBar: true,
+    });
   };
 
   // Delete a specific notification of selected user
@@ -227,16 +292,37 @@ const UserActivity: React.FC = () => {
       }
     };
 
+    // Listen for edited by admin (DM & Group)
+    const handleMessageEdited = () => {
+      if (monitorState.selectedFriendId) {
+        loadDm(monitorState.selectedFriendId);
+      }
+    };
+    const handleGroupMessageEdited = () => {
+      if (monitorState.selectedGroupId) {
+        loadGroup(monitorState.selectedGroupId);
+      }
+    };
+
     socket.on('message_recalled_by_admin', handleMessageRecalled);
     socket.on('message_deleted_by_admin', handleMessageDeleted);
     socket.on('group_message_recalled_by_admin', handleGroupMessageRecalled);
     socket.on('group_message_deleted_by_admin', handleGroupMessageDeleted);
+    socket.on('message_edited_by_admin', handleMessageEdited);
+    socket.on('group_message_edited_by_admin', handleGroupMessageEdited);
+    // Also listen to admin namespace events when other admins edit
+    socket.on('admin_dm_edited', handleMessageEdited);
+    socket.on('admin_group_message_edited', handleGroupMessageEdited);
 
     return () => {
       socket.off('message_recalled_by_admin', handleMessageRecalled);
       socket.off('message_deleted_by_admin', handleMessageDeleted);
       socket.off('group_message_recalled_by_admin', handleGroupMessageRecalled);
       socket.off('group_message_deleted_by_admin', handleGroupMessageDeleted);
+      socket.off('message_edited_by_admin', handleMessageEdited);
+      socket.off('group_message_edited_by_admin', handleGroupMessageEdited);
+      socket.off('admin_dm_edited', handleMessageEdited);
+      socket.off('admin_group_message_edited', handleGroupMessageEdited);
     };
   }, [monitorState.selectedFriendId, monitorState.selectedGroupId, loadDm, loadGroup]);
 
@@ -380,6 +466,7 @@ const UserActivity: React.FC = () => {
                       updateMonitorState={updateMonitorState}
                       onRecallMessage={handleRecallMessage}
                       onDeleteMessage={handleDeleteMessage}
+                      onEditMessage={handleEditMessage}
                     />
                   )}
                 </div>

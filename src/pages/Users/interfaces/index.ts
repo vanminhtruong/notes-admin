@@ -74,6 +74,12 @@ export interface MonitorState {
   groupMessages: any[];
   loadingDm: boolean;
   loadingGroup: boolean;
+  // Map trạng thái messageId -> 'sent' | 'delivered' | 'read'
+  dmStatusById?: Record<number, string>;
+  groupStatusById?: Record<number, string>;
+  // Người đã xem: DM: messageId -> readerId; Group: messageId -> danh sách readerIds
+  dmReadBy?: Record<number, number>;
+  groupReadBy?: Record<number, number[]>;
 }
 
 export interface GroupMemberInfo {

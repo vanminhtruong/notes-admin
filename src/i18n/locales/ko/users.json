@@ -25,7 +25,10 @@
       "actions": {
         "menu": "메뉴",
         "recall": "메시지 회수",
-        "delete": "메시지 삭제"
+        "delete": "메시지 삭제",
+        "deleteForUser": "사용자 측 삭제",
+        "confirmDeleteForUser": "모니터링 중인 사용자 측에서 이 메시지를 삭제하시겠습니까?",
+        "deleteError": "메시지를 삭제할 수 없습니다"
       }
     },
     "groups": {

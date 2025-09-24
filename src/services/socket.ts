@@ -50,7 +50,9 @@ export function getAdminSocket(): Socket {
     // Admin permissions management events
     'admin_created', 'admin_permissions_updated', 'admin_permission_revoked', 
     'admin_status_changed', 'admin_removed', 'permissions_changed', 'permission_revoked',
-    'admin_access_revoked', 'admin_account_deactivated'
+    'admin_access_revoked', 'admin_account_deactivated',
+    // New: status events for monitoring
+    'admin_message_delivered', 'admin_message_read', 'admin_group_message_delivered', 'admin_group_message_read'
   ];
   
   adminEvents.forEach(event => {

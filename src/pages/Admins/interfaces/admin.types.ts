@@ -192,7 +192,31 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
           {
             key: 'manage_users.activity.monitor',
             label: 'Tab giám sát',
-            description: 'Giám sát hoạt động real-time của người dùng'
+            description: 'Giám sát hoạt động real-time của người dùng',
+            subPermissions: [
+              {
+                key: 'manage_users.activity.monitor.message_status',
+                label: 'Theo dõi trạng thái tin nhắn',
+                description: 'Xem trạng thái gửi, nhận, đọc tin nhắn real-time',
+                subPermissions: [
+                  {
+                    key: 'manage_users.activity.monitor.message_status.sent',
+                    label: 'Trạng thái đã gửi',
+                    description: 'Theo dõi khi tin nhắn được gửi đi'
+                  },
+                  {
+                    key: 'manage_users.activity.monitor.message_status.delivered',
+                    label: 'Trạng thái đã nhận',
+                    description: 'Theo dõi khi tin nhắn được nhận bởi người nhận'
+                  },
+                  {
+                    key: 'manage_users.activity.monitor.message_status.read',
+                    label: 'Trạng thái đã xem',
+                    description: 'Theo dõi khi tin nhắn được đọc bởi người nhận'
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -289,24 +313,33 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
 // Helper functions
 export const getAllPermissionKeys = (): string[] => {
   const keys: string[] = [];
-  NESTED_PERMISSIONS.forEach(perm => {
-    keys.push(perm.key);
-    if (perm.subPermissions) {
-      perm.subPermissions.forEach(sub => keys.push(sub.key));
-    }
-  });
+  
+  const addPermissionKeys = (permissions: NestedPermission[]) => {
+    permissions.forEach(perm => {
+      keys.push(perm.key);
+      if (perm.subPermissions && perm.subPermissions.length > 0) {
+        addPermissionKeys(perm.subPermissions); // Recursive call để hỗ trợ nested sâu hơn
+      }
+    });
+  };
+  
+  addPermissionKeys(NESTED_PERMISSIONS);
   return keys;
 };
 
 export const getPermissionByKey = (key: string): NestedPermission | undefined => {
-  for (const perm of NESTED_PERMISSIONS) {
-    if (perm.key === key) return perm;
-    if (perm.subPermissions) {
-      const subPerm = perm.subPermissions.find(sub => sub.key === key);
-      if (subPerm) return subPerm;
+  const findPermission = (permissions: NestedPermission[]): NestedPermission | undefined => {
+    for (const perm of permissions) {
+      if (perm.key === key) return perm;
+      if (perm.subPermissions && perm.subPermissions.length > 0) {
+        const found = findPermission(perm.subPermissions); // Recursive search
+        if (found) return found;
+      }
     }
-  }
-  return undefined;
+    return undefined;
+  };
+  
+  return findPermission(NESTED_PERMISSIONS);
 };
 
 // Legacy support - keep for backwards compatibility

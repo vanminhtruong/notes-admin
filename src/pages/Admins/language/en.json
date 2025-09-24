@@ -126,7 +126,23 @@
         },
         "monitor": {
           "label": "Monitor Tab",
-          "description": "Monitor user's real-time activities"
+          "description": "Monitor user's real-time activities",
+          "message_status": {
+            "label": "Track Message Status",
+            "description": "View message sent, delivered, read status in real-time",
+            "sent": {
+              "label": "Sent Status",
+              "description": "Track when messages are sent"
+            },
+            "delivered": {
+              "label": "Delivered Status",
+              "description": "Track when messages are received by recipient"
+            },
+            "read": {
+              "label": "Read Status",
+              "description": "Track when messages are read by recipient"
+            }
+          }
         }
       }
     },

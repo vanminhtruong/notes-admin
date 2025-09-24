@@ -25,7 +25,10 @@
       "actions": {
         "menu": "Menu",
         "recall": "Thu hồi tin nhắn",
-        "delete": "Xóa tin nhắn"
+        "delete": "Xóa tin nhắn",
+        "deleteForUser": "Xóa phía Users",
+        "confirmDeleteForUser": "Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?",
+        "deleteError": "Không thể xóa tin nhắn"
       }
     },
     "groups": {

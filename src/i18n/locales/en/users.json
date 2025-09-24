@@ -25,7 +25,10 @@
       "actions": {
         "menu": "Menu",
         "recall": "Recall message",
-        "delete": "Delete message"
+        "delete": "Delete message",
+        "deleteForUser": "Delete for User",
+        "confirmDeleteForUser": "Are you sure you want to delete this message for the monitored user?",
+        "deleteError": "Cannot delete message"
       }
     },
     "groups": {

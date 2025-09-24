@@ -126,7 +126,23 @@
         },
         "monitor": {
           "label": "Tab giám sát",
-          "description": "Giám sát hoạt động real-time của người dùng"
+          "description": "Giám sát hoạt động real-time của người dùng",
+          "message_status": {
+            "label": "Theo dõi trạng thái tin nhắn",
+            "description": "Xem trạng thái gửi, nhận, đọc tin nhắn real-time",
+            "sent": {
+              "label": "Trạng thái đã gửi",
+              "description": "Theo dõi khi tin nhắn được gửi đi"
+            },
+            "delivered": {
+              "label": "Trạng thái đã nhận",
+              "description": "Theo dõi khi tin nhắn được nhận bởi người nhận"
+            },
+            "read": {
+              "label": "Trạng thái đã xem",
+              "description": "Theo dõi khi tin nhắn được đọc bởi người nhận"
+            }
+          }
         }
       }
     },

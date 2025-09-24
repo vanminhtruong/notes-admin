@@ -3,6 +3,7 @@ import { hasPermission } from '@utils/auth';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { UserActivityData, TypingInfo } from '../interfaces';
+import adminService from '@services/adminService';
 
 interface MonitorTabProps {
   activityData: UserActivityData | null;
@@ -27,6 +28,7 @@ interface MonitorTabProps {
   updateMonitorState: (update: any) => void;
   onRecallMessage?: (messageId: number, isGroup?: boolean) => void;
   onDeleteMessage?: (messageId: number, isGroup?: boolean) => void;
+  onEditMessage?: (messageId: number, isGroup?: boolean, currentContent?: string) => void;
 }
 
 const MonitorTab: React.FC<MonitorTabProps> = ({
@@ -51,11 +53,19 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   setOpenGroupMenuId,
   updateMonitorState,
   onRecallMessage,
-  onDeleteMessage
+  onDeleteMessage,
+  onEditMessage
 }) => {
   const { t } = useTranslation('users');
   const [openMessageMenuId, setOpenMessageMenuId] = useState<number | null>(null);
-  const { monitorTab, selectedFriendId, selectedGroupId, dmMessages, groupMessages, loadingDm, loadingGroup } = monitorState;
+  const { monitorTab, selectedFriendId, selectedGroupId, dmMessages, groupMessages, loadingDm, loadingGroup, dmStatusById = {}, groupStatusById = {} } = monitorState;
+  const hasFriends = Array.isArray(activityData?.activity.friends) && (activityData!.activity.friends.length > 0);
+
+  // Quyền granular theo dõi trạng thái tin nhắn trong Monitor
+  const canSeeMsgStatusParent = hasPermission('manage_users.activity.monitor.message_status');
+  const canSeeSent = canSeeMsgStatusParent || hasPermission('manage_users.activity.monitor.message_status.sent');
+  const canSeeDelivered = canSeeMsgStatusParent || hasPermission('manage_users.activity.monitor.message_status.delivered');
+  const canSeeRead = canSeeMsgStatusParent || hasPermission('manage_users.activity.monitor.message_status.read');
   // Prevent unused prop warnings for optional handlers we might not render depending on permissions
   void openGroupMenuId; void openGroupMembersModal; void setOpenGroupMenuId; void groupTyping;
 
@@ -129,34 +139,43 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
       </div>
 
       {monitorTab === 'dm' ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
+        <div className={`grid grid-cols-1 ${hasFriends ? 'lg:grid-cols-3' : ''} xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2`}>
           {/* Friends list */}
           <div className="lg:col-span-1">
             <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 mb-2 xl-down:mb-1">{t('userActivity.monitor.friendsList')}</h4>
             <div className="space-y-2 xl-down:space-y-1 max-h-[520px] xl-down:max-h-[300px] sm-down:max-h-[200px] overflow-auto pr-1">
-              {activityData?.activity.friends.map((f) => (
-                <button key={f.id} onClick={() => { updateMonitorState({ selectedFriendId: f.id }); loadDm(f.id); }} className={`w-full flex items-center p-3 xl-down:p-2 sm-down:p-1.5 rounded-lg xl-down:rounded-md border text-left ${selectedFriendId === f.id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700' : 'bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700'}`}>
-                  <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500 text-white flex items-center justify-center">
-                    {f.avatar ? (
-                      <img src={resolveAvatar(f.avatar)} alt={f.name || 'avatar'} className="h-full w-full object-cover" />
-                    ) : (
-                      <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{f.name.charAt(0).toUpperCase()}</span>
-                    )}
-                  </div>
-                  <div className="ml-3 xl-down:ml-2 flex-1 min-w-0">
-                    <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{f.name}</p>
-                    <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 truncate">{f.email}</p>
-                  </div>
-                </button>
-              ))}
+              {Array.isArray(activityData?.activity.friends) && activityData!.activity.friends.length === 0 ? (
+                <div className="flex items-center justify-center h-[120px] text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md border border-dashed border-gray-200 dark:border-neutral-700">
+                  {t('userActivity.monitor.noFriends', 'Người này chưa kết bạn với ai')}
+                </div>
+              ) : (
+                (activityData?.activity.friends || []).map((f) => (
+                  <button key={f.id} onClick={() => { updateMonitorState({ selectedFriendId: f.id }); loadDm(f.id); }} className={`w-full flex items-center p-3 xl-down:p-2 sm-down:p-1.5 rounded-lg xl-down:rounded-md border text-left ${selectedFriendId === f.id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700' : 'bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700'}`}>
+                    <div className="flex-shrink-0 h-9 w-9 xl-down:h-7 xl-down:w-7 sm-down:h-6 sm-down:w-6 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500 text-white flex items-center justify-center">
+                      {f.avatar ? (
+                        <img src={resolveAvatar(f.avatar)} alt={f.name || 'avatar'} className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-sm xl-down:text-xs sm-down:text-2xs font-medium">{f.name.charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+                    <div className="ml-3 xl-down:ml-2 flex-1 min-w-0">
+                      <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{f.name}</p>
+                      <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 truncate">{f.email}</p>
+                    </div>
+                  </button>
+                ))
+              )}
             </div>
           </div>
 
-          {/* DM Viewer */}
+          {/* DM Viewer - ẩn hoàn toàn nếu không có bạn bè */}
+          {hasFriends && (
           <div className="lg:col-span-2">
             {!selectedFriendId ? (
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700 text-sm xl-down:text-xs">
-                {t('userActivity.monitor.selectFriendToView')}
+                {Array.isArray(activityData?.activity.friends) && activityData!.activity.friends.length === 0
+                  ? t('userActivity.monitor.noFriends', 'Người này chưa kết bạn với ai')
+                  : t('userActivity.monitor.selectFriendToView')}
               </div>
             ) : (
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex flex-col bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700">
@@ -175,6 +194,15 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       let lastDayKey: string | null = null;
                       const today = new Date();
                       const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+                      // Xác định messageId gần nhất (do user đang theo dõi gửi) đã được đọc để hiển thị avatar
+                      let latestReadDmId: number | null = null;
+                      for (let i = (dmMessages as any[]).length - 1; i >= 0; i--) {
+                        const mm: any = (dmMessages as any[])[i];
+                        const isMine = Number(mm.senderId) === Number(selectedUserId);
+                        const statusStr: string = (dmStatusById as any)[Number(mm.id)] || (mm as any).status || '';
+                        const hasReader = !!(monitorState as any).dmReadBy?.[Number(mm.id)];
+                        if (isMine && (statusStr === 'read' || hasReader)) { latestReadDmId = Number(mm.id); break; }
+                      }
                       (dmMessages as any[]).forEach((m: any) => {
                         const d = new Date(m.createdAt);
                         const dayKey = startOf(d).toISOString();
@@ -211,7 +239,8 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                         );
 
                         fragments.push(
-                          <div key={m.id} className={`flex items-end ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                          <React.Fragment key={`dm-${m.id}`}>
+                          <div className={`flex items-end ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
                             {!isUserMessage && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
                             <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${isUserMessage ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
                               <div className="flex items-start justify-between space-x-2">
@@ -220,9 +249,8 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                     <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
                                   )}
                                   <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                                  <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
                                 </div>
-                                {((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete'))) && (
+                                {(((onRecallMessage && hasPermission('manage_users.activity.messages.recall')) || (onDeleteMessage && hasPermission('manage_users.activity.messages.delete')) || (onEditMessage && hasPermission('manage_users.activity.messages.edit'))) && isUserMessage) && (
                                   <div className="relative flex-shrink-0">
                                     <button
                                       type="button"
@@ -230,7 +258,11 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                         e.stopPropagation();
                                         setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
                                       }}
-                                      className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
+                                      className={`p-1 rounded transition-colors ${
+                                        isUserMessage 
+                                          ? 'text-white/70 hover:text-white hover:bg-white/10 focus:ring-white/30' 
+                                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:ring-blue-500'
+                                      } focus:outline-none focus:ring-1`}
                                       aria-label={t('userActivity.messages.actions.menu', 'Menu')}
                                     >
                                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -242,6 +274,20 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                         className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
                                         onClick={(e) => e.stopPropagation()}
                                       >
+                                        {onEditMessage && hasPermission('manage_users.activity.messages.edit') && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onEditMessage(m.id, false, m.content);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>✏️</span>
+                                            <span>{t('userActivity.messages.actions.edit', 'Chỉnh sửa tin nhắn')}</span>
+                                          </button>
+                                        )}
                                         {onRecallMessage && hasPermission('manage_users.activity.messages.recall') && (
                                           <button
                                             type="button"
@@ -274,10 +320,102 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                     )}
                                   </div>
                                 )}
+                                {/* Menu phía BẠN CHAT: Xóa phía Users (DM) */}
+                                {(!isUserMessage && hasPermission('manage_users.activity.messages.delete')) && (
+                                  <div className="relative flex-shrink-0 ml-2 xl-down:ml-1">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                      }}
+                                      className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
+                                      aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                    >
+                                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                      </svg>
+                                    </button>
+                                    {openMessageMenuId === m.id && (
+                                      <div
+                                        className="absolute left-full top-6 translate-x-2 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[180px]"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={async (e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            if (!selectedUserId) return;
+                                            const ok = window.confirm(t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'));
+                                            if (!ok) return;
+                                            try {
+                                              await adminService.deleteDMMessage(Number(m.id), Number(selectedUserId));
+                                              // Reload DM sau khi xóa
+                                              const friendId = (monitorState as any)?.selectedFriendId;
+                                              if (friendId) { loadDm(friendId); }
+                                            } catch (err: any) {
+                                              // no toast here to avoid import; native alert
+                                              alert(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
+                                            }
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🗑️</span>
+                                          <span>{t('userActivity.messages.actions.deleteForUser', 'Xóa phía Users')}</span>
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
-                            {isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
+                            {/* Ẩn avatar to cho tin nhắn của user đang theo dõi; trạng thái đã xem đã có avatar nhỏ bên dưới */}
+                            {false && isUserMessage && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                           </div>
+                          {/* Hàng trạng thái dưới bong bóng (DM) */}
+                          {(() => {
+                            const status: string = (dmStatusById as any)[Number(m.id)] || (m as any).status || 'sent';
+                            // Chỉ hiển thị theo đúng quyền của từng trạng thái
+                            const canShow = (status === 'sent' && canSeeSent) || (status === 'delivered' && canSeeDelivered) || (status === 'read' && canSeeRead);
+                            if (!canShow) return null;
+                            const label = status === 'read' ? t('userActivity.monitor.status.read', 'Đã xem')
+                              : status === 'delivered' ? t('userActivity.monitor.status.delivered', 'Đã nhận')
+                              : t('userActivity.monitor.status.sent', 'Đã gửi');
+                            const color = status === 'read' ? 'bg-green-500' : status === 'delivered' ? 'bg-blue-500' : 'bg-gray-400';
+                            const rowAlign = isUserMessage ? 'justify-end' : 'justify-start';
+                            // Xác định avatar người đã xem nếu status = read
+                            let readerAvatar: string | undefined;
+                            let readerName: string = '';
+                            const readerId = (monitorState as any).dmReadBy?.[Number(m.id)];
+                            if (status === 'read' && readerId && canSeeRead) {
+                              if (activityData?.user && Number(activityData.user.id) === Number(readerId)) {
+                                readerAvatar = activityData.user.avatar || undefined;
+                                readerName = activityData.user.name || '';
+                              } else {
+                                const friend = activityData?.activity.friends.find((f) => Number(f.id) === Number(readerId));
+                                readerAvatar = friend?.avatar;
+                                readerName = friend?.name || '';
+                              }
+                            }
+                            return (
+                              <div className={`mt-1 px-1 flex items-center gap-2 text-[10px] xl-down:text-[9px] opacity-80 ${rowAlign}`}>
+                                <span>{formatDate(m.createdAt)}</span>
+                                <span className="inline-flex items-center">
+                                  <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${color}`}></span>
+                                  <span>{label}</span>
+                                </span>
+                                {status === 'read' && readerAvatar && Number(m.id) === latestReadDmId && (
+                                  <img
+                                    src={resolveAvatar(readerAvatar)}
+                                    alt={readerName || 'read by'}
+                                    className="h-4 w-4 rounded-full object-cover ring-1 ring-white/50 dark:ring-neutral-800"
+                                  />
+                                )}
+                              </div>
+                            );
+                          })()}
+                          </React.Fragment>
                         );
                       });
                       return fragments;
@@ -318,6 +456,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
               </div>
             )}
           </div>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
@@ -374,6 +513,14 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       let lastDayKey: string | null = null;
                       const today = new Date();
                       const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+                      // Xác định message gần nhất do user đang theo dõi gửi mà đã có người đọc
+                      let latestReadGroupId: number | null = null;
+                      for (let i = (groupMessages as any[]).length - 1; i >= 0; i--) {
+                        const gm: any = (groupMessages as any[])[i];
+                        const mineCheck = Number(gm.senderId) === Number(selectedUserId);
+                        const readersArr: number[] = ((monitorState as any).groupReadBy?.[Number(gm.id)] || []) as number[];
+                        if (mineCheck && readersArr.length > 0) { latestReadGroupId = Number(gm.id); break; }
+                      }
                       (groupMessages as any[]).forEach((m: any) => {
                         const isSystem = m?.messageType === 'system' || (typeof m?.content === 'string' && m.content.toLowerCase().includes('joined the group'));
                         const d = new Date(m.createdAt);
@@ -426,16 +573,16 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                           </div>
                         );
                         fragments.push(
-                          <div key={m.id} className={`flex items-end ${mine ? 'justify-end' : 'justify-start'}`}>
+                          <React.Fragment key={`grp-${m.id}`}>
+                          <div className={`flex items-end ${mine ? 'justify-end' : 'justify-start'}`}>
                             {!mine && <div className="mr-2 xl-down:mr-1">{Avatar}</div>}
                             <div className={`relative max-w-[75%] xl-down:max-w-[85%] px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-1.5 sm-down:py-1 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs ${mine ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-gray-100'}`}>
                               <div className="flex items-start justify-between space-x-2">
                                 <div className="flex-1">
                                   <div className="font-medium mb-0.5 xl-down:mb-0.5 opacity-80 text-xs xl-down:text-2xs">{name}</div>
                                   <div className="whitespace-pre-wrap break-words">{m.content}</div>
-                                  <div className="text-[10px] xl-down:text-[9px] opacity-70 mt-1 xl-down:mt-0.5">{formatDate(m.createdAt)}</div>
                                 </div>
-                                {mine && (onRecallMessage || onDeleteMessage) && (
+                                {mine && (onRecallMessage || onDeleteMessage || onEditMessage) && (
                                   <div className="relative flex-shrink-0">
                                     <button
                                       type="button"
@@ -459,6 +606,20 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                         className="absolute right-0 top-6 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[160px]"
                                         onClick={(e) => e.stopPropagation()}
                                       >
+                                        {onEditMessage && hasPermission('manage_users.activity.groups.edit') && (
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setOpenMessageMenuId(null);
+                                              onEditMessage(m.id, true, m.content);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors flex items-center space-x-2"
+                                          >
+                                            <span>✏️</span>
+                                            <span>{t('userActivity.messages.actions.edit', 'Chỉnh sửa tin nhắn')}</span>
+                                          </button>
+                                        )}
                                         {onRecallMessage && (
                                           <button
                                             type="button"
@@ -491,10 +652,94 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                     )}
                                   </div>
                                 )}
+                                {/* Menu phía THÀNH VIÊN KHÁC: Xóa phía Users (Group) */}
+                                {(!mine && hasPermission('manage_users.activity.groups.delete')) && (
+                                  <div className="relative flex-shrink-0 ml-2 xl-down:ml-1">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenMessageMenuId(openMessageMenuId === m.id ? null : m.id);
+                                      }}
+                                      className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-200/60 dark:hover:bg-neutral-700/60 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors"
+                                      aria-label={t('userActivity.messages.actions.menu', 'Menu')}
+                                    >
+                                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                      </svg>
+                                    </button>
+                                    {openMessageMenuId === m.id && (
+                                      <div
+                                        className="absolute left-full top-6 translate-x-2 z-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg py-1 min-w-[180px]"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={async (e) => {
+                                            e.stopPropagation();
+                                            setOpenMessageMenuId(null);
+                                            if (!selectedUserId) return;
+                                            const ok = window.confirm(t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'));
+                                            if (!ok) return;
+                                            try {
+                                              await adminService.deleteGroupMessage(Number(m.id), Number(selectedUserId));
+                                              // Reload Group sau khi xóa
+                                              const gid = (monitorState as any)?.selectedGroupId;
+                                              if (gid) { loadGroup(gid); }
+                                            } catch (err: any) {
+                                              alert(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
+                                            }
+                                          }}
+                                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
+                                        >
+                                          <span>🗑️</span>
+                                          <span>{t('userActivity.messages.actions.deleteForUser', 'Xóa phía Users')}</span>
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
-                            {mine && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
+                            {/* Ẩn avatar to cho tin nhắn của user đang theo dõi (mine); trạng thái đã xem đã có avatar nhỏ bên dưới */}
+                            {false && mine && <div className="ml-2 xl-down:ml-1">{Avatar}</div>}
                           </div>
+                          {/* Hàng trạng thái dưới bong bóng (Group) */}
+                          {(() => {
+                            const status: string = (groupStatusById as any)[Number(m.id)] || (m as any).status || 'sent';
+                            // Chỉ hiển thị theo đúng quyền của từng trạng thái
+                            const canShow = (status === 'sent' && canSeeSent) || (status === 'delivered' && canSeeDelivered) || (status === 'read' && canSeeRead);
+                            if (!canShow) return null;
+                            const label = status === 'read' ? t('userActivity.monitor.status.read', 'Đã xem')
+                              : status === 'delivered' ? t('userActivity.monitor.status.delivered', 'Đã nhận')
+                              : t('userActivity.monitor.status.sent', 'Đã gửi');
+                            const color = status === 'read' ? 'bg-green-500' : status === 'delivered' ? 'bg-blue-500' : 'bg-gray-400';
+                            const rowAlign = mine ? 'justify-end' : 'justify-start';
+                            const readerIds: number[] = (monitorState as any).groupReadBy?.[Number(m.id)] || [];
+                            const topReaders = readerIds.filter((uid) => Number(uid) !== Number(m.senderId)).slice(0, 3);
+                            return (
+                              <div className={`mt-1 px-1 flex items-center gap-2 text-[10px] xl-down:text-[9px] opacity-80 ${rowAlign}`}>
+                                <span>{formatDate(m.createdAt)}</span>
+                                <span className="inline-flex items-center">
+                                  <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${color}`}></span>
+                                  <span>{label}</span>
+                                </span>
+                                {status === 'read' && canSeeRead && topReaders.length > 0 && Number(m.id) === latestReadGroupId && (
+                                  <div className="flex -space-x-1">
+                                    {topReaders.map((uid) => {
+                                      const info = groupMemberInfo[Number(uid)] || {} as any;
+                                      const a = info.avatar;
+                                      const n = info.name || '';
+                                      return (
+                                        <img key={uid} src={a ? resolveAvatar(a) : ''} alt={n || 'read by'} className="h-4 w-4 rounded-full object-cover ring-1 ring-white/50 dark:ring-neutral-800" />
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
+                          </React.Fragment>
                         );
                       });
                       return fragments;

@@ -464,8 +464,12 @@ class AdminService {
     return response.json();
   }
 
-  async deleteGroupMessage(messageId: number) {
-    const response = await fetch(`${API_BASE_URL}/admin/group-messages/${messageId}`, {
+  async deleteGroupMessage(messageId: number, targetUserId?: number) {
+    const url = new URL(`${API_BASE_URL}/admin/group-messages/${messageId}`);
+    if (typeof targetUserId === 'number') {
+      url.searchParams.set('targetUserId', String(targetUserId));
+    }
+    const response = await fetch(url.toString(), {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
@@ -475,6 +479,34 @@ class AdminService {
       throw new Error(error.message || 'Không thể xóa tin nhắn nhóm');
     }
 
+    return response.json();
+  }
+
+  async editDMMessage(messageId: number, content: string) {
+    const response = await fetch(`${API_BASE_URL}/admin/messages/${messageId}/edit`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể chỉnh sửa tin nhắn');
+    }
+    return response.json();
+  }
+
+  async editGroupMessage(messageId: number, content: string) {
+    const response = await fetch(`${API_BASE_URL}/admin/group-messages/${messageId}/edit`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể chỉnh sửa tin nhắn nhóm');
+    }
     return response.json();
   }
 
