@@ -27,7 +27,10 @@
   "actions": {
     "cancel": "Hủy",
     "save": "Lưu",
-    "saving": "Đang lưu..."
+    "saving": "Đang lưu...",
+    "reset": "Mặc định",
+    "enhance": "Siêu nét",
+    "showOriginal": "Ảnh gốc"
   },
   "messages": {
     "updateSuccess": "Cập nhật hồ sơ thành công",

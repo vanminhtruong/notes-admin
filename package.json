@@ -13,6 +13,8 @@
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.12.2",
     "country-flag-icons": "^1.5.20",
+    "glfx": "^0.0.4",
+    "glfx-es6": "^0.0.3",
     "i18next": "^25.5.2",
     "i18next-browser-languagedetector": "^8.2.0",
     "jwt-decode": "^4.0.0",

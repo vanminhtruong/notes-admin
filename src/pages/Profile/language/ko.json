@@ -27,7 +27,10 @@
   "actions": {
     "cancel": "취소",
     "save": "저장",
-    "saving": "저장 중..."
+    "saving": "저장 중...",
+    "reset": "기본값",
+    "enhance": "선명화",
+    "showOriginal": "원본"
   },
   "messages": {
     "updateSuccess": "프로필이 성공적으로 업데이트되었습니다",

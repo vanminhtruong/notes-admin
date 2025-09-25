@@ -27,7 +27,10 @@
   "actions": {
     "cancel": "Cancel",
     "save": "Save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "reset": "Reset",
+    "enhance": "Enhance",
+    "showOriginal": "Original"
   },
   "messages": {
     "updateSuccess": "Profile updated successfully",

@@ -9,13 +9,15 @@ interface ImagePreviewModalProps {
 }
 
 const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 'Preview', onClose }) => {
-  const { t } = useTranslation('common');
+  // Use 'profile' first (for reset/enhance/showOriginal), fallback to 'common' (for close)
+  const { t } = useTranslation(['profile', 'common']);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const imgWrapperRef = useRef<HTMLDivElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const dragState = useRef<{ dragging: boolean; startX: number; startY: number; originX: number; originY: number }>({ dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 });
+  const [useEnhanced, setUseEnhanced] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -31,6 +33,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
     if (open) {
       setScale(1);
       setOffset({ x: 0, y: 0 });
+      setUseEnhanced(false);
     }
   }, [open, src]);
 
@@ -63,6 +66,12 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
     setScale(1);
     setOffset({ x: 0, y: 0 });
   }, []);
+
+  // Simple CSS-based enhancement toggle 
+  const onEnhance = useCallback(() => {
+    if (!src) return;
+    setUseEnhanced(prev => !prev);
+  }, [src]);
 
   // Start dragging
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -174,6 +183,15 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
               >
                 {t('actions.reset', { defaultValue: 'Mặc định' })}
               </button>
+              <button
+                onClick={onEnhance}
+                aria-label={useEnhanced ? t('actions.showOriginal', { defaultValue: 'Ảnh gốc' }) : t('actions.enhance', { defaultValue: 'Siêu nét' })}
+                title={useEnhanced ? t('actions.showOriginal', { defaultValue: 'Ảnh gốc' }) : t('actions.enhance', { defaultValue: 'Siêu nét' })}
+                disabled={!src}
+                className="inline-flex items-center justify-center h-10 px-3 rounded-md bg-white/10 hover:bg-white/20 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium backdrop-blur-sm"
+              >
+                {useEnhanced ? t('actions.showOriginal', { defaultValue: 'Ảnh gốc' }) : t('actions.enhance', { defaultValue: 'Siêu nét' })}
+              </button>
             </div>
             {/* Close button inside header */}
             <button
@@ -191,7 +209,10 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
               src={src}
               alt={alt}
               className="relative z-0 max-h-[80vh] w-full h-auto object-contain bg-black transition-transform duration-100 ease-out select-none"
-              style={{ transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})` }}
+              style={{ 
+                transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+                filter: useEnhanced ? 'contrast(1.15) saturate(1.1) brightness(1.05)' : 'none'
+              }}
               draggable={false}
             />
           ) : (
