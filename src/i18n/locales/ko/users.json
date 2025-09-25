@@ -80,7 +80,11 @@
       },
       "actions": {
         "menu": "메뉴",
-        "delete": "알림 삭제"
+        "delete": "알림 삭제",
+        "clearAll": "모두 삭제",
+        "confirmClearAll": "이 사용자의 모든 알림을 삭제하시겠습니까?",
+        "clearAllSuccess": "모든 알림이 삭제되었습니다",
+        "clearAllError": "알림을 모두 삭제할 수 없습니다"
       },
       "message": {
         "title": "{{name}}님의 새 메시지",

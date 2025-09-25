@@ -80,7 +80,11 @@
       },
       "actions": {
         "menu": "Menu",
-        "delete": "Xóa thông báo"
+        "delete": "Xóa thông báo",
+        "clearAll": "Xóa tất cả",
+        "confirmClearAll": "Xóa tất cả thông báo của người dùng này?",
+        "clearAllSuccess": "Đã xóa tất cả thông báo",
+        "clearAllError": "Không thể xóa tất cả thông báo"
       },
       "message": {
         "title": "Tin nhắn mới từ {{name}}",

@@ -1,0 +1,48 @@
+{
+  "title": "Admin Profile",
+  "edit": "Edit information",
+  "loadFailed": "Failed to load profile",
+  "name": "Full name",
+  "namePlaceholder": "Enter full name",
+  "level": "Level",
+  "phone": "Phone number",
+  "birthDate": "Birth date",
+  "gender": {
+    "title": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "unspecified": "Unspecified"
+  },
+  "language": "Language",
+  "theme": {
+    "title": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "rememberLogin": "Remember login",
+  "hidePhone": "Hide phone number",
+  "hideBirthDate": "Hide birth date",
+  "allowMessagesFromNonFriends": "Allow messages from non-friends",
+  "actions": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "messages": {
+    "updateSuccess": "Profile updated successfully",
+    "updateFailed": "Update failed"
+  },
+  "noPermission": "You do not have permission to view this profile",
+  "avatar": {
+    "title": "Profile Picture",
+    "upload": "Choose Image",
+    "uploading": "Uploading...",
+    "remove": "Remove Image",
+    "hint": "JPG, PNG or GIF. Maximum 5MB.",
+    "invalidFileType": "Only image files are allowed",
+    "fileTooLarge": "File too large. Maximum 5MB",
+    "uploadSuccess": "Avatar uploaded successfully",
+    "uploadFailed": "Avatar upload failed"
+  }
+}

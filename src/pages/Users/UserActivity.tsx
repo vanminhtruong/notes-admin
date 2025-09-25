@@ -73,8 +73,6 @@ const UserActivity: React.FC = () => {
       onConfirm();
     };
 
-  
-
     const cancelAction = () => {
       toast.dismiss();
     };
@@ -107,6 +105,25 @@ const UserActivity: React.FC = () => {
         hideProgressBar: true,
       }
     );
+  };
+
+  // Delete all notifications of selected user
+  const handleClearAllNotifications = async () => {
+    try {
+      if (!selectedUserId) return;
+      showConfirmationToast(
+        t('userActivity.notifications.actions.confirmClearAll', 'Clear all notifications for this user?'),
+        async () => {
+          try {
+            await adminService.adminClearUserNotifications(Number(selectedUserId));
+            toast.success(t('userActivity.notifications.actions.clearAllSuccess', 'All notifications cleared'));
+            try { await loadNotifications(Number(selectedUserId)); } catch {}
+          } catch (error: any) {
+            toast.error(error?.message || t('userActivity.notifications.actions.clearAllError', 'Cannot clear notifications'));
+          }
+        }
+      );
+    } catch {}
   };
   
   // Edit a message (DM hoặc Group) cho user đang theo dõi (editor inline qua toast)
@@ -440,7 +457,13 @@ const UserActivity: React.FC = () => {
                     <FriendsTab activityData={activityData} formatDate={formatDate} />
                   )}
                   {activeTab === 'notifications' && visibleTabs.some(tab => tab.key === 'notifications') && (
-                    <NotificationsTab notifications={notifications} loadingNotifications={loadingNotifications} formatDate={formatDate} onDelete={handleDeleteNotification} />
+                    <NotificationsTab 
+                      notifications={notifications} 
+                      loadingNotifications={loadingNotifications} 
+                      formatDate={formatDate} 
+                      onDelete={handleDeleteNotification}
+                      onClearAll={handleClearAllNotifications}
+                    />
                   )}
                   {activeTab === 'monitor' && visibleTabs.some(tab => tab.key === 'monitor') && (
                     <MonitorTab 

@@ -70,6 +70,8 @@
       "noMessages": "No messages yet",
       "sentTo": "Sent to",
       "receivedFrom": "Received from",
+      "unknownUser": "User",
+      "noteShare": "{{name}} shared a note",
       "actions": {
         "menu": "Menu",
         "recall": "Recall message",
@@ -115,7 +117,11 @@
       },
       "actions": {
         "menu": "Menu",
-        "delete": "Delete notification"
+        "delete": "Delete notification",
+        "clearAll": "Clear all",
+        "confirmClearAll": "Clear all notifications for this user?",
+        "clearAllSuccess": "All notifications cleared",
+        "clearAllError": "Cannot clear notifications"
       },
       "message": {
         "title": "New message from {{name}}",
@@ -166,8 +172,22 @@
           "member": "Member"
         }
       }
-    }
-    ,
+    },
+    "noteShare": {
+      "cardTitle": "Shared note",
+      "untitled": "Untitled note",
+      "noContent": "No content",
+      "priority": {
+        "low": "Low priority",
+        "medium": "Medium priority",
+        "high": "High priority"
+      },
+      "category": {
+        "general": "General",
+        "work": "Work",
+        "personal": "Personal"
+      }
+    },
     "messageActions": {
       "editPrompt": "Enter new content for the message:",
       "editEmpty": "Content cannot be empty",

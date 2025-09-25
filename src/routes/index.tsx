@@ -11,6 +11,7 @@ import UserActivity from '@pages/Users/UserActivity'
 import NotesList from '@pages/Notes/NotesList'
 import CreateNote from '@pages/Notes/CreateNote'
 import AdminsList from '@pages/Admins/AdminsList'
+import AdminProfile from '@pages/Profile/AdminProfile'
 
 const router = createBrowserRouter([
   // Public
@@ -37,6 +38,9 @@ const router = createBrowserRouter([
           </PermissionRoute>
         )
       },
+
+      // Profile (Admin self)
+      { path: 'profile', element: <AdminProfile /> },
       { 
         path: 'users/activity', 
         element: (

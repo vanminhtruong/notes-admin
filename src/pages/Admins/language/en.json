@@ -122,6 +122,10 @@
           "delete": {
             "label": "Delete notifications",
             "description": "Allow deleting user's notifications in real time"
+          },
+          "clear_all": {
+            "label": "Clear all notifications",
+            "description": "Allow clearing all notifications for the user (Super Admin or granted admins only)"
           }
         },
         "monitor": {
@@ -209,11 +213,58 @@
     "system_settings": {
       "label": "System Settings",
       "description": "Change system settings and configuration"
+    },
+    "profile": {
+      "label": "Manage profile",
+      "description": "Permissions related to admin profile",
+      "self": {
+        "label": "Own profile",
+        "description": "Permissions for accessing and editing your own profile",
+        "view": {
+          "label": "View own profile",
+          "description": "Allow sub admin to access their own profile page"
+        },
+        "edit": {
+          "label": "Edit own profile",
+          "description": "Allow sub admin to edit their own profile"
+        }
+      }
     }
   },
   "revokePermission": "Revoke Permission",
   "confirmRevokePermission": "Confirm Revoke Permission",
   "revokePermissionMessage": "Are you sure you want to revoke permission \"{{permission}}\" from admin \"{{name}}\"?",
+  "viewProfile": "View Profile",
+  "profileTitle": "Admin Profile",
+  "editProfile": "Edit Profile",
+  "name": "Full Name",
+  "adminLevel": "Level",
+  "phone": "Phone Number",
+  "birthDate": "Birth Date",
+  "gender": "Gender",
+  "settings": "Settings",
+  "rememberLogin": "Remember Login",
+  "hidePhone": "Hide Phone Number",
+  "cancel": "Cancel",
+  "save": "Save",
+  "saving": "Saving...",
+  "genderOptions": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "unspecified": "Unspecified"
+  },
+  "avatar": {
+    "title": "Profile Picture",
+    "upload": "Choose Image",
+    "uploading": "Uploading...",
+    "remove": "Remove Image",
+    "hint": "JPG, PNG or GIF. Maximum 5MB.",
+    "invalidFileType": "Only image files are allowed",
+    "fileTooLarge": "File too large. Maximum 5MB",
+    "uploadSuccess": "Avatar uploaded successfully",
+    "uploadFailed": "Avatar upload failed"
+  },
   "messages": {
     "createSuccess": "Sub-admin created successfully",
     "createError": "Failed to create sub-admin",
@@ -225,6 +276,14 @@
     "toggleStatusError": "Failed to change admin status",
     "deleteSuccess": "Admin deleted successfully",
     "deleteError": "Failed to delete admin",
-    "loadError": "Failed to load admin list"
+    "loadError": "Failed to load admin list",
+    "loadProfileError": "Failed to load admin profile",
+    "updateProfileSuccess": "Profile updated successfully",
+    "updateProfileError": "Failed to update profile",
+    "permissionsChanged": "Your permissions have been updated",
+    "permissionsChangedError": "Unable to update permissions. Please log in again.",
+    "adminAccessRevoked": "Admin access has been revoked",
+    "adminAccountDeactivated": "Admin account has been deactivated",
+    "permissionRevokedGeneric": "Permission \"{{permission}}\" has been revoked"
   }
 }

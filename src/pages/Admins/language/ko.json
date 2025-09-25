@@ -122,6 +122,10 @@
           "delete": {
             "label": "알림 삭제",
             "description": "실시간으로 사용자의 알림을 삭제할 수 있습니다"
+          },
+          "clear_all": {
+            "label": "모든 알림 삭제",
+            "description": "해당 사용자의 모든 알림을 삭제 (슈퍼 관리자 또는 권한 부여된 관리자만)"
           }
         },
         "monitor": {
@@ -209,11 +213,58 @@
     "system_settings": {
       "label": "시스템 설정",
       "description": "시스템 설정 및 구성 변경"
+    },
+    "profile": {
+      "label": "프로필",
+      "description": "관리자 프로필 관련 권한",
+      "self": {
+        "label": "내 프로필",
+        "description": "자신의 프로필 접근 및 수정 권한",
+        "view": {
+          "label": "내 프로필 보기",
+          "description": "서브 관리자가 자신의 프로필 페이지에 접근하도록 허용"
+        },
+        "edit": {
+          "label": "내 프로필 편집",
+          "description": "서브 관리자가 자신의 프로필을 수정하도록 허용"
+        }
+      }
     }
   },
   "revokePermission": "권한 취소",
   "confirmRevokePermission": "권한 취소 확인",
   "revokePermissionMessage": "관리자 \"{{name}}\"에서 \"{{permission}}\" 권한을 취소하시겠습니까?",
+  "viewProfile": "프로필 보기",
+  "profileTitle": "관리자 프로필",
+  "editProfile": "프로필 편집",
+  "name": "이름",
+  "adminLevel": "레벨",
+  "phone": "전화번호",
+  "birthDate": "생년월일",
+  "gender": "성별",
+  "settings": "설정",
+  "rememberLogin": "로그인 기억",
+  "hidePhone": "전화번호 숨기기",
+  "cancel": "취소",
+  "save": "저장",
+  "saving": "저장 중...",
+  "genderOptions": {
+    "male": "남성",
+    "female": "여성",
+    "other": "기타",
+    "unspecified": "미지정"
+  },
+  "avatar": {
+    "title": "프로필 사진",
+    "upload": "이미지 선택",
+    "uploading": "업로드 중...",
+    "remove": "이미지 제거",
+    "hint": "JPG, PNG 또는 GIF. 최대 5MB.",
+    "invalidFileType": "이미지 파일만 허용됩니다",
+    "fileTooLarge": "파일이 너무 큽니다. 최대 5MB",
+    "uploadSuccess": "아바타 업로드 성공",
+    "uploadFailed": "아바타 업로드 실패"
+  },
   "messages": {
     "createSuccess": "서브 관리자가 성공적으로 생성되었습니다",
     "createError": "서브 관리자 생성에 실패했습니다",
@@ -225,6 +276,11 @@
     "toggleStatusError": "관리자 상태 변경에 실패했습니다",
     "deleteSuccess": "관리자가 성공적으로 삭제되었습니다",
     "deleteError": "관리자 삭제에 실패했습니다",
-    "loadError": "관리자 목록 로드에 실패했습니다"
+    "loadError": "관리자 목록 로드에 실패했습니다",
+    "permissionsChanged": "권한이 업데이트되었습니다",
+    "permissionsChangedError": "권한을 업데이트할 수 없습니다. 다시 로그인해 주세요.",
+    "adminAccessRevoked": "관리자 접근 권한이 취소되었습니다",
+    "adminAccountDeactivated": "관리자 계정이 비활성화되었습니다",
+    "permissionRevokedGeneric": "\"{{permission}}\" 권한이 취소되었습니다"
   }
 }

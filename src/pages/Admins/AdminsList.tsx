@@ -9,13 +9,16 @@ import AdminCard from './components/AdminCard';
 import FilterBar from './components/FilterBar';
 import CreateAdminModal from './components/CreateAdminModal';
 import EditAdminModal from './components/EditAdminModal';
+import AdminProfileModal from './components/AdminProfileModal';
 import Pagination from './components/Pagination';
 
 const AdminsList: React.FC = () => {
   const { t } = useTranslation('admins');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [profileAdmin, setProfileAdmin] = useState<Admin | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     type: 'toggle' | 'delete' | 'revoke';
     adminId: number;
@@ -96,6 +99,15 @@ const AdminsList: React.FC = () => {
     if (success) {
       refreshList();
     }
+  };
+
+  const handleViewProfile = (admin: Admin) => {
+    setProfileAdmin(admin);
+    setProfileModalOpen(true);
+  };
+
+  const handleProfileUpdate = () => {
+    refreshList();
   };
 
   const showConfirmDialog = (type: 'toggle' | 'delete', adminId: number, adminName: string) => {
@@ -194,6 +206,7 @@ const AdminsList: React.FC = () => {
                   onToggleStatus={(adminId) => showConfirmDialog('toggle', adminId, admin.name)}
                   onDelete={(adminId) => showConfirmDialog('delete', adminId, admin.name)}
                   onRevokePermission={(adminId, permission) => showRevokeConfirmDialog(adminId, admin.name, permission)}
+                  onViewProfile={handleViewProfile}
                 />
               ))}
             </div>
@@ -286,6 +299,17 @@ const AdminsList: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Admin Profile Modal */}
+        <AdminProfileModal
+          isOpen={profileModalOpen}
+          admin={profileAdmin}
+          onClose={() => {
+            setProfileModalOpen(false);
+            setProfileAdmin(null);
+          }}
+          onUpdate={handleProfileUpdate}
+        />
       </div>
     </div>
   );

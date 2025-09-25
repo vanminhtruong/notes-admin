@@ -23,7 +23,9 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
     const defaults = [
       'manage_users.activity',
       'manage_users.activity.messages',
-      'manage_users.activity.groups'
+      'manage_users.activity.groups',
+      'profile',
+      'profile.self'
     ];
     setExpandedPermissions(prev => new Set([...prev, ...defaults]));
   }, []);
@@ -96,8 +98,25 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
     if (excludeManageAdmins) {
       permissions = permissions.filter(p => p.key !== 'manage_admins');
     }
-    // Only show permissions that are in availablePermissions
-    return permissions.filter(p => availablePermissions.includes(p.key));
+
+    // Returns true if this permission or any descendant exists in availablePermissions
+    const hasAvailableDescendant = (perm: NestedPermission): boolean => {
+      if (availablePermissions.includes(perm.key)) return true;
+      if (!perm.subPermissions) return false;
+      return perm.subPermissions.some(sp => hasAvailableDescendant(sp));
+    };
+
+    // Recursively filter out sub-permissions that are not available
+    const filterTree = (perms: NestedPermission[]): NestedPermission[] => {
+      return perms
+        .filter(perm => hasAvailableDescendant(perm))
+        .map(perm => ({
+          ...perm,
+          subPermissions: perm.subPermissions ? filterTree(perm.subPermissions) : undefined
+        }));
+    };
+
+    return filterTree(permissions);
   };
 
   const isParentChecked = (parentKey: string, subPermissions?: NestedPermission[]) => {

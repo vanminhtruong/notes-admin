@@ -10,12 +10,14 @@ interface NotificationsTabProps {
   loadingNotifications: boolean;
   formatDate: (dateString: string) => string;
   onDelete?: (notificationId: number) => void;
+  onClearAll?: () => void;
 }
 
-const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, loadingNotifications, formatDate, onDelete }) => {
+const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, loadingNotifications, formatDate, onDelete, onClearAll }) => {
   const { t } = useTranslation('users');
   const [openMenuId, setOpenMenuId] = React.useState<number | null>(null);
   const canDelete = hasPermission('manage_users.activity.notifications.delete');
+  const canClearAll = hasPermission('manage_users.activity.notifications.clear_all');
 
   const {
     currentItems: currentNotifications,
@@ -45,6 +47,24 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, load
 
   return (
     <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
+      <div className="flex items-center justify-between bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-lg xl-down:rounded-md p-3">
+        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <span>🔔</span>
+          <span className="font-medium">{t('userActivity.tabs.notifications')}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">({notifications.length})</span>
+        </div>
+        {canClearAll && onClearAll && (
+          <button
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-xs xl-down:text-2xs rounded-lg border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+            onClick={() => onClearAll()}
+            aria-label={t('userActivity.notifications.actions.clearAll', 'Clear all')}
+            title={t('userActivity.notifications.actions.clearAll', 'Clear all')}
+          >
+            <span>🗑️</span>
+            <span className="font-semibold">{t('userActivity.notifications.actions.clearAll', 'Clear all')}</span>
+          </button>
+        )}
+      </div>
       <div className="space-y-3 xl-down:space-y-2">
         {currentNotifications.map((n) => {
           const isGroupInvite = n.type === 'group_invite';

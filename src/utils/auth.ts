@@ -11,6 +11,15 @@ interface AdminTokenPayload {
   exp?: number;
 }
 
+// Runtime overrides for real-time permission updates via sockets
+let __adminPermissionsOverride: string[] | null = null;
+let __adminLevelOverride: AdminTokenPayload['adminLevel'] | null = null;
+
+export const setAdminPermissionOverride = (data: { permissions?: string[]; adminLevel?: AdminTokenPayload['adminLevel'] } | null) => {
+  __adminPermissionsOverride = data?.permissions ?? null;
+  __adminLevelOverride = data?.adminLevel ?? null;
+};
+
 export const validateAdminToken = (token: string): AdminTokenPayload | null => {
   try {
     const decoded = jwtDecode<AdminTokenPayload>(token);
@@ -95,12 +104,14 @@ export const hasPermission = (permission: string): boolean => {
       return false;
     }
     
+    // Apply real-time overrides if present
+    const effectiveLevel = __adminLevelOverride ?? adminData.adminLevel;
+    const userPermissions = (__adminPermissionsOverride ?? adminData.adminPermissions) || [];
+
     // Super admin có tất cả quyền
-    if (adminData.adminLevel === 'super_admin') {
+    if (effectiveLevel === 'super_admin') {
       return true;
     }
-    
-    const userPermissions = adminData.adminPermissions || [];
     
     // Kiểm tra exact match trước
     if (userPermissions.includes(permission)) {

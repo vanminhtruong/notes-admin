@@ -80,7 +80,11 @@
       },
       "actions": {
         "menu": "Menu",
-        "delete": "Delete notification"
+        "delete": "Delete notification",
+        "clearAll": "Clear all",
+        "confirmClearAll": "Clear all notifications for this user?",
+        "clearAllSuccess": "All notifications cleared",
+        "clearAllError": "Cannot clear notifications"
       },
       "message": {
         "title": "New message from {{name}}",

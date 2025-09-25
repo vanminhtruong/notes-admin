@@ -122,6 +122,10 @@
           "delete": {
             "label": "Xóa thông báo",
             "description": "Cho phép xóa thông báo của người dùng theo thời gian thực"
+          },
+          "clear_all": {
+            "label": "Xóa tất cả thông báo",
+            "description": "Cho phép xóa toàn bộ thông báo của người dùng (chỉ Super Admin hoặc ai được cấp)"
           }
         },
         "monitor": {
@@ -209,11 +213,58 @@
     "system_settings": {
       "label": "Cài đặt hệ thống",
       "description": "Thay đổi cài đặt và cấu hình hệ thống"
+    },
+    "profile": {
+      "label": "Hồ sơ",
+      "description": "Quyền liên quan đến hồ sơ admin",
+      "self": {
+        "label": "Hồ sơ bản thân",
+        "description": "Quyền truy cập và chỉnh sửa hồ sơ của chính mình",
+        "view": {
+          "label": "Xem hồ sơ bản thân",
+          "description": "Cho phép sub admin truy cập trang hồ sơ của chính mình"
+        },
+        "edit": {
+          "label": "Sửa hồ sơ bản thân",
+          "description": "Cho phép sub admin chỉnh sửa hồ sơ của chính mình"
+        }
+      }
     }
   },
   "revokePermission": "Xóa quyền",
   "confirmRevokePermission": "Xác nhận xóa quyền",
   "revokePermissionMessage": "Bạn có chắc muốn xóa quyền \"{{permission}}\" khỏi admin \"{{name}}\"?",
+  "viewProfile": "Xem hồ sơ",
+  "profileTitle": "Hồ sơ Admin",
+  "editProfile": "Sửa hồ sơ",
+  "name": "Họ và tên",
+  "adminLevel": "Cấp độ",
+  "phone": "Số điện thoại",
+  "birthDate": "Ngày sinh",
+  "gender": "Giới tính",
+  "settings": "Cài đặt",
+  "rememberLogin": "Ghi nhớ đăng nhập",
+  "hidePhone": "Ẩn số điện thoại",
+  "cancel": "Hủy",
+  "save": "Lưu",
+  "saving": "Đang lưu...",
+  "genderOptions": {
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "unspecified": "Không xác định"
+  },
+  "avatar": {
+    "title": "Ảnh đại diện",
+    "upload": "Chọn ảnh",
+    "uploading": "Đang upload...",
+    "remove": "Xóa ảnh",
+    "hint": "JPG, PNG hoặc GIF. Tối đa 5MB.",
+    "invalidFileType": "Chỉ chấp nhận file hình ảnh",
+    "fileTooLarge": "File quá lớn. Tối đa 5MB",
+    "uploadSuccess": "Upload avatar thành công",
+    "uploadFailed": "Upload avatar thất bại"
+  },
   "messages": {
     "createSuccess": "Tạo phó admin thành công",
     "createError": "Không thể tạo phó admin",
@@ -225,6 +276,14 @@
     "toggleStatusError": "Không thể thay đổi trạng thái admin",
     "deleteSuccess": "Xóa admin thành công",
     "deleteError": "Không thể xóa admin",
-    "loadError": "Không thể tải danh sách admin"
+    "loadError": "Không thể tải danh sách admin",
+    "loadProfileError": "Không thể tải hồ sơ admin",
+    "updateProfileSuccess": "Cập nhật hồ sơ thành công",
+    "updateProfileError": "Cập nhật hồ sơ thất bại",
+    "permissionsChanged": "Quyền hạn của bạn đã được cập nhật",
+    "permissionsChangedError": "Không thể cập nhật quyền hạn. Vui lòng đăng nhập lại.",
+    "adminAccessRevoked": "Quyền truy cập admin đã bị thu hồi",
+    "adminAccountDeactivated": "Tài khoản admin đã bị vô hiệu hóa",
+    "permissionRevokedGeneric": "Quyền \"{{permission}}\" đã bị thu hồi"
   }
 }

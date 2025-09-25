@@ -86,11 +86,23 @@ export const useNotifications = (selectedUserId: number | null) => {
     };
     s.on('admin_notification_deleted', onAdminNotificationDeleted);
 
+    const onAdminNotificationsCleared = (p: any) => {
+      try {
+        if (!p) return;
+        if (Number(p.userId) !== Number(selectedUserId)) return;
+        // Reload list and reset counters after clear-all
+        loadNotifications(selectedUserId, false);
+        setUnreadNotificationsCount(0);
+      } catch {}
+    };
+    s.on('admin_notifications_cleared', onAdminNotificationsCleared);
+
     return () => {
       try {
         s.off('admin_notification_created', onAdminNotificationCreated);
         s.off('admin_notifications_marked_all_read', onAdminNotificationsMarkedAllRead);
         s.off('admin_notification_deleted', onAdminNotificationDeleted);
+        s.off('admin_notifications_cleared', onAdminNotificationsCleared);
       } catch {}
     };
   }, [selectedUserId, loadNotifications]);

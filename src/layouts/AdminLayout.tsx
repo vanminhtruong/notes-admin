@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { toggleTheme } from '@store/slices/themeSlice';
 import type { RootState } from '@store/index';
-import { removeAdminToken, getAdminToken, hasPermission, isSuperAdmin, getCurrentAdminInfo, getVisibleUserActivityTabs } from '@utils/auth';
+import { removeAdminToken, getAdminToken, hasPermission, isSuperAdmin, getCurrentAdminInfo, getVisibleUserActivityTabs, setAdminPermissionOverride } from '@utils/auth';
 import { getAdminSocket, closeAdminSocket } from '@services/socket';
 import adminService from '@services/adminService';
 import LanguageSwitcher from '@components/LanguageSwitcher';
@@ -27,6 +27,10 @@ const AdminLayout: React.FC = () => {
   // User dropdown state (desktop header)
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Admin profile state for real-time updates
+  const [currentAdminProfile, setCurrentAdminProfile] = useState(getCurrentAdminInfo());
+  const [profileLoading, setProfileLoading] = useState<boolean>(true);
 
   const token = getAdminToken();
 
@@ -56,6 +60,25 @@ const AdminLayout: React.FC = () => {
     })();
     return () => { cancelled = true; };
   }, [i18n]);
+
+  // Fetch admin profile on mount/when token changes to persist avatar after reload
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!token) return;
+      try {
+        const res = await adminService.getMyProfile();
+        if (!cancelled && res?.admin) {
+          setCurrentAdminProfile(res.admin);
+        }
+      } catch (e) {
+        // no-op: keep fallback from token
+      } finally {
+        if (!cancelled) setProfileLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [token]);
 
   const handleLogout = () => {
     removeAdminToken();
@@ -121,8 +144,43 @@ const AdminLayout: React.FC = () => {
     };
   }, []);
 
-  const currentAdmin = getCurrentAdminInfo();
+  const currentAdmin = currentAdminProfile || getCurrentAdminInfo();
   const isSuper = isSuperAdmin();
+
+  // Helper function to render admin avatar
+  const renderAdminAvatar = (size: string = "w-8 h-8") => {
+    // Trong khi đang tải profile, hiển thị skeleton để tránh flash avatar mặc định
+    if (profileLoading) {
+      return (
+        <div className={`${size} rounded-full bg-gray-200 dark:bg-neutral-800 animate-pulse flex-shrink-0`} />
+      );
+    }
+    const avatar = (currentAdmin as any)?.avatar;
+    if (avatar) {
+      return (
+        <img 
+          src={avatar} 
+          alt="Avatar" 
+          className={`${size} rounded-full object-cover flex-shrink-0`}
+          onError={(e) => {
+            console.error('Failed to load admin avatar:', avatar);
+            e.currentTarget.style.display = 'none';
+            const parent = e.currentTarget.parentElement!;
+            parent.innerHTML = `<div class="${size} bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-sm font-medium">${currentAdmin?.email.charAt(0).toUpperCase()}</span>
+            </div>`;
+          }}
+        />
+      );
+    }
+    return (
+      <div className={`${size} bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0`}>
+        <span className="text-white text-sm font-medium">
+          {currentAdmin?.email.charAt(0).toUpperCase()}
+        </span>
+      </div>
+    );
+  };
 
   // Check if user has access to any User Activity tabs
   const hasUserActivityAccess = isSuper || getVisibleUserActivityTabs().length > 0;
@@ -203,13 +261,33 @@ const AdminLayout: React.FC = () => {
           }
         } catch {}
       };
+      const onProfileUpdated = (p: any) => {
+        try {
+          if (p?.admin) {
+            setCurrentAdminProfile(p.admin);
+            console.log('Admin profile updated in layout:', p.admin.avatar);
+          }
+        } catch {}
+      };
       s.on('connected', onConnected);
       s.on('language_updated', onLanguageUpdated);
+      const onPermissionsChanged = (p: any) => {
+        try {
+          setAdminPermissionOverride({ permissions: p?.permissions || [], adminLevel: p?.adminLevel });
+          // Force re-render by updating local state
+          setCurrentAdminProfile(prev => prev ? { ...prev, adminPermissions: p?.permissions || prev.adminPermissions, adminLevel: p?.adminLevel || prev.adminLevel } : prev);
+          console.log('[AdminLayout] Permissions changed:', p);
+        } catch {}
+      };
+      s.on('permissions_changed', onPermissionsChanged);
+      s.on('admin_profile_updated', onProfileUpdated);
 
       return () => {
         try {
           s.off('connected', onConnected);
           s.off('language_updated', onLanguageUpdated);
+          s.off('admin_profile_updated', onProfileUpdated);
+          s.off('permissions_changed', onPermissionsChanged);
         } catch {}
       };
     } else {
@@ -333,11 +411,7 @@ const AdminLayout: React.FC = () => {
                 {/* User Info */}
                 {currentAdmin && (
                   <div className="flex items-center space-x-3 xl-down:space-x-2 p-3 xl-down:p-2 bg-gray-50 dark:bg-neutral-800 rounded-lg">
-                    <div className="w-8 h-8 xl-down:w-7 xl-down:h-7 sm-down:w-6 sm-down:h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-white text-sm xl-down:text-xs sm-down:text-2xs font-medium">
-                        {currentAdmin.email.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
+                    {renderAdminAvatar("w-8 h-8 xl-down:w-7 xl-down:h-7 sm-down:w-6 sm-down:h-6")}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm xl-down:text-xs sm-down:text-2xs font-medium text-gray-700 dark:text-gray-300 truncate">{currentAdmin.email}</p>
@@ -435,11 +509,7 @@ const AdminLayout: React.FC = () => {
                     aria-haspopup="menu"
                     aria-expanded={userMenuOpen}
                   >
-                    <div className="w-8 h-8 xl-down:w-6 xl-down:h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-white text-sm xl-down:text-xs font-medium">
-                        {currentAdmin.email.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
+                    {renderAdminAvatar("w-8 h-8 xl-down:w-6 xl-down:h-6")}
                     <div className="hidden lg:block">
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-40 truncate block">
                         {currentAdmin.email}
@@ -466,6 +536,15 @@ const AdminLayout: React.FC = () => {
                            currentAdmin.adminLevel === 'mod' ? 'Mod' : 'Admin'}
                         </p>
                       </div>
+                      <button
+                        onClick={() => { setUserMenuOpen(false); navigate('/profile'); }}
+                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-800 flex items-center gap-2"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.31 0-6 2.69-6 6 0 .55.45 1 1 1h10c.55 0 1-.45 1-1 0-3.31-2.69-6-6-6z" />
+                        </svg>
+                        <span>{t('profile:edit', { defaultValue: 'Sửa thông tin' })}</span>
+                      </button>
                       <button
                         onClick={confirmLogout}
                         className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"

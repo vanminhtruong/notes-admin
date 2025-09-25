@@ -11,6 +11,20 @@ class AdminService {
     };
   }
 
+  // Admin: Delete ALL notifications of a specific user
+  async adminClearUserNotifications(userId: number) {
+    const url = `${API_BASE_URL}/admin/users/${userId}/notifications`;
+    const response = await fetch(url, { method: 'DELETE', headers: this.getHeaders() });
+    if (!response.ok) {
+      let message = 'Không thể xóa tất cả thông báo';
+      try { const data = await response.json(); message = data.message || message; } catch {}
+      const err = new Error(message);
+      (err as any).status = response.status;
+      throw err;
+    }
+    return response.json();
+  }
+
   // Admin: Delete a specific notification of user
   async adminDeleteUserNotification(userId: number, notificationId: number) {
     const url = `${API_BASE_URL}/admin/users/${userId}/notifications/${notificationId}`;
@@ -561,6 +575,108 @@ class AdminService {
     }
 
     return data;
+  }
+
+  // Admin profile
+  async getMyProfile() {
+    const response = await fetch(`${API_BASE_URL}/admin/me`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể tải hồ sơ admin');
+    }
+    return response.json(); // { success, admin }
+  }
+
+  async updateMyProfile(data: {
+    name?: string;
+    avatar?: string;
+    phone?: string;
+    birthDate?: string; // YYYY-MM-DD
+    gender?: 'male' | 'female' | 'other' | 'unspecified';
+    theme?: 'light' | 'dark';
+    language?: string;
+    rememberLogin?: boolean;
+    hidePhone?: boolean;
+    hideBirthDate?: boolean;
+    allowMessagesFromNonFriends?: boolean;
+  }) {
+    const response = await fetch(`${API_BASE_URL}/admin/me`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể cập nhật hồ sơ admin');
+    }
+    return response.json(); // { success, message, admin }
+  }
+
+  // Upload image file (for avatar)
+  async uploadImage(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const token = getAdminToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/admin/upload/image`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể upload ảnh');
+    }
+
+    return response.json(); // { success, data: { url, filename } }
+  }
+
+  // Get admin profile by ID (Super Admin only)
+  async getAdminProfile(adminId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}/profile`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể tải hồ sơ admin');
+    }
+    return response.json(); // { success, admin }
+  }
+
+  // Update admin profile by ID (Super Admin only)
+  async updateAdminProfile(adminId: number, data: {
+    name?: string;
+    avatar?: string;
+    phone?: string;
+    birthDate?: string;
+    gender?: 'male' | 'female' | 'other' | 'unspecified';
+    theme?: 'light' | 'dark';
+    language?: string;
+    rememberLogin?: boolean;
+    hidePhone?: boolean;
+    hideBirthDate?: boolean;
+    allowMessagesFromNonFriends?: boolean;
+  }) {
+    const response = await fetch(`${API_BASE_URL}/admin/admins/${adminId}/profile`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Không thể cập nhật hồ sơ admin');
+    }
+    return response.json(); // { success, message, admin }
   }
 }
 

@@ -28,16 +28,18 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
 
     // Quyền admin được cập nhật
     const handleAdminPermissionsUpdated = (data: any) => {
-      // Tránh double toast: nếu do chính current admin cập nhật thì bỏ toast success chung
-      if (data?.updatedBy !== currentAdminId) {
+      // Tránh double toast:
+      // - Nếu do chính current admin cập nhật thì không toast success chung
+      // - Nếu admin bị cập nhật là current admin thì để service socket xử lý (permissions_changed)
+      const isActorIsMe = data?.updatedBy === currentAdminId;
+      const isTargetIsMe = data?.admin?.id === currentAdminId;
+      if (!isActorIsMe && !isTargetIsMe) {
         toast.success(t('messages.updateSuccess'));
       }
       onAdminListChange?.();
       
-      // Nếu là admin hiện tại bị cập nhật quyền vẫn thông báo riêng
-      if (data.admin?.id === currentAdminId) {
-        toast.info(`Quyền của bạn đã được cập nhật`);
-      }
+      // Nếu là admin hiện tại bị cập nhật quyền, không toast ở đây để tránh trùng;
+      // sự kiện 'permissions_changed' đã được xử lý trung tâm tại services/socket.ts
     };
 
     // Quyền cụ thể bị thu hồi
@@ -85,15 +87,6 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
       onAdminListChange?.();
     };
 
-    // Events cho admin hiện tại
-    const handlePermissionsChanged = (_data: any) => {
-      toast.info('Quyền hạn của bạn đã được cập nhật');
-      // Có thể cần reload trang để cập nhật UI
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    };
-
     const handlePermissionRevoked = (data: any) => {
       toast.warning(data.message || 'Một quyền của bạn đã bị thu hồi');
     };
@@ -118,7 +111,7 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
     socket.on('admin_permission_revoked', handleAdminPermissionRevoked);
     socket.on('admin_status_changed', handleAdminStatusChanged);
     socket.on('admin_removed', handleAdminRemoved);
-    socket.on('permissions_changed', handlePermissionsChanged);
+    // Gỡ bỏ listener 'permissions_changed' vì đã được xử lý tại services/socket.ts để tránh toast lặp
     socket.on('permission_revoked', handlePermissionRevoked);
     socket.on('admin_access_revoked', handleAdminAccessRevoked);
     socket.on('admin_account_deactivated', handleAdminAccountDeactivated);
@@ -130,7 +123,7 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
       socket.off('admin_permission_revoked', handleAdminPermissionRevoked);
       socket.off('admin_status_changed', handleAdminStatusChanged);
       socket.off('admin_removed', handleAdminRemoved);
-      socket.off('permissions_changed', handlePermissionsChanged);
+      // Không cần off 'permissions_changed' do không đăng ký ở hook này
       socket.off('permission_revoked', handlePermissionRevoked);
       socket.off('admin_access_revoked', handleAdminAccessRevoked);
       socket.off('admin_account_deactivated', handleAdminAccountDeactivated);

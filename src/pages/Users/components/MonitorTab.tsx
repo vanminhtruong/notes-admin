@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { Clock } from 'lucide-react';
 import type { UserActivityData, TypingInfo } from '../interfaces';
 import adminService from '@services/adminService';
 import ReactionChips from './ReactionChips';
@@ -91,7 +92,84 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
     const isOwn = !!options?.isOwn;
     const senderName = options?.senderName || '';
     const receiverName = options?.receiverName || '';
+    const notePrefix = 'NOTE_SHARE::';
     const callPrefix = 'CALL_LOG::';
+    if (typeof text === 'string' && text.startsWith(notePrefix)) {
+      try {
+        const raw = text.slice(notePrefix.length);
+        const obj = JSON.parse(decodeURIComponent(raw));
+        if (obj && (obj.type === 'note' || obj.v === 1)) {
+          const priority: string = typeof obj.priority === 'string' ? obj.priority : 'medium';
+          const category: string = typeof obj.category === 'string' ? obj.category : 'general';
+          const createdAt: string | null = obj.createdAt ? String(obj.createdAt) : null;
+
+          const priorityChipClass = (p: string) => {
+            const base = 'px-2 py-1 text-xs font-medium rounded-lg border';
+            switch (p) {
+              case 'high':
+                return `${base} bg-red-100 text-red-700 border-red-200`;
+              case 'medium':
+                return `${base} bg-yellow-100 text-yellow-700 border-yellow-200`;
+              case 'low':
+              default:
+                return `${base} bg-green-100 text-green-700 border-green-200`;
+            }
+          };
+
+          return (
+            <div className="max-w-[360px] bg-white/85 dark:bg-neutral-900/90 backdrop-blur-lg rounded-2xl p-5 border border-white/30 dark:border-neutral-700/60 shadow-sm">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div>
+                  <p className="text-2xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">
+                    {t('userActivity.noteShare.cardTitle', 'Ghi chú được chia sẻ')}
+                  </p>
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2">
+                    {obj.title || t('userActivity.noteShare.untitled', 'Ghi chú không tiêu đề')}
+                  </h3>
+                </div>
+              </div>
+              {(obj.content && String(obj.content).trim().length > 0) ? (
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4 line-clamp-4">
+                  {obj.content}
+                </p>
+              ) : (
+                <p className="text-sm italic text-gray-500 dark:text-gray-400 mb-4">
+                  {t('userActivity.noteShare.noContent', 'Không có nội dung')}
+                </p>
+              )}
+              {obj.imageUrl && (
+                <div className="mb-4">
+                  <img
+                    src={obj.imageUrl}
+                    alt={obj.title || 'note-image'}
+                    className="w-full h-40 object-cover rounded-xl border border-white/30 dark:border-neutral-700/60"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={priorityChipClass(priority)}>
+                    {t(`userActivity.noteShare.priority.${priority}`, { defaultValue: priority })}
+                  </span>
+                  <span className="px-2 py-1 text-xs font-medium rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-200">
+                    {t(`userActivity.noteShare.category.${category}`, { defaultValue: category })}
+                  </span>
+                </div>
+                {createdAt && (
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{formatDate(createdAt)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+      } catch {
+        // fallthrough
+      }
+    }
     if (typeof text === 'string' && text.startsWith(callPrefix)) {
       try {
         const raw = text.slice(callPrefix.length);

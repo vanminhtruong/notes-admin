@@ -70,6 +70,8 @@
       "noMessages": "Chưa có tin nhắn",
       "sentTo": "Đã gửi đến",
       "receivedFrom": "Nhận từ",
+      "unknownUser": "Người dùng",
+      "noteShare": "{{name}} đã chia sẻ ghi chú",
       "actions": {
         "menu": "Menu",
         "recall": "Thu hồi tin nhắn",
@@ -112,7 +114,11 @@
       },
       "actions": {
         "menu": "Menu",
-        "delete": "Xóa thông báo"
+        "delete": "Xóa thông báo",
+        "clearAll": "Xóa tất cả",
+        "confirmClearAll": "Xóa tất cả thông báo của người dùng này?",
+        "clearAllSuccess": "Đã xóa tất cả thông báo",
+        "clearAllError": "Không thể xóa tất cả thông báo"
       },
       "message": {
         "title": "Tin nhắn mới từ {{name}}",
@@ -163,8 +169,22 @@
           "member": "Thành viên"
         }
       }
-    }
-    ,
+    },
+    "noteShare": {
+      "cardTitle": "Ghi chú được chia sẻ",
+      "untitled": "Ghi chú không tiêu đề",
+      "noContent": "Không có nội dung",
+      "priority": {
+        "low": "Ưu tiên thấp",
+        "medium": "Ưu tiên trung bình",
+        "high": "Ưu tiên cao"
+      },
+      "category": {
+        "general": "Danh mục chung",
+        "work": "Công việc",
+        "personal": "Cá nhân"
+      }
+    },
     "messageActions": {
       "editPrompt": "Nhập nội dung mới cho tin nhắn:",
       "editEmpty": "Nội dung không được để trống",

@@ -42,7 +42,24 @@ const MessagesTab: React.FC<MessagesTabProps> = ({
     const isOwn = !!options?.isOwn;
     const senderName = options?.senderName || '';
     const receiverName = options?.receiverName || '';
+    const notePrefix = 'NOTE_SHARE::';
     const callPrefix = 'CALL_LOG::';
+    if (typeof text === 'string' && text.startsWith(notePrefix)) {
+      try {
+        const raw = text.slice(notePrefix.length);
+        const obj = JSON.parse(decodeURIComponent(raw));
+        if (obj && (obj.type === 'note' || obj.v === 1)) {
+          const nameFallback = senderName || t('userActivity.messages.unknownUser', 'Người dùng');
+          return (
+            <span className="inline-flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400">
+              📘 {t('userActivity.messages.noteShare', { name: nameFallback, defaultValue: `${nameFallback} đã chia sẻ ghi chú` })}
+            </span>
+          );
+        }
+      } catch {
+        // fallthrough
+      }
+    }
     if (typeof text === 'string' && text.startsWith(callPrefix)) {
       try {
         const raw = text.slice(callPrefix.length);

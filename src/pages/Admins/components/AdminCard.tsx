@@ -10,6 +10,7 @@ interface AdminCardProps {
   onToggleStatus: (adminId: number) => void;
   onDelete: (adminId: number) => void;
   onRevokePermission: (adminId: number, permission: string) => void;
+  onViewProfile: (admin: Admin) => void;
 }
 
 const AdminCard: React.FC<AdminCardProps> = ({
@@ -19,6 +20,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
   onToggleStatus,
   onDelete,
   onRevokePermission,
+  onViewProfile,
 }) => {
   const { t, i18n } = useTranslation('admins');
   const getStatusColor = (isActive: boolean) =>
@@ -99,32 +101,45 @@ const AdminCard: React.FC<AdminCardProps> = ({
         )}
       </div>
 
-      {canModify && (
-        <div className="mt-4 xl-down:mt-3 sm-down:mt-2 flex justify-end gap-2 sm-down:gap-1.5">
+      <div className="mt-4 xl-down:mt-3 sm-down:mt-2 flex justify-end gap-2 sm-down:gap-1.5">
+        {/* View Profile button - always visible for super admin */}
+        {isSuperAdmin() && admin.adminLevel !== 'super_admin' && (
           <button
-            onClick={() => onEdit(admin)}
-            className="px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+            onClick={() => onViewProfile(admin)}
+            className="px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
           >
-            {t('edit')}
+            {t('viewProfile', { defaultValue: 'Xem hồ sơ' })}
           </button>
-          <button
-            onClick={() => onToggleStatus(admin.id)}
-            className={`px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs rounded transition-colors ${
-              admin.isActive
-                ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}
-          >
-            {admin.isActive ? t('deactivate') : t('activate')}
-          </button>
-          <button
-            onClick={() => onDelete(admin.id)}
-            className="px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-          >
-            {t('delete')}
-          </button>
-        </div>
-      )}
+        )}
+        
+        {/* Modification buttons - only for non-super-admin */}
+        {canModify && (
+          <>
+            <button
+              onClick={() => onEdit(admin)}
+              className="px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+            >
+              {t('edit')}
+            </button>
+            <button
+              onClick={() => onToggleStatus(admin.id)}
+              className={`px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs rounded transition-colors ${
+                admin.isActive
+                  ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}
+            >
+              {admin.isActive ? t('deactivate') : t('activate')}
+            </button>
+            <button
+              onClick={() => onDelete(admin.id)}
+              className="px-3 py-1 md-down:px-2.5 md-down:py-1 sm-down:px-2 sm-down:py-1 text-sm sm-down:text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+            >
+              {t('delete')}
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 };

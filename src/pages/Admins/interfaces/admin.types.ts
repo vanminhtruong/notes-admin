@@ -186,6 +186,11 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
                 key: 'manage_users.activity.notifications.delete',
                 label: 'Xóa thông báo',
                 description: 'Cho phép xóa thông báo của người dùng theo thời gian thực'
+              },
+              {
+                key: 'manage_users.activity.notifications.clear_all',
+                label: 'Clear all notifications',
+                description: 'Allow clearing all notifications for the user (Super Admin or granted admins only)'
               }
             ]
           },
@@ -217,6 +222,30 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
                 ]
               }
             ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    key: 'profile',
+    label: 'Hồ sơ',
+    description: 'Quyền liên quan đến hồ sơ admin',
+    subPermissions: [
+      {
+        key: 'profile.self',
+        label: 'Hồ sơ bản thân',
+        description: 'Quyền truy cập và chỉnh sửa hồ sơ của chính mình',
+        subPermissions: [
+          {
+            key: 'profile.self.view',
+            label: 'Xem hồ sơ bản thân',
+            description: 'Cho phép truy cập trang hồ sơ của chính mình'
+          },
+          {
+            key: 'profile.self.edit',
+            label: 'Sửa hồ sơ bản thân',
+            description: 'Cho phép chỉnh sửa hồ sơ của chính mình'
           }
         ]
       }

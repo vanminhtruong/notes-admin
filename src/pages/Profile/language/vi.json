@@ -1,0 +1,48 @@
+{
+  "title": "Hồ sơ Admin",
+  "edit": "Sửa thông tin",
+  "loadFailed": "Không thể tải hồ sơ",
+  "name": "Họ và tên",
+  "namePlaceholder": "Nhập họ và tên",
+  "level": "Cấp độ",
+  "phone": "Số điện thoại",
+  "birthDate": "Ngày sinh",
+  "gender": {
+    "title": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "unspecified": "Không xác định"
+  },
+  "language": "Ngôn ngữ",
+  "theme": {
+    "title": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối"
+  },
+  "rememberLogin": "Ghi nhớ đăng nhập",
+  "hidePhone": "Ẩn số điện thoại",
+  "hideBirthDate": "Ẩn ngày sinh",
+  "allowMessagesFromNonFriends": "Cho phép người lạ nhắn tin",
+  "actions": {
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "saving": "Đang lưu..."
+  },
+  "messages": {
+    "updateSuccess": "Cập nhật hồ sơ thành công",
+    "updateFailed": "Cập nhật thất bại"
+  },
+  "noPermission": "Bạn không có quyền xem hồ sơ",
+  "avatar": {
+    "title": "Ảnh đại diện",
+    "upload": "Chọn ảnh",
+    "uploading": "Đang upload...",
+    "remove": "Xóa ảnh",
+    "hint": "JPG, PNG hoặc GIF. Tối đa 5MB.",
+    "invalidFileType": "Chỉ chấp nhận file hình ảnh",
+    "fileTooLarge": "File quá lớn. Tối đa 5MB",
+    "uploadSuccess": "Upload avatar thành công",
+    "uploadFailed": "Upload avatar thất bại"
+  }
+}
