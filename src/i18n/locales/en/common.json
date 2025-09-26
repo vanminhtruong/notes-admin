@@ -41,7 +41,9 @@
     }
   },
   "actions": {
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
   },
   "pagination": {
     "previous": "Previous",

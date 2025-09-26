@@ -24,6 +24,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
       'manage_users.activity',
       'manage_users.activity.messages',
       'manage_users.activity.groups',
+      'manage_notes',
       'profile',
       'profile.self'
     ];

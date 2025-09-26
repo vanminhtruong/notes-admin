@@ -41,7 +41,9 @@
     }
   },
   "actions": {
-    "cancel": "취소"
+    "cancel": "취소",
+    "confirm": "확인",
+    "close": "닫기"
   },
   "pagination": {
     "previous": "이전",

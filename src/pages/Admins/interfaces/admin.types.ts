@@ -275,6 +275,16 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
         key: 'manage_notes.view',
         label: 'Xem ghi chú',
         description: 'Xem tất cả ghi chú của người dùng'
+      },
+      {
+        key: 'manage_notes.view_detail',
+        label: 'Xem chi tiết ghi chú',
+        description: 'Xem chi tiết đầy đủ ghi chú qua modal khi click vào danh sách'
+      },
+      {
+        key: 'manage_notes.archive',
+        label: 'Lưu trữ ghi chú',
+        description: 'Lưu trữ và bỏ lưu trữ ghi chú'
       }
     ]
   },

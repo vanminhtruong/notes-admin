@@ -168,6 +168,14 @@
       "view": {
         "label": "View Notes",
         "description": "View all user notes"
+      },
+      "view_detail": {
+        "label": "View Note Details",
+        "description": "View detailed note information via modal when clicking on list"
+      },
+      "archive": {
+        "label": "Archive Notes",
+        "description": "Archive and unarchive notes"
       }
     },
     "manage_admins": {

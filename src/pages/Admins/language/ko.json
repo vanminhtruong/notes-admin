@@ -168,6 +168,14 @@
       "view": {
         "label": "노트 보기",
         "description": "모든 사용자 노트 조회"
+      },
+      "view_detail": {
+        "label": "노트 상세 보기",
+        "description": "목록 클릭 시 모달을 통한 상세 노트 정보 보기"
+      },
+      "archive": {
+        "label": "노트 보관",
+        "description": "노트 보관 및 보관 해제"
       }
     },
     "manage_admins": {

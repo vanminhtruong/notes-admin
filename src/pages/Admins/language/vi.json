@@ -168,6 +168,14 @@
       "view": {
         "label": "Xem ghi chú",
         "description": "Xem tất cả ghi chú của người dùng"
+      },
+      "view_detail": {
+        "label": "Xem chi tiết ghi chú",
+        "description": "Xem chi tiết đầy đủ ghi chú qua modal khi click vào danh sách"
+      },
+      "archive": {
+        "label": "Lưu trữ ghi chú",
+        "description": "Lưu trữ và bỏ lưu trữ ghi chú"
       }
     },
     "manage_admins": {

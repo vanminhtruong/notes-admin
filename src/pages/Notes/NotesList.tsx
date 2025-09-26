@@ -6,6 +6,8 @@ import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import NotesFilters from '@pages/Notes/components/NotesFilters';
+import NoteDetailModal from '@pages/Notes/components/NoteDetailModal';
 
 interface User {
   id: number;
@@ -26,6 +28,11 @@ interface Note {
   createdAt: string;
   updatedAt: string;
   user: User;
+}
+
+interface NotesListProps {
+  forcedArchived?: 'all' | 'active' | 'archived';
+  embedded?: boolean;
 }
 
 type EditNoteModalProps = {
@@ -201,9 +208,10 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
   );
 };
 
-const NotesList: React.FC = () => {
+
+const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const { t } = useTranslation('notes');
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -213,6 +221,13 @@ const NotesList: React.FC = () => {
   const [archivedFilter, setArchivedFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Tabs state via URL ?tab=all|active|archived
+  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived';
+  const setTab = (next: 'all' | 'active' | 'archived') => {
+    searchParams.set('tab', next);
+    setSearchParams(searchParams, { replace: true });
+  };
 
   // Initialize selectedUserId from URL params and update when URL changes
   useEffect(() => {
@@ -226,9 +241,29 @@ const NotesList: React.FC = () => {
     setCurrentPage(1);
   }, [searchParams]);
   
+  // Đồng bộ archivedFilter theo tab được ép từ NotesTabs
+  useEffect(() => {
+    if (!forcedArchived) return;
+    const next = forcedArchived === 'all' ? '' : forcedArchived === 'active' ? 'false' : 'true';
+    setArchivedFilter(next);
+    setCurrentPage(1);
+  }, [forcedArchived]);
+
+  // Đồng bộ archivedFilter theo tab trên URL khi không bị ép bởi parent
+  useEffect(() => {
+    if (forcedArchived) return; // parent overrides
+    const next = tab === 'all' ? '' : tab === 'active' ? 'false' : 'true';
+    setArchivedFilter(next);
+    setCurrentPage(1);
+  }, [tab, forcedArchived]);
+
   // Editing states
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  
+  // Detail modal states
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   useEffect(() => {
     loadNotes();
@@ -400,111 +435,92 @@ const NotesList: React.FC = () => {
 
   return (
     <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between xl-down:flex-col xl-down:items-start xl-down:space-y-3">
-        <div className="xl-down:w-full">
-          <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
-        </div>
-        {hasPermission('manage_notes.create') && (
-          <button
-            onClick={() => window.location.href = '/notes/create'}
-            className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
-          >
-            {t('createNote')}
-          </button>
-        )}
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 p-4 xl-down:p-3 sm-down:p-2">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 xl-down:grid-cols-2 md-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
-          <div>
-            <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.search.label')}
-            </label>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={t('filters.search.placeholder')}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-            />
+      {!embedded && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between xl-down:flex-col xl-down:items-start xl-down:space-y-3">
+          <div className="xl-down:w-full">
+            <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
           </div>
-
-          <div>
-            <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.userId.label')}
-            </label>
-            <input
-              type="number"
-              value={selectedUserId}
-              onChange={(e) => setSelectedUserId(e.target.value)}
-              placeholder={t('filters.userId.placeholder')}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.category.label')}
-            </label>
-            <input
-              type="text"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              placeholder={t('filters.category.placeholder')}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.priority.label')}
-            </label>
-            <select
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-            >
-              <option value="">{t('filters.all')}</option>
-              <option value="low">{t('constants.priority.low')}</option>
-              <option value="medium">{t('constants.priority.medium')}</option>
-              <option value="high">{t('constants.priority.high')}</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.status.label')}
-            </label>
-            <select
-              value={archivedFilter}
-              onChange={(e) => setArchivedFilter(e.target.value)}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-            >
-              <option value="">{t('filters.all')}</option>
-              <option value="false">{t('filters.active')}</option>
-              <option value="true">{t('filters.archived')}</option>
-            </select>
-          </div>
-
-          <div className="flex items-end xl-down:col-span-2 md-down:col-span-1">
+          {hasPermission('manage_notes.create') && tab !== 'archived' && (
             <button
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedUserId('');
-                setCategoryFilter('');
-                setPriorityFilter('');
-                setArchivedFilter('');
-                setCurrentPage(1);
-              }}
-              className="w-full xl-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors text-sm xl-down:text-xs font-medium"
+              onClick={() => window.location.href = '/notes/create'}
+              className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
             >
-              {t('filters.clear')}
+              {t('createNote')}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Tabs All / Active / Archived (segmented control) */}
+      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700">
+        <div className="px-4 xl-down:px-3 sm-down:px-2 py-3 xl-down:py-2">
+          <div className="inline-flex items-center p-1 rounded-lg bg-gray-100 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700">
+            <button
+              onClick={() => setTab('all')}
+              aria-label={t('filters.all') as string}
+              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                tab === 'all'
+                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+              }`}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/></svg>
+              {t('filters.all')}
+            </button>
+            <button
+              onClick={() => setTab('active')}
+              aria-label={t('filters.active') as string}
+              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                tab === 'active'
+                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+              }`}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4 1.5 1.5-5.5 5.5L7.5 13.5 9 12z"/></svg>
+              {t('filters.active')}
+            </button>
+            <button
+              onClick={() => setTab('archived')}
+              aria-label={t('filters.archived') as string}
+              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                tab === 'archived'
+                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+              }`}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2zm-2 2v10H6V9h12z"/></svg>
+              {t('filters.archived')}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Filters */}
+      <NotesFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedUserId={selectedUserId}
+        setSelectedUserId={setSelectedUserId}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
+        archivedFilter={archivedFilter}
+        setArchivedFilter={setArchivedFilter}
+        onClear={() => {
+          setSearchTerm('');
+          setSelectedUserId('');
+          setCategoryFilter('');
+          setPriorityFilter('');
+          const next = forcedArchived
+            ? (forcedArchived === 'all' ? '' : forcedArchived === 'active' ? 'false' : 'true')
+            : (tab === 'all' ? '' : tab === 'active' ? 'false' : 'true');
+          setArchivedFilter(next);
+          setCurrentPage(1);
+        }}
+        showStatusSelect={false}
+      />
 
       {/* Notes List */}
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
@@ -521,15 +537,24 @@ const NotesList: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <p className="text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300">{t('empty.title')}</p>
+                <p className="text-sm xl-down:text-xs font-semibold text-gray-800 dark:text-gray-200">{t('empty.title')}</p>
                 <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 mt-1">{t('empty.hint')}</p>
+                {hasPermission('manage_notes.create') && tab !== 'archived' && (
+                  <button
+                    onClick={() => window.location.href = '/notes/create'}
+                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-md text-sm xl-down:text-xs transition-colors shadow-sm"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
+                    {t('createNote')}
+                  </button>
+                )}
               </div>
             ) : (
               <>
                 {/* Desktop Table View */}
                 <div className="overflow-x-auto lg-down:hidden">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                    <thead className="bg-gray-50 dark:bg-neutral-800">
+                    <thead className="bg-gray-50 dark:bg-neutral-800 sticky top-0 z-10">
                       <tr>
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           {t('table.note')}
@@ -549,7 +574,7 @@ const NotesList: React.FC = () => {
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
                           {t('table.createdAt')}
                         </th>
-                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                           <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {t('table.actions')}
                           </th>
@@ -558,7 +583,18 @@ const NotesList: React.FC = () => {
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
                       {notes.map((note) => (
-                        <tr key={note.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800">
+                        <tr 
+                          key={note.id} 
+                          className={`hover:bg-gray-50 dark:hover:bg-neutral-800 ${
+                            hasPermission('manage_notes.view_detail') ? 'cursor-pointer' : ''
+                          }`}
+                          onClick={() => {
+                            if (hasPermission('manage_notes.view_detail')) {
+                              setSelectedNote(note);
+                              setShowDetailModal(true);
+                            }
+                          }}
+                        >
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3">
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
@@ -620,12 +656,13 @@ const NotesList: React.FC = () => {
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
                             {formatDate(note.createdAt)}
                           </td>
-                          {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                          {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                             <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
                               <div className="flex items-center gap-2 xl-down:gap-1">
                                 {hasPermission('manage_notes.update') && (
                                   <button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       setEditingNote(note);
                                       setShowEditModal(true);
                                     }}
@@ -639,9 +676,44 @@ const NotesList: React.FC = () => {
                                     </svg>
                                   </button>
                                 )}
+                                {hasPermission('manage_notes.archive') && (
+                                  <button
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      try {
+                                        await adminService.updateUserNote(note.id, { isArchived: !note.isArchived });
+                                        await loadNotes();
+                                        toast.success(
+                                          note.isArchived
+                                            ? (t('toasts.unarchiveSuccess', { defaultValue: 'Đã bỏ lưu trữ ghi chú' }) as string)
+                                            : (t('toasts.archiveSuccess', { defaultValue: 'Đã lưu trữ ghi chú' }) as string)
+                                        );
+                                      } catch (e) {
+                                        console.error('Toggle archive failed', e);
+                                        toast.error(
+                                          note.isArchived
+                                            ? (t('toasts.unarchiveError', { defaultValue: 'Không thể bỏ lưu trữ' }) as string)
+                                            : (t('toasts.archiveError', { defaultValue: 'Không thể lưu trữ' }) as string)
+                                        );
+                                      }
+                                    }}
+                                    aria-label={note.isArchived ? (t('actions.unarchive', { defaultValue: 'Bỏ lưu trữ' }) as string) : (t('actions.archive', { defaultValue: 'Lưu trữ' }) as string)}
+                                    title={note.isArchived ? (t('actions.unarchive', { defaultValue: 'Bỏ lưu trữ' }) as string) : (t('actions.archive', { defaultValue: 'Lưu trữ' }) as string)}
+                                    className={`p-2 xl-down:p-1.5 rounded-md xl-down:rounded transition-colors ${note.isArchived ? 'text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/20' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-neutral-800'}`}
+                                  >
+                                    {note.isArchived ? (
+                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M19 7H5V5h4.5l1-1h3l1 1H19v2Zm-2 2v9H7V9h10ZM9 11v5h2v-5H9Zm4 0v5h2v-5h-2Z"/></svg>
+                                    ) : (
+                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2Zm-2 2v10H6V9h12Z"/></svg>
+                                    )}
+                                  </button>
+                                )}
                                 {hasPermission('manage_notes.delete') && (
                                   <button
-                                    onClick={() => handleDeleteNote(note.id)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteNote(note.id);
+                                    }}
                                     aria-label={t('actions.delete')}
                                     title={t('actions.delete') as string}
                                     className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -663,7 +735,18 @@ const NotesList: React.FC = () => {
                 {/* Mobile Card View */}
                 <div className="hidden lg-down:block space-y-3 sm-down:space-y-2 p-4 xl-down:p-3 sm-down:p-2">
                   {notes.map((note) => (
-                    <div key={note.id} className="bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2 border border-gray-200 dark:border-neutral-700">
+                    <div 
+                      key={note.id} 
+                      className={`bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2 border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 ${
+                        hasPermission('manage_notes.view_detail') ? 'cursor-pointer' : ''
+                      }`}
+                      onClick={() => {
+                        if (hasPermission('manage_notes.view_detail')) {
+                          setSelectedNote(note);
+                          setShowDetailModal(true);
+                        }
+                      }}
+                    >
                       <div className="flex items-start justify-between mb-3 xl-down:mb-2">
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
@@ -730,11 +813,12 @@ const NotesList: React.FC = () => {
                           <span>📅 {formatDate(note.createdAt)}</span>
                         </div>
                         
-                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete')) && (
+                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                           <div className="flex items-center gap-1">
                             {hasPermission('manage_notes.update') && (
                               <button
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setEditingNote(note);
                                   setShowEditModal(true);
                                 }}
@@ -746,9 +830,42 @@ const NotesList: React.FC = () => {
                                 </svg>
                               </button>
                             )}
+                            {hasPermission('manage_notes.archive') && (
+                              <button
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  try {
+                                    await adminService.updateUserNote(note.id, { isArchived: !note.isArchived });
+                                    await loadNotes();
+                                    toast.success(
+                                      note.isArchived
+                                        ? (t('toasts.unarchiveSuccess', { defaultValue: 'Đã bỏ lưu trữ ghi chú' }) as string)
+                                        : (t('toasts.archiveSuccess', { defaultValue: 'Đã lưu trữ ghi chú' }) as string)
+                                    );
+                                  } catch (e) {
+                                    console.error('Toggle archive failed', e);
+                                    toast.error(
+                                      note.isArchived
+                                        ? (t('toasts.unarchiveError', { defaultValue: 'Không thể bỏ lưu trữ' }) as string)
+                                        : (t('toasts.archiveError', { defaultValue: 'Không thể lưu trữ' }) as string)
+                                    );
+                                  }
+                                }}
+                                className="p-1.5 rounded text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
+                              >
+                                {note.isArchived ? (
+                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19 7H5V5h4.5l1-1h3l1 1H19v2Zm-2 2v9H7V9h10ZM9 11v5h2v-5H9Zm4 0v5h2v-5h-2Z"/></svg>
+                                ) : (
+                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2Zm-2 2v10H6V9h12Z"/></svg>
+                                )}
+                              </button>
+                            )}
                             {hasPermission('manage_notes.delete') && (
                               <button
-                                onClick={() => handleDeleteNote(note.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteNote(note.id);
+                                }}
                                 className="p-1.5 rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -804,6 +921,16 @@ const NotesList: React.FC = () => {
           setEditingNote(null);
         }}
         onSubmit={handleUpdateNote}
+      />
+
+      {/* Detail Modal */}
+      <NoteDetailModal
+        show={showDetailModal}
+        note={selectedNote}
+        onClose={() => {
+          setShowDetailModal(false);
+          setSelectedNote(null);
+        }}
       />
     </div>
   );
