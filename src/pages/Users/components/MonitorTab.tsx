@@ -362,6 +362,38 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
     } catch {}
   }, [typingInfo, selectedFriendId, monitorTab]);
 
+  // Disable body scroll when group members modal is open
+  useEffect(() => {
+    if (showGroupMembers) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showGroupMembers]);
+
+  // Close group menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openGroupMenuId !== null) {
+        const target = event.target as Element;
+        // Don't close if clicking on the menu button or dropdown
+        if (!target.closest('[data-group-menu]')) {
+          setOpenGroupMenuId(null);
+        }
+      }
+    };
+
+    if (openGroupMenuId !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [openGroupMenuId, setOpenGroupMenuId]);
+
   // Auto-scroll when any group member is typing in current group
   useEffect(() => {
     try {
@@ -757,6 +789,57 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                       <div className="ml-3 xl-down:ml-2 flex-1 min-w-0">
                         <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{g.name}</p>
                       </div>
+                    </div>
+                    
+                    {/* Menu ba chấm để mở modal thành viên */}
+                    <div className="relative" style={{ zIndex: 20 }} data-group-menu>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Menu button clicked for group:', g.id, g.name);
+                          setOpenGroupMenuId(openGroupMenuId === g.id ? null : g.id);
+                        }}
+                        className="p-1.5 xl-down:p-1 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-600 transition-colors flex-shrink-0"
+                        aria-label={t('userActivity.monitor.actions.menu')}
+                        data-group-menu
+                      >
+                        <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                          <circle cx="12" cy="5" r="2"/>
+                          <circle cx="12" cy="12" r="2"/>
+                          <circle cx="12" cy="19" r="2"/>
+                        </svg>
+                      </button>
+                      
+                      {/* Dropdown menu */}
+                      {openGroupMenuId === g.id && (
+                        <div 
+                          className="absolute right-0 top-full mt-1 w-48 xl-down:w-40 bg-white dark:bg-neutral-800 rounded-md shadow-xl ring-1 ring-black ring-opacity-5 py-1"
+                          style={{ zIndex: 1000 }}
+                          data-group-menu
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              console.log('View members clicked for group:', g.id, g.name);
+                              console.log('openGroupMembersModal function:', openGroupMembersModal);
+                              openGroupMembersModal(g);
+                              setOpenGroupMenuId(null);
+                            }}
+                            className="w-full text-left px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                            data-group-menu
+                          >
+                            <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                              <circle cx="9" cy="7" r="4"/>
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+{t('userActivity.monitor.actions.viewMembers')}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

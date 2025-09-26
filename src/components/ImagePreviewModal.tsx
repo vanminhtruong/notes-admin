@@ -28,6 +28,20 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
+
   // Reset zoom when modal reopened or source changes
   useEffect(() => {
     if (open) {

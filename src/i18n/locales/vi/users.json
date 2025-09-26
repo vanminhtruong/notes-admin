@@ -53,6 +53,7 @@
       "groupChat": "Chat nhóm",
       "noMessages": "Chưa có tin nhắn",
       "actions": {
+        "menu": "Menu",
         "viewMembers": "Xem thành viên",
         "close": "Đóng"
       },

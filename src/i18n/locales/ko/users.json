@@ -53,6 +53,7 @@
       "groupChat": "그룹 채팅",
       "noMessages": "메시지가 없습니다",
       "actions": {
+        "menu": "메뉴",
         "viewMembers": "멤버 보기",
         "close": "닫기"
       },

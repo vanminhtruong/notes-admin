@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
+import ImagePreviewModal from '@components/ImagePreviewModal';
 import type { Admin } from '../interfaces/admin.types';
 
 interface AdminProfileModalProps {
@@ -26,11 +27,29 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
   const [formData, setFormData] = useState<any>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Image preview modal state
+  const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
+  const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
+
   useEffect(() => {
     if (isOpen && admin) {
       loadProfile();
     }
   }, [isOpen, admin]);
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const loadProfile = async () => {
     if (!admin) return;
@@ -116,21 +135,29 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
     }
   };
 
+  const handleAvatarClick = (avatarSrc?: string) => {
+    if (avatarSrc) {
+      setImagePreviewSrc(avatarSrc);
+      setImagePreviewOpen(true);
+    }
+  };
+
   if (!isOpen || !admin) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700 p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col">
+        {/* Header - Fixed */}
+        <div className="bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700 p-4 sm:p-6 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 truncate">
               {t('profileTitle', { defaultValue: 'Hồ sơ Admin' })} - {admin.name}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-end">
               {!editMode && (
                 <button
                   onClick={() => setEditMode(true)}
-                  className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
                 >
                   {t('editProfile', { defaultValue: 'Sửa hồ sơ' })}
                 </button>
@@ -147,7 +174,8 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
           </div>
         </div>
 
-        <div className="p-6">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {loading ? (
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -156,9 +184,12 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
           ) : profileData ? (
             <div className="space-y-6">
               {/* Avatar Section */}
-              <div className="flex items-center space-x-6">
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+                <div className="relative flex-shrink-0">
+                  <div 
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-400 transition-all"
+                    onClick={() => handleAvatarClick(editMode ? formData.avatar : profileData.avatar)}
+                  >
                     {(editMode ? formData.avatar : profileData.avatar) ? (
                       <img 
                         src={editMode ? formData.avatar : profileData.avatar} 
@@ -166,7 +197,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                         className="w-full h-full object-cover" 
                       />
                     ) : (
-                      <span className="text-white text-2xl font-semibold">
+                      <span className="text-white text-lg sm:text-2xl font-semibold">
                         {profileData.email.charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -179,16 +210,16 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                 </div>
                 
                 {editMode && (
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                       {t('avatar.title', { defaultValue: 'Ảnh đại diện' })}
                     </h3>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
-                        className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-md"
+                        className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-md w-full sm:w-auto"
                       >
                         {uploading ? t('avatar.uploading', { defaultValue: 'Đang upload...' }) : t('avatar.upload', { defaultValue: 'Chọn ảnh' })}
                       </button>
@@ -197,7 +228,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                           type="button"
                           onClick={() => setFormData((prev: any) => ({ ...prev, avatar: '' }))}
                           disabled={uploading}
-                          className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-md"
+                          className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-md w-full sm:w-auto"
                         >
                           {t('avatar.remove', { defaultValue: 'Xóa ảnh' })}
                         </button>
@@ -218,7 +249,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
               </div>
 
               {/* Profile Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
                     {t('name', { defaultValue: 'Họ và tên' })}
@@ -228,23 +259,23 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
                     />
                   ) : (
-                    <p className="px-3 py-2 text-gray-900 dark:text-gray-100">{profileData.name}</p>
+                    <p className="px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base text-gray-900 dark:text-gray-100">{profileData.name}</p>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Email</label>
-                  <p className="px-3 py-2 text-gray-500 dark:text-gray-400">{profileData.email}</p>
+                  <p className="px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base text-gray-500 dark:text-gray-400">{profileData.email}</p>
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
                     {t('adminLevel', { defaultValue: 'Cấp độ' })}
                   </label>
-                  <p className="px-3 py-2 text-gray-500 dark:text-gray-400">{profileData.adminLevel}</p>
+                  <p className="px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base text-gray-500 dark:text-gray-400">{profileData.adminLevel}</p>
                 </div>
 
                 <div>
@@ -256,7 +287,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
                       placeholder="+84 912 345 678"
                     />
                   ) : (
@@ -274,7 +305,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                       name="birthDate"
                       value={formData.birthDate || ''}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 dark:text-gray-100">{profileData.birthDate || '-'}</p>
@@ -290,7 +321,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                       name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
                     >
                       <option value="unspecified">{t('genderOptions.unspecified', { defaultValue: 'Không xác định' })}</option>
                       <option value="male">{t('genderOptions.male', { defaultValue: 'Nam' })}</option>
@@ -314,7 +345,7 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                   <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {t('settings', { defaultValue: 'Cài đặt' })}
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <label className="flex items-center gap-3">
                       <input 
                         type="checkbox" 
@@ -341,44 +372,58 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                 </div>
               )}
 
-              {/* Action Buttons */}
-              {editMode && (
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-neutral-600">
-                  <button
-                    onClick={() => {
-                      setEditMode(false);
-                      setFormData({
-                        name: profileData.name || '',
-                        avatar: profileData.avatar || '',
-                        phone: profileData.phone || '',
-                        birthDate: profileData.birthDate || '',
-                        gender: profileData.gender || 'unspecified',
-                        theme: profileData.theme || 'light',
-                        language: profileData.language || 'vi',
-                        rememberLogin: !!profileData.rememberLogin,
-                        hidePhone: !!profileData.hidePhone,
-                        hideBirthDate: !!profileData.hideBirthDate,
-                        allowMessagesFromNonFriends: !!profileData.allowMessagesFromNonFriends,
-                      });
-                    }}
-                    disabled={saving}
-                    className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-600"
-                  >
-                    {t('cancel', { defaultValue: 'Hủy' })}
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={saving || uploading}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg"
-                  >
-                    {saving ? t('saving', { defaultValue: 'Đang lưu...' }) : t('save', { defaultValue: 'Lưu' })}
-                  </button>
-                </div>
-              )}
             </div>
           ) : null}
         </div>
+        
+        {/* Footer - Fixed (chỉ hiện khi edit mode) */}
+        {editMode && (
+          <div className="border-t border-gray-200 dark:border-neutral-600 p-4 sm:p-6 flex-shrink-0">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+              <button
+                onClick={() => {
+                  setEditMode(false);
+                  setFormData({
+                    name: profileData.name || '',
+                    avatar: profileData.avatar || '',
+                    phone: profileData.phone || '',
+                    birthDate: profileData.birthDate || '',
+                    gender: profileData.gender || 'unspecified',
+                    theme: profileData.theme || 'light',
+                    language: profileData.language || 'vi',
+                    rememberLogin: !!profileData.rememberLogin,
+                    hidePhone: !!profileData.hidePhone,
+                    hideBirthDate: !!profileData.hideBirthDate,
+                    allowMessagesFromNonFriends: !!profileData.allowMessagesFromNonFriends,
+                  });
+                }}
+                disabled={saving}
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-600 w-full sm:w-auto"
+              >
+                {t('cancel', { defaultValue: 'Hủy' })}
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={saving || uploading}
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg w-full sm:w-auto"
+              >
+                {saving ? t('saving', { defaultValue: 'Đang lưu...' }) : t('save', { defaultValue: 'Lưu' })}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Image Preview Modal */}
+      <ImagePreviewModal
+        open={imagePreviewOpen}
+        src={imagePreviewSrc}
+        alt="Admin Avatar"
+        onClose={() => {
+          setImagePreviewOpen(false);
+          setImagePreviewSrc(null);
+        }}
+      />
     </div>
   );
 };

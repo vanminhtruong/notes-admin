@@ -119,13 +119,13 @@ const AdminProfile: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{t('title', { defaultValue: 'Hồ sơ Admin' })}</h1>
+    <div className="max-w-3xl mx-auto p-3 sm:p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100">{t('title', { defaultValue: 'Hồ sơ Admin' })}</h1>
         {!editMode && canEdit && (
           <button
             onClick={() => setEditMode(true)}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
+            className="px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium w-full sm:w-auto"
           >
             {t('edit', { defaultValue: 'Sửa thông tin' })}
           </button>
@@ -133,21 +133,21 @@ const AdminProfile: React.FC = () => {
       </div>
 
       {!editMode && (
-        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow border border-gray-200 dark:border-neutral-800 p-6">
-          <div className="flex items-start gap-6">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow border border-gray-200 dark:border-neutral-800 p-3 sm:p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
             <button
               type="button"
               onClick={() => data.avatar && setPreviewOpen(true)}
-              className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               title={data.avatar ? t('previewAvatar', { defaultValue: 'Xem ảnh đại diện' }) : undefined}
             >
               {data.avatar ? (
                 <img src={data.avatar} alt="avatar" className="w-full h-full object-cover hover:scale-105 transition-transform duration-200" />
               ) : (
-                <span className="text-white text-3xl font-semibold">{data.email.charAt(0).toUpperCase()}</span>
+                <span className="text-white text-2xl sm:text-3xl font-semibold">{data.email.charAt(0).toUpperCase()}</span>
               )}
             </button>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{t('name', { defaultValue: 'Họ và tên' })}</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100">{data.name}</p>

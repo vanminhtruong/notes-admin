@@ -8,6 +8,7 @@ import { removeAdminToken, getAdminToken, hasPermission, isSuperAdmin, getCurren
 import { getAdminSocket, closeAdminSocket } from '@services/socket';
 import adminService from '@services/adminService';
 import LanguageSwitcher from '@components/LanguageSwitcher';
+import ImagePreviewModal from '@components/ImagePreviewModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -31,6 +32,10 @@ const AdminLayout: React.FC = () => {
   // Admin profile state for real-time updates
   const [currentAdminProfile, setCurrentAdminProfile] = useState(getCurrentAdminInfo());
   const [profileLoading, setProfileLoading] = useState<boolean>(true);
+
+  // Image preview modal state
+  const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
+  const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
 
   const token = getAdminToken();
 
@@ -147,8 +152,16 @@ const AdminLayout: React.FC = () => {
   const currentAdmin = currentAdminProfile || getCurrentAdminInfo();
   const isSuper = isSuperAdmin();
 
+  // Helper function to handle avatar click
+  const handleAvatarClick = (avatarSrc?: string) => {
+    if (avatarSrc) {
+      setImagePreviewSrc(avatarSrc);
+      setImagePreviewOpen(true);
+    }
+  };
+
   // Helper function to render admin avatar
-  const renderAdminAvatar = (size: string = "w-8 h-8") => {
+  const renderAdminAvatar = (size: string = "w-8 h-8", clickable: boolean = false) => {
     // Trong khi đang tải profile, hiển thị skeleton để tránh flash avatar mặc định
     if (profileLoading) {
       return (
@@ -157,11 +170,11 @@ const AdminLayout: React.FC = () => {
     }
     const avatar = (currentAdmin as any)?.avatar;
     if (avatar) {
-      return (
+      const imageElement = (
         <img 
           src={avatar} 
           alt="Avatar" 
-          className={`${size} rounded-full object-cover flex-shrink-0`}
+          className={`${size} rounded-full object-cover flex-shrink-0 ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-blue-400 transition-all' : ''}`}
           onError={(e) => {
             console.error('Failed to load admin avatar:', avatar);
             e.currentTarget.style.display = 'none';
@@ -172,6 +185,15 @@ const AdminLayout: React.FC = () => {
           }}
         />
       );
+      
+      if (clickable) {
+        return (
+          <div onClick={() => handleAvatarClick(avatar)}>
+            {imageElement}
+          </div>
+        );
+      }
+      return imageElement;
     }
     return (
       <div className={`${size} bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0`}>
@@ -410,8 +432,16 @@ const AdminLayout: React.FC = () => {
               <div className="space-y-3 xl-down:space-y-2">
                 {/* User Info */}
                 {currentAdmin && (
-                  <div className="flex items-center space-x-3 xl-down:space-x-2 p-3 xl-down:p-2 bg-gray-50 dark:bg-neutral-800 rounded-lg">
-                    {renderAdminAvatar("w-8 h-8 xl-down:w-7 xl-down:h-7 sm-down:w-6 sm-down:h-6")}
+                  <button
+                    onClick={() => { 
+                      navigate('/profile'); 
+                      if (window.innerWidth <= 1279) {
+                        setSidebarOpen(false);
+                      }
+                    }}
+                    className="w-full flex items-center space-x-3 xl-down:space-x-2 p-3 xl-down:p-2 bg-gray-50 dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-lg transition-colors text-left"
+                  >
+                    {renderAdminAvatar("w-8 h-8 xl-down:w-7 xl-down:h-7 sm-down:w-6 sm-down:h-6", true)}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm xl-down:text-xs sm-down:text-2xs font-medium text-gray-700 dark:text-gray-300 truncate">{currentAdmin.email}</p>
@@ -423,7 +453,10 @@ const AdminLayout: React.FC = () => {
                         {currentAdmin.adminLevel === 'super_admin' ? 'Super Admin' : 'Phó Admin'}
                       </p>
                     </div>
-                  </div>
+                    <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.31 0-6 2.69-6 6 0 .55.45 1 1 1h10c.55 0 1-.45 1-1 0-3.31-2.69-6-6-6z" />
+                    </svg>
+                  </button>
                 )}
 
                 {/* Language Switcher */}
@@ -509,7 +542,7 @@ const AdminLayout: React.FC = () => {
                     aria-haspopup="menu"
                     aria-expanded={userMenuOpen}
                   >
-                    {renderAdminAvatar("w-8 h-8 xl-down:w-6 xl-down:h-6")}
+                    {renderAdminAvatar("w-8 h-8 xl-down:w-6 xl-down:h-6", true)}
                     <div className="hidden lg:block">
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-40 truncate block">
                         {currentAdmin.email}
@@ -576,6 +609,17 @@ const AdminLayout: React.FC = () => {
           />
         )}
       </div>
+
+      {/* Image Preview Modal */}
+      <ImagePreviewModal
+        open={imagePreviewOpen}
+        src={imagePreviewSrc}
+        alt="Admin Avatar"
+        onClose={() => {
+          setImagePreviewOpen(false);
+          setImagePreviewSrc(null);
+        }}
+      />
 
       {/* Toasts */}
       <ToastContainer

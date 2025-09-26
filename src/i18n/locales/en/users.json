@@ -53,6 +53,7 @@
       "groupChat": "Group Chat",
       "noMessages": "No messages",
       "actions": {
+        "menu": "Menu",
         "viewMembers": "View Members",
         "close": "Close"
       },

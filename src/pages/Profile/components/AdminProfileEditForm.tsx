@@ -113,11 +113,11 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
   };
 
   return (
-    <form onSubmit={submit} className="bg-white dark:bg-neutral-900 rounded-xl shadow border border-gray-200 dark:border-neutral-800 p-6 space-y-6">
+    <form onSubmit={submit} className="bg-white dark:bg-neutral-900 rounded-xl shadow border border-gray-200 dark:border-neutral-800 p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
       {/* Avatar Section */}
-      <div className="flex items-center space-x-6">
-        <div className="relative">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+        <div className="relative flex-shrink-0">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden">
             {form.avatar ? (
               <img 
                 src={form.avatar} 
@@ -130,7 +130,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
                 }}
               />
             ) : (
-              <span className="text-white text-2xl font-semibold">{data.email.charAt(0).toUpperCase()}</span>
+              <span className="text-white text-lg sm:text-2xl font-semibold">{data.email.charAt(0).toUpperCase()}</span>
             )}
           </div>
           {uploading && (
@@ -139,16 +139,16 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             </div>
           )}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 text-center sm:text-left">
           <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
             {t('avatar.title', { defaultValue: 'Ảnh đại diện' })}
           </h3>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={handleAvatarClick}
               disabled={uploading}
-              className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-md"
+              className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-md w-full sm:w-auto"
             >
               {uploading ? t('avatar.uploading', { defaultValue: 'Đang upload...' }) : t('avatar.upload', { defaultValue: 'Chọn ảnh' })}
             </button>
@@ -157,7 +157,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
                 type="button"
                 onClick={handleRemoveAvatar}
                 disabled={uploading}
-                className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 text-white rounded-md"
+                className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 text-white rounded-md w-full sm:w-auto"
               >
                 {t('avatar.remove', { defaultValue: 'Xóa ảnh' })}
               </button>
@@ -176,24 +176,24 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">{t('name', { defaultValue: 'Họ và tên' })}</label>
           <input
             name="name"
             value={form.name}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
             placeholder={t('namePlaceholder', { defaultValue: 'Nhập họ và tên' })}
           />
         </div>
         <div>
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Email</label>
-          <input value={data.email} disabled className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 text-gray-500" />
+          <input value={data.email} disabled className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 text-gray-500" />
         </div>
         <div>
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">{t('level', { defaultValue: 'Cấp độ' })}</label>
-          <input value={data.adminLevel || '-'} disabled className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 text-gray-500" />
+          <input value={data.adminLevel || '-'} disabled className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 text-gray-500" />
         </div>
         <div>
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">{t('phone', { defaultValue: 'Số điện thoại' })}</label>
@@ -201,7 +201,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
             placeholder="+84 912 345 678"
           />
         </div>
@@ -212,7 +212,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             name="birthDate"
             value={form.birthDate || ''}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
           />
         </div>
         <div>
@@ -221,7 +221,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             name="gender"
             value={form.gender}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
           >
             <option value="unspecified">{t('gender.unspecified', { defaultValue: 'Không xác định' })}</option>
             <option value="male">{t('gender.male', { defaultValue: 'Nam' })}</option>
@@ -235,7 +235,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             name="language"
             value={form.language}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
             placeholder="vi"
           />
         </div>
@@ -245,7 +245,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
             name="theme"
             value={form.theme}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 text-sm sm:text-base rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
           >
             <option value="light">{t('theme.light', { defaultValue: 'Sáng' })}</option>
             <option value="dark">{t('theme.dark', { defaultValue: 'Tối' })}</option>
@@ -253,33 +253,33 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <label className="flex items-center gap-3">
-          <input type="checkbox" name="rememberLogin" checked={form.rememberLogin} onChange={handleChange} />
-          <span className="text-sm text-gray-700 dark:text-gray-300">{t('rememberLogin', { defaultValue: 'Ghi nhớ đăng nhập' })}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        <label className="flex items-start gap-3">
+          <input type="checkbox" name="rememberLogin" checked={form.rememberLogin} onChange={handleChange} className="mt-0.5" />
+          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-tight">{t('rememberLogin', { defaultValue: 'Ghi nhớ đăng nhập' })}</span>
         </label>
-        <label className="flex items-center gap-3">
-          <input type="checkbox" name="hidePhone" checked={form.hidePhone} onChange={handleChange} />
-          <span className="text-sm text-gray-700 dark:text-gray-300">{t('hidePhone', { defaultValue: 'Ẩn số điện thoại' })}</span>
+        <label className="flex items-start gap-3">
+          <input type="checkbox" name="hidePhone" checked={form.hidePhone} onChange={handleChange} className="mt-0.5" />
+          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-tight">{t('hidePhone', { defaultValue: 'Ẩn số điện thoại' })}</span>
         </label>
-        <label className="flex items-center gap-3">
-          <input type="checkbox" name="hideBirthDate" checked={form.hideBirthDate} onChange={handleChange} />
-          <span className="text-sm text-gray-700 dark:text-gray-300">{t('hideBirthDate', { defaultValue: 'Ẩn ngày sinh' })}</span>
+        <label className="flex items-start gap-3">
+          <input type="checkbox" name="hideBirthDate" checked={form.hideBirthDate} onChange={handleChange} className="mt-0.5" />
+          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-tight">{t('hideBirthDate', { defaultValue: 'Ẩn ngày sinh' })}</span>
         </label>
-        <label className="flex items-center gap-3">
-          <input type="checkbox" name="allowMessagesFromNonFriends" checked={form.allowMessagesFromNonFriends} onChange={handleChange} />
-          <span className="text-sm text-gray-700 dark:text-gray-300">{t('allowMessagesFromNonFriends', { defaultValue: 'Cho phép người lạ nhắn tin' })}</span>
+        <label className="flex items-start gap-3 sm:col-span-2 lg:col-span-1 xl:col-span-1">
+          <input type="checkbox" name="allowMessagesFromNonFriends" checked={form.allowMessagesFromNonFriends} onChange={handleChange} className="mt-0.5" />
+          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-tight">{t('allowMessagesFromNonFriends', { defaultValue: 'Cho phép người lạ nhắn tin' })}</span>
         </label>
       </div>
 
-      <div className="flex justify-end gap-3">
-        <button type="button" onClick={onCancel} className="px-4 py-2.5 bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-700">
+      <div className="flex flex-col sm:flex-row justify-end gap-3">
+        <button type="button" onClick={onCancel} className="px-4 py-2.5 bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-700 w-full sm:w-auto">
           {t('actions.cancel', { defaultValue: 'Hủy' })}
         </button>
         <button
           type="submit"
           disabled={!canSubmit || saving}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg"
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg w-full sm:w-auto"
         >
           {saving ? t('actions.saving', { defaultValue: 'Đang lưu...' }) : t('actions.save', { defaultValue: 'Lưu' })}
         </button>

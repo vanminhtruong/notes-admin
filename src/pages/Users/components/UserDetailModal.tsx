@@ -27,6 +27,20 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
+
   if (!open || !user) return null;
 
   const modal = (
