@@ -23,7 +23,8 @@
     "usersList": "User List",
     "usersActivity": "User Activity",
     "notesList": "Notes List",
-    "notesCreate": "Create Note"
+    "notesCreate": "Create Note",
+    "notesShared": "Shared Notes"
   },
   "layout": {
     "adminPanel": "Admin Panel",

@@ -22,6 +22,7 @@
     "all": "All",
     "active": "Active",
     "archived": "Archived",
+    "shared": "Shared",
     "clear": "Clear filters"
   },
   "table": {
@@ -67,20 +68,61 @@
   "constants": {
     "priority": { "low": "Low", "medium": "Medium", "high": "High" }
   },
-  "create": {
-    "title": "Create new note",
-    "subtitle": "Create a note for a specific user",
-    "selectUserLabel": "Select user *",
-    "searchUserPlaceholder": "Search users...",
-    "changeUser": "Change",
-    "noUsers": "No users found"
-  },
   "alerts": {
     "confirmDelete": "Are you sure you want to delete this note?",
     "updateFailed": "Unable to update note",
     "deleteFailed": "Unable to delete note",
     "missingUserOrTitle": "Please select a user and enter a title",
     "createSuccess": "Note created successfully",
-    "createFailed": "Unable to create note"
+    "createFailed": "Unable to create note",
+    "uploadImageError": "Unable to upload image",
+    "deleteSuccess": "Shared note deleted successfully!",
+    "loadFailed": "Unable to load shared notes list"
+  },
+  "create": {
+    "title": "Create New Note",
+    "subtitle": "Create a note for user",
+    "selectUserLabel": "Select User",
+    "searchUserPlaceholder": "Search users..."
+  },
+  "sharedNotes": {
+    "title": "Shared Notes",
+    "subtitle": "Manage notes that users have shared with each other",
+    "empty": {
+      "title": "No shared notes",
+      "hint": "No notes have been shared yet"
+    },
+    "table": {
+      "note": "Note",
+      "sharedBy": "Shared By",
+      "sharedWith": "Shared With",
+      "permissions": "Permissions",
+      "sharedAt": "Shared At"
+    },
+    "searchFilters": {
+      "search": {
+        "placeholder": "Note title..."
+      },
+      "sharedWith": "Shared with User ID",
+      "sharedBy": "Shared by User ID"
+    },
+    "permissions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "title": "Shared Note Details",
+      "noteInfo": "Note Information",
+      "noteOwner": "Note Owner",
+      "sharingInfo": "Sharing Information",
+      "message": "Sharing Message"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Confirm Delete Share",
+        "message": "Are you sure you want to delete this note sharing?"
+      }
+    }
   }
 }

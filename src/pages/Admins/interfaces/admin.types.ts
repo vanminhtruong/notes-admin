@@ -285,6 +285,23 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
         key: 'manage_notes.archive',
         label: 'Lưu trữ ghi chú',
         description: 'Lưu trữ và bỏ lưu trữ ghi chú'
+      },
+      {
+        key: 'manage_notes.shared',
+        label: 'Quản lý ghi chú chia sẻ',
+        description: 'Quản lý các ghi chú được chia sẻ trong hệ thống',
+        subPermissions: [
+          {
+            key: 'manage_notes.shared.view',
+            label: 'Xem ghi chú chia sẻ',
+            description: 'Xem danh sách và chi tiết ghi chú chia sẻ'
+          },
+          {
+            key: 'manage_notes.shared.delete',
+            label: 'Xóa ghi chú chia sẻ',
+            description: 'Xóa ghi chú chia sẻ và tin nhắn liên quan'
+          }
+        ]
       }
     ]
   },

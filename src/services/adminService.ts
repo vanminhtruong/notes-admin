@@ -279,6 +279,61 @@ class AdminService {
     return response.json();
   }
 
+  // Shared Notes Management
+  async getAllSharedNotes(params: {
+    page?: number;
+    limit?: number;
+    userId?: number;
+    search?: string;
+    sharedByUserId?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}) {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        queryParams.append(key, value.toString());
+      }
+    });
+
+    const response = await fetch(`${API_BASE_URL}/admin/shared-notes?${queryParams}`, {
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error('Không thể tải danh sách ghi chú chia sẻ');
+    }
+
+    return response.json();
+  }
+
+  async getSharedNoteDetail(sharedNoteId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/shared-notes/${sharedNoteId}`, {
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể lấy chi tiết ghi chú chia sẻ');
+    }
+
+    return response.json();
+  }
+
+  async deleteSharedNote(sharedNoteId: number) {
+    const response = await fetch(`${API_BASE_URL}/admin/shared-notes/${sharedNoteId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Không thể xóa ghi chú chia sẻ');
+    }
+
+    return response.json();
+  }
+
   // User management actions
   async toggleUserStatus(userId: number) {
     const response = await fetch(`${API_BASE_URL}/admin/users/${userId}/toggle-status`, {

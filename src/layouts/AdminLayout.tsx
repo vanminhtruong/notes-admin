@@ -239,6 +239,9 @@ const AdminLayout: React.FC = () => {
         ...(hasPermission('manage_notes.create') ? [
           { id: 'notes-create', label: t('navigation.notesCreate'), path: '/notes/create' }
         ] : []),
+        ...(hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete') ? [
+          { id: 'notes-shared', label: t('navigation.notesShared'), path: '/notes/shared' }
+        ] : []),
       ],
     },
     ...(isSuper ? [{

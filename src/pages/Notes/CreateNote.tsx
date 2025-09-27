@@ -168,7 +168,7 @@ const CreateNote: React.FC = () => {
                       onClick={() => handleInputChange('userId', '')}
                       className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-sm xl-down:text-xs"
                     >
-                      Thay đổi
+                      {t('create.changeUser')}
                     </button>
                   </div>
                 </div>
@@ -303,7 +303,7 @@ const CreateNote: React.FC = () => {
                     handleInputChange('imageUrl', url);
                   } catch (error) {
                     console.error('Error uploading image:', error);
-                    toast.error('Không thể tải lên ảnh');
+                    toast.error(t('alerts.uploadImageError'));
                   }
                 }}
                 className="block w-full text-sm xl-down:text-xs text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"

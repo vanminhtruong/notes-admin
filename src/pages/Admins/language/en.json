@@ -176,6 +176,18 @@
       "archive": {
         "label": "Archive Notes",
         "description": "Archive and unarchive notes"
+      },
+      "shared": {
+        "label": "Manage Shared Notes",
+        "description": "Manage shared notes in the system",
+        "view": {
+          "label": "View Shared Notes", 
+          "description": "View shared notes list and details"
+        },
+        "delete": {
+          "label": "Delete Shared Notes",
+          "description": "Delete shared notes and related messages"
+        }
       }
     },
     "manage_admins": {

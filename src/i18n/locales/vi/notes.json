@@ -36,6 +36,7 @@
     "all": "Tất cả",
     "active": "Hoạt động", 
     "archived": "Đã lưu trữ",
+    "shared": "Chia sẻ",
     "search": {
       "label": "Tìm kiếm",
       "placeholder": "Tìm kiếm ghi chú..."
@@ -97,6 +98,51 @@
     "title": "Không có ghi chú nào",
     "hint": "Chưa có ghi chú nào được tạo",
     "content": "Không có nội dung"
+  },
+  "sharedNotes": {
+    "title": "Ghi chú đã chia sẻ",
+    "subtitle": "Xem và quản lý các ghi chú được chia sẻ giữa người dùng",
+    "searchFilters": {
+      "search": {
+        "placeholder": "Tìm kiếm ghi chú đã chia sẻ..."
+      },
+      "sharedWith": "Chia sẻ cho (ID người dùng)",
+      "sharedBy": "Chia sẻ bởi (ID người dùng)"
+    },
+    "empty": {
+      "title": "Chưa có ghi chú chia sẻ",
+      "hint": "Hiện chưa có ghi chú nào được chia sẻ"
+    },
+    "table": {
+      "note": "Ghi chú",
+      "sharedBy": "Chia sẻ bởi",
+      "sharedWith": "Chia sẻ cho",
+      "permissions": "Quyền hạn",
+      "sharedAt": "Ngày chia sẻ"
+    },
+    "permissions": {
+      "view": "Xem",
+      "edit": "Sửa",
+      "delete": "Xóa"
+    },
+    "detail": {
+      "title": "Chi tiết ghi chú chia sẻ",
+      "noteInfo": "Thông tin ghi chú",
+      "noteOwner": "Chủ sở hữu ghi chú",
+      "sharingInfo": "Thông tin chia sẻ",
+      "message": "Tin nhắn chia sẻ"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Xóa chia sẻ ghi chú?",
+        "message": "Thao tác này sẽ gỡ quyền truy cập của người nhận."
+      }
+    }
+  },
+  "alerts": {
+    "loadFailed": "Không thể tải danh sách ghi chú chia sẻ",
+    "deleteSuccess": "Đã xóa chia sẻ ghi chú thành công",
+    "deleteFailed": "Không thể xóa ghi chú chia sẻ"
   },
   "delete": {
     "confirm": {

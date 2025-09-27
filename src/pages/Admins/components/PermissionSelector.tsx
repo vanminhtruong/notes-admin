@@ -25,6 +25,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
       'manage_users.activity.messages',
       'manage_users.activity.groups',
       'manage_notes',
+      'manage_notes.shared',
       'profile',
       'profile.self'
     ];
@@ -200,8 +201,8 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
         const isIndeterminate = isParentIndeterminate(permission.subPermissions);
         const isExpanded = expandedPermissions.has(permission.key);
         const hasSubPermissions = permission.subPermissions && permission.subPermissions.length > 0;
-        const label = t(`permissions.${permission.key}.label`, { defaultValue: permission.key });
-        const description = t(`permissions.${permission.key}.description`, { defaultValue: '' });
+        const label = t(`permissions.${permission.key}.label`, { defaultValue: permission.label });
+        const description = t(`permissions.${permission.key}.description`, { defaultValue: permission.description });
         
         return (
           <div key={permission.key} className="border border-gray-200 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-800">
@@ -219,7 +220,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                 <div className="flex-1">
                   <label className="cursor-pointer">
                     <div className="font-medium text-gray-900 dark:text-gray-100">
-                      {label || permission.key}
+                      {label}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {description}

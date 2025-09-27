@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import NotesFilters from '@pages/Notes/components/NotesFilters';
 import NoteDetailModal from '@pages/Notes/components/NoteDetailModal';
+import SharedNotesList from '@pages/Notes/components/SharedNotesList';
 
 interface User {
   id: number;
@@ -222,12 +223,19 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Tabs state via URL ?tab=all|active|archived
-  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived';
-  const setTab = (next: 'all' | 'active' | 'archived') => {
+  // Tabs state via URL ?tab=all|active|archived|shared
+  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared';
+  const setTab = (next: 'all' | 'active' | 'archived' | 'shared') => {
     searchParams.set('tab', next);
     setSearchParams(searchParams, { replace: true });
   };
+
+  // Check if user has permission to access shared tab, if not redirect to 'all'
+  useEffect(() => {
+    if (tab === 'shared' && !hasPermission('manage_notes.shared.view') && !hasPermission('manage_notes.shared.delete')) {
+      setTab('all');
+    }
+  }, [tab]);
 
   // Initialize selectedUserId from URL params and update when URL changes
   useEffect(() => {
@@ -492,37 +500,57 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2zm-2 2v10H6V9h12z"/></svg>
               {t('filters.archived')}
             </button>
+            {(hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete')) && (
+              <button
+                onClick={() => setTab('shared')}
+                aria-label={t('filters.shared', { defaultValue: 'Ghi chú chia sẻ' }) as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'shared'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/></svg>
+                {t('filters.shared', { defaultValue: 'Chia sẻ' })}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <NotesFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedUserId={selectedUserId}
-        setSelectedUserId={setSelectedUserId}
-        categoryFilter={categoryFilter}
-        setCategoryFilter={setCategoryFilter}
-        priorityFilter={priorityFilter}
-        setPriorityFilter={setPriorityFilter}
-        archivedFilter={archivedFilter}
-        setArchivedFilter={setArchivedFilter}
-        onClear={() => {
-          setSearchTerm('');
-          setSelectedUserId('');
-          setCategoryFilter('');
-          setPriorityFilter('');
-          const next = forcedArchived
-            ? (forcedArchived === 'all' ? '' : forcedArchived === 'active' ? 'false' : 'true')
-            : (tab === 'all' ? '' : tab === 'active' ? 'false' : 'true');
-          setArchivedFilter(next);
-          setCurrentPage(1);
-        }}
-        showStatusSelect={false}
-      />
+      {/* Filters - only show for notes tabs, not shared tab */}
+      {tab !== 'shared' && (
+        <NotesFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedUserId={selectedUserId}
+          setSelectedUserId={setSelectedUserId}
+          categoryFilter={categoryFilter}
+          setCategoryFilter={setCategoryFilter}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+          archivedFilter={archivedFilter}
+          setArchivedFilter={setArchivedFilter}
+          onClear={() => {
+            setSearchTerm('');
+            setSelectedUserId('');
+            setCategoryFilter('');
+            setPriorityFilter('');
+            const next = forcedArchived
+              ? (forcedArchived === 'all' ? '' : forcedArchived === 'active' ? 'false' : 'true')
+              : (tab === 'all' ? '' : tab === 'active' ? 'false' : 'true');
+            setArchivedFilter(next);
+            setCurrentPage(1);
+          }}
+          showStatusSelect={false}
+        />
+      )}
 
-      {/* Notes List */}
+      {/* Render SharedNotesList for shared tab */}
+      {tab === 'shared' ? (
+        <SharedNotesList embedded />
+      ) : (
+        /* Notes List */
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-32">
@@ -910,6 +938,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
           </>
         )}
       </div>
+      )}
 
       {/* Edit Modal */}
       <EditNoteModal

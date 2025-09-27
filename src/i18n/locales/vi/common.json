@@ -23,7 +23,8 @@
     "usersList": "Danh sách người dùng",
     "usersActivity": "Hoạt động người dùng",
     "notesList": "Danh sách ghi chú",
-    "notesCreate": "Tạo ghi chú"
+    "notesCreate": "Tạo ghi chú",
+    "notesShared": "Ghi chú chia sẻ"
   },
   "layout": {
     "adminPanel": "Bảng quản trị",

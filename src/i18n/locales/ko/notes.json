@@ -36,6 +36,7 @@
     "all": "전체",
     "active": "활성", 
     "archived": "보관됨",
+    "shared": "공유됨",
     "search": {
       "label": "검색",
       "placeholder": "노트 검색..."
@@ -97,6 +98,51 @@
     "title": "노트가 없습니다",
     "hint": "아직 생성된 노트가 없습니다",
     "content": "내용이 없습니다"
+  },
+  "sharedNotes": {
+    "title": "공유된 노트",
+    "subtitle": "사용자 간에 공유된 노트를 조회하고 관리합니다",
+    "searchFilters": {
+      "search": {
+        "placeholder": "공유된 노트 검색..."
+      },
+      "sharedWith": "공유 대상 (사용자 ID)",
+      "sharedBy": "공유자 (사용자 ID)"
+    },
+    "empty": {
+      "title": "공유된 노트가 없습니다",
+      "hint": "아직 공유된 노트가 없습니다"
+    },
+    "table": {
+      "note": "노트",
+      "sharedBy": "공유자",
+      "sharedWith": "공유 대상",
+      "permissions": "권한",
+      "sharedAt": "공유일"
+    },
+    "permissions": {
+      "view": "보기",
+      "edit": "편집",
+      "delete": "삭제"
+    },
+    "detail": {
+      "title": "공유 노트 상세",
+      "noteInfo": "노트 정보",
+      "noteOwner": "노트 소유자",
+      "sharingInfo": "공유 정보",
+      "message": "공유 메시지"
+    },
+    "delete": {
+      "confirm": {
+        "title": "공유 노트를 삭제하시겠습니까?",
+        "message": "이 작업은 공유 링크와 수신자의 접근 권한을 제거합니다."
+      }
+    }
+  },
+  "alerts": {
+    "loadFailed": "공유된 노트를 불러올 수 없습니다",
+    "deleteSuccess": "공유 노트가 삭제되었습니다",
+    "deleteFailed": "공유 노트를 삭제할 수 없습니다"
   },
   "delete": {
     "confirm": {
