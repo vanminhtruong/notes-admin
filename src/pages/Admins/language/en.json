@@ -67,11 +67,19 @@
       "description": "Manage user accounts and information",
       "view": {
         "label": "View User Info",
-        "description": "View user list and detailed information"
+        "description": "View user list and basic information"
       },
       "view_detail": {
         "label": "View User Detail",
         "description": "Allow opening user detail modal in Users list"
+      },
+      "create": {
+        "label": "Create User Account",
+        "description": "Create new user accounts"
+      },
+      "edit": {
+        "label": "Edit User Information",
+        "description": "Edit user personal information"
       },
       "activate": {
         "label": "Activate/Deactivate",
@@ -183,6 +191,10 @@
         "view": {
           "label": "View Shared Notes", 
           "description": "View shared notes list and details"
+        },
+        "edit": {
+          "label": "Edit Shared Notes",
+          "description": "Edit permissions and messages of shared notes"
         },
         "delete": {
           "label": "Delete Shared Notes",

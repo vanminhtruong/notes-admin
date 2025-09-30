@@ -33,6 +33,7 @@ interface SharedNote {
   noteId: number;
   canEdit?: boolean;
   canDelete?: boolean;
+  canCreate?: boolean;
   message?: string;
   sharedAt: string;
   isActive: boolean;
@@ -104,6 +105,9 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
     };
     
     s.on('admin_shared_note_deleted', handleSharedNoteEvent);
+    s.on('admin_shared_note_updated', handleSharedNoteEvent);
+    s.on('shared_note_updated_by_admin', handleSharedNoteEvent);
+    s.on('group_shared_note_updated_by_admin', handleSharedNoteEvent);
     s.on('user_shared_note_created', handleSharedNoteEvent);
     s.on('user_shared_note_deleted', handleSharedNoteEvent);
     s.on('user_group_shared_note_created', handleSharedNoteEvent);
@@ -111,6 +115,9 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
     return () => {
       try {
         s.off('admin_shared_note_deleted', handleSharedNoteEvent);
+        s.off('admin_shared_note_updated', handleSharedNoteEvent);
+        s.off('shared_note_updated_by_admin', handleSharedNoteEvent);
+        s.off('group_shared_note_updated_by_admin', handleSharedNoteEvent);
         s.off('user_shared_note_created', handleSharedNoteEvent);
         s.off('user_shared_note_deleted', handleSharedNoteEvent);
         s.off('user_group_shared_note_created', handleSharedNoteEvent);
@@ -433,6 +440,11 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                               </span>
                             ) : (
                               <>
+                                {sharedNote.canCreate && (
+                                  <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                                    {t('sharedNotes.permissions.create', { defaultValue: 'Create' })}
+                                  </span>
+                                )}
                                 {sharedNote.canEdit && (
                                   <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                                     {t('sharedNotes.permissions.edit')}
@@ -443,7 +455,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                                     {t('sharedNotes.permissions.delete')}
                                   </span>
                                 )}
-                                {!sharedNote.canEdit && !sharedNote.canDelete && (
+                                {!sharedNote.canEdit && !sharedNote.canDelete && !sharedNote.canCreate && (
                                   <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
                                     {t('sharedNotes.permissions.view')}
                                   </span>

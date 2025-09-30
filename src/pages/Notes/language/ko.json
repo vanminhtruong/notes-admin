@@ -1,133 +1,151 @@
 {
-  "title": "메모 관리",
-  "subtitle": "사용자 메모와 콘텐츠를 관리합니다",
-  "createNote": "메모 생성",
-  "editNote": "메모 편집",
-  "deleteNote": "메모 삭제",
-  "noNotes": "메모가 없습니다",
-  "actions": {
-    "createNew": "새 메모 만들기",
-    "edit": "편집",
-    "delete": "삭제",
-    "cancel": "취소",
-    "update": "업데이트",
-    "creating": "생성 중..."
-  },
-  "filters": {
-    "search": { "label": "검색", "placeholder": "제목 또는 내용..." },
-    "userId": { "label": "사용자 ID", "placeholder": "사용자 ID..." },
-    "category": { "label": "카테고리", "placeholder": "카테고리..." },
-    "priority": { "label": "우선순위" },
-    "status": { "label": "상태" },
-    "all": "전체",
-    "active": "활성",
-    "archived": "보관됨",
-    "shared": "공유됨",
-    "clear": "필터 지우기"
-  },
-  "table": {
-    "note": "메모",
-    "user": "사용자",
-    "category": "카테고리",
-    "priority": "우선순위",
-    "status": "상태",
-    "createdAt": "생성 일자",
-    "actions": "작업"
-  },
-  "badges": {
-    "status": { "active": "활성", "archived": "보관됨" }
-  },
-  "empty": {
-    "title": "메모가 없습니다",
-    "hint": "필터를 변경하거나 새 메모를 생성해 보세요."
-  },
-  "pagination": {
-    "title": "페이지 {{currentPage}} / {{totalPages}}",
-    "prev": "이전",
-    "next": "다음"
-  },
+  "title": "노트 관리",
+  "subtitle": "모든 사용자 노트 보기 및 관리",
+  "createNote": "노트 생성",
   "modal": {
-    "editTitle": "메모 편집"
-  },
-  "form": {
-    "title": { "label": "제목 *" },
-    "content": { "label": "내용" },
-    "category": { "label": "카테고리" },
-    "priority": { "label": "우선순위" },
-    "archive": { "label": "메모 보관" },
-    "imageUrl": { "label": "이미지 URL" },
-    "reminder": { "label": "리마인더" },
-    "placeholders": {
-      "title": "메모 제목을 입력하세요...",
-      "content": "메모 내용을 입력하세요...",
-      "category": "예: 업무, 개인...",
-      "imageUrl": "https://example.com/image.jpg",
-      "searchUser": "사용자 검색..."
-    }
-  },
-  "constants": {
-    "priority": { "low": "낮음", "medium": "보통", "high": "높음" }
+    "detailTitle": "노트 상세",
+    "editTitle": "노트 편집"
   },
   "create": {
-    "title": "새 메모 만들기",
-    "subtitle": "특정 사용자를 위한 메모를 생성합니다",
+    "title": "새 노트 만들기",
+    "subtitle": "특정 사용자를 위한 노트를 생성합니다",
     "selectUserLabel": "사용자 선택 *",
     "searchUserPlaceholder": "사용자 검색...",
     "changeUser": "변경",
     "noUsers": "사용자를 찾을 수 없습니다"
   },
-  "delete": {
-    "confirm": {
-      "title": "삭제 확인",
-      "message": "이 메모를 정말 삭제하시겠습니까?",
-      "irreversible": "이 작업은 되돌릴 수 없습니다."
+  "form": {
+    "title": {
+      "label": "제목",
+      "placeholder": "노트 제목 입력"
+    },
+    "content": {
+      "label": "내용",
+      "placeholder": "노트 내용 입력"
+    },
+    "imageUrl": {
+      "label": "이미지"
+    },
+    "category": {
+      "label": "카테고리",
+      "placeholder": "카테고리 입력"
+    },
+    "priority": {
+      "label": "우선순위"
+    },
+    "reminder": {
+      "label": "알림"
+    },
+    "archive": {
+      "label": "보관"
+    },
+    "placeholders": {
+      "title": "노트 제목을 입력하세요...",
+      "content": "노트 내용을 입력하세요...",
+      "category": "예: 업무, 개인...",
+      "imageUrl": "https://example.com/image.jpg",
+      "searchUser": "사용자 검색..."
     }
   },
-  "alerts": {
-    "confirmDelete": "정말로 이 메모를 삭제하시겠습니까?",
-    "updateFailed": "메모를 업데이트할 수 없습니다",
-    "deleteFailed": "메모를 삭제할 수 없습니다",
-    "missingUserOrTitle": "사용자를 선택하고 제목을 입력해 주세요",
-    "createSuccess": "메모가 성공적으로 생성되었습니다",
-    "createFailed": "메모를 생성할 수 없습니다",
-    "uploadImageError": "이미지를 업로드할 수 없습니다",
-    "deleteSuccess": "공유 노트가 성공적으로 삭제되었습니다!",
-    "loadFailed": "공유 노트 목록을 로드할 수 없습니다"
+  "filters": {
+    "all": "전체",
+    "active": "활성", 
+    "archived": "보관됨",
+    "shared": "공유됨",
+    "search": {
+      "label": "검색",
+      "placeholder": "노트 검색..."
+    },
+    "userId": {
+      "label": "사용자 ID",
+      "placeholder": "사용자 ID 입력"
+    },
+    "category": {
+      "label": "카테고리",
+      "placeholder": "카테고리 입력"
+    },
+    "priority": {
+      "label": "우선순위"
+    },
+    "status": {
+      "label": "상태"
+    },
+    "clear": "필터 지우기"
   },
-  "toasts": {
-    "deleteSuccess": "메모를 성공적으로 삭제했습니다!",
-    "deleteError": "메모를 삭제할 수 없습니다",
-    "updateSuccess": "메모가 성공적으로 업데이트되었습니다!",
-    "updateError": "메모를 업데이트할 수 없습니다"
+  "table": {
+    "note": "노트",
+    "user": "사용자",
+    "category": "카테고리", 
+    "priority": "우선순위",
+    "status": "상태",
+    "createdAt": "생성일",
+    "actions": "작업"
+  },
+  "constants": {
+    "priority": {
+      "high": "높음",
+      "medium": "보통", 
+      "low": "낮음"
+    }
+  },
+  "badges": {
+    "status": {
+      "active": "활성",
+      "archived": "보관됨"
+    }
+  },
+  "actions": {
+    "edit": "편집",
+    "delete": "삭제",
+    "archive": "보관",
+    "unarchive": "보관 해제",
+    "close": "닫기",
+    "cancel": "취소",
+    "update": "업데이트",
+    "createNew": "노트 생성",
+    "creating": "생성 중...",
+    "updating": "업데이트 중..."
+  },
+  "detail": {
+    "userInfo": "생성자 정보",
+    "status": "상태",
+    "updatedAt": "수정일",
+    "metadata": "상세 정보"
+  },
+  "empty": {
+    "title": "노트가 없습니다",
+    "hint": "아직 생성된 노트가 없습니다",
+    "content": "내용이 없습니다"
   },
   "sharedNotes": {
     "title": "공유된 노트",
-    "subtitle": "사용자들이 서로 공유한 노트 관리",
+    "subtitle": "사용자 간에 공유된 노트를 조회하고 관리합니다",
+    "searchFilters": {
+      "search": {
+        "placeholder": "공유된 노트 검색..."
+      },
+      "sharedWith": "공유 대상 (사용자 ID)",
+      "sharedBy": "공유자 (사용자 ID)"
+    },
     "empty": {
-      "title": "공유된 노트 없음",
+      "title": "공유된 노트가 없습니다",
       "hint": "아직 공유된 노트가 없습니다"
     },
     "table": {
       "note": "노트",
-      "sharedBy": "공유한 사람",
-      "sharedWith": "공유받은 사람",
+      "sharedBy": "공유자",
+      "sharedWith": "공유 대상",
       "permissions": "권한",
-      "sharedAt": "공유 시간"
-    },
-    "searchFilters": {
-      "search": {
-        "placeholder": "노트 제목..."
-      },
-      "sharedWith": "공유받은 사용자 ID",
-      "sharedBy": "공유한 사용자 ID"
+      "sharedAt": "공유일"
     },
     "permissions": {
       "view": "보기",
       "edit": "편집",
-      "delete": "삭제"
+      "delete": "삭제",
+      "create": "생성"
     },
     "detail": {
-      "title": "공유 노트 세부정보",
+      "title": "공유 노트 상세",
       "noteInfo": "노트 정보",
       "noteOwner": "노트 소유자",
       "sharingInfo": "공유 정보",
@@ -135,9 +153,36 @@
     },
     "delete": {
       "confirm": {
-        "title": "공유 삭제 확인",
-        "message": "이 노트 공유를 삭제하시겠습니까?"
+        "title": "공유 노트를 삭제하시겠습니까?",
+        "message": "이 작업은 공유 링크와 수신자의 접근 권한을 제거합니다."
       }
     }
+  },
+  "alerts": {
+    "loadFailed": "공유된 노트를 불러올 수 없습니다",
+    "deleteSuccess": "공유 노트가 삭제되었습니다",
+    "deleteFailed": "공유 노트를 삭제할 수 없습니다",
+    "missingUserOrTitle": "사용자를 선택하고 제목을 입력해 주세요",
+    "createSuccess": "노트가 성공적으로 생성되었습니다",
+    "createFailed": "노트를 생성할 수 없습니다",
+    "uploadImageError": "이미지를 업로드할 수 없습니다"
+  },
+  "delete": {
+    "confirm": {
+      "title": "삭제 확인",
+      "message": "이 노트를 삭제하시겠습니까?",
+      "irreversible": "이 작업은 되돌릴 수 없습니다."
+    }
+  },
+  "toasts": {
+    "updateSuccess": "노트가 성공적으로 업데이트되었습니다!",
+    "updateError": "노트 업데이트에 실패했습니다",
+    "deleteSuccess": "노트가 성공적으로 삭제되었습니다!",
+    "deleteError": "노트 삭제에 실패했습니다",
+    "archiveSuccess": "노트가 성공적으로 보관되었습니다",
+    "archiveError": "노트 보관에 실패했습니다",
+    "unarchiveSuccess": "노트 보관이 성공적으로 해제되었습니다", 
+    "unarchiveError": "노트 보관 해제에 실패했습니다",
+    "uploadImageError": "이미지 업로드에 실패했습니다"
   }
 }

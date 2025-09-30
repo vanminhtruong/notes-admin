@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import adminService from '@services/adminService';
+import { hasPermission } from '@utils/auth';
 
 interface User {
   id: number;
@@ -26,6 +29,7 @@ interface Note {
 interface SharedNote {
   id: number;
   noteId: number;
+  canCreate?: boolean;
   canEdit?: boolean;
   canDelete?: boolean;
   message?: string;
@@ -59,8 +63,6 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
 }) => {
   const { t } = useTranslation('notes');
 
-  if (!show || !sharedNote) return null;
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
       year: 'numeric',
@@ -87,6 +89,66 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
       case 'low': return t('constants.priority.low');
       default: return priority;
     }
+  };
+
+  // Local editable state (init with safe defaults; sync by effect below)
+  const [form, setForm] = useState<{ canCreate?: boolean; canEdit?: boolean; canDelete?: boolean; message?: string }>(() => ({
+    canCreate: false,
+    canEdit: false,
+    canDelete: false,
+    message: '',
+  }));
+
+  // Permission check is static per admin session
+  const canEditShare = useMemo(() => hasPermission('manage_notes.shared.edit'), []);
+  const canDeleteShare = useMemo(() => hasPermission('manage_notes.shared.delete'), []);
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  // Sync form when a new sharedNote is opened
+  React.useEffect(() => {
+    if (sharedNote) {
+      setForm({
+        canCreate: sharedNote.canCreate ?? false,
+        canEdit: sharedNote.canEdit ?? false,
+        canDelete: sharedNote.canDelete ?? false,
+        message: sharedNote.message ?? '',
+      });
+      setEditing(false);
+    }
+  }, [sharedNote]);
+
+  // Guard render AFTER hooks to keep hook order consistent
+  if (!show || !sharedNote) return null;
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      const payload: any = { message: form.message };
+      if (sharedNote.shareType === 'individual') {
+        payload.canCreate = !!form.canCreate;
+        payload.canEdit = !!form.canEdit;
+        payload.canDelete = !!form.canDelete;
+      }
+      await adminService.updateSharedNote(sharedNote.id, payload);
+      toast.success(t('toasts.updateSuccess'));
+      setEditing(false);
+    } catch (e: any) {
+      toast.error(t('toasts.updateError'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelEditing = () => {
+    // revert form to current sharedNote values
+    setForm({
+      canCreate: sharedNote.canCreate ?? false,
+      canEdit: sharedNote.canEdit ?? false,
+      canDelete: sharedNote.canDelete ?? false,
+      message: sharedNote.message ?? '',
+    });
+    setEditing(false);
   };
 
   return createPortal(
@@ -349,44 +411,93 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                   <h5 className="text-base xl-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 xl-down:mb-1">
                     {t('sharedNotes.table.permissions', { defaultValue: 'Quyền hạn' })}
                   </h5>
-                  <div className="flex flex-wrap gap-2 xl-down:gap-1">
-                    {sharedNote.shareType === 'group' ? (
-                      <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
-                        {t('sharedNotes.permissions.groupShare', { defaultValue: 'Group Share' })}
-                      </span>
-                    ) : (
-                      <>
-                        <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                          {t('sharedNotes.permissions.view', { defaultValue: 'Xem' })}
+                  {canEditShare && sharedNote.shareType === 'individual' && editing ? (
+                    <div className="flex flex-wrap items-center gap-4 xl-down:gap-3">
+                      <label className="inline-flex items-center gap-2 text-sm xl-down:text-xs text-gray-800 dark:text-gray-200">
+                        <input
+                          type="checkbox"
+                          checked={!!form.canCreate}
+                          onChange={(e) => setForm((s) => ({ ...s, canCreate: e.target.checked }))}
+                          className="rounded border-gray-300 dark:border-neutral-600"
+                        />
+                        {t('sharedNotes.permissions.create', { defaultValue: 'Tạo' })}
+                      </label>
+                      <label className="inline-flex items-center gap-2 text-sm xl-down:text-xs text-gray-800 dark:text-gray-200">
+                        <input
+                          type="checkbox"
+                          checked={!!form.canEdit}
+                          onChange={(e) => setForm((s) => ({ ...s, canEdit: e.target.checked }))}
+                          className="rounded border-gray-300 dark:border-neutral-600"
+                        />
+                        {t('sharedNotes.permissions.edit', { defaultValue: 'Sửa' })}
+                      </label>
+                      <label className="inline-flex items-center gap-2 text-sm xl-down:text-xs text-gray-800 dark:text-gray-200">
+                        <input
+                          type="checkbox"
+                          checked={!!form.canDelete}
+                          onChange={(e) => setForm((s) => ({ ...s, canDelete: e.target.checked }))}
+                          className="rounded border-gray-300 dark:border-neutral-600"
+                        />
+                        {t('sharedNotes.permissions.delete', { defaultValue: 'Xóa' })}
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2 xl-down:gap-1">
+                      {sharedNote.shareType === 'group' ? (
+                        <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
+                          {t('sharedNotes.permissions.groupShare', { defaultValue: 'Group Share' })}
                         </span>
-                        {sharedNote.canEdit && (
-                          <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                            {t('sharedNotes.permissions.edit', { defaultValue: 'Sửa' })}
+                      ) : (
+                        <>
+                          <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                            {t('sharedNotes.permissions.view', { defaultValue: 'Xem' })}
                           </span>
-                        )}
-                        {sharedNote.canDelete && (
-                          <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-                            {t('sharedNotes.permissions.delete', { defaultValue: 'Xóa' })}
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </div>
+                          {sharedNote.canCreate && (
+                            <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                              {t('sharedNotes.permissions.create', { defaultValue: 'Tạo' })}
+                            </span>
+                          )}
+                          {sharedNote.canEdit && (
+                            <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                              {t('sharedNotes.permissions.edit', { defaultValue: 'Sửa' })}
+                            </span>
+                          )}
+                          {sharedNote.canDelete && (
+                            <span className="px-3 py-1 xl-down:px-2 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                              {t('sharedNotes.permissions.delete', { defaultValue: 'Xóa' })}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Sharing Message */}
-                {sharedNote.message && (
-                  <div>
-                    <h5 className="text-base xl-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 xl-down:mb-1">
-                      {t('sharedNotes.detail.message', { defaultValue: 'Tin nhắn chia sẻ' })}
-                    </h5>
-                    <div className="p-3 xl-down:p-2 bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md">
-                      <p className="text-sm xl-down:text-xs text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
-                        {sharedNote.message}
-                      </p>
-                    </div>
-                  </div>
-                )}
+                <div>
+                  <h5 className="text-base xl-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 xl-down:mb-1">
+                    {t('sharedNotes.detail.message', { defaultValue: 'Tin nhắn chia sẻ' })}
+                  </h5>
+                  {canEditShare && editing ? (
+                    <textarea
+                      value={form.message || ''}
+                      onChange={(e) => setForm((s) => ({ ...s, message: e.target.value }))}
+                      placeholder={t('sharedNotes.detail.message', { defaultValue: 'Tin nhắn chia sẻ' }) as string}
+                      className="w-full p-3 xl-down:p-2 text-sm xl-down:text-xs bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-md text-gray-900 dark:text-gray-100"
+                      rows={4}
+                    />
+                  ) : (
+                    sharedNote.message ? (
+                      <div className="p-3 xl-down:p-2 bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md">
+                        <p className="text-sm xl-down:text-xs text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                          {sharedNote.message}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-gray-500">—</div>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -399,12 +510,41 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
             >
               {t('actions.close', { defaultValue: 'Đóng' })}
             </button>
-            <button
-              onClick={() => onDelete(sharedNote.id)}
-              className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 bg-red-600 dark:bg-red-500 text-white rounded-md xl-down:rounded hover:bg-red-700 dark:hover:bg-red-600 text-sm xl-down:text-xs"
-            >
-              {t('actions.delete', { defaultValue: 'Xóa chia sẻ' })}
-            </button>
+            {canEditShare && (
+              editing ? (
+                <>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-60 text-sm xl-down:text-xs"
+                  >
+                    {saving ? t('actions.updating', { defaultValue: 'Đang cập nhật...' }) : t('actions.update', { defaultValue: 'Cập nhật' })}
+                  </button>
+                  <button
+                    onClick={handleCancelEditing}
+                    disabled={saving}
+                    className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors text-sm xl-down:text-xs"
+                  >
+                    {t('actions.cancel', { defaultValue: 'Hủy' })}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setEditing(true)}
+                  className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 text-sm xl-down:text-xs"
+                >
+                  {t('actions.edit', { defaultValue: 'Chỉnh sửa' })}
+                </button>
+              )
+            )}
+            {canDeleteShare && (
+              <button
+                onClick={() => onDelete(sharedNote.id)}
+                className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 bg-red-600 dark:bg-red-500 text-white rounded-md xl-down:rounded hover:bg-red-700 dark:hover:bg-red-600 text-sm xl-down:text-xs"
+              >
+                {t('actions.delete', { defaultValue: 'Xóa chia sẻ' })}
+              </button>
+            )}
           </div>
         </div>
       </div>

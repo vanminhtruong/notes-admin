@@ -67,11 +67,19 @@
       "description": "Quản lý tài khoản và thông tin người dùng",
       "view": {
         "label": "Xem thông tin người dùng",
-        "description": "Xem danh sách và thông tin chi tiết người dùng"
+        "description": "Xem danh sách và thông tin cơ bản của người dùng"
       },
       "view_detail": {
         "label": "Xem chi tiết người dùng",
         "description": "Cho phép mở modal chi tiết người dùng trong danh sách Users"
+      },
+      "create": {
+        "label": "Tạo tài khoản người dùng",
+        "description": "Tạo tài khoản mới cho người dùng"
+      },
+      "edit": {
+        "label": "Chỉnh sửa thông tin người dùng",
+        "description": "Chỉnh sửa thông tin cá nhân của người dùng"
       },
       "activate": {
         "label": "Kích hoạt/Vô hiệu hóa",
@@ -183,6 +191,10 @@
         "view": {
           "label": "Xem ghi chú chia sẻ", 
           "description": "Xem danh sách và chi tiết ghi chú chia sẻ"
+        },
+        "edit": {
+          "label": "Sửa ghi chú chia sẻ",
+          "description": "Chỉnh sửa quyền và tin nhắn của ghi chú chia sẻ"
         },
         "delete": {
           "label": "Xóa ghi chú chia sẻ",

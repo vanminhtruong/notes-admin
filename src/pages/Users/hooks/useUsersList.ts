@@ -16,7 +16,6 @@ export const useUsersList = () => {
   // Filters state
   const [filters, setFilters] = useState<UsersListFilters>({
     searchTerm: '',
-    roleFilter: '',
     activeFilter: '',
     currentPage: 1
   });
@@ -47,7 +46,6 @@ export const useUsersList = () => {
         page: filters.currentPage,
         limit: 5,
         search: filters.searchTerm || undefined,
-        role: filters.roleFilter || undefined,
         isActive: filters.activeFilter ? filters.activeFilter === 'true' : undefined,
         sortBy: 'createdAt',
         sortOrder: 'DESC'
@@ -136,6 +134,7 @@ export const useUsersList = () => {
   const performDeletePermanently = async (user: User) => {
     try {
       await adminService.deleteUserPermanently(user.id);
+      toast.success(t('alerts.deleteSuccess'));
     } catch (error) {
       console.error('Error deleting user permanently:', error);
       toast.error(t('alerts.cannotDeleteUser'));
@@ -161,7 +160,6 @@ export const useUsersList = () => {
   const clearFilters = () => {
     setFilters({
       searchTerm: '',
-      roleFilter: '',
       activeFilter: '',
       currentPage: 1
     });
@@ -170,7 +168,7 @@ export const useUsersList = () => {
   // Load users when filters change
   useEffect(() => {
     loadUsers();
-  }, [filters.currentPage, filters.searchTerm, filters.roleFilter, filters.activeFilter]);
+  }, [filters.currentPage, filters.searchTerm, filters.activeFilter]);
 
   // Realtime updates
   useEffect(() => {
@@ -221,10 +219,11 @@ export const useUsersList = () => {
         s.off('admin_user_updated', onAdminUserUpdated);
       } catch {}
     };
-  }, [filters.currentPage, filters.searchTerm, filters.roleFilter, filters.activeFilter]);
+  }, [filters.currentPage, filters.searchTerm, filters.activeFilter]);
 
   return {
     users,
+    setUsers,
     loading,
     totalPages,
     totalItems,

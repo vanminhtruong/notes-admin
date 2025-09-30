@@ -18,19 +18,30 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   const { t } = useTranslation('admins');
   const [expandedPermissions, setExpandedPermissions] = useState<Set<string>>(new Set());
 
-  // Auto-expand important branches so granular permissions are visible by default
+  // Auto-expand chỉ những quyền đã được chọn
   useEffect(() => {
-    const defaults = [
-      'manage_users.activity',
-      'manage_users.activity.messages',
-      'manage_users.activity.groups',
-      'manage_notes',
-      'manage_notes.shared',
-      'profile',
-      'profile.self'
-    ];
-    setExpandedPermissions(prev => new Set([...prev, ...defaults]));
-  }, []);
+    const expandSelected = (perms: string[]) => {
+      const toExpand: string[] = [];
+      
+      // Duyệt qua tất cả permissions đã chọn
+      perms.forEach(perm => {
+        // Tìm parent permission của permission này
+        const parts = perm.split('.');
+        for (let i = 1; i < parts.length; i++) {
+          const parentKey = parts.slice(0, i).join('.');
+          if (perms.includes(parentKey)) {
+            toExpand.push(parentKey);
+          }
+        }
+      });
+      
+      if (toExpand.length > 0) {
+        setExpandedPermissions(prev => new Set([...prev, ...toExpand]));
+      }
+    };
+    
+    expandSelected(selectedPermissions);
+  }, [selectedPermissions]);
 
   const handlePermissionChange = (permission: string, checked: boolean) => {
     let newPermissions = [...selectedPermissions];
@@ -122,12 +133,20 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
   };
 
   const isParentChecked = (parentKey: string, subPermissions?: NestedPermission[]) => {
-    if (!subPermissions) return selectedPermissions.includes(parentKey);
-    // Parent được check nếu có ít nhất 1 sub-permission được check
+    // Luôn ưu tiên check xem parent key có trong selectedPermissions không
+    if (selectedPermissions.includes(parentKey)) return true;
+    
+    // Nếu không có subPermissions, chỉ dựa vào parent key
+    if (!subPermissions) return false;
+    
+    // Parent cũng được check nếu có ít nhất 1 sub-permission được check (indeterminate state)
     return subPermissions.some(sub => selectedPermissions.includes(sub.key));
   };
 
-  const isParentIndeterminate = (subPermissions?: NestedPermission[]) => {
+  const isParentIndeterminate = (parentKey: string, subPermissions?: NestedPermission[]) => {
+    // Nếu parent key đã được chọn trực tiếp, không indeterminate
+    if (selectedPermissions.includes(parentKey)) return false;
+    
     if (!subPermissions || subPermissions.length === 0) return false;
     const checkedSubPerms = subPermissions.filter(sub => selectedPermissions.includes(sub.key));
     return checkedSubPerms.length > 0 && checkedSubPerms.length < subPermissions.length;
@@ -162,7 +181,8 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               </div>
             </label>
           </div>
-          {hasNestedSubs && (
+          {/* Chỉ hiển thị mũi tên khi quyền con này đã được tích */}
+          {hasNestedSubs && isSubChecked && (
             <button
               type="button"
               onClick={() => toggleExpanded(subPerm.key)}
@@ -182,8 +202,8 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
           )}
         </div>
         
-        {/* Nested sub-sub-permissions */}
-        {hasNestedSubs && isSubExpanded && (
+        {/* Nested sub-sub-permissions - chỉ hiển thị khi quyền cha được tích */}
+        {hasNestedSubs && isSubChecked && isSubExpanded && (
           <div className="mt-2 ml-4 space-y-2 border-l-2 border-gray-200 dark:border-neutral-600 pl-3">
             {subPerm.subPermissions!.map(nestedSub => 
               renderSubPermission(nestedSub, depth + 1)
@@ -198,7 +218,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
     <div className="space-y-3">
       {getFilteredPermissions().map(permission => {
         const isChecked = isParentChecked(permission.key, permission.subPermissions);
-        const isIndeterminate = isParentIndeterminate(permission.subPermissions);
+        const isIndeterminate = isParentIndeterminate(permission.key, permission.subPermissions);
         const isExpanded = expandedPermissions.has(permission.key);
         const hasSubPermissions = permission.subPermissions && permission.subPermissions.length > 0;
         const label = t(`permissions.${permission.key}.label`, { defaultValue: permission.label });
@@ -227,7 +247,8 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
                     </div>
                   </label>
                 </div>
-                {hasSubPermissions && (
+                {/* Chỉ hiển thị mũi tên khi quyền cha đã được tích */}
+                {hasSubPermissions && isChecked && (
                   <button
                     type="button"
                     onClick={() => toggleExpanded(permission.key)}
@@ -248,8 +269,8 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
               </div>
             </div>
             
-            {/* Sub-permissions */}
-            {hasSubPermissions && isExpanded && (
+            {/* Sub-permissions - chỉ hiển thị khi quyền cha được tích */}
+            {hasSubPermissions && isChecked && isExpanded && (
               <div className="border-t border-gray-200 dark:border-neutral-600 bg-gray-50 dark:bg-neutral-700/50">
                 <div className="p-3 space-y-2">
                   {permission.subPermissions!.map(subPerm => 

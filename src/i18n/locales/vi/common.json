@@ -54,5 +54,10 @@
     "to": "đến",
     "of": "trong tổng số",
     "results": "kết quả"
+  },
+  "noPermission": {
+    "title": "Không có quyền truy cập",
+    "message": "Tài khoản của bạn hiện không có quyền truy cập nào. Vui lòng liên hệ Super Admin để được cấp quyền.",
+    "hint": "Sau khi được cấp quyền, vui lòng đăng nhập lại."
   }
 }

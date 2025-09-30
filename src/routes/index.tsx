@@ -10,9 +10,9 @@ import UsersList from '@pages/Users/UsersList'
 import UserActivity from '@pages/Users/UserActivity'
 import NotesList from '@pages/Notes/NotesList'
 import CreateNote from '@pages/Notes/CreateNote'
-import SharedNotesList from '@pages/Notes/components/SharedNotesList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
+import NoPermission from '@pages/NoPermission/NoPermission'
 
 const router = createBrowserRouter([
   // Public
@@ -28,7 +28,18 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: 'dashboard', element: <Dashboard /> },
+      
+      // No Permission fallback page (không cần permission check)
+      { path: 'no-permission', element: <NoPermission /> },
+      
+      { 
+        path: 'dashboard', 
+        element: (
+          <PermissionRoute permission="view_analytics" redirectTo="/no-permission">
+            <Dashboard />
+          </PermissionRoute>
+        )
+      },
 
       // Users
       { 
@@ -77,14 +88,6 @@ const router = createBrowserRouter([
         element: (
           <PermissionRoute permission="manage_notes.create" redirectTo="/notes">
             <CreateNote />
-          </PermissionRoute>
-        )
-      },
-      { 
-        path: 'notes/shared', 
-        element: (
-          <PermissionRoute permission="manage_notes.shared" redirectTo="/notes">
-            <SharedNotesList />
           </PermissionRoute>
         )
       },

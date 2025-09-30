@@ -7,13 +7,14 @@ import { useUsersList } from './hooks/useUsersList';
 import UsersTable from './components/UsersTable';
 import ConfirmDialog from './components/ConfirmDialog';
 import UserDetailModal from './components/UserDetailModal';
+import CreateUserModal from './components/CreateUserModal';
 import type { User } from './interfaces';
-
 const UsersList: React.FC = () => {
   const { t } = useTranslation('users');
   const canViewActive = hasPermission('manage_users.view_active_accounts') || hasPermission('manage_users');
   const {
     users,
+    setUsers,
     loading,
     totalPages,
     totalItems,
@@ -23,6 +24,7 @@ const UsersList: React.FC = () => {
     clearFilters,
     handleToggleStatus,
     handleDeletePermanently,
+    openConfirm,
     closeConfirm,
     setConfirmState
   } = useUsersList();
@@ -33,6 +35,25 @@ const UsersList: React.FC = () => {
   const openUserModal = (user: User) => { setDetailUser(user); setOpenDetail(true); };
   const canViewDetail = hasPermission('manage_users.view_detail');
   const closeUserModal = () => { setOpenDetail(false); setDetailUser(null); };
+
+  // Modal tạo user mới
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const canCreateUser = hasPermission('manage_users.create');
+  const handleCreateSuccess = () => {
+    // Reload users list after successful creation
+    window.location.reload();
+  };
+
+  const handleUserUpdated = (updatedUser: User) => {
+    // Update user in the current list
+    setUsers((prevUsers: User[]) => 
+      prevUsers.map((u: User) => u.id === updatedUser.id ? updatedUser : u)
+    );
+    // Update detail user if it's the same user
+    if (detailUser?.id === updatedUser.id) {
+      setDetailUser(updatedUser);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -50,7 +71,7 @@ const UsersList: React.FC = () => {
       setOpenDetail(false);
       setDetailUser(null);
     }
-  }, [filters.currentPage, filters.searchTerm, filters.roleFilter, filters.activeFilter]);
+  }, [filters.currentPage, filters.searchTerm, filters.activeFilter]);
 
   const getStatusBadge = (isActive: boolean) => {
     return isActive ? (
@@ -84,6 +105,17 @@ const UsersList: React.FC = () => {
           <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('userList')}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
         </div>
+        {canCreateUser && (
+          <button
+            onClick={() => setOpenCreateModal(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm xl-down:text-xs mt-4 sm:mt-0 xl-down:mt-3 sm-down:mt-4"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            {t('create.title')}
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -104,17 +136,11 @@ const UsersList: React.FC = () => {
 
           <div>
             <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 xl-down:mb-0.5">
-              {t('filters.role')}
+              {t('filters.userType')}
             </label>
-            <select
-              value={filters.roleFilter}
-              onChange={(e) => updateFilters({ roleFilter: e.target.value })}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm xl-down:text-xs"
-            >
-              <option value="">{t('filters.all')}</option>
-              <option value="user">{t('roles.user')}</option>
-              <option value="admin">{t('roles.admin')}</option>
-            </select>
+            <div className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-neutral-700 text-gray-900 dark:text-gray-100 rounded-lg xl-down:rounded-md text-sm xl-down:text-xs">
+              {t('roles.user')} {t('filters.only')}
+            </div>
           </div>
 
           <div>
@@ -164,6 +190,7 @@ const UsersList: React.FC = () => {
         formatDate={formatDate}
         getStatusBadge={getStatusBadge}
         getRoleBadge={getRoleBadge}
+        onUserUpdated={handleUserUpdated}
       />
       {/* Pagination (common) - đặt ngoài thẻ card để đảm bảo không bị ẩn bởi overflow */}
       <Pagination
@@ -172,6 +199,12 @@ const UsersList: React.FC = () => {
         totalItems={totalItems}
         itemsPerPage={5}
         onPageChange={(page) => updateFilters({ currentPage: page })}
+      />
+      {/* Create User Modal */}
+      <CreateUserModal
+        isOpen={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+        onSuccess={handleCreateSuccess}
       />
       {/* Confirm Dialog */}
       <ConfirmDialog state={confirmState} onClose={closeConfirm} setState={setConfirmState} />

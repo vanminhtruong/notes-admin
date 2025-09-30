@@ -49,6 +49,8 @@ export const useAdminActions = (): UseAdminActionsReturn => {
         adminLevel: data.adminLevel
       });
       
+      // Toast cho super admin khi cập nhật thành công
+      // Target admin sẽ nhận toast qua socket event 'permissions_changed'
       toast.success(t('messages.updateSuccess'));
       return true;
     } catch (error: any) {

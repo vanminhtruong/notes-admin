@@ -11,9 +11,9 @@ import loginEn from '@pages/Login/language/en.json';
 import loginKo from '@pages/Login/language/ko.json';
 import loginVi from '@pages/Login/language/vi.json';
 
-import notesEn from './locales/en/notes.json';
-import notesKo from './locales/ko/notes.json';
-import notesVi from './locales/vi/notes.json';
+import notesEn from '@pages/Notes/language/en.json';
+import notesKo from '@pages/Notes/language/ko.json';
+import notesVi from '@pages/Notes/language/vi.json';
 
 import usersEn from '@pages/Users/language/en.json';
 import usersKo from '@pages/Users/language/ko.json';

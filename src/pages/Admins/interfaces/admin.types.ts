@@ -19,6 +19,8 @@ export interface AdminPermissions {
   manage_users: {
     value: boolean;
     view: boolean;
+    create: boolean;
+    edit: boolean;
     activate: boolean;
     view_active_accounts: boolean;
     delete_permanently: boolean;
@@ -117,6 +119,16 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             description: 'Cho phép mở modal chi tiết người dùng trong danh sách Users'
           }
         ]
+      },
+      {
+        key: 'manage_users.create',
+        label: 'Tạo tài khoản người dùng',
+        description: 'Tạo tài khoản mới cho người dùng'
+      },
+      {
+        key: 'manage_users.edit',
+        label: 'Chỉnh sửa thông tin người dùng',
+        description: 'Chỉnh sửa thông tin cá nhân của người dùng'
       },
       {
         key: 'manage_users.activate',
@@ -295,6 +307,11 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             key: 'manage_notes.shared.view',
             label: 'Xem ghi chú chia sẻ',
             description: 'Xem danh sách và chi tiết ghi chú chia sẻ'
+          },
+          {
+            key: 'manage_notes.shared.edit',
+            label: 'Sửa ghi chú chia sẻ',
+            description: 'Chỉnh sửa quyền và tin nhắn của ghi chú chia sẻ'
           },
           {
             key: 'manage_notes.shared.delete',

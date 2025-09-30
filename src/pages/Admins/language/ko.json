@@ -67,11 +67,19 @@
       "description": "사용자 계정 및 정보 관리",
       "view": {
         "label": "사용자 정보 보기",
-        "description": "사용자 목록 및 상세 정보 조회"
+        "description": "사용자 목록 및 기본 정보 보기"
       },
       "view_detail": {
         "label": "사용자 상세 보기",
         "description": "Users 목록에서 사용자 상세 모달 열기 허용"
+      },
+      "create": {
+        "label": "사용자 계정 생성",
+        "description": "새 사용자 계정 생성"
+      },
+      "edit": {
+        "label": "사용자 정보 수정",
+        "description": "사용자 개인 정보 수정"
       },
       "activate": {
         "label": "활성화/비활성화",
@@ -183,6 +191,10 @@
         "view": {
           "label": "공유 노트 보기", 
           "description": "공유 노트 목록 및 세부 정보 보기"
+        },
+        "edit": {
+          "label": "공유 노트 편집",
+          "description": "공유 노트의 권한과 메시지 편집"
         },
         "delete": {
           "label": "공유 노트 삭제",

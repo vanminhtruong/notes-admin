@@ -9,9 +9,23 @@ export interface User {
   // Optional profile fields
   phone?: string | null;
   birthDate?: string | null;
-  gender?: string;
+  gender?: 'male' | 'female' | 'other' | 'unspecified';
   lastSeenAt?: string;
   createdAt: string;
+  updatedAt?: string;
+  // Privacy settings
+  hidePhone?: boolean;
+  hideBirthDate?: boolean;
+  allowMessagesFromNonFriends?: boolean;
+  // App settings
+  theme?: 'light' | 'dark';
+  language?: string;
+  rememberLogin?: boolean;
+  e2eeEnabled?: boolean;
+  readStatusEnabled?: boolean;
+  // Admin fields (if applicable)
+  adminLevel?: 'super_admin' | 'sub_admin' | 'dev' | 'mod' | null;
+  adminPermissions?: string[] | null;
 }
 
 export interface Message {
@@ -61,7 +75,6 @@ export interface ConfirmState {
 
 export interface UsersListFilters {
   searchTerm: string;
-  roleFilter: string;
   activeFilter: string;
   currentPage: number;
 }

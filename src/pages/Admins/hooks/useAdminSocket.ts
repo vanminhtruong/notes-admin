@@ -29,26 +29,36 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
     // Quyền admin được cập nhật
     const handleAdminPermissionsUpdated = (data: any) => {
       // Tránh double toast:
-      // - Nếu do chính current admin cập nhật thì không toast success chung
+      // - Nếu do chính current admin cập nhật thì đã toast ở useAdminActions rồi
       // - Nếu admin bị cập nhật là current admin thì để service socket xử lý (permissions_changed)
+      // - Chỉ toast khi có admin khác (không phải current admin) cập nhật admin khác
       const isActorIsMe = data?.updatedBy === currentAdminId;
       const isTargetIsMe = data?.admin?.id === currentAdminId;
+      
+      // Không toast nếu actor là current admin (đã toast ở useAdminActions)
+      // Không toast nếu target là current admin (sẽ toast ở permissions_changed)
       if (!isActorIsMe && !isTargetIsMe) {
         toast.success(t('messages.updateSuccess'));
       }
-      onAdminListChange?.();
       
-      // Nếu là admin hiện tại bị cập nhật quyền, không toast ở đây để tránh trùng;
-      // sự kiện 'permissions_changed' đã được xử lý trung tâm tại services/socket.ts
+      onAdminListChange?.();
     };
 
     // Quyền cụ thể bị thu hồi
     const handleAdminPermissionRevoked = (data: any) => {
-      toast.success(t('messages.revokeSuccess'));
+      const isActorIsMe = data?.revokedBy === currentAdminId;
+      const isTargetIsMe = data?.admin?.id === currentAdminId;
+      
+      // Không toast nếu actor là current admin (đã toast ở useAdminActions)
+      // Chỉ toast cho admin khác đang xem danh sách
+      if (!isActorIsMe && !isTargetIsMe) {
+        toast.success(t('messages.revokeSuccess'));
+      }
+      
       onAdminListChange?.();
       
-      // Nếu là admin hiện tại bị thu hồi quyền
-      if (data.admin?.id === currentAdminId) {
+      // Nếu là admin hiện tại bị thu hồi quyền, hiển thị warning riêng
+      if (isTargetIsMe) {
         const permissionLabel = t(`permissions.${data.revokedPermission}.label`, { defaultValue: data.revokedPermission });
         toast.warning(`Quyền "${permissionLabel}" của bạn đã bị thu hồi`);
       }

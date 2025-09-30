@@ -22,7 +22,9 @@
   },
   "filters": {
     "role": "역할",
-    "status": "상태",
+    "status": "상태", 
+    "userType": "사용자 유형",
+    "only": "- 만 표시중",
     "all": "전체",
     "clear": "필터 지우기"
   },
@@ -31,19 +33,40 @@
     "prev": "이전",
     "next": "다음"
   },
+  "create": {
+    "title": "사용자 계정 생성",
+    "success": "계정이 성공적으로 생성되었습니다",
+    "failed": "계정을 생성할 수 없습니다",
+    "creating": "생성 중...",
+    "submit": "계정 생성",
+    "form": {
+      "name": "이름",
+      "namePlaceholder": "이름을 입력하세요...",
+      "email": "이메일",
+      "emailPlaceholder": "이메일 주소를 입력하세요...",
+      "password": "비밀번호",
+      "passwordPlaceholder": "비밀번호를 입력하세요..."
+    },
+    "validation": {
+      "nameRequired": "이름은 필수입니다",
+      "emailRequired": "이메일은 필수입니다",
+      "emailInvalid": "올바르지 않은 이메일 형식입니다",
+      "passwordRequired": "비밀번호는 필수입니다",
+      "passwordMinLength": "비밀번호는 최소 6자 이상이어야 합니다"
+    }
+  },
   "buttons": {
     "cancel": "취소",
-    "confirm": "확인"
-  },
-  "detail": {
-    "title": "사용자 상세 정보",
-    "close": "닫기"
+    "confirm": "확인", 
+    "submit": "제출",
+    "update": "업데이트",
+    "loading": "로딩 중...",
+    "retry": "다시 시도"
   },
   "action": {
     "enable": "활성화",
     "disable": "비활성화",
-    "enableAccount": "계정 활성화",
-    "disableAccount": "계정 비활성화"
+    "enableAccount": "계정 활성화"
   },
   "alerts": {
     "cannotChangeAdminStatus": "관리자 계정 상태를 변경할 수 없습니다",
@@ -52,7 +75,8 @@
     "cannotDeleteAdmin": "관리자 계정을 삭제할 수 없습니다",
     "confirmDeletePermanent1": "⚠️ 경고: 정말로 \"{{name}}\" 계정을 영구 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!",
     "confirmDeletePermanent2": "최종 확인: \"{{email}}\" 계정을 영구 삭제하시겠습니까?",
-    "cannotDeleteUser": "계정을 삭제할 수 없습니다"
+    "cannotDeleteUser": "계정을 삭제할 수 없습니다",
+    "deleteSuccess": "계정이 영구적으로 삭제되었습니다"
   },
   "online": "온라인",
   "offline": "오프라인",
@@ -188,5 +212,61 @@
       "editSuccess": "메시지가 수정되었습니다",
       "editError": "메시지를 수정할 수 없습니다"
     }
+  },
+  "edit": {
+    "title": "사용자 정보 수정",
+    "button": "수정",
+    "save": "저장",
+    "cancel": "취소",
+    "saving": "저장 중...",
+    "success": "사용자 정보가 성공적으로 업데이트되었습니다!",
+    "failed": "사용자 정보 업데이트에 실패했습니다",
+    "changeAvatar": "사진 변경",
+    "changeAvatarSuccess": "프로필 사진이 업데이트되었습니다",
+    "changeAvatarFailed": "프로필 사진을 업데이트할 수 없습니다",
+    "validation": {
+      "nameRequired": "이름은 필수입니다",
+      "emailRequired": "이메일은 필수입니다",
+      "emailInvalid": "올바르지 않은 이메일 형식입니다",
+      "phoneInvalid": "유효하지 않은 전화번호입니다. 숫자, +, 공백, 대시, 괄호만 사용하세요"
+    }
+  },
+  "personalInfo": "개인 정보",
+  "accountSettings": "계정 설정",
+  "privacySettings": "개인정보 설정",
+  "timestamps": "타임스탬프",
+  "name": "이름",
+  "email": "이메일",
+  "phone": "전화번호",
+  "phoneOptional": "전화번호 (선택사항)",
+  "birthDate": "생년월일",
+  "genderLabel": "성별",
+  "gender": {
+    "male": "남성",
+    "female": "여성",
+    "other": "기타",
+    "unspecified": "미지정"
+  },
+  "role": "역할",
+  "theme": "테마",
+  "language": "언어",
+  "e2eeEnabled": "종단간 암호화",
+  "readStatusEnabled": "읽음 상태",
+  "hidePhone": "전화번호 숨기기",
+  "hideBirthDate": "생년월일 숨기기",
+  "allowMessagesFromNonFriends": "친구가 아닌 사용자로부터 메시지 허용",
+  "updatedAt": "마지막 업데이트",
+  "lastSeenAt": "마지막 접속",
+  "notProvided": "제공되지 않음",
+  "notAvailable": "사용할 수 없음",
+  "enabled": "활성화",
+  "disabled": "비활성화",
+  "hidden": "숨김",
+  "visible": "표시",
+  "allowed": "허용",
+  "blocked": "차단",
+  "detail": {
+    "title": "사용자 세부정보",
+    "close": "닫기"
   }
 }

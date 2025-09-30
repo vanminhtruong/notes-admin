@@ -23,6 +23,8 @@
   "filters": {
     "role": "Vai trò",
     "status": "Trạng thái",
+    "userType": "Loại người dùng",
+    "only": "- Chỉ hiển thị",
     "all": "Tất cả",
     "clear": "Xóa bộ lọc"
   },
@@ -31,14 +33,39 @@
     "prev": "Trước",
     "next": "Sau"
   },
+  "create": {
+    "title": "Tạo tài khoản người dùng",
+    "success": "Tạo tài khoản thành công",
+    "failed": "Không thể tạo tài khoản",
+    "creating": "Đang tạo...",
+    "submit": "Tạo tài khoản",
+    "form": {
+      "name": "Tên người dùng",
+      "namePlaceholder": "Nhập tên người dùng...",
+      "email": "Email",
+      "emailPlaceholder": "Nhập địa chỉ email...",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "Nhập mật khẩu..."
+    },
+    "validation": {
+      "nameRequired": "Tên người dùng là bắt buộc",
+      "emailRequired": "Email là bắt buộc",
+      "emailInvalid": "Email không hợp lệ",
+      "passwordRequired": "Mật khẩu là bắt buộc",
+      "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự"
+    }
+  },
   "buttons": {
     "cancel": "Hủy",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "submit": "Xác nhận",
+    "update": "Cập nhật",
+    "loading": "Đang tải...",
+    "retry": "Thử lại"
   },
   "action": {
-    "enable": "Kích hoạt",
+    "enable": "Kích hoạt tài khoản",
     "disable": "Vô hiệu hóa",
-    "enableAccount": "Kích hoạt tài khoản",
     "disableAccount": "Vô hiệu hóa tài khoản"
   },
   "alerts": {
@@ -49,7 +76,8 @@
     "cannotDeleteAdmin": "Không thể xóa tài khoản admin",
     "confirmDeletePermanent1": "⚠️ CẢNH BÁO: Bạn có chắc muốn XÓA VĨNH VIỄN tài khoản \"{{name}}\"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!",
     "confirmDeletePermanent2": "Xác nhận lần cuối: Xóa vĩnh viễn tài khoản \"{{email}}\"?",
-    "cannotDeleteUser": "Không thể xóa tài khoản"
+    "cannotDeleteUser": "Không thể xóa tài khoản",
+    "deleteSuccess": "Đã xóa tài khoản vĩnh viễn"
   },
   "online": "Online",
   "offline": "Offline",
@@ -191,5 +219,61 @@
       "editSuccess": "Đã chỉnh sửa tin nhắn",
       "editError": "Không thể chỉnh sửa tin nhắn"
     }
+  },
+  "edit": {
+    "title": "Chỉnh sửa thông tin người dùng",
+    "button": "Chỉnh sửa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "saving": "Đang lưu...",
+    "success": "Cập nhật thông tin thành công!",
+    "failed": "Cập nhật thông tin thất bại",
+    "changeAvatar": "Đổi ảnh",
+    "changeAvatarSuccess": "Đã cập nhật ảnh đại diện",
+    "changeAvatarFailed": "Không thể cập nhật ảnh đại diện",
+    "validation": {
+      "nameRequired": "Tên người dùng là bắt buộc",
+      "emailRequired": "Email là bắt buộc",
+      "emailInvalid": "Email không hợp lệ",
+      "phoneInvalid": "Số điện thoại không hợp lệ. Chỉ sử dụng số, +, dấu cách, dấu gạch ngang, dấu ngoặc đơn"
+    }
+  },
+  "personalInfo": "Thông tin cá nhân",
+  "accountSettings": "Cài đặt tài khoản",
+  "privacySettings": "Cài đặt riêng tư",
+  "timestamps": "Thời gian",
+  "name": "Tên",
+  "email": "Email",
+  "phone": "Số điện thoại",
+  "phoneOptional": "Số điện thoại (không bắt buộc)",
+  "birthDate": "Ngày sinh",
+  "genderLabel": "Giới tính",
+  "gender": {
+    "male": "Nam",
+    "female": "Nữ", 
+    "other": "Khác",
+    "unspecified": "Không xác định"
+  },
+  "role": "Vai trò",
+  "theme": "Giao diện",
+  "language": "Ngôn ngữ",
+  "e2eeEnabled": "Mã hóa đầu cuối",
+  "readStatusEnabled": "Trạng thái đã đọc",
+  "hidePhone": "Ẩn số điện thoại",
+  "hideBirthDate": "Ẩn ngày sinh",
+  "allowMessagesFromNonFriends": "Cho phép tin nhắn từ người lạ",
+  "updatedAt": "Cập nhật lần cuối",
+  "lastSeenAt": "Lần cuối online",
+  "notProvided": "Chưa cung cấp",
+  "notAvailable": "Không có",
+  "enabled": "Bật",
+  "disabled": "Tắt",
+  "hidden": "Ẩn",
+  "visible": "Hiển thị",
+  "allowed": "Cho phép",
+  "blocked": "Chặn",
+  "detail": {
+    "title": "Chi tiết người dùng",
+    "close": "Đóng"
   }
 }

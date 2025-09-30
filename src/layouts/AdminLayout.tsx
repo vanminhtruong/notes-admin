@@ -239,9 +239,6 @@ const AdminLayout: React.FC = () => {
         ...(hasPermission('manage_notes.create') ? [
           { id: 'notes-create', label: t('navigation.notesCreate'), path: '/notes/create' }
         ] : []),
-        ...(hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete') ? [
-          { id: 'notes-shared', label: t('navigation.notesShared'), path: '/notes/shared' }
-        ] : []),
       ],
     },
     ...(isSuper ? [{
@@ -252,6 +249,13 @@ const AdminLayout: React.FC = () => {
       permission: 'manage_admins',
     }] : []),
   ].filter(item => !item.permission || hasPermission(item.permission));
+
+  // Redirect to no-permission page if admin has no permissions at all
+  useEffect(() => {
+    if (!isSuper && menuItems.length === 0 && location.pathname !== '/no-permission' && location.pathname !== '/profile') {
+      navigate('/no-permission');
+    }
+  }, [isSuper, menuItems.length, location.pathname, navigate]);
 
   const isActiveRoute = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
@@ -634,6 +638,7 @@ const AdminLayout: React.FC = () => {
         draggable
         pauseOnHover
         theme={mode === 'dark' ? 'dark' : 'light'}
+        style={{ zIndex: 999999 }}
       />
     </div>
   );

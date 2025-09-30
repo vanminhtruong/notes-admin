@@ -1,72 +1,10 @@
 {
   "title": "Quản lý ghi chú",
-  "subtitle": "Quản lý ghi chú và nội dung người dùng",
+  "subtitle": "Xem và quản lý tất cả ghi chú của người dùng",
   "createNote": "Tạo ghi chú",
-  "editNote": "Chỉnh sửa ghi chú",
-  "deleteNote": "Xóa ghi chú",
-  "noNotes": "Không có ghi chú",
-  "actions": {
-    "createNew": "Tạo ghi chú mới",
-    "edit": "Sửa",
-    "delete": "Xóa",
-    "cancel": "Hủy",
-    "update": "Cập nhật",
-    "creating": "Đang tạo..."
-  },
-  "filters": {
-    "search": { "label": "Tìm kiếm", "placeholder": "Tiêu đề hoặc nội dung..." },
-    "userId": { "label": "User ID", "placeholder": "ID người dùng..." },
-    "category": { "label": "Danh mục", "placeholder": "Danh mục..." },
-    "priority": { "label": "Ưu tiên" },
-    "status": { "label": "Trạng thái" },
-    "all": "Tất cả",
-    "active": "Hoạt động",
-    "archived": "Lưu trữ",
-    "shared": "Chia sẻ",
-    "clear": "Xóa bộ lọc"
-  },
-  "table": {
-    "note": "Ghi chú",
-    "user": "Người dùng",
-    "category": "Danh mục",
-    "priority": "Ưu tiên",
-    "status": "Trạng thái",
-    "createdAt": "Ngày tạo",
-    "actions": "Thao tác"
-  },
-  "badges": {
-    "status": { "active": "Hoạt động", "archived": "Lưu trữ" }
-  },
-  "empty": {
-    "title": "Không có ghi chú",
-    "hint": "Hãy thay đổi bộ lọc hoặc tạo ghi chú mới."
-  },
-  "pagination": {
-    "title": "Trang {{currentPage}} / {{totalPages}}",
-    "prev": "Trước",
-    "next": "Sau"
-  },
   "modal": {
+    "detailTitle": "Chi tiết ghi chú",
     "editTitle": "Chỉnh sửa ghi chú"
-  },
-  "form": {
-    "title": { "label": "Tiêu đề *" },
-    "content": { "label": "Nội dung" },
-    "category": { "label": "Danh mục" },
-    "priority": { "label": "Mức độ ưu tiên" },
-    "archive": { "label": "Lưu trữ ghi chú" },
-    "imageUrl": { "label": "URL hình ảnh" },
-    "reminder": { "label": "Nhắc nhở" },
-    "placeholders": {
-      "title": "Nhập tiêu đề ghi chú...",
-      "content": "Nhập nội dung ghi chú...",
-      "category": "Ví dụ: Công việc, Cá nhân...",
-      "imageUrl": "https://example.com/image.jpg",
-      "searchUser": "Tìm kiếm người dùng..."
-    }
-  },
-  "constants": {
-    "priority": { "low": "Thấp", "medium": "Trung bình", "high": "Cao" }
   },
   "create": {
     "title": "Tạo ghi chú mới",
@@ -76,42 +14,135 @@
     "changeUser": "Thay đổi",
     "noUsers": "Không tìm thấy người dùng"
   },
-  "alerts": {
-    "confirmDelete": "Bạn có chắc muốn xóa ghi chú này?",
-    "updateFailed": "Không thể cập nhật ghi chú",
-    "deleteFailed": "Không thể xóa ghi chú",
-    "missingUserOrTitle": "Vui lòng chọn người dùng và nhập tiêu đề",
-    "createSuccess": "Tạo ghi chú thành công",
-    "createFailed": "Không thể tạo ghi chú",
-    "uploadImageError": "Không thể tải lên ảnh",
-    "deleteSuccess": "Xóa chia sẻ ghi chú thành công!",
-    "loadFailed": "Không thể tải danh sách ghi chú chia sẻ"
+  "form": {
+    "title": {
+      "label": "Tiêu đề",
+      "placeholder": "Nhập tiêu đề ghi chú"
+    },
+    "content": {
+      "label": "Nội dung",
+      "placeholder": "Nhập nội dung ghi chú"
+    },
+    "imageUrl": {
+      "label": "Hình ảnh"
+    },
+    "category": {
+      "label": "Danh mục",
+      "placeholder": "Nhập danh mục"
+    },
+    "priority": {
+      "label": "Độ ưu tiên"
+    },
+    "reminder": {
+      "label": "Nhắc nhở"
+    },
+    "archive": {
+      "label": "Lưu trữ"
+    },
+    "placeholders": {
+      "title": "Nhập tiêu đề ghi chú...",
+      "content": "Nhập nội dung ghi chú...",
+      "category": "Ví dụ: Công việc, Cá nhân...",
+      "imageUrl": "https://example.com/image.jpg",
+      "searchUser": "Tìm kiếm người dùng..."
+    }
+  },
+  "filters": {
+    "all": "Tất cả",
+    "active": "Hoạt động", 
+    "archived": "Đã lưu trữ",
+    "shared": "Chia sẻ",
+    "search": {
+      "label": "Tìm kiếm",
+      "placeholder": "Tìm kiếm ghi chú..."
+    },
+    "userId": {
+      "label": "ID người dùng",
+      "placeholder": "Nhập ID người dùng"
+    },
+    "category": {
+      "label": "Danh mục",
+      "placeholder": "Nhập danh mục"
+    },
+    "priority": {
+      "label": "Độ ưu tiên"
+    },
+    "status": {
+      "label": "Trạng thái"
+    },
+    "clear": "Xóa bộ lọc"
+  },
+  "table": {
+    "note": "Ghi chú",
+    "user": "Người dùng",
+    "category": "Danh mục", 
+    "priority": "Độ ưu tiên",
+    "status": "Trạng thái",
+    "createdAt": "Ngày tạo",
+    "actions": "Thao tác"
+  },
+  "constants": {
+    "priority": {
+      "high": "Cao",
+      "medium": "Trung bình", 
+      "low": "Thấp"
+    }
+  },
+  "badges": {
+    "status": {
+      "active": "Hoạt động",
+      "archived": "Đã lưu trữ"
+    }
+  },
+  "actions": {
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "archive": "Lưu trữ",
+    "unarchive": "Bỏ lưu trữ",
+    "close": "Đóng",
+    "cancel": "Hủy",
+    "update": "Cập nhật",
+    "createNew": "Tạo ghi chú",
+    "creating": "Đang tạo...",
+    "updating": "Đang cập nhật..."
+  },
+  "detail": {
+    "userInfo": "Thông tin người tạo",
+    "status": "Trạng thái",
+    "updatedAt": "Ngày cập nhật",
+    "metadata": "Thông tin chi tiết"
+  },
+  "empty": {
+    "title": "Không có ghi chú nào",
+    "hint": "Chưa có ghi chú nào được tạo",
+    "content": "Không có nội dung"
   },
   "sharedNotes": {
-    "title": "Ghi chú được chia sẻ",
-    "subtitle": "Quản lý ghi chú mà người dùng đã chia sẻ với nhau",
+    "title": "Ghi chú đã chia sẻ",
+    "subtitle": "Xem và quản lý các ghi chú được chia sẻ giữa người dùng",
+    "searchFilters": {
+      "search": {
+        "placeholder": "Tìm kiếm ghi chú đã chia sẻ..."
+      },
+      "sharedWith": "Chia sẻ cho (ID người dùng)",
+      "sharedBy": "Chia sẻ bởi (ID người dùng)"
+    },
     "empty": {
-      "title": "Không có ghi chú chia sẻ",
-      "hint": "Chưa có ghi chú nào được chia sẻ"
+      "title": "Chưa có ghi chú chia sẻ",
+      "hint": "Hiện chưa có ghi chú nào được chia sẻ"
     },
     "table": {
       "note": "Ghi chú",
       "sharedBy": "Chia sẻ bởi",
       "sharedWith": "Chia sẻ cho",
       "permissions": "Quyền hạn",
-      "sharedAt": "Thời gian chia sẻ"
-    },
-    "searchFilters": {
-      "search": {
-        "placeholder": "Tiêu đề ghi chú..."
-      },
-      "sharedWith": "Chia sẻ cho User ID",
-      "sharedBy": "Chia sẻ bởi User ID"
+      "sharedAt": "Ngày chia sẻ"
     },
     "permissions": {
       "view": "Xem",
       "edit": "Sửa",
-      "delete": "Xóa"
+      "delete": "Xóa",
+      "create": "Tạo"
     },
     "detail": {
       "title": "Chi tiết ghi chú chia sẻ",
@@ -122,9 +153,36 @@
     },
     "delete": {
       "confirm": {
-        "title": "Xác nhận xóa chia sẻ",
-        "message": "Bạn có chắc muốn xóa việc chia sẻ ghi chú này không?"
+        "title": "Xóa chia sẻ ghi chú?",
+        "message": "Thao tác này sẽ gỡ quyền truy cập của người nhận."
       }
     }
+  },
+  "alerts": {
+    "loadFailed": "Không thể tải danh sách ghi chú chia sẻ",
+    "deleteSuccess": "Đã xóa chia sẻ ghi chú thành công",
+    "deleteFailed": "Không thể xóa ghi chú chia sẻ",
+    "missingUserOrTitle": "Vui lòng chọn người dùng và nhập tiêu đề",
+    "createSuccess": "Tạo ghi chú thành công",
+    "createFailed": "Không thể tạo ghi chú",
+    "uploadImageError": "Không thể tải lên ảnh"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Xác nhận xóa",
+      "message": "Bạn có chắc muốn xóa ghi chú này không?",
+      "irreversible": "Hành động này không thể hoàn tác."
+    }
+  },
+  "toasts": {
+    "updateSuccess": "Cập nhật ghi chú thành công!",
+    "updateError": "Không thể cập nhật ghi chú",
+    "deleteSuccess": "Xóa ghi chú thành công!",
+    "deleteError": "Không thể xóa ghi chú",
+    "archiveSuccess": "Đã lưu trữ ghi chú",
+    "archiveError": "Không thể lưu trữ",
+    "unarchiveSuccess": "Đã bỏ lưu trữ ghi chú", 
+    "unarchiveError": "Không thể bỏ lưu trữ",
+    "uploadImageError": "Không thể tải lên ảnh"
   }
 }

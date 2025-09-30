@@ -21,8 +21,10 @@
     "user": "User"
   },
   "filters": {
-    "role": "Role",
+    "role": "Role", 
     "status": "Status",
+    "userType": "User Type",
+    "only": "- Only showing",
     "all": "All",
     "clear": "Clear filters"
   },
@@ -31,14 +33,39 @@
     "prev": "Previous",
     "next": "Next"
   },
+  "create": {
+    "title": "Create User Account",
+    "success": "Account created successfully",
+    "failed": "Unable to create account",
+    "creating": "Creating...",
+    "submit": "Create Account",
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "Enter full name...",
+      "email": "Email",
+      "emailPlaceholder": "Enter email address...",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password..."
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters"
+    }
+  },
   "buttons": {
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "update": "Update",
+    "loading": "Loading...",
+    "retry": "Retry"
   },
   "action": {
-    "enable": "Enable",
+    "enable": "Enable account",
     "disable": "Disable",
-    "enableAccount": "Enable account",
     "disableAccount": "Disable account"
   },
   "alerts": {
@@ -49,7 +76,8 @@
     "cannotDeleteAdmin": "Cannot delete admin account",
     "confirmDeletePermanent1": "⚠️ WARNING: Are you sure you want to PERMANENTLY DELETE account \"{{name}}\"?\n\nThis action CANNOT BE UNDONE!",
     "confirmDeletePermanent2": "Final confirmation: Permanently delete account \"{{email}}\"?",
-    "cannotDeleteUser": "Unable to delete account"
+    "cannotDeleteUser": "Unable to delete account",
+    "deleteSuccess": "User has been permanently deleted"
   },
   "online": "Online",
   "offline": "Offline",
@@ -194,5 +222,61 @@
       "editSuccess": "Message edited successfully",
       "editError": "Cannot edit message"
     }
+  },
+  "edit": {
+    "title": "Edit User Information",
+    "button": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "success": "User information updated successfully!",
+    "failed": "Failed to update user information",
+    "changeAvatar": "Change photo",
+    "changeAvatarSuccess": "Avatar updated",
+    "changeAvatarFailed": "Cannot update avatar",
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "phoneInvalid": "Invalid phone number. Only use digits, +, spaces, dashes, parentheses"
+    }
+  },
+  "personalInfo": "Personal Information",
+  "accountSettings": "Account Settings",
+  "privacySettings": "Privacy Settings",
+  "timestamps": "Timestamps",
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "phoneOptional": "Phone (optional)",
+  "birthDate": "Birth Date",
+  "genderLabel": "Gender",
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "unspecified": "Unspecified"
+  },
+  "role": "Role",
+  "theme": "Theme",
+  "language": "Language",
+  "e2eeEnabled": "End-to-End Encryption",
+  "readStatusEnabled": "Read Status",
+  "hidePhone": "Hide Phone",
+  "hideBirthDate": "Hide Birth Date",
+  "allowMessagesFromNonFriends": "Allow Messages from Non-Friends",
+  "updatedAt": "Last Updated",
+  "lastSeenAt": "Last Seen",
+  "notProvided": "Not provided",
+  "notAvailable": "Not available",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "hidden": "Hidden",
+  "visible": "Visible",
+  "allowed": "Allowed",
+  "blocked": "Blocked",
+  "detail": {
+    "title": "User Details",
+    "close": "Close"
   }
 }
