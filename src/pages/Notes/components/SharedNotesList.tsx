@@ -77,7 +77,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
   const loadSharedNotes = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await adminService.getAllSharedNotes({
+      const response: any = await adminService.getAllSharedNotes({
         page: currentPage,
         limit: 20,
         userId: selectedUserId ? parseInt(selectedUserId) : undefined,
@@ -87,8 +87,8 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
         sortOrder: 'DESC'
       });
 
-      setSharedNotes(response.sharedNotes || []);
-      setTotalPages(response.pagination?.totalPages || 1);
+      setSharedNotes(response?.sharedNotes || []);
+      setTotalPages(response?.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error loading shared notes:', error);
       toast.error(t('alerts.loadFailed'));
@@ -154,7 +154,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
             onClick={async () => {
               toast.dismiss();
               try {
-                const response = await adminService.deleteSharedNote(sharedNoteId);
+                const response: any = await adminService.deleteSharedNote(sharedNoteId);
                 await loadSharedNotes();
                 
                 // Show enhanced success message
@@ -535,6 +535,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
           setShowDetailModal(false);
           setSelectedSharedNote(null);
         }}
+        onUpdate={loadSharedNotes}
       />
     </div>
   );

@@ -53,13 +53,15 @@ interface SharedNoteDetailModalProps {
   show: boolean;
   onClose: () => void;
   onDelete: (id: number) => void;
+  onUpdate?: () => void;
 }
 
 const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
   sharedNote,
   show,
   onClose,
-  onDelete
+  onDelete,
+  onUpdate
 }) => {
   const { t } = useTranslation('notes');
 
@@ -135,6 +137,8 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
   if (!show || !sharedNote) return null;
 
   const handleSave = async () => {
+    if (!sharedNote) return;
+    
     try {
       setSaving(true);
       const payload: any = { message: form.message };
@@ -144,8 +148,21 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
         payload.canDelete = !!form.canDelete;
       }
       await adminService.updateSharedNote(sharedNote.id, payload);
+      
+      // Update the sharedNote prop locally to reflect changes immediately
+      Object.assign(sharedNote, {
+        canCreate: form.canCreate,
+        canEdit: form.canEdit,
+        canDelete: form.canDelete,
+        message: form.message,
+      });
+      
       toast.success(t('toasts.updateSuccess'));
       setEditing(false);
+      // Trigger refresh in parent component
+      if (onUpdate) {
+        onUpdate();
+      }
     } catch (e: any) {
       toast.error(t('toasts.updateError'));
     } finally {
