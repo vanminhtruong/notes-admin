@@ -175,6 +175,7 @@
       "chatWith": "Chat with {{name}}",
       "noMessages": "No messages",
       "groupsList": "Groups",
+      "noGroups": "This user has not joined any groups yet",
       "selectGroupToView": "Select a group to view",
       "groupChat": "Group chat",
       "actions": {

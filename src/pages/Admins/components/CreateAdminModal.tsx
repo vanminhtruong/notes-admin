@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { CreateAdminForm, AdminLevel } from '../interfaces/admin.types';
 import PermissionSelector from './PermissionSelector';
@@ -90,8 +91,8 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-3 sm:p-4">
       <div className="bg-white dark:bg-neutral-800 rounded-lg w-full max-w-md sm:max-w-lg max-h-[95vh] sm:max-h-[90vh] flex flex-col">
         {/* Header - Fixed */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-neutral-700 flex-shrink-0">
@@ -208,6 +209,8 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default CreateAdminModal;

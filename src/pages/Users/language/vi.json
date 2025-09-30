@@ -172,6 +172,7 @@
       "chatWith": "Chat với {{name}}",
       "noMessages": "Chưa có tin nhắn",
       "groupsList": "Nhóm",
+      "noGroups": "Người này chưa tham gia nhóm nào",
       "selectGroupToView": "Chọn một nhóm để xem",
       "groupChat": "Chat nhóm",
       "actions": {

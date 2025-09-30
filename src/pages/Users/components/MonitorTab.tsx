@@ -763,12 +763,17 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
+        <div className={`grid grid-cols-1 ${Array.isArray(activityData?.activity.groups) && activityData!.activity.groups.length > 0 ? 'lg:grid-cols-3' : ''} xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2`}>
           {/* Groups list */}
           <div className="lg:col-span-1">
             <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 mb-2 xl-down:mb-1">{t('userActivity.monitor.groupsList')}</h4>
             <div className="space-y-2 xl-down:space-y-1 max-h-[520px] xl-down:max-h-[300px] sm-down:max-h-[200px] overflow-auto pr-1">
-              {activityData?.activity.groups.map((g: any) => (
+              {Array.isArray(activityData?.activity.groups) && activityData!.activity.groups.length === 0 ? (
+                <div className="flex items-center justify-center h-[120px] text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md border border-dashed border-gray-200 dark:border-neutral-700">
+                  {t('userActivity.monitor.noGroups', 'Người này chưa tham gia nhóm nào')}
+                </div>
+              ) : (
+                (activityData?.activity.groups || []).map((g: any) => (
                 <div
                   key={g.id}
                   role="button"
@@ -843,9 +848,13 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+              )}
             </div>
           </div>
+          
+          {/* Group Chat Viewer - ẩn hoàn toàn nếu không có group */}
+          {Array.isArray(activityData?.activity.groups) && activityData!.activity.groups.length > 0 && (
           <div className="lg:col-span-2">
             {!selectedGroupId ? (
               <div className="h-[520px] xl-down:h-[300px] sm-down:h-[200px] flex items-center justify-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md border border-gray-200 dark:border-neutral-700 text-sm xl-down:text-xs">
@@ -1141,6 +1150,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
               </div>
             )}
           </div>
+          )}
         </div>
       )}
       {showGroupMembers && typeof window !== 'undefined' && createPortal(

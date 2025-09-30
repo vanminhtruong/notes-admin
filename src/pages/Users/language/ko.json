@@ -169,6 +169,7 @@
       "chatWith": "{{name}} 님과의 채팅",
       "noMessages": "메시지가 없습니다",
       "groupsList": "그룹",
+      "noGroups": "이 사용자는 아직 그룹에 가입하지 않았습니다",
       "selectGroupToView": "볼 그룹을 선택하세요",
       "groupChat": "그룹 채팅",
       "status": {

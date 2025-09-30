@@ -129,8 +129,8 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
       setIsEditing(false);
       
       // Call callback to update user data in parent component
-      if (onUserUpdated && response.user) {
-        onUserUpdated(response.user);
+      if (onUserUpdated && response?.data?.user) {
+        onUserUpdated(response.data.user);
       }
     } catch (error: any) {
       toast.error(error.message || t('edit.failed'));
@@ -172,7 +172,6 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={isEditing ? undefined : onClose}
       />
 
       {/* Modal Card */}

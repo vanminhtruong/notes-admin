@@ -151,7 +151,6 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ open, src, alt = 
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-[1px]"
-        onClick={onClose}
       />
 
       {/* Content */}

@@ -24,9 +24,13 @@ const GroupsTab: React.FC<GroupsTabProps> = ({ activityData, formatDate }) => {
 
   if (groups.length === 0) {
     return (
-      <div className="text-center py-8 xl-down:py-6 sm-down:py-4 text-gray-500 dark:text-gray-400">
-        <span className="text-4xl xl-down:text-3xl sm-down:text-2xl mb-4 xl-down:mb-3 sm-down:mb-2 block">👥</span>
-        <p className="text-sm xl-down:text-xs">{t('userActivity.groups.noGroups')}</p>
+      <div className="space-y-4 xl-down:space-y-3 sm-down:space-y-2">
+        <div className="bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2">
+          <div className="text-center py-8 xl-down:py-6 sm-down:py-4 text-gray-500 dark:text-gray-400">
+            <span className="text-4xl xl-down:text-3xl sm-down:text-2xl mb-4 xl-down:mb-3 sm-down:mb-2 block">👥</span>
+            <p className="text-sm xl-down:text-xs">{t('userActivity.groups.noGroups')}</p>
+          </div>
+        </div>
       </div>
     );
   }

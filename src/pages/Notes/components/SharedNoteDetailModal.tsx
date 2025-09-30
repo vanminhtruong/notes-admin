@@ -118,6 +118,19 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
     }
   }, [sharedNote]);
 
+  // Disable body scroll when modal is open
+  React.useEffect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [show]);
+
   // Guard render AFTER hooks to keep hook order consistent
   if (!show || !sharedNote) return null;
 
