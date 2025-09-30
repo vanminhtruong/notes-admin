@@ -12,6 +12,7 @@ interface UsersTableProps {
   getStatusBadge: (isActive: boolean) => React.ReactNode;
   getRoleBadge: (role: string) => React.ReactNode;
   onRowClick?: (user: User) => void;
+  onViewSessions?: (user: User) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
@@ -22,10 +23,12 @@ const UsersTable: React.FC<UsersTableProps> = ({
   formatDate,
   getStatusBadge,
   getRoleBadge,
-  onRowClick
+  onRowClick,
+  onViewSessions
 }) => {
   const { t } = useTranslation('users');
   const canViewActiveAccounts = hasPermission('manage_users.view_active_accounts');
+  const canViewSessions = hasPermission('manage_users.sessions.view');
 
   if (loading) {
     return (
@@ -157,6 +160,17 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         </svg>
                       </button>
                     )}
+                    {canViewSessions && onViewSessions && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onViewSessions(user); }}
+                        className="p-2 xl-down:p-1.5 text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-md transition-colors"
+                        title="Quản lý thiết bị đăng nhập"
+                      >
+                        <svg className="w-4 h-4 xl-down:w-3 xl-down:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                    )}
                     {user.role !== 'admin' && (
                       <>
                         {hasPermission('manage_users.activate') && (
@@ -266,6 +280,17 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   >
                     <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </button>
+                )}
+                {canViewSessions && onViewSessions && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onViewSessions(user); }}
+                    className="p-1.5 sm-down:p-1 text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 rounded transition-colors"
+                    title="Quản lý thiết bị đăng nhập"
+                  >
+                    <svg className="w-3 h-3 sm-down:w-2.5 sm-down:h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </button>
                 )}

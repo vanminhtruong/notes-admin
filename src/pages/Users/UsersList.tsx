@@ -8,6 +8,7 @@ import UsersTable from './components/UsersTable';
 import ConfirmDialog from './components/ConfirmDialog';
 import UserDetailModal from './components/UserDetailModal';
 import CreateUserModal from './components/CreateUserModal';
+import UserSessionsModal from './components/UserSessionsModal';
 import type { User } from './interfaces';
 const UsersList: React.FC = () => {
   const { t } = useTranslation('users');
@@ -42,6 +43,18 @@ const UsersList: React.FC = () => {
   const handleCreateSuccess = () => {
     // Reload users list after successful creation
     window.location.reload();
+  };
+
+  // Modal quản lý sessions
+  const [sessionsModalOpen, setSessionsModalOpen] = useState(false);
+  const [sessionUser, setSessionUser] = useState<User | null>(null);
+  const handleViewSessions = (user: User) => {
+    setSessionUser(user);
+    setSessionsModalOpen(true);
+  };
+  const closeSessionsModal = () => {
+    setSessionsModalOpen(false);
+    setSessionUser(null);
   };
 
   const handleUserUpdated = (updatedUser: User) => {
@@ -180,6 +193,7 @@ const UsersList: React.FC = () => {
           getStatusBadge={getStatusBadge}
           getRoleBadge={getRoleBadge}
           onRowClick={canViewDetail ? openUserModal : undefined}
+          onViewSessions={handleViewSessions}
         />
       </div>
       {/* User Detail Modal (render tại UsersList để bền vững khi loading/pagination) */}
@@ -206,6 +220,15 @@ const UsersList: React.FC = () => {
         onClose={() => setOpenCreateModal(false)}
         onSuccess={handleCreateSuccess}
       />
+      {/* Sessions Modal */}
+      {sessionUser && (
+        <UserSessionsModal
+          isOpen={sessionsModalOpen}
+          onClose={closeSessionsModal}
+          userId={sessionUser.id}
+          userName={sessionUser.name}
+        />
+      )}
       {/* Confirm Dialog */}
       <ConfirmDialog state={confirmState} onClose={closeConfirm} setState={setConfirmState} />
     </div>

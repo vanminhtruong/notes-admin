@@ -156,6 +156,22 @@
             }
           }
         }
+      },
+      "sessions": {
+        "label": "Quản lý thiết bị đăng nhập",
+        "description": "Quản lý các phiên đăng nhập và thiết bị của người dùng",
+        "view": {
+          "label": "Xem thiết bị đăng nhập",
+          "description": "Xem danh sách các thiết bị đang đăng nhập"
+        },
+        "logout": {
+          "label": "Đăng xuất thiết bị cụ thể",
+          "description": "Đăng xuất người dùng khỏi thiết bị cụ thể"
+        },
+        "logout_all": {
+          "label": "Đăng xuất tất cả thiết bị",
+          "description": "Đăng xuất người dùng khỏi tất cả thiết bị"
+        }
       }
     },
     "manage_notes": {

@@ -198,6 +198,19 @@ class AdminService {
     return this.axiosInstance.delete(`/admin/users/${userId}/permanent`);
   }
 
+  // User sessions management
+  async getUserSessions(userId: number) {
+    return this.axiosInstance.get(`/admin/users/${userId}/sessions`);
+  }
+
+  async logoutUserSession(userId: number, sessionId: number) {
+    return this.axiosInstance.delete(`/admin/users/${userId}/sessions/${sessionId}`);
+  }
+
+  async logoutAllUserSessions(userId: number) {
+    return this.axiosInstance.delete(`/admin/users/${userId}/sessions`);
+  }
+
   // Admin Permissions Management
   async getMyPermissions() {
     return this.axiosInstance.get('/admin/permissions/me');

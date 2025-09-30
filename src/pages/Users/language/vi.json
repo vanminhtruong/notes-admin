@@ -276,5 +276,46 @@
   "detail": {
     "title": "Chi tiết người dùng",
     "close": "Đóng"
+  },
+  "sessions": {
+    "title": "Quản lý thiết bị đăng nhập",
+    "subtitle": "Quản lý thiết bị đăng nhập của {{userName}}",
+    "noSessions": "Không có thiết bị nào đang đăng nhập",
+    "activeSessions": "{{count}} thiết bị đang hoạt động",
+    "unknownDevice": "Thiết bị không xác định",
+    "browser": "Trình duyệt",
+    "os": "Hệ điều hành",
+    "ip": "Địa chỉ IP",
+    "location": "Vị trí",
+    "lastActivity": "Hoạt động cuối",
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "daysAgo": "{{count}} ngày trước"
+    },
+    "actions": {
+      "logout": "Đăng xuất",
+      "logoutAll": "Đăng xuất tất cả"
+    },
+    "confirm": {
+      "logoutTitle": "Xác nhận đăng xuất",
+      "logoutMessage": "Bạn có chắc muốn đăng xuất thiết bị này?",
+      "logoutAllTitle": "Xác nhận đăng xuất tất cả",
+      "logoutAllMessage": "Bạn có chắc muốn đăng xuất tất cả thiết bị của người dùng này?"
+    },
+    "messages": {
+      "logoutSuccess": "Đã đăng xuất thiết bị thành công",
+      "logoutAllSuccess": "Đã đăng xuất tất cả thiết bị"
+    },
+    "errors": {
+      "fetchFailed": "Không thể tải danh sách thiết bị",
+      "logoutFailed": "Không thể đăng xuất thiết bị",
+      "logoutAllFailed": "Không thể đăng xuất tất cả thiết bị",
+      "noPermission": "Bạn không có quyền xem thiết bị đăng nhập"
+    }
+  },
+  "common": {
+    "close": "Đóng"
   }
 }

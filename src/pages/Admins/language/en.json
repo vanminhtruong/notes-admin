@@ -156,6 +156,22 @@
             }
           }
         }
+      },
+      "sessions": {
+        "label": "Manage Login Devices",
+        "description": "Manage user login sessions and devices",
+        "view": {
+          "label": "View Login Devices",
+          "description": "View list of active login devices"
+        },
+        "logout": {
+          "label": "Logout Specific Device",
+          "description": "Logout user from a specific device"
+        },
+        "logout_all": {
+          "label": "Logout All Devices",
+          "description": "Logout user from all devices"
+        }
       }
     },
     "manage_notes": {

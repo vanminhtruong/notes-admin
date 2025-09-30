@@ -279,5 +279,46 @@
   "detail": {
     "title": "User Details",
     "close": "Close"
+  },
+  "sessions": {
+    "title": "Manage Login Devices",
+    "subtitle": "Manage login devices for {{userName}}",
+    "noSessions": "No active login devices",
+    "activeSessions": "{{count}} active device(s)",
+    "unknownDevice": "Unknown Device",
+    "browser": "Browser",
+    "os": "Operating System",
+    "ip": "IP Address",
+    "location": "Location",
+    "lastActivity": "Last Activity",
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "{{count}} minute(s) ago",
+      "hoursAgo": "{{count}} hour(s) ago",
+      "daysAgo": "{{count}} day(s) ago"
+    },
+    "actions": {
+      "logout": "Logout",
+      "logoutAll": "Logout All"
+    },
+    "confirm": {
+      "logoutTitle": "Confirm Logout",
+      "logoutMessage": "Are you sure you want to logout this device?",
+      "logoutAllTitle": "Confirm Logout All",
+      "logoutAllMessage": "Are you sure you want to logout all devices for this user?"
+    },
+    "messages": {
+      "logoutSuccess": "Device logged out successfully",
+      "logoutAllSuccess": "All devices logged out successfully"
+    },
+    "errors": {
+      "fetchFailed": "Failed to load device list",
+      "logoutFailed": "Failed to logout device",
+      "logoutAllFailed": "Failed to logout all devices",
+      "noPermission": "You don't have permission to view login devices"
+    }
+  },
+  "common": {
+    "close": "Close"
   }
 }

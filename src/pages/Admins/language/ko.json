@@ -156,6 +156,22 @@
             }
           }
         }
+      },
+      "sessions": {
+        "label": "로그인 기기 관리",
+        "description": "사용자 로그인 세션 및 기기 관리",
+        "view": {
+          "label": "로그인 기기 보기",
+          "description": "활성 로그인 기기 목록 보기"
+        },
+        "logout": {
+          "label": "특정 기기 로그아웃",
+          "description": "특정 기기에서 사용자 로그아웃"
+        },
+        "logout_all": {
+          "label": "모든 기기 로그아웃",
+          "description": "모든 기기에서 사용자 로그아웃"
+        }
       }
     },
     "manage_notes": {

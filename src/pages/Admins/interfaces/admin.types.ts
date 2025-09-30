@@ -236,6 +236,28 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             ]
           }
         ]
+      },
+      {
+        key: 'manage_users.sessions',
+        label: 'Quản lý thiết bị đăng nhập',
+        description: 'Quản lý các phiên đăng nhập và thiết bị của người dùng',
+        subPermissions: [
+          {
+            key: 'manage_users.sessions.view',
+            label: 'Xem thiết bị đăng nhập',
+            description: 'Xem danh sách các thiết bị đang đăng nhập'
+          },
+          {
+            key: 'manage_users.sessions.logout',
+            label: 'Đăng xuất thiết bị cụ thể',
+            description: 'Đăng xuất người dùng khỏi thiết bị cụ thể'
+          },
+          {
+            key: 'manage_users.sessions.logout_all',
+            label: 'Đăng xuất tất cả thiết bị',
+            description: 'Đăng xuất người dùng khỏi tất cả thiết bị'
+          }
+        ]
       }
     ]
   },
