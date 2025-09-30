@@ -29,6 +29,15 @@ const UsersTable: React.FC<UsersTableProps> = ({
   const { t } = useTranslation('users');
   const canViewActiveAccounts = hasPermission('manage_users.view_active_accounts');
   const canViewSessions = hasPermission('manage_users.sessions.view');
+  // Chỉ xem cột Actions nếu có ÍT NHẤT MỘT quyền con thực thi trong cột
+  const hasAnyActionPermission = (
+    hasPermission('manage_users.view') ||
+    hasPermission('manage_users.activate') ||
+    hasPermission('manage_users.delete_permanently') ||
+    hasPermission('manage_users.sessions.view') ||
+    // Không dùng quyền cha 'manage_notes' để mở cột; phải có quyền con cụ thể
+    hasPermission('manage_notes.shared.edit')
+  );
 
   if (loading) {
     return (
@@ -65,9 +74,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
               <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider xl-down:hidden">
                 {t('createdAt')}
               </th>
-              <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {t('actions')}
-              </th>
+              {hasAnyActionPermission && (
+                <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  {t('actions')}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-neutral-700">
@@ -135,6 +146,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 xl-down:hidden">
                   {formatDate(user.createdAt)}
                 </td>
+                {hasAnyActionPermission && (
                 <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center gap-2 xl-down:gap-1">
                     {hasPermission('manage_users.view') && (
@@ -149,7 +161,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         </svg>
                       </button>
                     )}
-                    {hasPermission('manage_notes') && (
+                    {hasPermission('manage_notes.shared.edit') && (
                       <button
                         onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
                         className="p-2 xl-down:p-1.5 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
@@ -209,6 +221,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     )}
                   </div>
                 </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -259,6 +272,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   </div>
                 </div>
               </div>
+              {hasAnyActionPermission && (
               <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                 {hasPermission('manage_users.view') && (
                   <button
@@ -272,7 +286,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     </svg>
                   </button>
                 )}
-                {hasPermission('manage_notes') && (
+                {hasPermission('manage_notes.shared.edit') && (
                   <button
                     onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
                     className="p-1.5 sm-down:p-1 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
@@ -331,6 +345,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   </>
                 )}
               </div>
+              )}
             </div>
           </div>
         ))}

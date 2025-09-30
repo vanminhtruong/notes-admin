@@ -1,15 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-
-interface AdminTokenPayload {
-  id?: number; // new shape
-  userId?: number; // backward compatibility
-  email: string;
-  role: string;
-  adminLevel?: 'super_admin' | 'sub_admin' | 'dev' | 'mod';
-  adminPermissions?: string[];
-  iat?: number;
-  exp?: number;
-}
+import type { AdminTokenPayload } from '../types/auth';
 
 // Runtime overrides for real-time permission updates via sockets
 let __adminPermissionsOverride: string[] | null = null;
