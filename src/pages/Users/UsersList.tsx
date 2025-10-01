@@ -206,14 +206,16 @@ const UsersList: React.FC = () => {
         getRoleBadge={getRoleBadge}
         onUserUpdated={handleUserUpdated}
       />
-      {/* Pagination (common) - đặt ngoài thẻ card để đảm bảo không bị ẩn bởi overflow */}
-      <Pagination
-        currentPage={filters.currentPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        itemsPerPage={5}
-        onPageChange={(page) => updateFilters({ currentPage: page })}
-      />
+      {/* Pagination (common) - chỉ hiển thị khi có từ 2 trang trở lên */}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={filters.currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={5}
+          onPageChange={(page) => updateFilters({ currentPage: page })}
+        />
+      )}
       {/* Create User Modal */}
       <CreateUserModal
         isOpen={openCreateModal}
