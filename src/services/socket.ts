@@ -72,7 +72,9 @@ export function getAdminSocket(): Socket {
       'admin_status_changed', 'admin_removed', 'permissions_changed', 'permission_revoked',
       'admin_access_revoked', 'admin_account_deactivated',
       // New: status events for monitoring
-      'admin_message_delivered', 'admin_message_read', 'admin_group_message_delivered', 'admin_group_message_read'
+      'admin_message_delivered', 'admin_message_read', 'admin_group_message_delivered', 'admin_group_message_read',
+      // User management events
+      'user_registered', 'user_status_changed', 'user_deleted_permanently'
     ];
     adminEvents.forEach(event => {
       socket?.on(event, (data) => {

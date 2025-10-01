@@ -39,58 +39,68 @@ export const useUsersList = () => {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
+  const PAGE_SIZE = 5;
+
   const loadUsers = async () => {
     try {
       setLoading(true);
       const response = await adminService.getAllUsers({
         page: filters.currentPage,
-        limit: 5,
+        limit: PAGE_SIZE,
         search: filters.searchTerm || undefined,
         isActive: filters.activeFilter ? filters.activeFilter === 'true' : undefined,
         sortBy: 'createdAt',
         sortOrder: 'DESC'
       });
 
-      const rawList: User[] = response.users || [];
-      const apiTotal = response?.pagination?.total;
-      const apiTotalPages = response?.pagination?.totalPages;
+      // Normalize response shape from backend (axios interceptor unwraps data but TS may still see AxiosResponse)
+      const resp: any = response as any;
+      const rawList: User[] = (resp?.users as User[]) || [];
+      const apiTotal: number | undefined =
+        (typeof resp?.totalUsers === 'number' ? resp.totalUsers : undefined) ??
+        (typeof resp?.pagination?.total === 'number' ? resp.pagination.total : undefined);
+      const apiTotalPages: number | undefined =
+        (typeof resp?.totalPages === 'number' ? resp.totalPages : undefined) ??
+        (typeof resp?.pagination?.totalPages === 'number' ? resp.pagination.totalPages : undefined);
+      const apiCurrentPage: number | undefined =
+        (typeof resp?.currentPage === 'number' ? resp.currentPage : undefined) ??
+        (typeof resp?.pagination?.currentPage === 'number' ? resp.pagination.currentPage : undefined);
 
       // Trường hợp backend có phân trang chuẩn
       if (typeof apiTotal === 'number' || typeof apiTotalPages === 'number') {
         setUsers(rawList);
         const total = typeof apiTotal === 'number' ? apiTotal : undefined;
-        let computedTotalPages = typeof apiTotalPages === 'number' ? apiTotalPages : (typeof total === 'number' ? Math.ceil(total / 5) : 1);
-        // Nếu API trả totalPages không hợp lệ (<= currentPage) nhưng list có đủ 5 item, suy ra còn trang tiếp theo
-        if ((computedTotalPages <= filters.currentPage) && rawList.length === 5) {
-          computedTotalPages = filters.currentPage + 1;
-        }
+        const computedTotalPages = typeof apiTotalPages === 'number'
+          ? apiTotalPages
+          : (typeof total === 'number' ? Math.max(1, Math.ceil(total / PAGE_SIZE)) : 1);
         setTotalPages(computedTotalPages || 1);
         setTotalItems(total);
+        // Đồng bộ currentPage nếu backend có trả
+        if (typeof apiCurrentPage === 'number' && apiCurrentPage !== filters.currentPage) {
+          setFilters(prev => ({ ...prev, currentPage: apiCurrentPage }));
+        }
       } else {
         // Fallback khi backend không trả pagination/limit
-        if (rawList.length > 5) {
+        if (rawList.length > PAGE_SIZE) {
           // Backend trả full danh sách: phân trang client-side đầy đủ
           const total = rawList.length;
-          const start = (filters.currentPage - 1) * 5;
-          const end = start + 5;
+          const start = (filters.currentPage - 1) * PAGE_SIZE;
+          const end = start + PAGE_SIZE;
           const paged = rawList.slice(start, end);
           setUsers(paged);
-          setTotalPages(Math.max(1, Math.ceil(total / 5)));
+          setTotalPages(Math.max(1, Math.ceil(total / PAGE_SIZE)));
           setTotalItems(total);
-        } else if (rawList.length === 5) {
-          // Backend chỉ trả đúng 5 item mà không có total => giả định còn trang tiếp theo để hiển thị nút chuyển trang
-          setUsers(rawList);
-          setTotalPages(filters.currentPage + 1);
-          setTotalItems(undefined);
         } else {
-          // Ít hơn 5 => có thể là trang cuối
+          // Không có total từ API: hành vi an toàn là KHÔNG tạo trang ảo
+          // Nếu danh sách nhận về ít hơn PAGE_SIZE -> coi như trang cuối
+          // Nếu bằng PAGE_SIZE mà không có total -> vẫn coi là chưa biết, tránh hiển thị trang kế để không lỗi UX
           setUsers(rawList);
           setTotalPages(Math.max(1, filters.currentPage));
           setTotalItems(rawList.length);
         }
       }
-    } catch (error) {
-      console.error('Error loading users:', error);
+    } catch (err) {
+      console.error('Error loading users:', err);
     } finally {
       setLoading(false);
     }
@@ -194,10 +204,21 @@ export const useUsersList = () => {
       );
     };
 
+    // Update user status in-place without reloading entire list
+    const onUserStatusChanged = (payload: any) => {
+      if (payload && typeof payload.userId === 'number' && typeof payload.isActive === 'boolean') {
+        setUsers(prevUsers => 
+          prevUsers.map(user => 
+            user.id === payload.userId ? { ...user, isActive: payload.isActive } : user
+          )
+        );
+      }
+    };
+
     s.on('admin_user_online', onUserOnline);
     s.on('admin_user_offline', onUserOffline);
     s.on('user_registered', onMajorChange);
-    s.on('user_status_changed', onMajorChange);
+    s.on('user_status_changed', onUserStatusChanged); // Use in-place update
     s.on('user_deleted_permanently', onMajorChange);
     // When a user updates their profile info (name/avatar/phone/etc.), update the row in place
     const onAdminUserUpdated = (payload: any) => {
@@ -214,7 +235,7 @@ export const useUsersList = () => {
         s.off('admin_user_online', onUserOnline);
         s.off('admin_user_offline', onUserOffline);
         s.off('user_registered', onMajorChange);
-        s.off('user_status_changed', onMajorChange);
+        s.off('user_status_changed', onUserStatusChanged);
         s.off('user_deleted_permanently', onMajorChange);
         s.off('admin_user_updated', onAdminUserUpdated);
       } catch {}
