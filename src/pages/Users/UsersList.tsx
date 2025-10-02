@@ -25,7 +25,6 @@ const UsersList: React.FC = () => {
     clearFilters,
     handleToggleStatus,
     handleDeletePermanently,
-    openConfirm,
     closeConfirm,
     setConfirmState
   } = useUsersList();

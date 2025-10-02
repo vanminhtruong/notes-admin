@@ -34,13 +34,18 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
 
   const { t } = useTranslation('notes');
 
-  // Lock body scroll while modal is open
+  // Lock body scroll while modal is open + ESC to close
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = 'unset';
+      document.removeEventListener('keydown', onKey);
     };
-  }, []);
+  }, [onClose]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -72,7 +77,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
   const priorityConfig = getPriorityConfig(note.priority);
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]" role="dialog" aria-modal="true">
       <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 dark:from-neutral-800 dark:to-neutral-700 p-6">
@@ -89,9 +94,10 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-md transition-colors"
+              aria-label={t('actions.close') as string}
+              className="p-2 text-white hover:bg-white/20 rounded-md transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

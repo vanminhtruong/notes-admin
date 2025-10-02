@@ -124,13 +124,15 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
         gender: editData.gender,
         avatar: editData.avatar?.trim() || undefined
       });
-      
+
       toast.success(t('edit.success'));
       setIsEditing(false);
-      
-      // Call callback to update user data in parent component
-      if (onUserUpdated && response?.data?.user) {
-        onUserUpdated(response.data.user);
+
+      // Call callback to update user data in parent component (axios interceptor đã unwrap data)
+      const resp: any = response as any;
+      const updatedUser: User | undefined = resp?.user || resp?.data?.user;
+      if (onUserUpdated && updatedUser) {
+        onUserUpdated(updatedUser);
       }
     } catch (error: any) {
       toast.error(error.message || t('edit.failed'));
