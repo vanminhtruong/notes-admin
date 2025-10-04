@@ -70,6 +70,10 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
   const [selectedSharedNote, setSelectedSharedNote] = useState<SharedNote | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
+  // Check if user has any action permissions
+  const canDelete = hasPermission('manage_notes.shared.delete');
+  const hasAnyActionPermission = canDelete;
+
   useEffect(() => {
     loadSharedNotes();
   }, [currentPage, searchTerm, selectedUserId, sharedByUserId]);
@@ -311,9 +315,11 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                       <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         {t('sharedNotes.table.sharedAt')}
                       </th>
-                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        {t('table.actions')}
-                      </th>
+                      {hasAnyActionPermission && (
+                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          {t('table.actions')}
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
@@ -467,26 +473,24 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                         <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400">
                           {formatDate(sharedNote.sharedAt)}
                         </td>
-                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
-                          {hasPermission('manage_notes.shared.delete') ? (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteSharedNote(sharedNote.id);
-                              }}
-                              title={String(t('actions.delete'))}
-                              aria-label={String(t('actions.delete'))}
-                              className="inline-flex items-center justify-center w-8 h-8 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              <span className="sr-only">{t('actions.delete')}</span>
-                            </button>
-                          ) : (
-                            <span className="text-gray-400 dark:text-gray-600 text-xs">
-                              {t('permissions.noDeleteAccess', 'Không có quyền xóa')}
-                            </span>
-                          )}
-                        </td>
+                        {hasAnyActionPermission && (
+                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
+                            {canDelete && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteSharedNote(sharedNote.id);
+                                }}
+                                title={String(t('actions.delete'))}
+                                aria-label={String(t('actions.delete'))}
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                <span className="sr-only">{t('actions.delete')}</span>
+                              </button>
+                            )}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>

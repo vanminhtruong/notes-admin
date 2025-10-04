@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
-import { hasPermission } from '@utils/auth';
+import { hasPermission, isSuperAdmin } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import NotesFilters from '@pages/Notes/components/NotesFilters';
@@ -223,6 +223,23 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // Check if user has permission to view notes
+  if (!hasPermission('manage_notes.view') && !isSuperAdmin()) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            {t('noPermission.title', { defaultValue: 'Không có quyền truy cập' })}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t('noPermission.description', { defaultValue: 'Bạn không có quyền xem danh sách ghi chú' })}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Tabs state via URL ?tab=all|active|archived|shared
   const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared';
   const setTab = (next: 'all' | 'active' | 'archived' | 'shared') => {
@@ -292,8 +309,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         sortOrder: 'DESC'
       });
 
-      setNotes(response.notes || []);
-      setTotalPages(response.pagination?.totalPages || 1);
+      setNotes((response as any).notes || []);
+      setTotalPages((response as any).pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error loading notes:', error);
     } finally {
@@ -602,7 +619,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
                           {t('table.createdAt')}
                         </th>
-                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
+                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                           <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {t('table.actions')}
                           </th>
@@ -684,10 +701,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
                             {formatDate(note.createdAt)}
                           </td>
-                          {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
+                          {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                             <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
                               <div className="flex items-center gap-2 xl-down:gap-1">
-                                {hasPermission('manage_notes.update') && (
+                                {hasPermission('manage_notes.edit') && (
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -841,9 +858,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           <span>📅 {formatDate(note.createdAt)}</span>
                         </div>
                         
-                        {(hasPermission('manage_notes.update') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
+                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                           <div className="flex items-center gap-1">
-                            {hasPermission('manage_notes.update') && (
+                            {hasPermission('manage_notes.edit') && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
