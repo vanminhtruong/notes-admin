@@ -19,6 +19,8 @@ interface Note {
   title: string;
   content?: string;
   imageUrl?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
   category?: string;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;

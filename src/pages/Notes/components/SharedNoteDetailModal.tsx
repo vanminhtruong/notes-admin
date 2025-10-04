@@ -17,6 +17,8 @@ interface Note {
   title: string;
   content?: string;
   imageUrl?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
   category?: string;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;
@@ -119,19 +121,6 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
       setEditing(false);
     }
   }, [sharedNote]);
-
-  // Disable body scroll when modal is open
-  React.useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [show]);
 
   // Guard render AFTER hooks to keep hook order consistent
   if (!show || !sharedNote) return null;
@@ -255,7 +244,24 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                     </div>
                   </div>
 
-                  {sharedNote.note.imageUrl && (
+                  {sharedNote.note.videoUrl && (
+                    <div>
+                      <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
+                        {t('form.videoUrl.label', { defaultValue: 'Video' })}
+                      </label>
+                      <video
+                        controls
+                        preload="metadata"
+                        src={sharedNote.note.videoUrl}
+                        className="max-w-full h-48 xl-down:h-40 rounded-md border"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {sharedNote.note.imageUrl && !sharedNote.note.videoUrl && (
                     <div>
                       <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
                         {t('form.imageUrl.label', { defaultValue: 'Hình ảnh' })}
@@ -268,6 +274,23 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                           e.currentTarget.style.display = 'none';
                         }}
                       />
+                    </div>
+                  )}
+
+                  {sharedNote.note.youtubeUrl && (
+                    <div>
+                      <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
+                        {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                      </label>
+                      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                        <iframe
+                          src={sharedNote.note.youtubeUrl.replace('watch?v=', 'embed/')}
+                          title={sharedNote.note.title}
+                          className="absolute top-0 left-0 w-full h-full rounded-md border"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
                     </div>
                   )}
 

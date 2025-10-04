@@ -23,8 +23,17 @@
       "label": "Content",
       "placeholder": "Enter note content"
     },
+    "media": {
+      "label": "Media"
+    },
     "imageUrl": {
       "label": "Image"
+    },
+    "videoUrl": {
+      "label": "Video"
+    },
+    "youtubeUrl": {
+      "label": "YouTube URL"
     },
     "category": {
       "label": "Category",
@@ -44,13 +53,13 @@
       "content": "Enter note content...",
       "category": "e.g., Work, Personal...",
       "imageUrl": "https://example.com/image.jpg",
-      "searchUser": "Search users..."
+      "youtubeUrl": "Enter YouTube video URL",
+      "searchUser": "Search for user..."
     }
   },
   "filters": {
     "all": "All",
     "active": "Active", 
-    "archived": "Archived",
     "shared": "Shared",
     "search": {
       "label": "Search",

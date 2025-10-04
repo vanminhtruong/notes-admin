@@ -23,8 +23,17 @@
       "label": "내용",
       "placeholder": "노트 내용 입력"
     },
+    "media": {
+      "label": "미디어"
+    },
     "imageUrl": {
       "label": "이미지"
+    },
+    "videoUrl": {
+      "label": "비디오"
+    },
+    "youtubeUrl": {
+      "label": "YouTube URL"
     },
     "category": {
       "label": "카테고리",
@@ -44,6 +53,7 @@
       "content": "노트 내용을 입력하세요...",
       "category": "예: 업무, 개인...",
       "imageUrl": "https://example.com/image.jpg",
+      "youtubeUrl": "YouTube 비디오 URL을 입력하세요",
       "searchUser": "사용자 검색..."
     }
   },

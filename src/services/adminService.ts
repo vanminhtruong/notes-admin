@@ -145,6 +145,8 @@ class AdminService {
     title: string;
     content?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
     category?: string;
     priority?: string;
     reminderAt?: string;
@@ -156,6 +158,8 @@ class AdminService {
     title?: string;
     content?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
     category?: string;
     priority?: string;
     isArchived?: boolean;

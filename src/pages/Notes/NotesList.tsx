@@ -22,6 +22,8 @@ interface Note {
   title: string;
   content?: string;
   imageUrl?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
   category?: string;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;
@@ -48,6 +50,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
   if (!show || !editingNote) return null;
 
   const { t } = useTranslation('notes');
+  const [activeMediaTab, setActiveMediaTab] = useState<'image' | 'video' | 'youtube'>('image');
 
   // Lock body scroll while modal is open and avoid layout shift
   useEffect(() => {
@@ -128,34 +131,109 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               </div>
             </div>
 
-            {/* Image Upload */}
+            {/* Media Upload - Tabs */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {t('form.imageUrl.label')}
+                {t('form.media.label', { defaultValue: 'Media' })}
               </label>
-              <div className="flex items-start gap-3">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    try {
-                      // Import uploadService dynamically
-                      const { uploadService } = await import('@services/uploadService');
-                      const { url } = await uploadService.uploadImage(file);
-                      setEditingNote({ ...editingNote, imageUrl: url });
-                    } catch (error) {
-                      console.error('Error uploading image:', error);
-                      toast.error(t('toasts.uploadImageError', { defaultValue: 'Không thể tải lên ảnh' }));
-                    }
-                  }}
-                  className="flex-1 block w-full text-sm text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-                {editingNote.imageUrl && (
-                  <div className="flex-shrink-0">
-                    <img src={editingNote.imageUrl} alt="preview" className="w-12 h-12 rounded-md object-cover border" />
+              
+              {/* Tabs */}
+              <div className="flex border-b border-gray-200 dark:border-neutral-600 mb-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab('image')}
+                  className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+                    activeMediaTab === 'image'
+                      ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  }`}
+                >
+                  📷 {t('form.imageUrl.label')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab('video')}
+                  className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+                    activeMediaTab === 'video'
+                      ? 'border-b-2 border-green-600 text-green-600 dark:text-green-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  }`}
+                >
+                  🎬 {t('form.videoUrl.label', { defaultValue: 'Video' })}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab('youtube')}
+                  className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+                    activeMediaTab === 'youtube'
+                      ? 'border-b-2 border-red-600 text-red-600 dark:text-red-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  }`}
+                >
+                  📺 {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              <div className="min-h-[100px]">
+                {activeMediaTab === 'image' && (
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          const { uploadService } = await import('@services/uploadService');
+                          const { url } = await uploadService.uploadImage(file);
+                          setEditingNote({ ...editingNote, imageUrl: url, videoUrl: '', youtubeUrl: '' });
+                        } catch (error) {
+                          console.error('Error uploading image:', error);
+                          toast.error(t('toasts.uploadImageError', { defaultValue: 'Không thể tải lên ảnh' }));
+                        }
+                      }}
+                      className="flex-1 block w-full text-sm text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    {editingNote.imageUrl && (
+                      <img src={editingNote.imageUrl} alt="preview" className="w-12 h-12 rounded-md object-cover border" />
+                    )}
                   </div>
+                )}
+
+                {activeMediaTab === 'video' && (
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          const { uploadService } = await import('@services/uploadService');
+                          const { url } = await uploadService.uploadFile(file);
+                          setEditingNote({ ...editingNote, videoUrl: url, imageUrl: '', youtubeUrl: '' });
+                        } catch (error) {
+                          console.error('Error uploading video:', error);
+                          toast.error(t('toasts.uploadVideoError', { defaultValue: 'Không thể tải lên video' }));
+                        }
+                      }}
+                      className="flex-1 block w-full text-sm text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                    />
+                    {editingNote.videoUrl && (
+                      <video src={editingNote.videoUrl} preload="metadata" className="w-12 h-12 rounded-md object-cover border" />
+                    )}
+                  </div>
+                )}
+
+                {activeMediaTab === 'youtube' && (
+                  <input
+                    type="url"
+                    value={editingNote.youtubeUrl || ''}
+                    onChange={(e) => setEditingNote({ ...editingNote, youtubeUrl: e.target.value, imageUrl: '', videoUrl: '' })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+                    placeholder="https://youtube.com/watch?v=..."
+                  />
                 )}
               </div>
             </div>
@@ -360,6 +438,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         title: editingNote.title,
         content: editingNote.content,
         imageUrl: editingNote.imageUrl,
+        videoUrl: editingNote.videoUrl,
+        youtubeUrl: editingNote.youtubeUrl,
         category: editingNote.category,
         priority: editingNote.priority,
         isArchived: editingNote.isArchived,

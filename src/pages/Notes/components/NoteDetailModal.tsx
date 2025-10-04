@@ -14,6 +14,8 @@ interface Note {
   title: string;
   content?: string;
   imageUrl?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
   category?: string;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;
@@ -34,15 +36,14 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
 
   const { t } = useTranslation('notes');
 
-  // Lock body scroll while modal is open + ESC to close
+  // ESC to close
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
+    
     return () => {
-      document.body.style.overflow = 'unset';
       document.removeEventListener('keydown', onKey);
     };
   }, [onClose]);
@@ -155,8 +156,25 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                   </div>
                 </div>
 
+                {/* Video */}
+                {note.videoUrl && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+                      {t('form.videoUrl.label', { defaultValue: 'Video' })}
+                    </h3>
+                    <div className="border border-gray-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+                      <video
+                        controls
+                        preload="metadata"
+                        src={note.videoUrl}
+                        className="w-full h-auto max-h-80"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Image */}
-                {note.imageUrl && (
+                {note.imageUrl && !note.videoUrl && (
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
                       {t('form.imageUrl.label')}
@@ -166,6 +184,24 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                         src={note.imageUrl} 
                         alt={note.title}
                         className="w-full h-auto max-h-80 object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* YouTube */}
+                {note.youtubeUrl && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+                      {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                    </h3>
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe
+                        src={note.youtubeUrl.replace('watch?v=', 'embed/')}
+                        title={note.title}
+                        className="absolute top-0 left-0 w-full h-full rounded-lg border border-gray-200 dark:border-neutral-700"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
                       />
                     </div>
                   </div>

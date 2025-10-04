@@ -6,6 +6,115 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { hasPermission } from '@utils/auth';
 
+// MediaTabs Component
+const MediaTabs = ({ formData, setFormData, t }: { formData: any; setFormData: (data: any) => void; t: any }) => {
+  const [activeTab, setActiveTab] = useState<'image' | 'video' | 'youtube'>('image');
+
+  return (
+    <div>
+      {/* Tabs */}
+      <div className="flex border-b border-gray-200 dark:border-neutral-600 mb-3">
+        <button
+          type="button"
+          onClick={() => setActiveTab('image')}
+          className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+            activeTab === 'image'
+              ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+          }`}
+        >
+          📷 {t('form.imageUrl.label')}
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('video')}
+          className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+            activeTab === 'video'
+              ? 'border-b-2 border-green-600 text-green-600 dark:text-green-400'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+          }`}
+        >
+          🎬 {t('form.videoUrl.label') || 'Video'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('youtube')}
+          className={`px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-sm xl-down:text-xs font-medium transition-colors ${
+            activeTab === 'youtube'
+              ? 'border-b-2 border-red-600 text-red-600 dark:text-red-400'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+          }`}
+        >
+          📺 {t('form.youtubeUrl.label') || 'YouTube'}
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="min-h-[100px]">
+        {activeTab === 'image' && (
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const { uploadService } = await import('@services/uploadService');
+                  const { url } = await uploadService.uploadImage(file);
+                  setFormData({ ...formData, imageUrl: url, videoUrl: '', youtubeUrl: '' });
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                  toast.error(t('alerts.uploadImageError'));
+                }
+              }}
+              className="block w-full text-sm xl-down:text-xs text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+            {formData.imageUrl && (
+              <img src={formData.imageUrl} alt="preview" className="w-16 h-16 xl-down:w-12 xl-down:h-12 rounded-md object-cover border" />
+            )}
+          </div>
+        )}
+
+        {activeTab === 'video' && (
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const { uploadService } = await import('@services/uploadService');
+                  const { url } = await uploadService.uploadFile(file);
+                  setFormData({ ...formData, videoUrl: url, imageUrl: '', youtubeUrl: '' });
+                } catch (error) {
+                  console.error('Error uploading video:', error);
+                  toast.error(t('alerts.uploadVideoError') || 'Tải video thất bại');
+                }
+              }}
+              className="block w-full text-sm xl-down:text-xs text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+            />
+            {formData.videoUrl && (
+              <video src={formData.videoUrl} className="w-16 h-16 xl-down:w-12 xl-down:h-12 rounded-md object-cover border" />
+            )}
+          </div>
+        )}
+
+        {activeTab === 'youtube' && (
+          <input
+            type="url"
+            value={formData.youtubeUrl}
+            onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value, imageUrl: '', videoUrl: '' })}
+            className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
+            placeholder={t('form.placeholders.youtubeUrl') || 'Nhập URL video YouTube'}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
 interface User {
   id: number;
   name: string;
@@ -20,6 +129,8 @@ const CreateNote: React.FC = () => {
     title: '',
     content: '',
     imageUrl: '',
+    videoUrl: '',
+    youtubeUrl: '',
     category: '',
     priority: 'medium' as 'low' | 'medium' | 'high',
     reminderAt: ''
@@ -68,7 +179,7 @@ const CreateNote: React.FC = () => {
         limit: 50,
         role: 'user' // Chỉ load user, không load admin
       });
-      setUsers(response.users || []);
+      setUsers(response.data?.users || []);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {
@@ -90,6 +201,8 @@ const CreateNote: React.FC = () => {
         title: formData.title,
         content: formData.content || undefined,
         imageUrl: formData.imageUrl || undefined,
+        videoUrl: formData.videoUrl || undefined,
+        youtubeUrl: formData.youtubeUrl || undefined,
         category: formData.category || undefined,
         priority: formData.priority,
         reminderAt: formData.reminderAt || undefined,
@@ -285,45 +398,12 @@ const CreateNote: React.FC = () => {
             </div>
           </div>
 
-          {/* Image Upload */}
+          {/* Media Section - Tabs */}
           <div>
             <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
-              {t('form.imageUrl.label')}
+              {t('form.media.label') || 'Phương tiện'}
             </label>
-            <div className="flex items-center gap-3">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  try {
-                    const { uploadService } = await import('@services/uploadService');
-                    const { url } = await uploadService.uploadImage(file);
-                    handleInputChange('imageUrl', url);
-                  } catch (error) {
-                    console.error('Error uploading image:', error);
-                    toast.error(t('alerts.uploadImageError'));
-                  }
-                }}
-                className="block w-full text-sm xl-down:text-xs text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {formData.imageUrl && (
-                <img src={formData.imageUrl} alt="preview" className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-8 sm-down:h-8 rounded-md object-cover border" />
-              )}
-            </div>
-            {formData.imageUrl && (
-              <div className="mt-2 xl-down:mt-1.5">
-                <img
-                  src={formData.imageUrl}
-                  alt="Preview"
-                  className="max-w-xs xl-down:max-w-xs sm-down:max-w-full h-32 xl-down:h-28 sm-down:h-24 object-cover rounded-lg xl-down:rounded-md"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
+            <MediaTabs formData={formData} setFormData={setFormData} t={t} />
           </div>
 
           {/* Reminder */}

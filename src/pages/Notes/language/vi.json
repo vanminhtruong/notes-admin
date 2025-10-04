@@ -23,8 +23,17 @@
       "label": "Nội dung",
       "placeholder": "Nhập nội dung ghi chú"
     },
+    "media": {
+      "label": "Phương tiện"
+    },
     "imageUrl": {
       "label": "Hình ảnh"
+    },
+    "videoUrl": {
+      "label": "Video"
+    },
+    "youtubeUrl": {
+      "label": "YouTube URL"
     },
     "category": {
       "label": "Danh mục",
@@ -44,6 +53,7 @@
       "content": "Nhập nội dung ghi chú...",
       "category": "Ví dụ: Công việc, Cá nhân...",
       "imageUrl": "https://example.com/image.jpg",
+      "youtubeUrl": "Nhập URL video YouTube",
       "searchUser": "Tìm kiếm người dùng..."
     }
   },
