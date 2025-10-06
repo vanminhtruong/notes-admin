@@ -7,6 +7,7 @@ import type { UserActivityData, TypingInfo } from '../interfaces';
 import adminService from '@services/adminService';
 import ReactionChips from './ReactionChips';
 import { onAdminEvent } from '@services/adminEvents';
+import { getYouTubeEmbedUrl } from '@utils/youtube';
 
 interface MonitorTabProps {
   activityData: UserActivityData | null;
@@ -116,6 +117,9 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
             }
           };
 
+          // Helper resolve cho media (ảnh/video) từ URL tương đối -> tuyệt đối
+          const resolveMedia = (u?: string | null) => u ? resolveAvatar(u) : '';
+
           return (
             <div className="max-w-[360px] bg-white/85 dark:bg-neutral-900/90 backdrop-blur-lg rounded-2xl p-5 border border-white/30 dark:border-neutral-700/60 shadow-sm">
               <div className="flex items-start justify-between gap-3 mb-3">
@@ -140,13 +144,45 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
               {obj.imageUrl && (
                 <div className="mb-4">
                   <img
-                    src={obj.imageUrl}
+                    src={resolveMedia(obj.imageUrl)}
                     alt={obj.title || 'note-image'}
                     className="w-full h-40 object-cover rounded-xl border border-white/30 dark:border-neutral-700/60"
                     loading="lazy"
                   />
                 </div>
               )}
+              {/* Video upload trực tiếp */}
+              {obj.videoUrl && (
+                <div className="mb-4">
+                  <video
+                    src={resolveMedia(obj.videoUrl)}
+                    className="w-full h-44 bg-black rounded-xl border border-white/30 dark:border-neutral-700/60"
+                    controls
+                    preload="metadata"
+                  >
+                    {/* fallback */}
+                    Sorry, your browser doesn't support embedded videos.
+                  </video>
+                </div>
+              )}
+              {/* YouTube embed nếu có */}
+              {obj.youtubeUrl && (() => {
+                const embed = getYouTubeEmbedUrl(String(obj.youtubeUrl));
+                return embed ? (
+                  <div className="mb-4 relative w-full rounded-xl overflow-hidden border border-white/30 dark:border-neutral-700/60">
+                    <div className="aspect-video">
+                      <iframe
+                        src={embed}
+                        title="YouTube video"
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                ) : null;
+              })()}
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className={priorityChipClass(priority)}>

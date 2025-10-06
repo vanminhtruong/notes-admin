@@ -218,8 +218,22 @@
       "editPrompt": "Nhập nội dung mới cho tin nhắn:",
       "editEmpty": "Nội dung không được để trống",
       "editSuccess": "Đã chỉnh sửa tin nhắn",
-      "editError": "Không thể chỉnh sửa tin nhắn"
+      "editError": "Không thể chỉnh sửa tin nhắn",
+      "confirmRecall": "Bạn có chắc muốn thu hồi tin nhắn này?",
+      "recallSuccess": "Đã thu hồi tin nhắn",
+      "recallError": "Không thể thu hồi tin nhắn",
+      "confirmDelete": "Bạn có chắc muốn xóa tin nhắn này?",
+      "deleteSuccess": "Đã xóa tin nhắn",
+      "deleteError": "Không thể xóa tin nhắn"
     }
+  },
+  "messageActions": {
+    "confirmRecall": "Bạn có chắc muốn thu hồi tin nhắn này?",
+    "recallSuccess": "Đã thu hồi tin nhắn",
+    "recallError": "Không thể thu hồi tin nhắn",
+    "confirmDelete": "Bạn có chắc muốn xóa tin nhắn này?",
+    "deleteSuccess": "Đã xóa tin nhắn",
+    "deleteError": "Không thể xóa tin nhắn"
   },
   "edit": {
     "title": "Chỉnh sửa thông tin người dùng",

@@ -224,6 +224,14 @@
       "editError": "Cannot edit message"
     }
   },
+  "messageActions": {
+    "confirmRecall": "Are you sure you want to recall this message?",
+    "recallSuccess": "Message recalled successfully",
+    "recallError": "Unable to recall message",
+    "confirmDelete": "Are you sure you want to delete this message?",
+    "deleteSuccess": "Message deleted successfully",
+    "deleteError": "Unable to delete message"
+  },
   "edit": {
     "title": "Edit User Information",
     "button": "Edit",

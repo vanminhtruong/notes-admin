@@ -214,6 +214,14 @@
       "editError": "메시지를 수정할 수 없습니다"
     }
   },
+  "messageActions": {
+    "confirmRecall": "이 메시지를 회수하시겠습니까?",
+    "recallSuccess": "메시지가 성공적으로 회수되었습니다",
+    "recallError": "메시지를 회수할 수 없습니다",
+    "confirmDelete": "이 메시지를 삭제하시겠습니까?",
+    "deleteSuccess": "메시지가 삭제되었습니다",
+    "deleteError": "메시지를 삭제할 수 없습니다"
+  },
   "edit": {
     "title": "사용자 정보 수정",
     "button": "수정",

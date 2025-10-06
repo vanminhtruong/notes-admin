@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { getYouTubeEmbedUrl } from '@utils/youtube';
 
 interface User {
   id: number;
@@ -32,8 +33,6 @@ type NoteDetailModalProps = {
 };
 
 const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }) => {
-  if (!show || !note) return null;
-
   const { t } = useTranslation('notes');
 
   // ESC to close
@@ -47,6 +46,8 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
       document.removeEventListener('keydown', onKey);
     };
   }, [onClose]);
+
+  if (!show || !note) return null;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -190,22 +191,36 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                 )}
 
                 {/* YouTube */}
-                {note.youtubeUrl && (
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
-                      {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
-                    </h3>
-                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                      <iframe
-                        src={note.youtubeUrl.replace('watch?v=', 'embed/')}
-                        title={note.title}
-                        className="absolute top-0 left-0 w-full h-full rounded-lg border border-gray-200 dark:border-neutral-700"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
+                {note.youtubeUrl && (() => {
+                  const embed = getYouTubeEmbedUrl(String(note.youtubeUrl));
+                  return embed ? (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+                        {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                      </h3>
+                      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                        <iframe
+                          src={embed}
+                          title={note.title}
+                          className="absolute top-0 left-0 w-full h-full rounded-lg border border-gray-200 dark:border-neutral-700"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+                        {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                      </h3>
+                      <a href={String(note.youtubeUrl)} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        {t('actions.open', { defaultValue: 'Mở trên YouTube' })}
+                      </a>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Sidebar */}

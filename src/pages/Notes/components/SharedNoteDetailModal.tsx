@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
+import { getYouTubeEmbedUrl } from '@utils/youtube';
 
 interface User {
   id: number;
@@ -277,22 +278,36 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                     </div>
                   )}
 
-                  {sharedNote.note.youtubeUrl && (
-                    <div>
-                      <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
-                        {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
-                      </label>
-                      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                        <iframe
-                          src={sharedNote.note.youtubeUrl.replace('watch?v=', 'embed/')}
-                          title={sharedNote.note.title}
-                          className="absolute top-0 left-0 w-full h-full rounded-md border"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
+                  {sharedNote.note.youtubeUrl && (() => {
+                    const embed = getYouTubeEmbedUrl(String(sharedNote.note.youtubeUrl));
+                    return embed ? (
+                      <div>
+                        <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
+                          {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                        </label>
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                          <iframe
+                            src={embed}
+                            title={sharedNote.note.title}
+                            className="absolute top-0 left-0 w-full h-full rounded-md border"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ) : (
+                      <div>
+                        <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
+                          {t('form.youtubeUrl.label', { defaultValue: 'YouTube' })}
+                        </label>
+                        <a href={String(sharedNote.note.youtubeUrl)} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          {t('actions.open', { defaultValue: 'Mở trên YouTube' })}
+                        </a>
+                      </div>
+                    );
+                  })()}
 
                   <div className="grid grid-cols-2 gap-3 xl-down:gap-2 text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400">
                     <div>

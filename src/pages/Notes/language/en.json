@@ -59,7 +59,8 @@
   },
   "filters": {
     "all": "All",
-    "active": "Active", 
+    "active": "Active",
+    "archived": "Archived",
     "shared": "Shared",
     "search": {
       "label": "Search",

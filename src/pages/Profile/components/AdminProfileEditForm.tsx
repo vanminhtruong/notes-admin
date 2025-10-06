@@ -120,13 +120,14 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center overflow-hidden">
             {form.avatar ? (
               <img 
+                key={form.avatar}
                 src={form.avatar} 
                 alt="Avatar" 
                 className="w-full h-full object-cover" 
                 onError={(e) => {
                   console.error('Failed to load avatar image:', form.avatar);
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.innerHTML = `<span class="text-white text-2xl font-semibold">${data.email.charAt(0).toUpperCase()}</span>`;
+                  // Reset avatar on error instead of manipulating DOM
+                  setForm((prev) => ({ ...prev, avatar: '' }));
                 }}
               />
             ) : (
