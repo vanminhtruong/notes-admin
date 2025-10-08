@@ -6,6 +6,8 @@
     "totalUsers": "Tổng số người dùng",
     "activeUsers": "Người dùng hoạt động",
     "totalNotes": "Tổng số ghi chú",
+    "totalFolders": "Tổng số thư mục",
+    "notesInFolders": "Ghi chú trong thư mục",
     "todayActivity": "Hoạt động hôm nay"
   },
   "actions": {

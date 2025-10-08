@@ -233,6 +233,8 @@
     "changeAvatar": "사진 변경",
     "changeAvatarSuccess": "프로필 사진이 업데이트되었습니다",
     "changeAvatarFailed": "프로필 사진을 업데이트할 수 없습니다",
+    "newPasswordPlaceholder": "새 비밀번호 입력 (변경하지 않으려면 비워두세요)",
+    "passwordHint": "변경하지 않으려면 비워두세요. 최소 6자.",
     "validation": {
       "nameRequired": "이름은 필수입니다",
       "emailRequired": "이메일은 필수입니다",

@@ -64,14 +64,31 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
   const canRemoveFromFolder = hasPermission('manage_notes.folders.notes.remove');
 
   useEffect(() => {
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const appRoot = document.getElementById('root');
+
     if (show && folderId) {
       loadFolderDetail();
-      document.body.style.overflow = 'hidden';
+      // Lock scroll on both html and body
+      bodyEl.style.overflow = 'hidden';
+      htmlEl.style.overflow = 'hidden';
+      htmlEl.style.overscrollBehavior = 'contain';
+      bodyEl.style.overscrollBehavior = 'contain';
+      if (appRoot) appRoot.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      bodyEl.style.overflow = '';
+      htmlEl.style.overflow = '';
+      htmlEl.style.overscrollBehavior = '';
+      bodyEl.style.overscrollBehavior = '';
+      if (appRoot) appRoot.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      bodyEl.style.overflow = '';
+      htmlEl.style.overflow = '';
+      htmlEl.style.overscrollBehavior = '';
+      bodyEl.style.overscrollBehavior = '';
+      if (appRoot) appRoot.style.overflow = '';
     };
   }, [show, folderId]);
 

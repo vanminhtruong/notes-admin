@@ -5,6 +5,8 @@
     "totalUsers": "Total users",
     "activeUsers": "Active users",
     "totalNotes": "Total notes",
+    "totalFolders": "Total folders",
+    "notesInFolders": "Notes in folders",
     "todayActivity": "Today's activity"
   },
   "actions": {

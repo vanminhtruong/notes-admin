@@ -29,7 +29,13 @@ const COLORS = [
   { value: '#6B7280', label: 'Xám' }
 ];
 
-const ICONS = ['📁', '📂', '🗂️', '📋', '📝', '💼', '🎯', '⭐', '🔖'];
+const ICONS = [
+  '📁', '💰', '📖', '🎓', '✏️', '🍃',
+  '💻', '😊', '🎵', '🍿', '🛠️', '🎨',
+  '🌱', '🪷', '📷', '📊', '⭐', '💪',
+  '📋', '⚖️', '🔍', '✈️', '🌐', '🔧',
+  '🐾', '🧪', '⚾', '❤️', '☕', '🎯'
+];
 
 const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, onSuccess }) => {
   const { t } = useTranslation('notes');
@@ -41,7 +47,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
   
   const [folderName, setFolderName] = useState('');
   const [selectedColor, setSelectedColor] = useState(COLORS[0].value);
-  const [selectedIcon, setSelectedIcon] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState('📁');
 
   useEffect(() => {
     if (show) {
@@ -54,7 +60,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
       setSearchUserTerm('');
       setFolderName('');
       setSelectedColor(COLORS[0].value);
-      setSelectedIcon('');
+      setSelectedIcon('📁');
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -119,7 +125,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
         userId: selectedUser.id,
         name: folderName.trim(),
         color: selectedColor,
-        icon: selectedIcon || undefined
+        icon: selectedIcon || '📁'
       });
 
       toast.success(t('folders.toasts.createSuccess'));

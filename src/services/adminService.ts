@@ -117,6 +117,7 @@ class AdminService {
     birthDate?: string;
     gender?: string;
     avatar?: string;
+    password?: string;
   }) {
     return this.axiosInstance.put(`/admin/users/${userId}`, userData);
   }

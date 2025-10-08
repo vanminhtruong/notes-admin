@@ -246,6 +246,8 @@
     "changeAvatar": "Đổi ảnh",
     "changeAvatarSuccess": "Đã cập nhật ảnh đại diện",
     "changeAvatarFailed": "Không thể cập nhật ảnh đại diện",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới (để trống nếu không đổi)",
+    "passwordHint": "Để trống nếu không muốn thay đổi. Tối thiểu 6 ký tự.",
     "validation": {
       "nameRequired": "Tên người dùng là bắt buộc",
       "emailRequired": "Email là bắt buộc",

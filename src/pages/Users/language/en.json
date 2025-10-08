@@ -243,6 +243,8 @@
     "changeAvatar": "Change photo",
     "changeAvatarSuccess": "Avatar updated",
     "changeAvatarFailed": "Cannot update avatar",
+    "newPasswordPlaceholder": "Enter new password (leave blank to keep current)",
+    "passwordHint": "Leave blank if you don't want to change it. Minimum 6 characters.",
     "validation": {
       "nameRequired": "Name is required",
       "emailRequired": "Email is required",

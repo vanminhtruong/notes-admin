@@ -6,6 +6,8 @@
     "totalUsers": "총 사용자 수",
     "activeUsers": "활성 사용자",
     "totalNotes": "총 메모 수",
+    "totalFolders": "총 폴더 수",
+    "notesInFolders": "폴더 내 메모",
     "todayActivity": "오늘의 활동"
   },
   "actions": {
