@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
@@ -37,25 +38,11 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
     }
   }, [isOpen, admin]);
 
-  // Disable body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   const loadProfile = async () => {
     if (!admin) return;
     setLoading(true);
     try {
-      const response = await adminService.getAdminProfile(admin.id);
+      const response = await adminService.getAdminProfile(admin.id) as any;
       setProfileData(response.admin);
       setFormData({
         name: response.admin.name || '',
@@ -144,8 +131,8 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
 
   if (!isOpen || !admin) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-3 sm:p-4">
       <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col">
         {/* Header - Fixed */}
         <div className="bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700 p-4 sm:p-6 flex-shrink-0">
@@ -426,6 +413,8 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
       />
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default AdminProfileModal;

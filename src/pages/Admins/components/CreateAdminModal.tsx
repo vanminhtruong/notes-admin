@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { CreateAdminForm, AdminLevel } from '../interfaces/admin.types';
@@ -28,20 +28,6 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({
     adminLevel: 'sub_admin'
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Disable body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};

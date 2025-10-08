@@ -24,7 +24,20 @@
       "placeholder": "노트 내용 입력"
     },
     "media": {
-      "label": "미디어"
+      "label": "미디어",
+      "fullLabel": "미디어 (이미지 / 비디오 / YouTube)",
+      "tabs": {
+        "image": "이미지",
+        "video": "비디오",
+        "youtube": "YouTube"
+      },
+      "uploading": "업로드 중...",
+      "uploadSuccess": {
+        "image": "이미지가 성공적으로 업로드되었습니다!",
+        "video": "비디오가 성공적으로 업로드되었습니다!"
+      },
+      "uploadError": "업로드 실패",
+      "youtubePlaceholder": "https://www.youtube.com/watch?v=..."
     },
     "imageUrl": {
       "label": "이미지"
@@ -40,7 +53,10 @@
       "placeholder": "카테고리 입력"
     },
     "priority": {
-      "label": "우선순위"
+      "label": "우선순위",
+      "low": "낮음",
+      "medium": "보통",
+      "high": "높음"
     },
     "reminder": {
       "label": "알림"
@@ -51,7 +67,7 @@
     "placeholders": {
       "title": "노트 제목을 입력하세요...",
       "content": "노트 내용을 입력하세요...",
-      "category": "예: 업무, 개인...",
+      "category": "카테고리 입력...",
       "imageUrl": "https://example.com/image.jpg",
       "youtubeUrl": "YouTube 비디오 URL을 입력하세요",
       "searchUser": "사용자 검색..."
@@ -62,6 +78,7 @@
     "active": "활성", 
     "archived": "보관됨",
     "shared": "공유됨",
+    "folders": "폴더",
     "search": {
       "label": "검색",
       "placeholder": "노트 검색..."
@@ -194,5 +211,90 @@
     "unarchiveSuccess": "노트 보관이 성공적으로 해제되었습니다", 
     "unarchiveError": "노트 보관 해제에 실패했습니다",
     "uploadImageError": "이미지 업로드에 실패했습니다"
+  },
+  "folders": {
+    "title": "폴더 관리",
+    "subtitle": "사용자 노트 폴더 보기 및 관리",
+    "createFolder": "폴더 생성",
+    "searchPlaceholder": "폴더 검색...",
+    "table": {
+      "folder": "폴더",
+      "user": "사용자",
+      "notesCount": "노트 수",
+      "createdAt": "생성일",
+      "actions": "작업"
+    },
+    "form": {
+      "name": {
+        "label": "폴더 이름",
+        "placeholder": "폴더 이름 입력..."
+      },
+      "color": {
+        "label": "색상"
+      },
+      "icon": {
+        "label": "아이콘"
+      },
+      "selectUser": "사용자 선택",
+      "selectUserRequired": "사용자 선택 *",
+      "searchUser": "이름, 이메일 또는 ID로 검색...",
+      "changeUser": "변경",
+      "noUsers": "사용자 없음",
+      "noUsersFound": "사용자를 찾을 수 없습니다",
+      "loading": "로딩 중..."
+    },
+    "modal": {
+      "create": "새 폴더 만들기",
+      "edit": "폴더 편집",
+      "creating": "생성 중...",
+      "saving": "저장 중...",
+      "saveChanges": "변경사항 저장"
+    },
+    "detail": {
+      "title": "폴더 세부정보",
+      "inFolder": "폴더 내",
+      "createNoteInFolder": "폴더에 새 노트 생성",
+      "noNotes": "이 폴더에 아직 노트가 없습니다",
+      "viewingFolder": "폴더 보기",
+      "userLabel": "사용자:",
+      "notesCount": "노트"
+    },
+    "actions": {
+      "edit": "폴더 편집",
+      "delete": "폴더 삭제",
+      "viewDetail": "세부정보 보기",
+      "removeFromFolder": "폴더에서 이동",
+      "create": "폴더 생성",
+      "update": "업데이트"
+    },
+    "delete": {
+      "confirm": {
+        "title": "폴더 삭제?",
+        "message": "이 폴더를 삭제하시겠습니까?",
+        "note": "노트는 유지되며 활성 탭으로 이동됩니다.",
+        "irreversible": "이 작업은 되돌릴 수 없습니다."
+      }
+    },
+    "remove": {
+      "confirm": {
+        "title": "노트 이동",
+        "message": "이 노트를 폴더에서 이동하시겠습니까?",
+        "note": "노트가 활성 탭으로 이동됩니다."
+      }
+    },
+    "empty": {
+      "title": "폴더 없음",
+      "hint": "아직 생성된 폴더가 없습니다"
+    },
+    "toasts": {
+      "createSuccess": "폴더가 성공적으로 생성되었습니다!",
+      "createError": "폴더 생성에 실패했습니다",
+      "updateSuccess": "폴더가 성공적으로 업데이트되었습니다!",
+      "updateError": "폴더 업데이트에 실패했습니다",
+      "deleteSuccess": "폴더가 성공적으로 삭제되었습니다!",
+      "deleteError": "폴더 삭제에 실패했습니다",
+      "removeNoteSuccess": "노트가 폴더에서 이동되었습니다!",
+      "removeNoteError": "노트 이동에 실패했습니다"
+    }
   }
 }

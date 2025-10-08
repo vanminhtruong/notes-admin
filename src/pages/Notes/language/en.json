@@ -24,7 +24,20 @@
       "placeholder": "Enter note content"
     },
     "media": {
-      "label": "Media"
+      "label": "Media",
+      "fullLabel": "Media (Image / Video / YouTube)",
+      "tabs": {
+        "image": "Image",
+        "video": "Video",
+        "youtube": "YouTube"
+      },
+      "uploading": "Uploading...",
+      "uploadSuccess": {
+        "image": "Image uploaded successfully!",
+        "video": "Video uploaded successfully!"
+      },
+      "uploadError": "Upload failed",
+      "youtubePlaceholder": "https://www.youtube.com/watch?v=..."
     },
     "imageUrl": {
       "label": "Image"
@@ -40,7 +53,10 @@
       "placeholder": "Enter category"
     },
     "priority": {
-      "label": "Priority"
+      "label": "Priority",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
     },
     "reminder": {
       "label": "Reminder"
@@ -51,7 +67,7 @@
     "placeholders": {
       "title": "Enter note title...",
       "content": "Enter note content...",
-      "category": "e.g., Work, Personal...",
+      "category": "Enter category...",
       "imageUrl": "https://example.com/image.jpg",
       "youtubeUrl": "Enter YouTube video URL",
       "searchUser": "Search for user..."
@@ -62,6 +78,7 @@
     "active": "Active",
     "archived": "Archived",
     "shared": "Shared",
+    "folders": "Folders",
     "search": {
       "label": "Search",
       "placeholder": "Search notes..."
@@ -194,5 +211,90 @@
     "unarchiveSuccess": "Note unarchived successfully", 
     "unarchiveError": "Failed to unarchive note",
     "uploadImageError": "Failed to upload image"
+  },
+  "folders": {
+    "title": "Manage Folders",
+    "subtitle": "View and manage user note folders",
+    "createFolder": "Create Folder",
+    "searchPlaceholder": "Search folders...",
+    "table": {
+      "folder": "Folder",
+      "user": "User",
+      "notesCount": "Notes Count",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "form": {
+      "name": {
+        "label": "Folder Name",
+        "placeholder": "Enter folder name..."
+      },
+      "color": {
+        "label": "Color"
+      },
+      "icon": {
+        "label": "Icon"
+      },
+      "selectUser": "Select User",
+      "selectUserRequired": "Select User *",
+      "searchUser": "Search by name, email or ID...",
+      "changeUser": "Change",
+      "noUsers": "No users",
+      "noUsersFound": "No users found",
+      "loading": "Loading..."
+    },
+    "modal": {
+      "create": "Create New Folder",
+      "edit": "Edit Folder",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes"
+    },
+    "detail": {
+      "title": "Folder Details",
+      "inFolder": "In Folder",
+      "createNoteInFolder": "Create new note in folder",
+      "noNotes": "No notes in this folder yet",
+      "viewingFolder": "Viewing folder",
+      "userLabel": "User:",
+      "notesCount": "notes"
+    },
+    "actions": {
+      "edit": "Edit Folder",
+      "delete": "Delete Folder",
+      "viewDetail": "View Details",
+      "removeFromFolder": "Move out of folder",
+      "create": "Create Folder",
+      "update": "Update"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Delete Folder?",
+        "message": "Are you sure you want to delete this folder?",
+        "note": "Notes will be kept and moved to Active tab.",
+        "irreversible": "This action cannot be undone."
+      }
+    },
+    "remove": {
+      "confirm": {
+        "title": "Move Note",
+        "message": "Do you want to move this note out of the folder?",
+        "note": "Note will be moved to Active tab."
+      }
+    },
+    "empty": {
+      "title": "No Folders",
+      "hint": "No folders have been created yet"
+    },
+    "toasts": {
+      "createSuccess": "Folder created successfully!",
+      "createError": "Failed to create folder",
+      "updateSuccess": "Folder updated successfully!",
+      "updateError": "Failed to update folder",
+      "deleteSuccess": "Folder deleted successfully!",
+      "deleteError": "Failed to delete folder",
+      "removeNoteSuccess": "Note moved out of folder!",
+      "removeNoteError": "Failed to move note"
+    }
   }
 }

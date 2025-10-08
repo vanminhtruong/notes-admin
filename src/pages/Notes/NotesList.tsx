@@ -3,12 +3,15 @@ import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
-import { hasPermission, isSuperAdmin } from '@utils/auth';
+import { hasPermission, hasAnyNotesPermission } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import NotesFilters from '@pages/Notes/components/NotesFilters';
 import NoteDetailModal from '@pages/Notes/components/NoteDetailModal';
 import SharedNotesList from '@pages/Notes/components/SharedNotesList';
+import FoldersList from '@pages/Notes/components/FoldersList';
+import MoveToFolderModal from '@pages/Notes/components/MoveToFolderModal';
+import Pagination from '@components/common/Pagination';
 
 interface User {
   id: number;
@@ -175,7 +178,7 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               </div>
 
               {/* Tab Content */}
-              <div className="min-h-[100px]">
+              <div>
                 {activeMediaTab === 'image' && (
                   <div className="flex items-center gap-3">
                     <input
@@ -300,9 +303,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const [archivedFilter, setArchivedFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  // Check if user has permission to view notes
-  if (!hasPermission('manage_notes.view') && !isSuperAdmin()) {
+  // Check if user has any notes permission (flexible check)
+  if (!hasAnyNotesPermission()) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
@@ -318,17 +322,34 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     );
   }
 
-  // Tabs state via URL ?tab=all|active|archived|shared
-  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared';
-  const setTab = (next: 'all' | 'active' | 'archived' | 'shared') => {
+  // Tabs state via URL ?tab=all|active|archived|shared|folders
+  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared' | 'folders';
+  const setTab = (next: 'all' | 'active' | 'archived' | 'shared' | 'folders') => {
     searchParams.set('tab', next);
     setSearchParams(searchParams, { replace: true });
   };
 
-  // Check if user has permission to access shared tab, if not redirect to 'all'
+  // Check if user has permission to access current tab, if not redirect to first available tab
   useEffect(() => {
-    if (tab === 'shared' && !hasPermission('manage_notes.shared.view') && !hasPermission('manage_notes.shared.delete')) {
-      setTab('all');
+    const getFirstAvailableTab = (): 'all' | 'active' | 'archived' | 'shared' | 'folders' => {
+      if (hasPermission('manage_notes.view')) return 'all';
+      if (hasPermission('manage_notes.archive')) return 'archived';
+      if (hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete')) return 'shared';
+      if (hasPermission('manage_notes.folders.view')) return 'folders';
+      return 'all'; // fallback
+    };
+
+    // Check current tab permission
+    if (tab === 'all' && !hasPermission('manage_notes.view')) {
+      setTab(getFirstAvailableTab());
+    } else if (tab === 'active' && !hasPermission('manage_notes.view')) {
+      setTab(getFirstAvailableTab());
+    } else if (tab === 'archived' && !hasPermission('manage_notes.archive')) {
+      setTab(getFirstAvailableTab());
+    } else if (tab === 'shared' && !hasPermission('manage_notes.shared.view') && !hasPermission('manage_notes.shared.delete')) {
+      setTab(getFirstAvailableTab());
+    } else if (tab === 'folders' && !hasPermission('manage_notes.folders.view')) {
+      setTab(getFirstAvailableTab());
     }
   }, [tab]);
 
@@ -368,6 +389,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
+  // Move to folder modal states
+  const [showMoveToFolderModal, setShowMoveToFolderModal] = useState(false);
+  const [noteToMove, setNoteToMove] = useState<Note | null>(null);
+
   useEffect(() => {
     loadNotes();
   }, [currentPage, searchTerm, selectedUserId, categoryFilter, priorityFilter, archivedFilter]);
@@ -377,7 +402,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       setLoading(true);
       const response = await adminService.getAllUsersNotes({
         page: currentPage,
-        limit: 20,
+        limit: 5,
         userId: selectedUserId ? parseInt(selectedUserId) : undefined,
         search: searchTerm || undefined,
         category: categoryFilter || undefined,
@@ -389,6 +414,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
 
       setNotes((response as any).notes || []);
       setTotalPages((response as any).pagination?.totalPages || 1);
+      setTotalItems((response as any).pagination?.totalItems || 0);
     } catch (error) {
       console.error('Error loading notes:', error);
     } finally {
@@ -414,6 +440,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     s.on('user_note_updated', handleNoteEvent);
     s.on('user_note_deleted', handleNoteEvent);
     s.on('user_note_archived', handleNoteEvent);
+    s.on('note_moved_to_folder', handleNoteEvent);
+    s.on('admin_note_moved_to_folder', handleNoteEvent);
 
     return () => {
       try {
@@ -424,6 +452,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         s.off('user_note_updated', handleNoteEvent);
         s.off('user_note_deleted', handleNoteEvent);
         s.off('user_note_archived', handleNoteEvent);
+        s.off('note_moved_to_folder', handleNoteEvent);
+        s.off('admin_note_moved_to_folder', handleNoteEvent);
       } catch {}
     };
   }, [loadNotes]);
@@ -561,42 +591,48 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700">
         <div className="px-4 xl-down:px-3 sm-down:px-2 py-3 xl-down:py-2">
           <div className="inline-flex items-center p-1 rounded-lg bg-gray-100 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700">
-            <button
-              onClick={() => setTab('all')}
-              aria-label={t('filters.all') as string}
-              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
-                tab === 'all'
-                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-              }`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/></svg>
-              {t('filters.all')}
-            </button>
-            <button
-              onClick={() => setTab('active')}
-              aria-label={t('filters.active') as string}
-              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
-                tab === 'active'
-                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-              }`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4 1.5 1.5-5.5 5.5L7.5 13.5 9 12z"/></svg>
-              {t('filters.active')}
-            </button>
-            <button
-              onClick={() => setTab('archived')}
-              aria-label={t('filters.archived') as string}
-              className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
-                tab === 'archived'
-                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-              }`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2zm-2 2v10H6V9h12z"/></svg>
-              {t('filters.archived')}
-            </button>
+            {hasPermission('manage_notes.view') && (
+              <button
+                onClick={() => setTab('all')}
+                aria-label={t('filters.all') as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'all'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/></svg>
+                {t('filters.all')}
+              </button>
+            )}
+            {hasPermission('manage_notes.view') && (
+              <button
+                onClick={() => setTab('active')}
+                aria-label={t('filters.active') as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'active'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4 1.5 1.5-5.5 5.5L7.5 13.5 9 12z"/></svg>
+                {t('filters.active')}
+              </button>
+            )}
+            {hasPermission('manage_notes.archive') && (
+              <button
+                onClick={() => setTab('archived')}
+                aria-label={t('filters.archived') as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'archived'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/></svg>
+                {t('filters.archived')}
+              </button>
+            )}
             {(hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete')) && (
               <button
                 onClick={() => setTab('shared')}
@@ -611,12 +647,26 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                 {t('filters.shared', { defaultValue: 'Chia sẻ' })}
               </button>
             )}
+            {hasPermission('manage_notes.folders.view') && (
+              <button
+                onClick={() => setTab('folders')}
+                aria-label={t('filters.folders') as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'folders'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a2 2 0 0 1 2-2h4.586a1 1 0 0 1 .707.293l1.414 1.414a1 1 0 0 0 .707.293H19a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4z"/></svg>
+                {t('filters.folders')}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Filters - only show for notes tabs, not shared tab */}
-      {tab !== 'shared' && (
+      {/* Filters - only show for notes tabs, not shared/folders tabs */}
+      {tab !== 'shared' && tab !== 'folders' && (
         <NotesFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -643,9 +693,11 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         />
       )}
 
-      {/* Render SharedNotesList for shared tab */}
+      {/* Render SharedNotesList for shared tab, FoldersList for folders tab */}
       {tab === 'shared' ? (
         <SharedNotesList embedded />
+      ) : tab === 'folders' ? (
+        <FoldersList embedded />
       ) : (
         /* Notes List */
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
@@ -699,7 +751,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
                           {t('table.createdAt')}
                         </th>
-                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
+                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive') || hasPermission('manage_notes.folders.move')) && (
                           <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {t('table.actions')}
                           </th>
@@ -827,10 +879,26 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                                     className={`p-2 xl-down:p-1.5 rounded-md xl-down:rounded transition-colors ${note.isArchived ? 'text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/20' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-neutral-800'}`}
                                   >
                                     {note.isArchived ? (
-                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M19 7H5V5h4.5l1-1h3l1 1H19v2Zm-2 2v9H7V9h10ZM9 11v5h2v-5H9Zm4 0v5h2v-5h-2Z"/></svg>
+                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/><path d="M10 13l2 2 2-2h-4z"/></svg>
                                     ) : (
-                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2Zm-2 2v10H6V9h12Z"/></svg>
+                                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 xl-down:w-4 xl-down:h-4"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/></svg>
                                     )}
+                                  </button>
+                                )}
+                                {hasPermission('manage_notes.folders.move') && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setNoteToMove(note);
+                                      setShowMoveToFolderModal(true);
+                                    }}
+                                    aria-label="Di chuyển vào thư mục"
+                                    title="Di chuyển vào thư mục"
+                                    className="p-2 xl-down:p-1.5 rounded-md xl-down:rounded text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                                  >
+                                    <svg className="w-5 h-5 xl-down:w-4 xl-down:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                    </svg>
                                   </button>
                                 )}
                                 {hasPermission('manage_notes.delete') && (
@@ -938,7 +1006,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           <span>📅 {formatDate(note.createdAt)}</span>
                         </div>
                         
-                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
+                        {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive') || hasPermission('manage_notes.folders.move')) && (
                           <div className="flex items-center gap-1">
                             {hasPermission('manage_notes.edit') && (
                               <button
@@ -979,10 +1047,24 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                                 className="p-1.5 rounded text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                               >
                                 {note.isArchived ? (
-                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19 7H5V5h4.5l1-1h3l1 1H19v2Zm-2 2v9H7V9h10ZM9 11v5h2v-5H9Zm4 0v5h2v-5h-2Z"/></svg>
+                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/><path d="M10 13l2 2 2-2h-4z"/></svg>
                                 ) : (
-                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 7H4V5h5.5l1-1h3l1 1H20v2Zm-2 2v10H6V9h12Z"/></svg>
+                                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/></svg>
                                 )}
+                              </button>
+                            )}
+                            {hasPermission('manage_notes.folders.move') && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setNoteToMove(note);
+                                  setShowMoveToFolderModal(true);
+                                }}
+                                className="p-1.5 rounded text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
                               </button>
                             )}
                             {hasPermission('manage_notes.delete') && (
@@ -1006,29 +1088,14 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="px-6 py-3 xl-down:px-4 xl-down:py-2 sm-down:px-3 sm-down:py-2 bg-gray-50 dark:bg-neutral-800 border-t border-gray-200 dark:border-neutral-700">
-                    <div className="flex items-center justify-between xl-down:flex-col xl-down:space-y-2 xl-down:items-center">
-                      <h3 className="text-lg xl-down:text-base sm-down:text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {t('pagination.title', { currentPage, totalPages })}
-                      </h3>
-                      <div className="flex space-x-2 xl-down:space-x-1">
-                        <button
-                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                          disabled={currentPage === 1}
-                          className="px-3 py-1 xl-down:px-2 xl-down:py-1 sm-down:px-2 sm-down:py-0.5 mx-1 xl-down:mx-0.5 rounded xl-down:rounded-sm border text-sm xl-down:text-xs sm-down:text-xs disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700 font-medium"
-                        >
-                          {t('pagination.prev')}
-                        </button>
-                        <button
-                          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                          disabled={currentPage === totalPages}
-                          className="px-3 py-1 xl-down:px-2 xl-down:py-1 sm-down:px-2 sm-down:py-0.5 mx-1 xl-down:mx-0.5 rounded xl-down:rounded-sm border text-sm xl-down:text-xs sm-down:text-xs disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700 font-medium"
-                        >
-                          {t('pagination.next')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={totalItems}
+                    itemsPerPage={5}
+                    showInfo={true}
+                  />
                 )}
               </>
             )}
@@ -1056,6 +1123,21 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         onClose={() => {
           setShowDetailModal(false);
           setSelectedNote(null);
+        }}
+      />
+
+      {/* Move to Folder Modal */}
+      <MoveToFolderModal
+        show={showMoveToFolderModal}
+        noteId={noteToMove?.id || null}
+        noteTitle={noteToMove?.title || ''}
+        userId={noteToMove?.user?.id || 0}
+        onClose={() => {
+          setShowMoveToFolderModal(false);
+          setNoteToMove(null);
+        }}
+        onSuccess={() => {
+          loadNotes();
         }}
       />
     </div>

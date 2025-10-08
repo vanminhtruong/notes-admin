@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useAdminsList } from './hooks/useAdminsList';
 import { useAdminActions } from './hooks/useAdminActions';
@@ -25,6 +26,35 @@ const AdminsList: React.FC = () => {
     adminName: string;
     permission?: string;
   } | null>(null);
+
+  // Disable body scroll when any modal or confirmation dialog is open
+  useEffect(() => {
+    const hasOpenModal = createModalOpen || editModalOpen || profileModalOpen || confirmAction !== null;
+    
+    if (hasOpenModal) {
+      // Save original values
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalBodyPaddingRight = document.body.style.paddingRight;
+      
+      // Calculate scrollbar width to avoid layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Disable scroll on both html and body
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      
+      return () => {
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.overflow = originalBodyOverflow;
+        document.body.style.paddingRight = originalBodyPaddingRight;
+      };
+    }
+  }, [createModalOpen, editModalOpen, profileModalOpen, confirmAction]);
 
   const {
     admins,
@@ -244,8 +274,8 @@ const AdminsList: React.FC = () => {
         />
 
         {/* Confirmation Dialog */}
-        {confirmAction && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        {confirmAction && createPortal(
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
             <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-md w-full mx-4 border border-gray-200 dark:border-neutral-700">
               <div className="p-6">
                 <div className="flex items-center mb-4">
@@ -297,7 +327,8 @@ const AdminsList: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         {/* Admin Profile Modal */}

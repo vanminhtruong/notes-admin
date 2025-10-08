@@ -175,3 +175,19 @@ export const getVisibleUserActivityTabs = (): Array<{key: string, label: string,
   // Filter tabs based on permissions
   return allTabs.filter(tab => hasUserActivityTabPermission(tab.key as any));
 };
+
+// Helper function to check if user has any notes permission
+export const hasAnyNotesPermission = (): boolean => {
+  if (isSuperAdmin()) return true;
+  
+  const token = getAdminToken();
+  if (!token) return false;
+  
+  const adminData = validateAdminToken(token);
+  if (!adminData) return false;
+  
+  const userPermissions = (__adminPermissionsOverride ?? adminData.adminPermissions) || [];
+  
+  // Kiểm tra xem có bất kỳ quyền nào liên quan đến manage_notes không
+  return userPermissions.some(perm => perm.startsWith('manage_notes'));
+};

@@ -134,13 +134,14 @@ class AdminService {
     priority?: string;
     search?: string;
     isArchived?: boolean;
+    folderId?: number | 'null';
     sortBy?: string;
     sortOrder?: string;
   } = {}) {
     return this.axiosInstance.get('/admin/notes', { params });
   }
 
-  async createNoteForUser(noteData: {
+  async createUserNote(noteData: {
     userId: number;
     title: string;
     content?: string;
@@ -150,6 +151,7 @@ class AdminService {
     category?: string;
     priority?: string;
     reminderAt?: string;
+    folderId?: number | null;
   }) {
     return this.axiosInstance.post('/admin/notes', noteData);
   }
@@ -164,6 +166,7 @@ class AdminService {
     priority?: string;
     isArchived?: boolean;
     reminderAt?: string;
+    folderId?: number | null;
   }) {
     return this.axiosInstance.put(`/admin/notes/${noteId}`, noteData);
   }
@@ -191,6 +194,47 @@ class AdminService {
 
   async deleteSharedNote(sharedNoteId: number) {
     return this.axiosInstance.delete(`/admin/shared-notes/${sharedNoteId}`);
+  }
+
+  // Folders Management
+  async getAllFolders(params: {
+    page?: number;
+    limit?: number;
+    userId?: number;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}) {
+    return this.axiosInstance.get('/admin/folders', { params });
+  }
+
+  async getFolderById(folderId: number) {
+    return this.axiosInstance.get(`/admin/folders/${folderId}`);
+  }
+
+  async createFolderForUser(folderData: {
+    userId: number;
+    name: string;
+    color?: string;
+    icon?: string;
+  }) {
+    return this.axiosInstance.post('/admin/folders', folderData);
+  }
+
+  async updateUserFolder(folderId: number, folderData: {
+    name?: string;
+    color?: string;
+    icon?: string;
+  }) {
+    return this.axiosInstance.put(`/admin/folders/${folderId}`, folderData);
+  }
+
+  async deleteUserFolder(folderId: number) {
+    return this.axiosInstance.delete(`/admin/folders/${folderId}`);
+  }
+
+  async moveNoteToFolder(noteId: number, folderId: number | null) {
+    return this.axiosInstance.patch(`/admin/notes/${noteId}/move-to-folder`, { folderId });
   }
 
   // User management actions

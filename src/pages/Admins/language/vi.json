@@ -216,6 +216,58 @@
           "label": "Xóa ghi chú chia sẻ",
           "description": "Xóa ghi chú chia sẻ và tin nhắn liên quan"
         }
+      },
+      "folders": {
+        "label": "Quản lý thư mục ghi chú",
+        "description": "Quản lý các thư mục ghi chú của người dùng",
+        "view": {
+          "label": "Xem thư mục",
+          "description": "Xem danh sách thư mục ghi chú",
+          "view_detail": {
+            "label": "Xem chi tiết thư mục",
+            "description": "Xem chi tiết thư mục và ghi chú bên trong khi click vào folder"
+          }
+        },
+        "view_detail": {
+          "label": "Xem chi tiết thư mục",
+          "description": "Xem chi tiết thư mục và ghi chú bên trong khi click vào folder"
+        },
+        "create": {
+          "label": "Tạo thư mục",
+          "description": "Tạo thư mục mới cho người dùng"
+        },
+        "edit": {
+          "label": "Sửa thư mục",
+          "description": "Chỉnh sửa tên, màu sắc, icon của thư mục"
+        },
+        "delete": {
+          "label": "Xóa thư mục",
+          "description": "Xóa thư mục (các ghi chú sẽ được giữ lại)"
+        },
+        "move": {
+          "label": "Di chuyển note vào folder",
+          "description": "Di chuyển ghi chú từ tab Active/Archived vào thư mục"
+        },
+        "notes": {
+          "label": "Quản lý notes trong folder",
+          "description": "Quản lý ghi chú bên trong thư mục",
+          "create": {
+            "label": "Tạo note trong folder",
+            "description": "Tạo ghi chú mới trong thư mục"
+          },
+          "edit": {
+            "label": "Sửa note trong folder",
+            "description": "Chỉnh sửa ghi chú trong thư mục"
+          },
+          "delete": {
+            "label": "Xóa note trong folder",
+            "description": "Xóa ghi chú trong thư mục"
+          },
+          "remove": {
+            "label": "Di chuyển note ra khỏi folder",
+            "description": "Di chuyển ghi chú từ folder sang tab Active"
+          }
+        }
       }
     },
     "manage_admins": {

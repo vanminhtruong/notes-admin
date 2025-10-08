@@ -341,6 +341,70 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             description: 'Xóa ghi chú chia sẻ và tin nhắn liên quan'
           }
         ]
+      },
+      {
+        key: 'manage_notes.folders',
+        label: 'Quản lý thư mục ghi chú',
+        description: 'Quản lý các thư mục ghi chú của người dùng',
+        subPermissions: [
+          {
+            key: 'manage_notes.folders.view',
+            label: 'Xem thư mục',
+            description: 'Xem danh sách thư mục ghi chú'
+          },
+          {
+            key: 'manage_notes.folders.view_detail',
+            label: 'Xem chi tiết thư mục',
+            description: 'Xem chi tiết thư mục và ghi chú bên trong khi click vào folder'
+          },
+          {
+            key: 'manage_notes.folders.create',
+            label: 'Tạo thư mục',
+            description: 'Tạo thư mục mới cho người dùng'
+          },
+          {
+            key: 'manage_notes.folders.edit',
+            label: 'Sửa thư mục',
+            description: 'Chỉnh sửa tên, màu sắc, icon của thư mục'
+          },
+          {
+            key: 'manage_notes.folders.delete',
+            label: 'Xóa thư mục',
+            description: 'Xóa thư mục (các ghi chú sẽ được giữ lại)'
+          },
+          {
+            key: 'manage_notes.folders.move',
+            label: 'Di chuyển note vào folder',
+            description: 'Di chuyển ghi chú vào một thư mục cụ thể của người dùng'
+          },
+          {
+            key: 'manage_notes.folders.notes',
+            label: 'Quản lý notes trong folder',
+            description: 'Quản lý ghi chú bên trong thư mục',
+            subPermissions: [
+              {
+                key: 'manage_notes.folders.notes.create',
+                label: 'Tạo note trong folder',
+                description: 'Tạo ghi chú mới trong thư mục'
+              },
+              {
+                key: 'manage_notes.folders.notes.edit',
+                label: 'Sửa note trong folder',
+                description: 'Chỉnh sửa ghi chú trong thư mục'
+              },
+              {
+                key: 'manage_notes.folders.notes.delete',
+                label: 'Xóa note trong folder',
+                description: 'Xóa ghi chú trong thư mục'
+              },
+              {
+                key: 'manage_notes.folders.notes.remove',
+                label: 'Di chuyển note ra khỏi folder',
+                description: 'Di chuyển ghi chú từ folder sang tab Active'
+              }
+            ]
+          }
+        ]
       }
     ]
   },

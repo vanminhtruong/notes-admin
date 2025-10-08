@@ -216,6 +216,58 @@
           "label": "Delete Shared Notes",
           "description": "Delete shared notes and related messages"
         }
+      },
+      "folders": {
+        "label": "Manage Note Folders",
+        "description": "Manage user note folders",
+        "view": {
+          "label": "View Folders",
+          "description": "View list of note folders",
+          "view_detail": {
+            "label": "View Folder Details",
+            "description": "View folder details and notes inside when clicking on folder"
+          }
+        },
+        "view_detail": {
+          "label": "View Folder Details",
+          "description": "View folder details and notes inside when clicking on folder"
+        },
+        "create": {
+          "label": "Create Folders",
+          "description": "Create new folders for users"
+        },
+        "edit": {
+          "label": "Edit Folders",
+          "description": "Edit folder name, color, and icon"
+        },
+        "delete": {
+          "label": "Delete Folders",
+          "description": "Delete folders (notes will be kept)"
+        },
+        "move": {
+          "label": "Move note to folder",
+          "description": "Move notes from Active/Archived tabs to folders"
+        },
+        "notes": {
+          "label": "Manage notes in folder",
+          "description": "Manage notes inside the folder",
+          "create": {
+            "label": "Create note in folder",
+            "description": "Create a new note in the folder"
+          },
+          "edit": {
+            "label": "Edit note in folder",
+            "description": "Edit a note inside the folder"
+          },
+          "delete": {
+            "label": "Delete note in folder",
+            "description": "Delete a note inside the folder"
+          },
+          "remove": {
+            "label": "Move note out of folder",
+            "description": "Move a note from the folder to the Active tab"
+          }
+        }
       }
     },
     "manage_admins": {

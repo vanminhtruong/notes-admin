@@ -216,6 +216,58 @@
           "label": "공유 노트 삭제",
           "description": "공유 노트 및 관련 메시지 삭제"
         }
+      },
+      "folders": {
+        "label": "노트 폴더 관리",
+        "description": "사용자 노트 폴더 관리",
+        "view": {
+          "label": "폴더 보기",
+          "description": "노트 폴더 목록 보기",
+          "view_detail": {
+            "label": "폴더 세부정보 보기",
+            "description": "폴더 클릭 시 폴더 세부정보 및 내부 노트 보기"
+          }
+        },
+        "view_detail": {
+          "label": "폴더 세부정보 보기",
+          "description": "폴더 클릭 시 폴더 세부정보 및 내부 노트 보기"
+        },
+        "create": {
+          "label": "폴더 생성",
+          "description": "사용자를 위한 새 폴더 생성"
+        },
+        "edit": {
+          "label": "폴더 편집",
+          "description": "폴더 이름, 색상 및 아이콘 편집"
+        },
+        "delete": {
+          "label": "폴더 삭제",
+          "description": "폴더 삭제 (노트는 유지됨)"
+        },
+        "move": {
+          "label": "폴더로 노트 이동",
+          "description": "활성/보관 탭에서 폴더로 노트 이동"
+        },
+        "notes": {
+          "label": "폴더 노트 관리",
+          "description": "폴더 내부 노트 관리",
+          "create": {
+            "label": "폴더에 노트 생성",
+            "description": "폴더에 새 노트 생성"
+          },
+          "edit": {
+            "label": "폴더 노트 편집",
+            "description": "폴더 내부 노트 편집"
+          },
+          "delete": {
+            "label": "폴더 노트 삭제",
+            "description": "폴더 내부 노트 삭제"
+          },
+          "remove": {
+            "label": "폴더에서 노트 제거",
+            "description": "폴더에서 활성 탭으로 노트 이동"
+          }
+        }
       }
     },
     "manage_admins": {

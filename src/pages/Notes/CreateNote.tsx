@@ -50,7 +50,7 @@ const MediaTabs = ({ formData, setFormData, t }: { formData: any; setFormData: (
       </div>
 
       {/* Tab Content */}
-      <div className="min-h-[100px]">
+      <div>
         {activeTab === 'image' && (
           <div className="flex items-center gap-3">
             <input
@@ -179,7 +179,7 @@ const CreateNote: React.FC = () => {
         limit: 50,
         role: 'user' // Chỉ load user, không load admin
       });
-      setUsers(response.data?.users || []);
+      setUsers((response as any).users || []);
     } catch (error) {
       console.error('Error loading users:', error);
     } finally {

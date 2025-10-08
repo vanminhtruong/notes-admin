@@ -24,7 +24,20 @@
       "placeholder": "Nhập nội dung ghi chú"
     },
     "media": {
-      "label": "Phương tiện"
+      "label": "Phương tiện",
+      "fullLabel": "Media (Hình ảnh / Video / YouTube)",
+      "tabs": {
+        "image": "Hình ảnh",
+        "video": "Video",
+        "youtube": "YouTube"
+      },
+      "uploading": "Đang upload...",
+      "uploadSuccess": {
+        "image": "Upload hình ảnh thành công!",
+        "video": "Upload video thành công!"
+      },
+      "uploadError": "Upload thất bại",
+      "youtubePlaceholder": "https://www.youtube.com/watch?v=..."
     },
     "imageUrl": {
       "label": "Hình ảnh"
@@ -40,7 +53,10 @@
       "placeholder": "Nhập danh mục"
     },
     "priority": {
-      "label": "Độ ưu tiên"
+      "label": "Mức độ ưu tiên",
+      "low": "Thấp",
+      "medium": "Trung bình",
+      "high": "Cao"
     },
     "reminder": {
       "label": "Nhắc nhở"
@@ -51,17 +67,17 @@
     "placeholders": {
       "title": "Nhập tiêu đề ghi chú...",
       "content": "Nhập nội dung ghi chú...",
-      "category": "Ví dụ: Công việc, Cá nhân...",
+      "category": "Nhập danh mục...",
       "imageUrl": "https://example.com/image.jpg",
-      "youtubeUrl": "Nhập URL video YouTube",
       "searchUser": "Tìm kiếm người dùng..."
     }
   },
   "filters": {
     "all": "Tất cả",
-    "active": "Hoạt động", 
-    "archived": "Đã lưu trữ",
+    "active": "Hoạt động",
+    "archived": "Lưu trữ",
     "shared": "Chia sẻ",
+    "folders": "Thư mục",
     "search": {
       "label": "Tìm kiếm",
       "placeholder": "Tìm kiếm ghi chú..."
@@ -194,5 +210,90 @@
     "unarchiveSuccess": "Đã bỏ lưu trữ ghi chú", 
     "unarchiveError": "Không thể bỏ lưu trữ",
     "uploadImageError": "Không thể tải lên ảnh"
+  },
+  "folders": {
+    "title": "Quản lý thư mục",
+    "subtitle": "Xem và quản lý thư mục ghi chú của người dùng",
+    "createFolder": "Tạo thư mục",
+    "searchPlaceholder": "Tìm kiếm thư mục...",
+    "table": {
+      "folder": "Thư mục",
+      "user": "Người dùng",
+      "notesCount": "Số ghi chú",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "form": {
+      "name": {
+        "label": "Tên thư mục",
+        "placeholder": "Nhập tên thư mục..."
+      },
+      "color": {
+        "label": "Màu sắc"
+      },
+      "icon": {
+        "label": "Icon"
+      },
+      "selectUser": "Chọn người dùng",
+      "selectUserRequired": "Chọn người dùng *",
+      "searchUser": "Tìm kiếm theo tên, email hoặc ID...",
+      "changeUser": "Thay đổi",
+      "noUsers": "Không có người dùng nào",
+      "noUsersFound": "Không tìm thấy người dùng nào",
+      "loading": "Đang tải..."
+    },
+    "modal": {
+      "create": "Tạo thư mục mới",
+      "edit": "Chỉnh sửa thư mục",
+      "creating": "Đang tạo...",
+      "saving": "Đang lưu...",
+      "saveChanges": "Lưu thay đổi"
+    },
+    "detail": {
+      "title": "Chi tiết thư mục",
+      "inFolder": "Trong thư mục",
+      "createNoteInFolder": "Tạo ghi chú mới trong thư mục",
+      "noNotes": "Chưa có ghi chú nào trong thư mục",
+      "viewingFolder": "Đang xem thư mục",
+      "userLabel": "Người dùng:",
+      "notesCount": "ghi chú"
+    },
+    "actions": {
+      "edit": "Sửa thư mục",
+      "delete": "Xóa thư mục",
+      "viewDetail": "Xem chi tiết",
+      "removeFromFolder": "Di chuyển ra khỏi thư mục",
+      "create": "Tạo thư mục",
+      "update": "Cập nhật"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Xóa thư mục?",
+        "message": "Bạn có chắc muốn xóa thư mục này?",
+        "note": "Các ghi chú sẽ được giữ lại và di chuyển về tab Active.",
+        "irreversible": "Hành động này không thể hoàn tác."
+      }
+    },
+    "remove": {
+      "confirm": {
+        "title": "Di chuyển ghi chú",
+        "message": "Bạn muốn di chuyển ghi chú này ra khỏi thư mục?",
+        "note": "Ghi chú sẽ được chuyển về tab Active."
+      }
+    },
+    "empty": {
+      "title": "Không có thư mục nào",
+      "hint": "Chưa có thư mục nào được tạo"
+    },
+    "toasts": {
+      "createSuccess": "Tạo thư mục thành công!",
+      "createError": "Không thể tạo thư mục",
+      "updateSuccess": "Cập nhật thư mục thành công!",
+      "updateError": "Không thể cập nhật thư mục",
+      "deleteSuccess": "Xóa thư mục thành công!",
+      "deleteError": "Không thể xóa thư mục",
+      "removeNoteSuccess": "Đã di chuyển ghi chú ra khỏi thư mục!",
+      "removeNoteError": "Không thể di chuyển ghi chú"
+    }
   }
 }
