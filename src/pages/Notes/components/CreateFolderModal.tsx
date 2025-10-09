@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
 import Pagination from '@components/common/Pagination';
 import { usePagination } from '@hooks/usePagination';
+import {
+  Folder, DollarSign, Book, GraduationCap, Pencil, Leaf,
+  Code, Smile, Music, Popcorn, Wrench, Palette,
+  Sprout, Flower, Camera, BarChart, Star, Dumbbell,
+  ClipboardList, Scale, Search, Plane, Globe, Settings,
+  Footprints, FlaskConical, Trophy, Heart, Coffee, Target
+} from 'lucide-react';
 
 interface User {
   id: number;
@@ -20,21 +27,47 @@ interface CreateFolderModalProps {
 }
 
 const COLORS = [
-  { value: '#3B82F6', label: 'Xanh dương' },
-  { value: '#10B981', label: 'Xanh lá' },
-  { value: '#F59E0B', label: 'Cam' },
-  { value: '#EF4444', label: 'Đỏ' },
-  { value: '#8B5CF6', label: 'Tím' },
-  { value: '#EC4899', label: 'Hồng' },
-  { value: '#6B7280', label: 'Xám' }
+  { value: 'blue', label: 'Xanh dương', class: 'text-blue-500 border-blue-500' },
+  { value: 'green', label: 'Xanh lá', class: 'text-green-500 border-green-500' },
+  { value: 'orange', label: 'Cam', class: 'text-orange-500 border-orange-500' },
+  { value: 'red', label: 'Đỏ', class: 'text-red-500 border-red-500' },
+  { value: 'purple', label: 'Tím', class: 'text-purple-500 border-purple-500' },
+  { value: 'pink', label: 'Hồng', class: 'text-pink-500 border-pink-500' },
+  { value: 'gray', label: 'Xám', class: 'text-gray-500 border-gray-500' },
+  { value: 'yellow', label: 'Vàng', class: 'text-yellow-500 border-yellow-500' }
 ];
 
 const ICONS = [
-  '📁', '💰', '📖', '🎓', '✏️', '🍃',
-  '💻', '😊', '🎵', '🍿', '🛠️', '🎨',
-  '🌱', '🪷', '📷', '📊', '⭐', '💪',
-  '📋', '⚖️', '🔍', '✈️', '🌐', '🔧',
-  '🐾', '🧪', '⚾', '❤️', '☕', '🎯'
+  { name: 'folder', icon: Folder },
+  { name: 'dollar', icon: DollarSign },
+  { name: 'book', icon: Book },
+  { name: 'graduation', icon: GraduationCap },
+  { name: 'pencil', icon: Pencil },
+  { name: 'leaf', icon: Leaf },
+  { name: 'code', icon: Code },
+  { name: 'smile', icon: Smile },
+  { name: 'music', icon: Music },
+  { name: 'popcorn', icon: Popcorn },
+  { name: 'wrench', icon: Wrench },
+  { name: 'palette', icon: Palette },
+  { name: 'sprout', icon: Sprout },
+  { name: 'flower', icon: Flower },
+  { name: 'camera', icon: Camera },
+  { name: 'chart', icon: BarChart },
+  { name: 'star', icon: Star },
+  { name: 'dumbbell', icon: Dumbbell },
+  { name: 'clipboard', icon: ClipboardList },
+  { name: 'scale', icon: Scale },
+  { name: 'search', icon: Search },
+  { name: 'plane', icon: Plane },
+  { name: 'globe', icon: Globe },
+  { name: 'settings', icon: Settings },
+  { name: 'footprints', icon: Footprints },
+  { name: 'flask', icon: FlaskConical },
+  { name: 'trophy', icon: Trophy },
+  { name: 'heart', icon: Heart },
+  { name: 'coffee', icon: Coffee },
+  { name: 'target', icon: Target },
 ];
 
 const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, onSuccess }) => {
@@ -47,7 +80,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
   
   const [folderName, setFolderName] = useState('');
   const [selectedColor, setSelectedColor] = useState(COLORS[0].value);
-  const [selectedIcon, setSelectedIcon] = useState('📁');
+  const [selectedIcon, setSelectedIcon] = useState('folder');
 
   useEffect(() => {
     if (show) {
@@ -60,7 +93,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
       setSearchUserTerm('');
       setFolderName('');
       setSelectedColor(COLORS[0].value);
-      setSelectedIcon('📁');
+      setSelectedIcon('folder');
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -125,7 +158,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
         userId: selectedUser.id,
         name: folderName.trim(),
         color: selectedColor,
-        icon: selectedIcon || '📁'
+        icon: selectedIcon || 'folder'
       });
 
       toast.success(t('folders.toasts.createSuccess'));
@@ -310,12 +343,11 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
                     key={color.value}
                     type="button"
                     onClick={() => setSelectedColor(color.value)}
-                    className={`w-10 h-10 md-down:w-9 md-down:h-9 sm-down:w-8 sm-down:h-8 rounded-lg transition-all ${
+                    className={`w-10 h-10 md-down:w-9 md-down:h-9 sm-down:w-8 sm-down:h-8 rounded-full border-4 ${color.class} transition-all bg-white dark:bg-neutral-800 ${
                       selectedColor === color.value
-                        ? 'ring-2 ring-offset-2 ring-blue-500 scale-110'
+                        ? 'ring-4 ring-blue-300 dark:ring-blue-600 ring-offset-2 dark:ring-offset-neutral-900 scale-110'
                         : 'hover:scale-105'
                     }`}
-                    style={{ backgroundColor: color.value }}
                     title={color.label}
                   />
                 ))}
@@ -327,21 +359,25 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ show, onClose, on
               <label className="block text-sm md-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('folders.form.icon.label')}
               </label>
-              <div className="flex gap-2 flex-wrap">
-                {ICONS.map((icon) => (
-                  <button
-                    key={icon}
-                    type="button"
-                    onClick={() => setSelectedIcon(icon)}
-                    className={`w-12 h-12 md-down:w-11 md-down:h-11 sm-down:w-10 sm-down:h-10 text-2xl md-down:text-xl sm-down:text-lg rounded-lg border-2 transition-all ${
-                      selectedIcon === icon
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-110'
-                        : 'border-gray-300 dark:border-neutral-600 hover:border-blue-300 hover:scale-105'
-                    }`}
-                  >
-                    {icon}
-                  </button>
-                ))}
+              <div className="grid grid-cols-6 gap-2">
+                {ICONS.map((iconOption) => {
+                  const IconComponent = iconOption.icon;
+                  const selectedColorObj = COLORS.find(c => c.value === selectedColor);
+                  return (
+                    <button
+                      key={iconOption.name}
+                      type="button"
+                      onClick={() => setSelectedIcon(iconOption.name)}
+                      className={`w-12 h-12 md-down:w-11 md-down:h-11 sm-down:w-10 sm-down:h-10 rounded-lg border-2 flex items-center justify-center transition-all ${
+                        selectedIcon === iconOption.name
+                          ? `${selectedColorObj?.class} bg-gray-50 dark:bg-neutral-700/50 scale-110`
+                          : 'border-gray-300 dark:border-neutral-600 text-gray-600 dark:text-gray-400 hover:border-gray-400 hover:scale-105'
+                      }`}
+                    >
+                      <IconComponent className="w-6 h-6 md-down:w-5 md-down:h-5 sm-down:w-4.5 sm-down:h-4.5" strokeWidth={2} />
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

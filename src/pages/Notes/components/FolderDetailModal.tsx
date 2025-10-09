@@ -7,6 +7,7 @@ import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import NoteFormModal from './NoteFormModal';
 import NoteDetailModal from './NoteDetailModal';
+import { getFolderIcon, getFolderColorClass } from '@utils/folderIcons';
 
 interface User {
   id: number;
@@ -266,11 +267,12 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
         <div className="p-6 md-down:p-5 sm-down:p-4 xs-down:p-3.5 border-b border-gray-200 dark:border-neutral-700">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <div 
-                className="w-16 h-16 xl-down:w-14 xl-down:h-14 md-down:w-12 md-down:h-12 sm-down:w-10 sm-down:h-10 rounded-lg flex items-center justify-center text-3xl xl-down:text-2xl md-down:text-xl sm-down:text-lg"
-                style={{ backgroundColor: folder.color }}
-              >
-                {folder.icon}
+              <div className="w-16 h-16 xl-down:w-14 xl-down:h-14 md-down:w-12 md-down:h-12 sm-down:w-10 sm-down:h-10 rounded-lg flex items-center justify-center">
+                {(() => {
+                  const IconComponent = getFolderIcon(folder.icon || 'folder');
+                  const colorClass = getFolderColorClass(folder.color);
+                  return <IconComponent className={`w-12 h-12 xl-down:w-10 xl-down:h-10 md-down:w-8 md-down:h-8 sm-down:w-7 sm-down:h-7 ${colorClass}`} strokeWidth={2} />;
+                })()}
               </div>
               <div>
                 <h3 className="text-xl xl-down:text-lg sm-down:text-base font-medium text-gray-900 dark:text-gray-100">

@@ -7,6 +7,7 @@ import { hasPermission } from '@utils/auth';
 import CreateFolderModal from './CreateFolderModal';
 import EditFolderModal from './EditFolderModal';
 import FolderDetailModal from './FolderDetailModal';
+import { getFolderIcon, getFolderColorClass } from '@utils/folderIcons';
 
 interface User {
   id: number;
@@ -268,17 +269,12 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                   >
                     <td className="px-6 py-4 md-down:px-4 md-down:py-3 sm-down:px-3.5 sm-down:py-2.5 xs-down:px-3 xs-down:py-2 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div 
-                          className="flex-shrink-0 w-10 h-10 md-down:w-9 md-down:h-9 sm-down:w-8 sm-down:h-8 xs-down:w-7 xs-down:h-7 rounded-lg flex items-center justify-center text-white"
-                          style={{ backgroundColor: folder.color || '#3B82F6' }}
-                        >
-                          {folder.icon && folder.icon !== 'folder' ? (
-                            <span className="text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">{folder.icon}</span>
-                          ) : (
-                            <svg className="w-6 h-6 md-down:w-5 md-down:h-5 sm-down:w-5 sm-down:h-5 xs-down:w-4 xs-down:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                            </svg>
-                          )}
+                        <div className="flex-shrink-0 w-10 h-10 md-down:w-9 md-down:h-9 sm-down:w-8 sm-down:h-8 xs-down:w-7 xs-down:h-7 rounded-lg flex items-center justify-center">
+                          {(() => {
+                            const IconComponent = getFolderIcon(folder.icon || 'folder');
+                            const colorClass = getFolderColorClass(folder.color);
+                            return <IconComponent className={`w-6 h-6 md-down:w-5 md-down:h-5 sm-down:w-5 sm-down:h-5 xs-down:w-4 xs-down:h-4 ${colorClass}`} strokeWidth={2} />;
+                          })()}
                         </div>
                         <div className="ml-3">
                           <div className="text-sm md-down:text-sm sm-down:text-xs font-medium text-gray-900 dark:text-gray-100">
