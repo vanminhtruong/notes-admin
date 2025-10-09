@@ -238,6 +238,14 @@ class AdminService {
     return this.axiosInstance.patch(`/admin/notes/${noteId}/move-to-folder`, { folderId });
   }
 
+  async pinUserNote(noteId: number) {
+    return this.axiosInstance.patch(`/admin/notes/${noteId}/pin`);
+  }
+
+  async unpinUserNote(noteId: number) {
+    return this.axiosInstance.patch(`/admin/notes/${noteId}/unpin`);
+  }
+
   // User management actions
   async toggleUserStatus(userId: number) {
     return this.axiosInstance.patch(`/admin/users/${userId}/toggle-status`);
