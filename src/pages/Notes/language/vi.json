@@ -125,6 +125,8 @@
     "delete": "Xóa",
     "archive": "Lưu trữ",
     "unarchive": "Bỏ lưu trữ",
+    "pin": "Ghim ghi chú",
+    "unpin": "Bỏ ghim ghi chú",
     "close": "Đóng",
     "cancel": "Hủy",
     "update": "Cập nhật",
@@ -209,6 +211,9 @@
     "archiveError": "Không thể lưu trữ",
     "unarchiveSuccess": "Đã bỏ lưu trữ ghi chú", 
     "unarchiveError": "Không thể bỏ lưu trữ",
+    "pinSuccess": "Đã ghim ghi chú thành công",
+    "unpinSuccess": "Đã bỏ ghim ghi chú thành công",
+    "pinError": "Không thể thay đổi trạng thái ghim",
     "uploadImageError": "Không thể tải lên ảnh"
   },
   "folders": {

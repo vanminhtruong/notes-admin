@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
+import { Pin, PinOff } from 'lucide-react';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { hasPermission, hasAnyNotesPermission } from '@utils/auth';
@@ -762,9 +763,11 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                         <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
                           {t('table.createdAt')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Pin
-                        </th>
+                        {hasPermission('manage_notes.edit') && (
+                          <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Pin
+                          </th>
+                        )}
                         {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive') || hasPermission('manage_notes.folders.move')) && (
                           <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {t('table.actions')}
@@ -847,23 +850,23 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
                             {formatDate(note.createdAt)}
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
-                            {hasPermission('manage_notes.edit') && (
+                          {hasPermission('manage_notes.edit') && (
+                            <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
                               <button
                                 onClick={async (e) => {
                                   e.stopPropagation();
                                   try {
                                     if (note.isPinned) {
                                       await adminService.unpinUserNote(note.id);
-                                      toast.success('Đã bỏ ghim ghi chú');
+                                      toast.success(t('toasts.unpinSuccess'));
                                     } else {
                                       await adminService.pinUserNote(note.id);
-                                      toast.success('Đã ghim ghi chú');
+                                      toast.success(t('toasts.pinSuccess'));
                                     }
                                     await loadNotes();
                                   } catch (e) {
                                     console.error('Toggle pin failed', e);
-                                    toast.error('Không thể thay đổi trạng thái ghim');
+                                    toast.error(t('toasts.pinError'));
                                   }
                                 }}
                                 className={`p-2 xl-down:p-1.5 rounded-md xl-down:rounded transition-colors ${
@@ -871,32 +874,16 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                                     ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50 dark:text-amber-400 dark:hover:text-amber-300 dark:hover:bg-amber-900/20' 
                                     : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-neutral-800'
                                 }`}
-                                title={note.isPinned ? 'Bỏ ghim ghi chú' : 'Ghim ghi chú'}
+                                title={note.isPinned ? t('actions.unpin') : t('actions.pin')}
                               >
                                 {note.isPinned ? (
-                                  <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    viewBox="0 0 24 24" 
-                                    fill="currentColor"
-                                    className="w-5 h-5 xl-down:w-4 xl-down:h-4"
-                                  >
-                                    <path d="M16 12V4a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v8H5.5a1 1 0 0 0-.832 1.555L8 17.237V20a1 1 0 0 0 2 0v-2h4v2a1 1 0 0 0 2 0v-2.763l3.332-3.682A1 1 0 0 0 18.5 12H16z"/>
-                                  </svg>
+                                  <Pin className="w-5 h-5 xl-down:w-4 xl-down:h-4" />
                                 ) : (
-                                  <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    viewBox="0 0 24 24" 
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    className="w-5 h-5 xl-down:w-4 xl-down:h-4"
-                                  >
-                                    <path d="M16 12V4a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v8H5.5a1 1 0 0 0-.832 1.555L8 17.237V20a1 1 0 0 0 2 0v-2h4v2a1 1 0 0 0 2 0v-2.763l3.332-3.682A1 1 0 0 0 18.5 12H16z"/>
-                                  </svg>
+                                  <PinOff className="w-5 h-5 xl-down:w-4 xl-down:h-4" />
                                 )}
                               </button>
-                            )}
-                          </td>
+                            </td>
+                          )}
                           {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
                             <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
                               <div className="flex items-center gap-2 xl-down:gap-1">
@@ -1006,23 +993,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                     >
                       <div className="flex items-start justify-between mb-3 xl-down:mb-2">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
-                              {note.title}
-                            </h4>
-                            {note.isPinned && (
-                              <div title="Đã ghim">
-                                <svg 
-                                  xmlns="http://www.w3.org/2000/svg" 
-                                  viewBox="0 0 24 24" 
-                                  fill="currentColor"
-                                  className="w-4 h-4 text-amber-500 flex-shrink-0"
-                                >
-                                  <path d="M16 12V4a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v8H5.5a1 1 0 0 0-.832 1.555L8 17.237V20a1 1 0 0 0 2 0v-2h4v2a1 1 0 0 0 2 0v-2.763l3.332-3.682A1 1 0 0 0 18.5 12H16z"/>
-                                </svg>
-                              </div>
-                            )}
-                          </div>
+                          <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
+                            {note.title}
+                          </h4>
                           <p className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                             {note.content}
                           </p>
@@ -1056,7 +1029,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           </div>
                         </div>
                         
-                        <div className="flex gap-2 xl-down:gap-1">
+                        <div className="flex items-center gap-2 xl-down:gap-1">
                           <span className={`px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full ${
                             note.priority === 'high' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' :
                             note.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
@@ -1066,6 +1039,39 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                              note.priority === 'medium' ? t('constants.priority.medium') :
                              t('constants.priority.low')}
                           </span>
+                          
+                          {hasPermission('manage_notes.edit') && (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                try {
+                                  if (note.isPinned) {
+                                    await adminService.unpinUserNote(note.id);
+                                    toast.success(t('toasts.unpinSuccess'));
+                                  } else {
+                                    await adminService.pinUserNote(note.id);
+                                    toast.success(t('toasts.pinSuccess'));
+                                  }
+                                  await loadNotes();
+                                } catch (e) {
+                                  console.error('Toggle pin failed', e);
+                                  toast.error(t('toasts.pinError'));
+                                }
+                              }}
+                              className={`p-1.5 rounded-md transition-colors ${
+                                note.isPinned 
+                                  ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50 dark:text-amber-400 dark:hover:text-amber-300 dark:hover:bg-amber-900/20' 
+                                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-neutral-800'
+                              }`}
+                              title={note.isPinned ? t('actions.unpin') : t('actions.pin')}
+                            >
+                              {note.isPinned ? (
+                                <Pin className="w-4 h-4" />
+                              ) : (
+                                <PinOff className="w-4 h-4" />
+                              )}
+                            </button>
+                          )}
                         </div>
                       </div>
                       

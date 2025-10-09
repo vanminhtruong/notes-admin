@@ -22,29 +22,19 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const getVisiblePages = () => {
     if (totalPages <= 1) return [1];
-    const delta = 2; // Số trang hiển thị mỗi bên
-    const range = [];
-    const rangeWithDots = [];
-
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-      range.push(i);
+    if (totalPages <= 3) {
+      // Nếu tổng số trang <= 3, hiển thị tất cả
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    if (currentPage - delta > 2) {
-      rangeWithDots.push(1, '...');
+    // Chỉ hiển thị tối đa 3 ô số
+    if (currentPage === 1) {
+      return [1, 2, 3];
+    } else if (currentPage === totalPages) {
+      return [totalPages - 2, totalPages - 1, totalPages];
     } else {
-      rangeWithDots.push(1);
+      return [currentPage - 1, currentPage, currentPage + 1];
     }
-
-    rangeWithDots.push(...range);
-
-    if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push('...', totalPages);
-    } else {
-      if (totalPages > 1) rangeWithDots.push(totalPages);
-    }
-
-    return rangeWithDots;
   };
 
   const visiblePages = getVisiblePages();
@@ -115,24 +105,17 @@ const Pagination: React.FC<PaginationProps> = ({
 
             {/* Số trang */}
             {visiblePages.map((page, index) => (
-              <React.Fragment key={index}>
-                {page === '...' ? (
-                  <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 focus:outline-offset-0">
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    onClick={() => handlePageClick(page)}
-                    className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:z-20 focus:outline-offset-0 ${
-                      page === currentPage
-                        ? 'z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                        : 'text-gray-900 dark:text-gray-100'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                )}
-              </React.Fragment>
+              <button
+                key={index}
+                onClick={() => handlePageClick(page)}
+                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:z-20 focus:outline-offset-0 ${
+                  page === currentPage
+                    ? 'z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                    : 'text-gray-900 dark:text-gray-100'
+                }`}
+              >
+                {page}
+              </button>
             ))}
 
             {/* Next button */}

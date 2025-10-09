@@ -126,6 +126,8 @@
     "delete": "삭제",
     "archive": "보관",
     "unarchive": "보관 해제",
+    "pin": "노트 고정",
+    "unpin": "노트 고정 해제",
     "close": "닫기",
     "cancel": "취소",
     "update": "업데이트",
@@ -210,6 +212,9 @@
     "archiveError": "노트 보관에 실패했습니다",
     "unarchiveSuccess": "노트 보관이 성공적으로 해제되었습니다", 
     "unarchiveError": "노트 보관 해제에 실패했습니다",
+    "pinSuccess": "노트가 성공적으로 고정되었습니다",
+    "unpinSuccess": "노트 고정이 성공적으로 해제되었습니다",
+    "pinError": "고정 상태를 변경할 수 없습니다",
     "uploadImageError": "이미지 업로드에 실패했습니다"
   },
   "folders": {

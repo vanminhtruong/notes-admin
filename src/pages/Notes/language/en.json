@@ -126,16 +126,17 @@
     "delete": "Delete",
     "archive": "Archive",
     "unarchive": "Unarchive",
+    "pin": "Pin note",
+    "unpin": "Unpin note",
     "close": "Close",
     "cancel": "Cancel",
     "update": "Update",
-    "createNew": "Create note",
+    "createNew": "Create Note",
     "creating": "Creating...",
     "updating": "Updating..."
   },
   "detail": {
     "userInfo": "Creator Information",
-    "status": "Status",
     "updatedAt": "Updated At",
     "metadata": "Details Information"
   },
@@ -210,6 +211,9 @@
     "archiveError": "Failed to archive note",
     "unarchiveSuccess": "Note unarchived successfully", 
     "unarchiveError": "Failed to unarchive note",
+    "pinSuccess": "Note pinned successfully",
+    "unpinSuccess": "Note unpinned successfully",
+    "pinError": "Unable to change pin status",
     "uploadImageError": "Failed to upload image"
   },
   "folders": {
