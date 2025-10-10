@@ -27,6 +27,10 @@ import profileEn from '@pages/Profile/language/en.json';
 import profileKo from '@pages/Profile/language/ko.json';
 import profileVi from '@pages/Profile/language/vi.json';
 
+import categoriesEn from '@pages/Categories/language/en.json';
+import categoriesKo from '@pages/Categories/language/ko.json';
+import categoriesVi from '@pages/Categories/language/vi.json';
+
 // Common translations
 import commonEn from './locales/en/common.json';
 import commonKo from './locales/ko/common.json';
@@ -40,7 +44,8 @@ const resources = {
     notes: notesEn,
     users: usersEn,
     admins: adminsEn,
-    profile: profileEn
+    profile: profileEn,
+    categories: categoriesEn
   },
   ko: {
     common: commonKo,
@@ -49,7 +54,8 @@ const resources = {
     notes: notesKo,
     users: usersKo,
     admins: adminsKo,
-    profile: profileKo
+    profile: profileKo,
+    categories: categoriesKo
   },
   vi: {
     common: commonVi,
@@ -58,7 +64,8 @@ const resources = {
     notes: notesVi,
     users: usersVi,
     admins: adminsVi,
-    profile: profileVi
+    profile: profileVi,
+    categories: categoriesVi
   }
 };
 
@@ -73,7 +80,7 @@ const initI18n = async () => {
       
       // Namespace mặc định
       defaultNS: 'common',
-      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile'],
+      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile', 'categories'],
 
       interpolation: {
         escapeValue: false, // React đã escape

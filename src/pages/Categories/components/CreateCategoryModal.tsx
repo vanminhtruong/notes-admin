@@ -35,7 +35,7 @@ interface UserItem {
 }
 
 const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('categories');
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [name, setName] = useState('');
   const [color, setColor] = useState(COLOR_OPTIONS[0]);
@@ -67,7 +67,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
       setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast.error(t('categories.modal.create.errorLoadUsers'));
+      toast.error(t('modal.create.errorLoadUsers'));
     } finally {
       setIsLoadingUsers(false);
     }
@@ -83,7 +83,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
     e.preventDefault();
 
     if (!selectedUser || !name) {
-      toast.error(t('categories.modal.create.errorNoUser'));
+      toast.error(t('modal.create.errorNoUser'));
       return;
     }
 
@@ -95,12 +95,12 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
         color,
         icon
       });
-      toast.success(t('categories.modal.create.success'));
+      toast.success(t('modal.create.success'));
       onSuccess();
       handleClose();
     } catch (error: any) {
       console.error('Error creating category:', error);
-      toast.error(error.response?.data?.message || t('categories.modal.create.error'));
+      toast.error(error.response?.data?.message || t('modal.create.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -127,7 +127,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {t('categories.modal.create.title')}
+            {t('modal.create.title')}
           </h3>
           <button
             onClick={handleClose}
@@ -163,7 +163,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
                 }}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
-                {t('categories.modal.create.changeUser')}
+                {t('modal.create.changeUser')}
               </button>
             </div>
           )}
@@ -173,7 +173,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('categories.modal.create.selectUser')} <span className="text-red-500">{t('categories.modal.create.required')}</span>
+                  {t('modal.create.selectUser')} <span className="text-red-500">{t('modal.create.required')}</span>
                 </label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -185,7 +185,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
                       setCurrentPage(1);
                     }}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm"
-                    placeholder={t('categories.modal.create.searchUser')}
+                    placeholder={t('modal.create.searchUser')}
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
               ) : users.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-neutral-700 rounded-lg">
                   <User className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">{t('categories.modal.create.noUsers')}</p>
+                  <p className="text-sm">{t('modal.create.noUsers')}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -242,7 +242,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
           {selectedUser && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {t('categories.modal.create.categoryName')} <span className="text-red-500">{t('categories.modal.create.required')}</span>
+                {t('modal.create.categoryName')} <span className="text-red-500">{t('modal.create.required')}</span>
               </label>
               <input
                 type="text"
@@ -250,7 +250,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
-                placeholder={t('categories.modal.create.categoryNamePlaceholder')}
+                placeholder={t('modal.create.categoryNamePlaceholder')}
               />
             </div>
           )}
@@ -259,7 +259,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
           {selectedUser && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('categories.modal.create.icon')}
+                {t('modal.create.icon')}
               </label>
               <div className="grid grid-cols-8 gap-2">
                 {ICON_OPTIONS.map((iconName) => {
@@ -287,7 +287,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
           {selectedUser && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('categories.modal.create.color')}
+                {t('modal.create.color')}
               </label>
               <div className="grid grid-cols-8 gap-2">
                 {COLOR_OPTIONS.map((colorOption) => (
@@ -310,7 +310,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
           {/* Preview */}
           {selectedUser && (
             <div className="p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('categories.modal.create.preview')}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('modal.create.preview')}</p>
               <div className="flex items-center gap-2">
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -319,7 +319,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
                   <IconComponent className="w-5 h-5" style={{ color }} />
                 </div>
                 <span className="font-semibold" style={{ color }}>
-                  {name || t('categories.modal.create.previewName')}
+                  {name || t('modal.create.previewName')}
                 </span>
               </div>
             </div>
@@ -332,14 +332,14 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClo
               onClick={handleClose}
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
             >
-              {t('categories.modal.create.cancel')}
+              {t('modal.create.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !selectedUser}
               className="flex-1 px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? t('categories.modal.create.submitting') : t('categories.modal.create.submit')}
+              {isSubmitting ? t('modal.create.submitting') : t('modal.create.submit')}
             </button>
           </div>
         </form>

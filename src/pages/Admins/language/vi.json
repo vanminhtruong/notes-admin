@@ -268,6 +268,26 @@
             "description": "Di chuyển ghi chú từ folder sang tab Active"
           }
         }
+      },
+      "categories": {
+        "label": "Quản lý categories",
+        "description": "Quản lý các categories ghi chú của người dùng",
+        "view": {
+          "label": "Xem categories",
+          "description": "Xem danh sách categories của người dùng"
+        },
+        "create": {
+          "label": "Tạo category",
+          "description": "Tạo category mới cho người dùng"
+        },
+        "edit": {
+          "label": "Sửa category",
+          "description": "Chỉnh sửa tên, màu sắc, icon của category"
+        },
+        "delete": {
+          "label": "Xóa category",
+          "description": "Xóa category (các ghi chú sẽ được giữ lại)"
+        }
       }
     },
     "manage_admins": {

@@ -34,7 +34,7 @@ const COLOR_OPTIONS = [
 ];
 
 const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category, onClose, onSuccess }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('categories');
   const [name, setName] = useState(category.name);
   const [color, setColor] = useState(category.color);
   const [icon, setIcon] = useState(category.icon);
@@ -44,7 +44,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
     e.preventDefault();
 
     if (!name) {
-      toast.error(t('categories.modal.edit.errorNoName'));
+      toast.error(t('modal.edit.errorNoName'));
       return;
     }
 
@@ -55,12 +55,12 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
         color,
         icon
       });
-      toast.success(t('categories.modal.edit.success'));
+      toast.success(t('modal.edit.success'));
       onSuccess();
       onClose();
     } catch (error: any) {
       console.error('Error updating category:', error);
-      toast.error(error.response?.data?.message || t('categories.modal.edit.error'));
+      toast.error(error.response?.data?.message || t('modal.edit.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -75,7 +75,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
       <div className="bg-white dark:bg-neutral-900 rounded-lg max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {t('categories.modal.edit.title')}
+            {t('modal.edit.title')}
           </h3>
           <button
             onClick={onClose}
@@ -88,7 +88,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
         <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto flex-1">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              {t('categories.modal.edit.categoryName')} <span className="text-red-500">{t('categories.modal.edit.required')}</span>
+              {t('modal.edit.categoryName')} <span className="text-red-500">{t('modal.edit.required')}</span>
             </label>
             <input
               type="text"
@@ -101,7 +101,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('categories.modal.edit.icon')}
+              {t('modal.edit.icon')}
             </label>
             <div className="grid grid-cols-8 gap-2">
               {ICON_OPTIONS.map((iconName) => {
@@ -126,7 +126,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('categories.modal.edit.color')}
+              {t('modal.edit.color')}
             </label>
             <div className="grid grid-cols-8 gap-2">
               {COLOR_OPTIONS.map((colorOption) => (
@@ -146,7 +146,7 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
           </div>
 
           <div className="p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('categories.modal.edit.preview')}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('modal.edit.preview')}</p>
             <div className="flex items-center gap-2">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -166,14 +166,14 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ isOpen, category,
               onClick={onClose}
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
             >
-              {t('categories.modal.edit.cancel')}
+              {t('modal.edit.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="flex-1 px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? t('categories.modal.edit.submitting') : t('categories.modal.edit.submit')}
+              {isSubmitting ? t('modal.edit.submitting') : t('modal.edit.submit')}
             </button>
           </div>
         </form>
