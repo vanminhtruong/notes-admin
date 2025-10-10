@@ -55,7 +55,7 @@ const AdminLayout: React.FC = () => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await adminService.getLanguage();
+        const res: any = await adminService.getLanguage();
         const serverLang = (res?.language || 'vi').split('-')[0];
         const currentLang = (i18n.language || 'vi').split('-')[0];
         if (!cancelled && serverLang && serverLang !== currentLang) {
@@ -72,7 +72,7 @@ const AdminLayout: React.FC = () => {
     (async () => {
       if (!token) return;
       try {
-        const res = await adminService.getMyProfile();
+        const res: any = await adminService.getMyProfile();
         if (!cancelled && res?.admin) {
           setCurrentAdminProfile(res.admin);
         }
@@ -238,6 +238,9 @@ const AdminLayout: React.FC = () => {
         { id: 'notes-list', label: t('navigation.notesList'), path: '/notes' },
         ...(hasPermission('manage_notes.create') ? [
           { id: 'notes-create', label: t('navigation.notesCreate'), path: '/notes/create' }
+        ] : []),
+        ...(hasPermission('manage_notes.categories.view') ? [
+          { id: 'categories', label: t('navigation.categories', { defaultValue: 'Categories' }), path: '/categories' }
         ] : []),
       ],
     },

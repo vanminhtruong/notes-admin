@@ -24,7 +24,8 @@
     "usersActivity": "Hoạt động người dùng",
     "notesList": "Danh sách ghi chú",
     "notesCreate": "Tạo ghi chú",
-    "notesShared": "Ghi chú chia sẻ"
+    "notesShared": "Ghi chú chia sẻ",
+    "categories": "Categories"
   },
   "layout": {
     "adminPanel": "Bảng quản trị",
@@ -44,7 +45,11 @@
   "actions": {
     "cancel": "Hủy",
     "confirm": "Xác nhận",
-    "close": "Đóng"
+    "close": "Đóng",
+    "view": "Xem",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "refresh": "Làm mới"
   },
   "pagination": {
     "previous": "Trước",
@@ -59,5 +64,65 @@
     "title": "Không có quyền truy cập",
     "message": "Tài khoản của bạn hiện không có quyền truy cập nào. Vui lòng liên hệ Super Admin để được cấp quyền.",
     "hint": "Sau khi được cấp quyền, vui lòng đăng nhập lại."
+  },
+  "categories": {
+    "title": "Quản lý Categories",
+    "subtitle": "Quản lý categories của người dùng",
+    "search": "Tìm kiếm category...",
+    "userId": "User ID (tùy chọn)",
+    "createButton": "Tạo Category",
+    "total": "Tổng",
+    "notFound": "Không tìm thấy category nào",
+    "tryFilter": "Thử thay đổi bộ lọc",
+    "noData": "Chưa có category nào",
+    "modal": {
+      "create": {
+        "title": "Tạo Category Mới",
+        "selectUser": "Chọn người dùng",
+        "searchUser": "Tìm kiếm người dùng...",
+        "noUsers": "Không tìm thấy người dùng",
+        "changeUser": "Thay đổi",
+        "categoryName": "Tên Category",
+        "categoryNamePlaceholder": "Ví dụ: Công việc",
+        "icon": "Icon",
+        "color": "Màu sắc",
+        "preview": "Preview:",
+        "previewName": "Category Name",
+        "cancel": "Hủy",
+        "submit": "Tạo Category",
+        "submitting": "Đang tạo...",
+        "required": "*",
+        "errorNoUser": "Vui lòng chọn người dùng và nhập tên category",
+        "errorLoadUsers": "Không thể tải danh sách người dùng",
+        "success": "Tạo category thành công",
+        "error": "Không thể tạo category"
+      },
+      "edit": {
+        "title": "Chỉnh sửa Category",
+        "categoryName": "Tên Category",
+        "icon": "Icon",
+        "color": "Màu sắc",
+        "preview": "Preview:",
+        "cancel": "Hủy",
+        "submit": "Lưu thay đổi",
+        "submitting": "Đang lưu...",
+        "required": "*",
+        "errorNoName": "Vui lòng nhập tên category",
+        "success": "Cập nhật category thành công",
+        "error": "Không thể cập nhật category"
+      },
+      "detail": {
+        "title": "Chi tiết Category",
+        "userInfo": "Thông tin người dùng",
+        "createdAt": "Ngày tạo",
+        "updatedAt": "Cập nhật lần cuối",
+        "sampleNotes": "Ghi chú mẫu",
+        "notes": "Notes",
+        "color": "Color",
+        "icon": "Icon",
+        "close": "Đóng",
+        "errorLoad": "Không thể tải chi tiết category"
+      }
+    }
   }
 }

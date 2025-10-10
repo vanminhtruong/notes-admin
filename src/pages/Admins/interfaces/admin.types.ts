@@ -405,6 +405,33 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             ]
           }
         ]
+      },
+      {
+        key: 'manage_notes.categories',
+        label: 'Quản lý Categories',
+        description: 'Quản lý các categories ghi chú của người dùng',
+        subPermissions: [
+          {
+            key: 'manage_notes.categories.view',
+            label: 'Xem categories',
+            description: 'Xem danh sách categories của người dùng'
+          },
+          {
+            key: 'manage_notes.categories.create',
+            label: 'Tạo category',
+            description: 'Tạo category mới cho người dùng'
+          },
+          {
+            key: 'manage_notes.categories.edit',
+            label: 'Sửa category',
+            description: 'Chỉnh sửa tên, màu sắc, icon của category'
+          },
+          {
+            key: 'manage_notes.categories.delete',
+            label: 'Xóa category',
+            description: 'Xóa category (các ghi chú sẽ được giữ lại)'
+          }
+        ]
       }
     ]
   },

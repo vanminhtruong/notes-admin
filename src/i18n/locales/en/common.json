@@ -24,7 +24,8 @@
     "usersActivity": "User Activity",
     "notesList": "Notes List",
     "notesCreate": "Create Note",
-    "notesShared": "Shared Notes"
+    "notesShared": "Shared Notes",
+    "categories": "Categories"
   },
   "layout": {
     "adminPanel": "Admin Panel",
@@ -44,7 +45,11 @@
   "actions": {
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "refresh": "Refresh"
   },
   "pagination": {
     "previous": "Previous",
@@ -59,5 +64,65 @@
     "title": "No Access Permission",
     "message": "Your account currently has no access permissions. Please contact Super Admin to be granted permissions.",
     "hint": "After being granted permissions, please log in again."
+  },
+  "categories": {
+    "title": "Manage Categories",
+    "subtitle": "Manage user categories",
+    "search": "Search category...",
+    "userId": "User ID (optional)",
+    "createButton": "Create Category",
+    "total": "Total",
+    "notFound": "No categories found",
+    "tryFilter": "Try changing filters",
+    "noData": "No categories yet",
+    "modal": {
+      "create": {
+        "title": "Create New Category",
+        "selectUser": "Select User",
+        "searchUser": "Search user...",
+        "noUsers": "No users found",
+        "changeUser": "Change",
+        "categoryName": "Category Name",
+        "categoryNamePlaceholder": "e.g., Work",
+        "icon": "Icon",
+        "color": "Color",
+        "preview": "Preview:",
+        "previewName": "Category Name",
+        "cancel": "Cancel",
+        "submit": "Create Category",
+        "submitting": "Creating...",
+        "required": "*",
+        "errorNoUser": "Please select a user and enter category name",
+        "errorLoadUsers": "Cannot load user list",
+        "success": "Category created successfully",
+        "error": "Cannot create category"
+      },
+      "edit": {
+        "title": "Edit Category",
+        "categoryName": "Category Name",
+        "icon": "Icon",
+        "color": "Color",
+        "preview": "Preview:",
+        "cancel": "Cancel",
+        "submit": "Save Changes",
+        "submitting": "Saving...",
+        "required": "*",
+        "errorNoName": "Please enter category name",
+        "success": "Category updated successfully",
+        "error": "Cannot update category"
+      },
+      "detail": {
+        "title": "Category Details",
+        "userInfo": "User Information",
+        "createdAt": "Created At",
+        "updatedAt": "Last Updated",
+        "sampleNotes": "Sample Notes",
+        "notes": "Notes",
+        "color": "Color",
+        "icon": "Icon",
+        "close": "Close",
+        "errorLoad": "Cannot load category details"
+      }
+    }
   }
 }

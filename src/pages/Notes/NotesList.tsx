@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
-import { Pin, PinOff } from 'lucide-react';
+import { Pin, PinOff, Tag, X } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { hasPermission, hasAnyNotesPermission } from '@utils/auth';
@@ -21,6 +22,13 @@ interface User {
   avatar?: string;
 }
 
+interface NoteCategory {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
+}
+
 interface Note {
   id: number;
   title: string;
@@ -28,7 +36,8 @@ interface Note {
   imageUrl?: string;
   videoUrl?: string;
   youtubeUrl?: string;
-  category?: string;
+  categoryId?: number;
+  category?: NoteCategory;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;
   isPinned?: boolean;
@@ -56,30 +65,63 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
 
   const { t } = useTranslation('notes');
   const [activeMediaTab, setActiveMediaTab] = useState<'image' | 'video' | 'youtube'>('image');
+  const [categories, setCategories] = useState<NoteCategory[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
-  // Lock body scroll while modal is open and avoid layout shift
+  // Fetch categories for the user
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = 'hidden';
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
+    const fetchCategories = async () => {
+      if (!editingNote?.user?.id) return;
+      try {
+        setLoadingCategories(true);
+        const response: any = await adminService.getAllCategories({ userId: editingNote.user.id, limit: 100 });
+        setCategories(response.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoadingCategories(false);
+      }
     };
-  }, []);
+    if (show) {
+      fetchCategories();
+    }
+  }, [show, editingNote?.user?.id]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.category-dropdown-container')) {
+        setShowCategoryDropdown(false);
+      }
+    };
+    if (showCategoryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showCategoryDropdown]);
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-[9999]">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md max-w-2xl xl-down:max-w-xl md-down:max-w-lg sm-down:max-w-sm w-full max-h-[90vh] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="p-6 xl-down:p-4 sm-down:p-3">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-[9999]">
+      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md max-w-2xl xl-down:max-w-xl md-down:max-w-lg sm-down:max-w-sm w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between p-4 xl-down:p-3 sm-down:p-2 border-b border-gray-200 dark:border-neutral-700">
+          <h3 className="text-lg xl-down:text-base sm-down:text-sm font-semibold text-gray-900 dark:text-gray-100">
+            {t('modal.editTitle')}
+          </h3>
+          <button
+            onClick={onClose}
+            type="button"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div className="p-6 xl-down:p-4 sm-down:p-3 overflow-y-auto flex-1">
           <style>
             {`.scrollbar-hide::-webkit-scrollbar { display: none; }`}
           </style>
-          <h3 className="text-lg xl-down:text-base sm-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-3 xl-down:mb-2 sm-down:mb-2">{t('modal.editTitle')}</h3>
 
           <form onSubmit={onSubmit} className="space-y-3 xl-down:space-y-2 sm-down:space-y-2">
             <div>
@@ -108,16 +150,75 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
+              <div className="relative category-dropdown-container">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {t('form.category.label')}
                 </label>
-                <input
-                  type="text"
-                  value={editingNote.category || ''}
-                  onChange={(e) => setEditingNote({ ...editingNote, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
-                />
+                <button
+                  type="button"
+                  onClick={() => !loadingCategories && setShowCategoryDropdown(!showCategoryDropdown)}
+                  disabled={loadingCategories}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-left flex items-center justify-between"
+                >
+                  {loadingCategories ? (
+                    <span>Loading...</span>
+                  ) : editingNote.category ? (
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: `${editingNote.category.color}20` }}
+                      >
+                        {(() => {
+                          const Icon = (LucideIcons as any)[editingNote.category.icon] || Tag;
+                          return <Icon className="w-3 h-3" style={{ color: editingNote.category.color }} />;
+                        })()}
+                      </div>
+                      <span style={{ color: editingNote.category.color }}>{editingNote.category.name}</span>
+                    </div>
+                  ) : (
+                    <span className="text-gray-500">No category</span>
+                  )}
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showCategoryDropdown && (
+                  <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md shadow-lg max-h-[200px] overflow-y-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingNote({ ...editingNote, categoryId: undefined, category: undefined });
+                        setShowCategoryDropdown(false);
+                      }}
+                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500"
+                    >
+                      No category
+                    </button>
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                          setEditingNote({ ...editingNote, categoryId: cat.id, category: cat });
+                          setShowCategoryDropdown(false);
+                        }}
+                        className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                      >
+                        <div
+                          className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: `${cat.color}20` }}
+                        >
+                          {(() => {
+                            const Icon = (LucideIcons as any)[cat.icon] || Tag;
+                            return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
+                          })()}
+                        </div>
+                        <span style={{ color: cat.color }}>{cat.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -269,22 +370,24 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               </label>
             </div>
 
-            <div className="flex justify-end space-x-3 xl-down:space-x-2 pt-3 xl-down:pt-2 sm-down:pt-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors text-sm xl-down:text-xs"
-              >
-                {t('actions.cancel')}
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 text-sm xl-down:text-xs"
-              >
-                {t('actions.update')}
-              </button>
-            </div>
           </form>
+        </div>
+
+        <div className="flex justify-end gap-2 xl-down:gap-1.5 sm-down:gap-1 p-4 xl-down:p-3 sm-down:p-2 border-t border-gray-200 dark:border-neutral-700">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors text-sm xl-down:text-xs"
+          >
+            {t('actions.cancel')}
+          </button>
+          <button
+            type="submit"
+            onClick={onSubmit}
+            className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 text-sm xl-down:text-xs"
+          >
+            {t('actions.update')}
+          </button>
         </div>
       </div>
     </div>,
@@ -482,11 +585,11 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         imageUrl: editingNote.imageUrl,
         videoUrl: editingNote.videoUrl,
         youtubeUrl: editingNote.youtubeUrl,
-        category: editingNote.category,
+        categoryId: editingNote.categoryId || null,
         priority: editingNote.priority,
         isArchived: editingNote.isArchived,
         reminderAt: editingNote.reminderAt,
-      });
+      } as any);
 
       setShowEditModal(false);
       setEditingNote(null);
@@ -824,8 +927,28 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
-                            {note.category || '-'}
+                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap md-down:hidden">
+                            {note.category ? (
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                                  style={{ backgroundColor: `${note.category.color}20` }}
+                                >
+                                  {(() => {
+                                    const Icon = (LucideIcons as any)[note.category.icon] || Tag;
+                                    return <Icon className="w-3 h-3" style={{ color: note.category.color }} />;
+                                  })()}
+                                </div>
+                                <span 
+                                  className="text-sm xl-down:text-xs font-medium truncate"
+                                  style={{ color: note.category.color }}
+                                >
+                                  {note.category.name}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-sm xl-down:text-xs text-gray-500 dark:text-gray-400">-</span>
+                            )}
                           </td>
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
                             <span className={`px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full ${
@@ -1078,7 +1201,18 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 xl-down:gap-2 text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400">
                           {note.category && (
-                            <span>📁 {note.category}</span>
+                            <div className="flex items-center gap-1.5">
+                              <div
+                                className="w-4 h-4 rounded flex items-center justify-center"
+                                style={{ backgroundColor: `${note.category.color}20` }}
+                              >
+                                {(() => {
+                                  const Icon = (LucideIcons as any)[note.category.icon] || Tag;
+                                  return <Icon className="w-2.5 h-2.5" style={{ color: note.category.color }} />;
+                                })()}
+                              </div>
+                              <span style={{ color: note.category.color }}>{note.category.name}</span>
+                            </div>
                           )}
                           <span className={`px-1.5 py-0.5 xl-down:px-1 xl-down:py-0.5 rounded-full ${
                             note.isArchived 

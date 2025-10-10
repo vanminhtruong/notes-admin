@@ -2,12 +2,21 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { getYouTubeEmbedUrl } from '@utils/youtube';
+import * as LucideIcons from 'lucide-react';
+import { Tag } from 'lucide-react';
 
 interface User {
   id: number;
   name: string;
   email: string;
   avatar?: string;
+}
+
+interface NoteCategory {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
 }
 
 interface Note {
@@ -17,7 +26,8 @@ interface Note {
   imageUrl?: string;
   videoUrl?: string;
   youtubeUrl?: string;
-  category?: string;
+  categoryId?: number;
+  category?: NoteCategory;
   priority: 'low' | 'medium' | 'high';
   isArchived: boolean;
   reminderAt?: string;
@@ -31,7 +41,6 @@ type NoteDetailModalProps = {
   note: Note | null;
   onClose: () => void;
 };
-
 const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }) => {
   const { t } = useTranslation('notes');
 
@@ -164,8 +173,24 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
               </div>
 
               {note.category && (
-                <div className="inline-flex items-center gap-2 xl-down:gap-1.5 sm-down:gap-1 px-3 xl-down:px-2.5 sm-down:px-2 py-1 xl-down:py-0.5 rounded-md border bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700 text-sm xl-down:text-xs sm-down:text-[11px] font-medium">
-                  <span>{note.category}</span>
+                <div 
+                  className="inline-flex items-center gap-2 xl-down:gap-1.5 sm-down:gap-1 px-3 xl-down:px-2.5 sm-down:px-2 py-1 xl-down:py-0.5 rounded-md border text-sm xl-down:text-xs sm-down:text-[11px] font-medium"
+                  style={{ 
+                    backgroundColor: `${note.category.color}15`,
+                    borderColor: `${note.category.color}40`,
+                    color: note.category.color
+                  }}
+                >
+                  <div
+                    className="w-4 h-4 rounded flex items-center justify-center"
+                    style={{ backgroundColor: `${note.category.color}20` }}
+                  >
+                    {(() => {
+                      const Icon = (LucideIcons as any)[note.category.icon] || Tag;
+                      return <Icon className="w-2.5 h-2.5" style={{ color: note.category.color }} />;
+                    })()}
+                  </div>
+                  <span>{note.category.name}</span>
                 </div>
               )}
             </div>

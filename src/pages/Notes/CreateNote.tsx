@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { hasPermission } from '@utils/auth';
+import * as LucideIcons from 'lucide-react';
+import { Tag } from 'lucide-react';
 
 // MediaTabs Component
 const MediaTabs = ({ formData, setFormData, t }: { formData: any; setFormData: (data: any) => void; t: any }) => {
@@ -131,14 +133,18 @@ const CreateNote: React.FC = () => {
     imageUrl: '',
     videoUrl: '',
     youtubeUrl: '',
-    category: '',
+    categoryId: null as number | null,
     priority: 'medium' as 'low' | 'medium' | 'high',
     reminderAt: ''
   });
   const [users, setUsers] = useState<User[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const navigate = useNavigate();
 
   // Check permission
@@ -153,6 +159,31 @@ const CreateNote: React.FC = () => {
   useEffect(() => {
     loadUsers();
   }, [searchTerm]);
+
+  // Load categories when user is selected
+  useEffect(() => {
+    if (formData.userId) {
+      loadCategories(parseInt(formData.userId));
+    } else {
+      setCategories([]);
+      setSelectedCategory(null);
+      setFormData(prev => ({ ...prev, categoryId: null }));
+    }
+  }, [formData.userId]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.category-dropdown-container')) {
+        setShowCategoryDropdown(false);
+      }
+    };
+    if (showCategoryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showCategoryDropdown]);
 
   // Real-time feedback when note is created successfully
   useEffect(() => {
@@ -187,6 +218,18 @@ const CreateNote: React.FC = () => {
     }
   };
 
+  const loadCategories = async (userId: number) => {
+    try {
+      setLoadingCategories(true);
+      const response: any = await adminService.getAllCategories({ userId, limit: 100 });
+      setCategories(response.categories || []);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.userId || !formData.title) {
@@ -203,10 +246,10 @@ const CreateNote: React.FC = () => {
         imageUrl: formData.imageUrl || undefined,
         videoUrl: formData.videoUrl || undefined,
         youtubeUrl: formData.youtubeUrl || undefined,
-        category: formData.category || undefined,
+        categoryId: formData.categoryId || undefined,
         priority: formData.priority,
         reminderAt: formData.reminderAt || undefined,
-      });
+      } as any);
 
       toast.success(t('alerts.createSuccess'));
       navigate('/notes');
@@ -369,17 +412,79 @@ const CreateNote: React.FC = () => {
 
           {/* Category and Priority */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
-            <div>
+            <div className="relative category-dropdown-container">
               <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
                 {t('form.category.label')}
               </label>
-              <input
-                type="text"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
-                placeholder={t('form.placeholders.category')}
-              />
+              <button
+                type="button"
+                onClick={() => formData.userId && !loadingCategories && setShowCategoryDropdown(!showCategoryDropdown)}
+                disabled={!formData.userId || loadingCategories}
+                className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs text-left flex items-center justify-between"
+              >
+                {!formData.userId ? (
+                  <span className="text-gray-500">Select user first</span>
+                ) : loadingCategories ? (
+                  <span>Loading...</span>
+                ) : selectedCategory ? (
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: `${selectedCategory.color}20` }}
+                    >
+                      {(() => {
+                        const Icon = (LucideIcons as any)[selectedCategory.icon] || Tag;
+                        return <Icon className="w-3 h-3" style={{ color: selectedCategory.color }} />;
+                      })()}
+                    </div>
+                    <span style={{ color: selectedCategory.color }}>{selectedCategory.name}</span>
+                  </div>
+                ) : (
+                  <span className="text-gray-500">No category</span>
+                )}
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {showCategoryDropdown && (
+                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setFormData({ ...formData, categoryId: null });
+                      setShowCategoryDropdown(false);
+                    }}
+                    className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 text-sm"
+                  >
+                    No category
+                  </button>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setFormData({ ...formData, categoryId: cat.id });
+                        setShowCategoryDropdown(false);
+                      }}
+                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 text-sm"
+                    >
+                      <div
+                        className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: `${cat.color}20` }}
+                      >
+                        {(() => {
+                          const Icon = (LucideIcons as any)[cat.icon] || Tag;
+                          return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
+                        })()}
+                      </div>
+                      <span style={{ color: cat.color }}>{cat.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>

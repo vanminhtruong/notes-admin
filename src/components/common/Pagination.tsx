@@ -60,6 +60,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {/* Mobile controls: luôn hiển thị nút Prev/Next; chỉ hiển thị info khi có totalItems */}
       <div className="flex flex-1 items-center justify-between sm:hidden">
         <button
+          type="button"
           onClick={() => handlePageClick(currentPage - 1)}
           disabled={currentPage === 1}
           className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -70,6 +71,7 @@ const Pagination: React.FC<PaginationProps> = ({
           {t('pagination.pageInfo', { current: currentPage, total: totalPages })}
         </span>
         <button
+          type="button"
           onClick={() => handlePageClick(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -93,6 +95,7 @@ const Pagination: React.FC<PaginationProps> = ({
           <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
             {/* Previous button */}
             <button
+              type="button"
               onClick={() => handlePageClick(currentPage - 1)}
               disabled={currentPage === 1}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -106,6 +109,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {/* Số trang */}
             {visiblePages.map((page, index) => (
               <button
+                type="button"
                 key={index}
                 onClick={() => handlePageClick(page)}
                 className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:z-20 focus:outline-offset-0 ${
@@ -120,6 +124,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
             {/* Next button */}
             <button
+              type="button"
               onClick={() => handlePageClick(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"

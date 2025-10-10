@@ -10,6 +10,7 @@ import UsersList from '@pages/Users/UsersList'
 import UserActivity from '@pages/Users/UserActivity'
 import NotesList from '@pages/Notes/NotesList'
 import CreateNote from '@pages/Notes/CreateNote'
+import CategoriesList from '@pages/Categories/CategoriesList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
 import NoPermission from '@pages/NoPermission/NoPermission'
@@ -88,6 +89,16 @@ const router = createBrowserRouter([
         element: (
           <PermissionRoute permission="manage_notes.create" redirectTo="/notes">
             <CreateNote />
+          </PermissionRoute>
+        )
+      },
+
+      // Categories
+      { 
+        path: 'categories', 
+        element: (
+          <PermissionRoute permission="manage_notes.categories.view" redirectTo="/dashboard">
+            <CategoriesList />
           </PermissionRoute>
         )
       },

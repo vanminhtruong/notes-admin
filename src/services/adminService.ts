@@ -150,11 +150,29 @@ class AdminService {
     videoUrl?: string;
     youtubeUrl?: string;
     category?: string;
+    categoryId?: number | null;
     priority?: string;
     reminderAt?: string;
     folderId?: number | null;
   }) {
     return this.axiosInstance.post('/admin/notes', noteData);
+  }
+
+  // Alias for consistency with backend naming
+  async createNoteForUser(noteData: {
+    userId: number;
+    title: string;
+    content?: string;
+    imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
+    category?: string;
+    categoryId?: number | null;
+    priority?: string;
+    reminderAt?: string;
+    folderId?: number | null;
+  }) {
+    return this.createUserNote(noteData);
   }
 
   async updateUserNote(noteId: number, noteData: {
@@ -164,6 +182,7 @@ class AdminService {
     videoUrl?: string;
     youtubeUrl?: string;
     category?: string;
+    categoryId?: number | null;
     priority?: string;
     isArchived?: boolean;
     reminderAt?: string;
@@ -432,6 +451,54 @@ class AdminService {
     allowMessagesFromNonFriends?: boolean;
   }) {
     return this.axiosInstance.put(`/admin/admins/${adminId}/profile`, data);
+  }
+
+  // ============ Categories Management ============
+
+  // Get all categories
+  async getAllCategories(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    userId?: number;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}) {
+    return this.axiosInstance.get('/admin/categories', { params });
+  }
+
+  // Get category detail
+  async getCategoryDetail(categoryId: number) {
+    return this.axiosInstance.get(`/admin/categories/${categoryId}`);
+  }
+
+  // Create category for user
+  async createCategoryForUser(data: {
+    userId: number;
+    name: string;
+    color: string;
+    icon: string;
+  }) {
+    return this.axiosInstance.post('/admin/categories', data);
+  }
+
+  // Update category
+  async updateCategory(categoryId: number, data: {
+    name?: string;
+    color?: string;
+    icon?: string;
+  }) {
+    return this.axiosInstance.put(`/admin/categories/${categoryId}`, data);
+  }
+
+  // Delete category
+  async deleteCategory(categoryId: number) {
+    return this.axiosInstance.delete(`/admin/categories/${categoryId}`);
+  }
+
+  // Get categories stats
+  async getCategoriesStats() {
+    return this.axiosInstance.get('/admin/categories/stats');
   }
 }
 
