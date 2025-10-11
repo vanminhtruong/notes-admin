@@ -116,7 +116,9 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
     s.on('group_shared_note_updated_by_admin', handleSharedNoteEvent);
     s.on('user_shared_note_created', handleSharedNoteEvent);
     s.on('user_shared_note_deleted', handleSharedNoteEvent);
+    s.on('user_shared_note_permissions_updated', handleSharedNoteEvent);
     s.on('user_group_shared_note_created', handleSharedNoteEvent);
+    s.on('user_group_shared_note_permissions_updated', handleSharedNoteEvent);
 
     return () => {
       try {
@@ -126,7 +128,9 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
         s.off('group_shared_note_updated_by_admin', handleSharedNoteEvent);
         s.off('user_shared_note_created', handleSharedNoteEvent);
         s.off('user_shared_note_deleted', handleSharedNoteEvent);
+        s.off('user_shared_note_permissions_updated', handleSharedNoteEvent);
         s.off('user_group_shared_note_created', handleSharedNoteEvent);
+        s.off('user_group_shared_note_permissions_updated', handleSharedNoteEvent);
       } catch {}
     };
   }, [loadSharedNotes]);
@@ -441,34 +445,26 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                           </div>
                         </td>
                         <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
-                          <div className="flex gap-1">
-                            {sharedNote.shareType === 'group' ? (
-                              <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
-                                {t('sharedNotes.permissions.groupShare', { defaultValue: 'Group Share' })}
+                          <div className="flex flex-nowrap gap-1 overflow-x-auto">
+                            {sharedNote.canCreate && (
+                              <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 whitespace-nowrap">
+                                {t('sharedNotes.permissions.create', { defaultValue: 'Create' })}
                               </span>
-                            ) : (
-                              <>
-                                {sharedNote.canCreate && (
-                                  <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                                    {t('sharedNotes.permissions.create', { defaultValue: 'Create' })}
-                                  </span>
-                                )}
-                                {sharedNote.canEdit && (
-                                  <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                                    {t('sharedNotes.permissions.edit')}
-                                  </span>
-                                )}
-                                {sharedNote.canDelete && (
-                                  <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-                                    {t('sharedNotes.permissions.delete')}
-                                  </span>
-                                )}
-                                {!sharedNote.canEdit && !sharedNote.canDelete && !sharedNote.canCreate && (
-                                  <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                                    {t('sharedNotes.permissions.view')}
-                                  </span>
-                                )}
-                              </>
+                            )}
+                            {sharedNote.canEdit && (
+                              <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 whitespace-nowrap">
+                                {t('sharedNotes.permissions.edit')}
+                              </span>
+                            )}
+                            {sharedNote.canDelete && (
+                              <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 whitespace-nowrap">
+                                {t('sharedNotes.permissions.delete')}
+                              </span>
+                            )}
+                            {!sharedNote.canEdit && !sharedNote.canDelete && !sharedNote.canCreate && (
+                              <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                                {t('sharedNotes.permissions.view')}
+                              </span>
                             )}
                           </div>
                         </td>
