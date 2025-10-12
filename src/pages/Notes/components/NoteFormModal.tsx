@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
+import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
+import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
 
 // MediaTabs Component
 const MediaTabs = memo(({ imageUrl, videoUrl, youtubeUrl, onImageChange, onVideoChange, onYoutubeChange }: {
@@ -192,6 +194,13 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [reminderAt, setReminderAt] = useState('');
 
+  // RichTextEditor instance
+  const editor = useRichTextEditor({
+    content,
+    placeholder: t('form.placeholders.content'),
+    onUpdate: (html) => setContent(html),
+  });
+
   useEffect(() => {
     if (show) {
       if (note) {
@@ -319,12 +328,10 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
               <label className="block text-sm md-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('form.content.label')}
               </label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
+              <RichTextEditor 
+                editor={editor}
                 placeholder={t('form.placeholders.content')}
-                rows={6}
-                className="w-full px-4 py-2 md-down:px-3.5 md-down:py-2 sm-down:px-3 sm-down:py-1.5 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 resize-none text-sm md-down:text-sm sm-down:text-xs"
+                className="text-sm md-down:text-xs"
               />
             </div>
 

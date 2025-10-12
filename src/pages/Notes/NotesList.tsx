@@ -14,6 +14,9 @@ import SharedNotesList from '@pages/Notes/components/SharedNotesList';
 import FoldersList from '@pages/Notes/components/FoldersList';
 import MoveToFolderModal from '@pages/Notes/components/MoveToFolderModal';
 import Pagination from '@components/common/Pagination';
+import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
+import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
+import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -68,6 +71,15 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
   const [categories, setCategories] = useState<NoteCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+  // RichTextEditor instance
+  const editor = useRichTextEditor({
+    content: editingNote.content || '',
+    placeholder: t('form.placeholders.content'),
+    onUpdate: (html) => {
+      setEditingNote({ ...editingNote, content: html });
+    },
+  });
 
   // Fetch categories for the user
   useEffect(() => {
@@ -141,11 +153,10 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('form.content.label')}
               </label>
-              <textarea
-                value={editingNote.content || ''}
-                onChange={(e) => setEditingNote({ ...editingNote, content: e.target.value })}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+              <RichTextEditor 
+                editor={editor}
+                placeholder={t('form.placeholders.content')}
+                className="text-sm"
               />
             </div>
 
@@ -896,7 +907,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
                                 <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{note.title}</h4>
-                                <p className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{note.content}</p>
+                                <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                                  <RichTextContent content={note.content || ''} />
+                                </div>
                               </div>
                             </div>
                           </td>
@@ -1119,9 +1132,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                           <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
                             {note.title}
                           </h4>
-                          <p className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                            {note.content}
-                          </p>
+                          <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                            <RichTextContent content={note.content || ''} />
+                          </div>
                         </div>
                       </div>
                       

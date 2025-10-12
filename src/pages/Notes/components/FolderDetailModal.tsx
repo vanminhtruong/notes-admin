@@ -8,6 +8,7 @@ import { hasPermission } from '@utils/auth';
 import NoteFormModal from './NoteFormModal';
 import NoteDetailModal from './NoteDetailModal';
 import { getFolderIcon, getFolderColorClass } from '@utils/folderIcons';
+import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -350,9 +351,9 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
                         {note.title}
                       </h4>
                       {note.content && (
-                        <p className="text-sm md-down:text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
-                          {note.content}
-                        </p>
+                        <div className="text-sm md-down:text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                          <RichTextContent content={note.content} />
+                        </div>
                       )}
                       
                       {/* Media indicators */}

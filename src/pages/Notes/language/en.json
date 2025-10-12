@@ -14,6 +14,37 @@
     "changeUser": "Change",
     "noUsers": "No users found"
   },
+  "editor": {
+    "loading": "Loading editor...",
+    "link": {
+      "placeholder": "https://...",
+      "add": "Add",
+      "cancel": "Cancel",
+      "invalidUrl": "Invalid URL",
+      "inserted": "Link inserted",
+      "addTitle": "Add link"
+    },
+    "toolbar": {
+      "bold": "Bold (Ctrl+B)",
+      "italic": "Italic (Ctrl+I)",
+      "underline": "Underline (Ctrl+U)",
+      "strike": "Strikethrough",
+      "code": "Code",
+      "h1": "Heading 1",
+      "h2": "Heading 2",
+      "h3": "Heading 3",
+      "bulletList": "Bulleted list",
+      "orderedList": "Numbered list",
+      "alignLeft": "Align left",
+      "alignCenter": "Align center",
+      "alignRight": "Align right",
+      "alignJustify": "Justify",
+      "blockquote": "Blockquote",
+      "horizontalRule": "Horizontal rule",
+      "undo": "Undo (Ctrl+Z)",
+      "redo": "Redo (Ctrl+Y)"
+    }
+  },
   "form": {
     "title": {
       "label": "Title",
@@ -69,7 +100,7 @@
       "content": "Enter note content...",
       "category": "Enter category...",
       "imageUrl": "https://example.com/image.jpg",
-      "youtubeUrl": "Enter YouTube video URL",
+      "youtubeUrl": "Enter YouTube video URL (Shorts supported)",
       "searchUser": "Search for user..."
     }
   },

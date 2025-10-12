@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { getYouTubeEmbedUrl } from '@utils/youtube';
 import * as LucideIcons from 'lucide-react';
 import { Tag } from 'lucide-react';
+import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -204,13 +205,15 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                     {t('form.content.label')}
                   </h3>
                   <div className="bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3.5 sm-down:p-3 border border-gray-200 dark:border-neutral-700 min-h-[120px] xl-down:min-h-[100px] sm-down:min-h-[80px]">
-                    <p className="text-gray-900 dark:text-gray-100 leading-relaxed whitespace-pre-wrap text-sm xl-down:text-xs sm-down:text-[11px]">
-                      {note.content || (
-                        <span className="text-gray-500 dark:text-gray-400 italic">
-                          {t('empty.content')}
-                        </span>
-                      )}
-                    </p>
+                    {note.content ? (
+                      <div className="text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs sm-down:text-[11px]">
+                        <RichTextContent content={note.content} />
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 dark:text-gray-400 italic text-sm xl-down:text-xs sm-down:text-[11px]">
+                        {t('empty.content')}
+                      </p>
+                    )}
                   </div>
                 </div>
 

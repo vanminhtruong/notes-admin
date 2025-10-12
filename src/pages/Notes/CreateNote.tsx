@@ -7,6 +7,8 @@ import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import * as LucideIcons from 'lucide-react';
 import { Tag } from 'lucide-react';
+import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
+import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
 
 // MediaTabs Component
 const MediaTabs = ({ formData, setFormData, t }: { formData: any; setFormData: (data: any) => void; t: any }) => {
@@ -136,6 +138,15 @@ const CreateNote: React.FC = () => {
     categoryId: null as number | null,
     priority: 'medium' as 'low' | 'medium' | 'high',
     reminderAt: ''
+  });
+
+  // RichTextEditor instance
+  const editor = useRichTextEditor({
+    content: formData.content,
+    placeholder: t('form.placeholders.content'),
+    onUpdate: (html) => {
+      setFormData(prev => ({ ...prev, content: html }));
+    },
   });
   const [users, setUsers] = useState<User[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -401,12 +412,10 @@ const CreateNote: React.FC = () => {
             <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
               {t('form.content.label')}
             </label>
-            <textarea
-              value={formData.content}
-              onChange={(e) => handleInputChange('content', e.target.value)}
-              rows={6}
-              className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs"
+            <RichTextEditor 
+              editor={editor}
               placeholder={t('form.placeholders.content')}
+              className="text-sm xl-down:text-xs"
             />
           </div>
 

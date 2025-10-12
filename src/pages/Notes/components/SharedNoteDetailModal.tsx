@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
 import { getYouTubeEmbedUrl } from '@utils/youtube';
+import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -216,8 +217,8 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                       <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {t('form.content.label', { defaultValue: 'Nội dung' })}
                       </label>
-                      <div className="text-sm xl-down:text-xs text-gray-900 dark:text-gray-100 whitespace-pre-wrap max-h-32 overflow-y-auto">
-                        {sharedNote.note.content}
+                      <div className="text-sm xl-down:text-xs text-gray-900 dark:text-gray-100 max-h-32 overflow-y-auto">
+                        <RichTextContent content={sharedNote.note.content} />
                       </div>
                     </div>
                   )}

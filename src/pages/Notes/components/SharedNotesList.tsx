@@ -6,6 +6,7 @@ import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import SharedNoteDetailModal from './SharedNoteDetailModal';
+import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -343,9 +344,9 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                             <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">
                               {sharedNote.note.title}
                             </h4>
-                            <p className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                              {sharedNote.note.content}
-                            </p>
+                            <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                              <RichTextContent content={sharedNote.note.content || ''} />
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">

@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@tiptap/extension-link": "^3.6.6",
+    "@tiptap/extension-placeholder": "^3.6.6",
+    "@tiptap/extension-text-align": "^3.6.6",
+    "@tiptap/extension-underline": "^3.6.6",
+    "@tiptap/react": "^3.6.6",
+    "@tiptap/starter-kit": "^3.6.6",
     "axios": "^1.12.2",
     "country-flag-icons": "^1.5.20",
     "glfx": "^0.0.4",
@@ -21,6 +27,7 @@
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hot-toast": "^2.4.1",
     "react-i18next": "^15.7.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.8.0",
@@ -29,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.2.0",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",

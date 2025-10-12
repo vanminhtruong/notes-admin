@@ -14,6 +14,37 @@
     "changeUser": "Thay đổi",
     "noUsers": "Không tìm thấy người dùng"
   },
+  "editor": {
+    "loading": "Đang tải editor...",
+    "link": {
+      "placeholder": "https://...",
+      "add": "Thêm",
+      "cancel": "Hủy",
+      "invalidUrl": "URL không hợp lệ",
+      "inserted": "Đã chèn liên kết",
+      "addTitle": "Thêm liên kết"
+    },
+    "toolbar": {
+      "bold": "Đậm (Ctrl+B)",
+      "italic": "Nghiêng (Ctrl+I)",
+      "underline": "Gạch chân (Ctrl+U)",
+      "strike": "Gạch ngang",
+      "code": "Code",
+      "h1": "Tiêu đề 1",
+      "h2": "Tiêu đề 2",
+      "h3": "Tiêu đề 3",
+      "bulletList": "Danh sách dấu đầu dòng",
+      "orderedList": "Danh sách đánh số",
+      "alignLeft": "Căn trái",
+      "alignCenter": "Căn giữa",
+      "alignRight": "Căn phải",
+      "alignJustify": "Căn đều",
+      "blockquote": "Trích dẫn",
+      "horizontalRule": "Đường kẻ ngang",
+      "undo": "Hoàn tác (Ctrl+Z)",
+      "redo": "Làm lại (Ctrl+Y)"
+    }
+  },
   "form": {
     "title": {
       "label": "Tiêu đề",
@@ -66,9 +97,10 @@
     },
     "placeholders": {
       "title": "Nhập tiêu đề ghi chú...",
-      "content": "Nhập nội dung ghi chú...",
+      "content": "Nhập nội dung...",
       "category": "Nhập danh mục...",
       "imageUrl": "https://example.com/image.jpg",
+      "youtubeUrl": "Nhập URL video YouTube (hỗ trợ cả Shorts)",
       "searchUser": "Tìm kiếm người dùng..."
     }
   },
