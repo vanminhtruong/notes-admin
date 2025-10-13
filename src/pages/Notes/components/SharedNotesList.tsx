@@ -6,7 +6,6 @@ import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import SharedNoteDetailModal from './SharedNoteDetailModal';
-import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -209,6 +208,21 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
     });
   };
 
+  // Helpers: truncate to N words and strip HTML for content preview
+  const truncateWords = (text: string, words = 5) => {
+    if (!text) return '';
+    const parts = text.trim().split(/\s+/);
+    return parts.length <= words ? text.trim() : parts.slice(0, words).join(' ') + ' ...';
+  };
+
+  const getPlainText = (html?: string) => {
+    if (!html) return '';
+    const div = typeof document !== 'undefined' ? document.createElement('div') : null;
+    if (!div) return '';
+    div.innerHTML = html;
+    return (div.textContent || div.innerText || '').trim();
+  };
+
   return (
     <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
       {!embedded && (
@@ -340,12 +354,12 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                         }}
                       >
                         <td className="px-6 py-4 xl-down:px-4 xl-down:py-3">
-                          <div>
-                            <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">
-                              {sharedNote.note.title}
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
+                              {truncateWords(sharedNote.note.title, 5)}
                             </h4>
-                            <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                              <RichTextContent content={sharedNote.note.content || ''} />
+                            <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                              {truncateWords(getPlainText(sharedNote.note.content || ''), 5)}
                             </div>
                           </div>
                         </td>

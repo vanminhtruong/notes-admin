@@ -16,7 +16,6 @@ import MoveToFolderModal from '@pages/Notes/components/MoveToFolderModal';
 import Pagination from '@components/common/Pagination';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
-import RichTextContent from '@components/RichTextEditor/RichTextContent';
 
 interface User {
   id: number;
@@ -692,6 +691,21 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     });
   };
 
+  // Helpers: truncate to N words and strip HTML to plain text for preview
+  const truncateWords = (text: string, words = 5) => {
+    if (!text) return '';
+    const parts = text.trim().split(/\s+/);
+    return parts.length <= words ? text.trim() : parts.slice(0, words).join(' ') + ' ...';
+  };
+
+  const getPlainText = (html?: string) => {
+    if (!html) return '';
+    const div = typeof document !== 'undefined' ? document.createElement('div') : null;
+    if (!div) return '';
+    div.innerHTML = html;
+    return (div.textContent || div.innerText || '').trim();
+  };
+
 
 
   return (
@@ -905,10 +919,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                         >
                           <td className="px-6 py-4 xl-down:px-4 xl-down:py-3">
                             <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{note.title}</h4>
-                                <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                                  <RichTextContent content={note.content || ''} />
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{truncateWords(note.title, 5)}</h4>
+                                <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                                  {truncateWords(getPlainText(note.content || ''), 5)}
                                 </div>
                               </div>
                             </div>
@@ -1130,10 +1144,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                       <div className="flex items-start justify-between mb-3 xl-down:mb-2">
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
-                            {note.title}
+                            {truncateWords(note.title, 5)}
                           </h4>
-                          <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                            <RichTextContent content={note.content || ''} />
+                          <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                            {truncateWords(getPlainText(note.content || ''), 5)}
                           </div>
                         </div>
                       </div>
