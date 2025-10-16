@@ -172,6 +172,50 @@
           "label": "Logout All Devices",
           "description": "Logout user from all devices"
         }
+      },
+      "chat_settings": {
+        "label": "Manage Chat Settings",
+        "description": "Manage user chat settings (E2EE, Read Status, Privacy)",
+        "view": {
+          "label": "View Chat Settings",
+          "description": "View all user chat settings"
+        },
+        "edit": {
+          "label": "Edit Chat Settings",
+          "description": "Edit user chat settings"
+        },
+        "e2ee": {
+          "label": "Manage E2EE",
+          "description": "Manage End-to-end Encryption",
+          "toggle": {
+            "label": "Toggle E2EE",
+            "description": "Allow enabling or disabling E2EE for user"
+          }
+        },
+        "read_status": {
+          "label": "Manage Read Status",
+          "description": "Manage message read status",
+          "toggle": {
+            "label": "Toggle Read Status",
+            "description": "Allow enabling or disabling read status display"
+          }
+        },
+        "privacy": {
+          "label": "Manage Privacy",
+          "description": "Manage user privacy settings",
+          "allow_non_friends": {
+            "label": "Messages from non-friends",
+            "description": "Allow or disallow messages from non-friends"
+          },
+          "hide_phone": {
+            "label": "Hide/Show Phone Number",
+            "description": "Manage phone number visibility"
+          },
+          "hide_birthdate": {
+            "label": "Hide/Show Birth Date",
+            "description": "Manage birth date visibility"
+          }
+        }
       }
     },
     "manage_notes": {

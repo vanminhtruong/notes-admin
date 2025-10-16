@@ -172,6 +172,50 @@
           "label": "Đăng xuất tất cả thiết bị",
           "description": "Đăng xuất người dùng khỏi tất cả thiết bị"
         }
+      },
+      "chat_settings": {
+        "label": "Quản lý cài đặt chat",
+        "description": "Quản lý cài đặt chat của người dùng (E2EE, Read Status, Privacy)",
+        "view": {
+          "label": "Xem cài đặt chat",
+          "description": "Xem tất cả cài đặt chat của người dùng"
+        },
+        "edit": {
+          "label": "Chỉnh sửa cài đặt chat",
+          "description": "Chỉnh sửa cài đặt chat của người dùng"
+        },
+        "e2ee": {
+          "label": "Quản lý E2EE",
+          "description": "Quản lý mã hóa đầu cuối (End-to-end Encryption)",
+          "toggle": {
+            "label": "Bật/tắt E2EE",
+            "description": "Cho phép bật hoặc tắt E2EE cho người dùng"
+          }
+        },
+        "read_status": {
+          "label": "Quản lý Read Status",
+          "description": "Quản lý trạng thái đã đọc tin nhắn",
+          "toggle": {
+            "label": "Bật/tắt Read Status",
+            "description": "Cho phép bật hoặc tắt hiển thị trạng thái đã đọc"
+          }
+        },
+        "privacy": {
+          "label": "Quản lý Privacy",
+          "description": "Quản lý cài đặt riêng tư của người dùng",
+          "allow_non_friends": {
+            "label": "Tin nhắn từ người lạ",
+            "description": "Cho phép hoặc không cho phép tin nhắn từ người không phải bạn bè"
+          },
+          "hide_phone": {
+            "label": "Ẩn/hiện số điện thoại",
+            "description": "Quản lý việc ẩn hiện số điện thoại của người dùng"
+          },
+          "hide_birthdate": {
+            "label": "Ẩn/hiện ngày sinh",
+            "description": "Quản lý việc ẩn hiện ngày sinh của người dùng"
+          }
+        }
       }
     },
     "manage_notes": {

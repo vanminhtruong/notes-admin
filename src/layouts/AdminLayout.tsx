@@ -226,6 +226,9 @@ const AdminLayout: React.FC = () => {
         ...(hasUserActivityAccess ? [
           { id: 'users-activity', label: t('navigation.usersActivity'), path: '/users/activity' }
         ] : []),
+        ...(hasPermission('manage_users.chat_settings.view') ? [
+          { id: 'chat-settings', label: t('navigation.chatSettings', { defaultValue: 'Chat Settings' }), path: '/users/chat-settings' }
+        ] : []),
       ],
     },
     {

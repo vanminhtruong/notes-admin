@@ -1,0 +1,33 @@
+{
+  "title": "Quản lý Chat Settings",
+  "subtitle": "Quản lý cài đặt chat của người dùng (E2EE, Read Status, Privacy...)",
+  "noPermission": "Bạn không có quyền truy cập trang này",
+  "noData": "Không có dữ liệu",
+  "filters": {
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm theo tên hoặc email người dùng...",
+    "e2ee": "End-to-end Encryption",
+    "readStatus": "Read Status",
+    "all": "Tất cả",
+    "enabled": "Đã bật",
+    "disabled": "Đã tắt",
+    "clear": "Xóa bộ lọc"
+  },
+  "table": {
+    "user": "Người dùng",
+    "e2ee": "E2EE",
+    "readStatus": "Read Status",
+    "allowNonFriends": "Tin nhắn từ người lạ",
+    "hidePhone": "Ẩn số điện thoại",
+    "hideBirthDate": "Ẩn ngày sinh",
+    "createdAt": "Ngày tạo",
+    "hasPIN": "Đã đặt PIN"
+  },
+  "actions": {
+    "updateSuccess": "Cập nhật thành công",
+    "updateFailed": "Không thể cập nhật"
+  },
+  "errors": {
+    "loadFailed": "Không thể tải dữ liệu chat settings"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "Chat Settings Management",
+  "subtitle": "Manage user chat settings (E2EE, Read Status, Privacy...)",
+  "noPermission": "You don't have permission to access this page",
+  "noData": "No data available",
+  "filters": {
+    "search": "Search",
+    "searchPlaceholder": "Search by user name or email...",
+    "e2ee": "End-to-end Encryption",
+    "readStatus": "Read Status",
+    "all": "All",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "clear": "Clear Filters"
+  },
+  "table": {
+    "user": "User",
+    "e2ee": "E2EE",
+    "readStatus": "Read Status",
+    "allowNonFriends": "Allow Non-Friends",
+    "hidePhone": "Hide Phone",
+    "hideBirthDate": "Hide Birth Date",
+    "createdAt": "Created At",
+    "hasPIN": "Has PIN"
+  },
+  "actions": {
+    "updateSuccess": "Updated successfully",
+    "updateFailed": "Failed to update"
+  },
+  "errors": {
+    "loadFailed": "Failed to load chat settings data"
+  }
+}

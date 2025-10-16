@@ -1,0 +1,33 @@
+{
+  "title": "채팅 설정 관리",
+  "subtitle": "사용자 채팅 설정 관리 (E2EE, 읽음 상태, 개인정보...)",
+  "noPermission": "이 페이지에 접근할 권한이 없습니다",
+  "noData": "데이터가 없습니다",
+  "filters": {
+    "search": "검색",
+    "searchPlaceholder": "사용자 이름 또는 이메일로 검색...",
+    "e2ee": "종단간 암호화",
+    "readStatus": "읽음 상태",
+    "all": "전체",
+    "enabled": "활성화됨",
+    "disabled": "비활성화됨",
+    "clear": "필터 지우기"
+  },
+  "table": {
+    "user": "사용자",
+    "e2ee": "E2EE",
+    "readStatus": "읽음 상태",
+    "allowNonFriends": "친구 아닌 사람 허용",
+    "hidePhone": "전화번호 숨기기",
+    "hideBirthDate": "생년월일 숨기기",
+    "createdAt": "생성일",
+    "hasPIN": "PIN 설정됨"
+  },
+  "actions": {
+    "updateSuccess": "성공적으로 업데이트되었습니다",
+    "updateFailed": "업데이트할 수 없습니다"
+  },
+  "errors": {
+    "loadFailed": "채팅 설정 데이터를 로드할 수 없습니다"
+  }
+}

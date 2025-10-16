@@ -172,6 +172,50 @@
           "label": "모든 기기 로그아웃",
           "description": "모든 기기에서 사용자 로그아웃"
         }
+      },
+      "chat_settings": {
+        "label": "채팅 설정 관리",
+        "description": "사용자 채팅 설정 관리 (E2EE, 읽음 상태, 개인정보)",
+        "view": {
+          "label": "채팅 설정 보기",
+          "description": "모든 사용자 채팅 설정 조회"
+        },
+        "edit": {
+          "label": "채팅 설정 편집",
+          "description": "사용자 채팅 설정 편집"
+        },
+        "e2ee": {
+          "label": "E2EE 관리",
+          "description": "종단간 암호화 관리",
+          "toggle": {
+            "label": "E2EE 토글",
+            "description": "사용자의 E2EE 활성화 또는 비활성화 허용"
+          }
+        },
+        "read_status": {
+          "label": "읽음 상태 관리",
+          "description": "메시지 읽음 상태 관리",
+          "toggle": {
+            "label": "읽음 상태 토글",
+            "description": "읽음 상태 표시 활성화 또는 비활성화 허용"
+          }
+        },
+        "privacy": {
+          "label": "개인정보 관리",
+          "description": "사용자 개인정보 설정 관리",
+          "allow_non_friends": {
+            "label": "친구 아닌 사람의 메시지",
+            "description": "친구가 아닌 사람의 메시지 허용 또는 차단"
+          },
+          "hide_phone": {
+            "label": "전화번호 숨기기/표시",
+            "description": "전화번호 표시 여부 관리"
+          },
+          "hide_birthdate": {
+            "label": "생년월일 숨기기/표시",
+            "description": "생년월일 표시 여부 관리"
+          }
+        }
       }
     },
     "manage_notes": {

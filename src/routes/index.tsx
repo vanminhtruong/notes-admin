@@ -8,6 +8,7 @@ import Login from '@/pages/Login/Login'
 import Dashboard from '@/pages/Dashboard/Dashboard'
 import UsersList from '@pages/Users/UsersList'
 import UserActivity from '@pages/Users/UserActivity'
+import ChatSettings from '@pages/Users/ChatSettings/ChatSettings'
 import NotesList from '@pages/Notes/NotesList'
 import CreateNote from '@pages/Notes/CreateNote'
 import CategoriesList from '@pages/Categories/CategoriesList'
@@ -71,6 +72,14 @@ const router = createBrowserRouter([
             <UserActivityRoute redirectTo="/users">
               <UserActivity />
             </UserActivityRoute>
+          </PermissionRoute>
+        )
+      },
+      { 
+        path: 'users/chat-settings', 
+        element: (
+          <PermissionRoute permission="manage_users.chat_settings.view" redirectTo="/dashboard">
+            <ChatSettings />
           </PermissionRoute>
         )
       },

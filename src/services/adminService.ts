@@ -96,6 +96,8 @@ class AdminService {
     search?: string;
     role?: string;
     isActive?: boolean;
+    e2eeEnabled?: boolean;
+    readStatusEnabled?: boolean;
     sortBy?: string;
     sortOrder?: string;
   } = {}) {
@@ -111,15 +113,31 @@ class AdminService {
   }
 
   async editUser(userId: number, userData: {
-    name: string;
-    email: string;
+    name?: string;
+    email?: string;
     phone?: string;
     birthDate?: string;
     gender?: string;
     avatar?: string;
     password?: string;
+    // Chat settings
+    e2eeEnabled?: boolean;
+    readStatusEnabled?: boolean;
+    allowMessagesFromNonFriends?: boolean;
+    hidePhone?: boolean;
+    hideBirthDate?: boolean;
   }) {
     return this.axiosInstance.put(`/admin/users/${userId}`, userData);
+  }
+
+  async editUserChatSettings(userId: number, chatSettings: {
+    e2eeEnabled?: boolean;
+    readStatusEnabled?: boolean;
+    allowMessagesFromNonFriends?: boolean;
+    hidePhone?: boolean;
+    hideBirthDate?: boolean;
+  }) {
+    return this.axiosInstance.put(`/admin/users/${userId}/chat-settings`, chatSettings);
   }
 
   async getUserActivity(userId: number, params: { page?: number; limit?: number } = {}) {

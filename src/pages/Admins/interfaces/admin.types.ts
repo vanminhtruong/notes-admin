@@ -258,6 +258,23 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             description: 'Đăng xuất người dùng khỏi tất cả thiết bị'
           }
         ]
+      },
+      {
+        key: 'manage_users.chat_settings',
+        label: 'Quản lý cài đặt chat',
+        description: 'Quản lý cài đặt chat của người dùng (E2EE, Read Status, Privacy)',
+        subPermissions: [
+          {
+            key: 'manage_users.chat_settings.view',
+            label: 'Xem cài đặt chat',
+            description: 'Xem tất cả cài đặt chat của người dùng'
+          },
+          {
+            key: 'manage_users.chat_settings.edit',
+            label: 'Chỉnh sửa cài đặt chat',
+            description: 'Chỉnh sửa cài đặt chat của người dùng (E2EE, Read Status, Privacy)'
+          }
+        ]
       }
     ]
   },
