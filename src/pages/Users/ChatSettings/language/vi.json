@@ -21,7 +21,10 @@
     "hidePhone": "Ẩn số điện thoại",
     "hideBirthDate": "Ẩn ngày sinh",
     "createdAt": "Ngày tạo",
-    "hasPIN": "Đã đặt PIN"
+    "actions": "Hành động",
+    "hasPIN": "Đã đặt PIN",
+    "viewPin": "Xem PIN",
+    "noPin": "Chưa có PIN"
   },
   "actions": {
     "updateSuccess": "Cập nhật thành công",
@@ -29,5 +32,19 @@
   },
   "errors": {
     "loadFailed": "Không thể tải dữ liệu chat settings"
+  },
+  "pinModal": {
+    "title": "E2EE PIN Hash",
+    "infoTitle": "Thông tin quan trọng",
+    "infoText": "Đây là PIN hash đã được mã hóa bằng bcrypt. PIN gốc không thể giải mã được từ hash này. Hash này được sử dụng để xác thực khi user nhập PIN.",
+    "hashLabel": "PIN Hash (Bcrypt)",
+    "copied": "Đã sao chép",
+    "copy": "Sao chép",
+    "hashAlgorithm": "Thuật toán mã hóa",
+    "hashLength": "Độ dài hash",
+    "characters": "ký tự",
+    "warningTitle": "Cảnh báo bảo mật",
+    "warningText": "Không chia sẻ hash này cho người dùng. Nếu cần reset PIN, hãy sử dụng chức năng reset PIN trong hệ thống.",
+    "close": "Đóng"
   }
 }

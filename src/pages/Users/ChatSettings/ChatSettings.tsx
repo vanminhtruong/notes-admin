@@ -77,7 +77,7 @@ const ChatSettings: React.FC = () => {
       />
 
       {/* Chat Settings Table */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden xl-down:overflow-x-auto p-6 xl-down:p-4 md-down:p-3 sm-down:p-2">
+      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
         <UserChatSettingsTable
           users={users}
           loading={loading}

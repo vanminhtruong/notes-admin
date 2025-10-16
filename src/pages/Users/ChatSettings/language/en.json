@@ -21,7 +21,10 @@
     "hidePhone": "Hide Phone",
     "hideBirthDate": "Hide Birth Date",
     "createdAt": "Created At",
-    "hasPIN": "Has PIN"
+    "actions": "Actions",
+    "hasPIN": "Has PIN",
+    "viewPin": "View PIN",
+    "noPin": "No PIN Set"
   },
   "actions": {
     "updateSuccess": "Updated successfully",
@@ -29,5 +32,19 @@
   },
   "errors": {
     "loadFailed": "Failed to load chat settings data"
+  },
+  "pinModal": {
+    "title": "E2EE PIN Hash",
+    "infoTitle": "Important Information",
+    "infoText": "This is the PIN hash encrypted with bcrypt. The original PIN cannot be decrypted from this hash. This hash is used for authentication when the user enters their PIN.",
+    "hashLabel": "PIN Hash (Bcrypt)",
+    "copied": "Copied",
+    "copy": "Copy",
+    "hashAlgorithm": "Hash Algorithm",
+    "hashLength": "Hash Length",
+    "characters": "characters",
+    "warningTitle": "Security Warning",
+    "warningText": "Do not share this hash with users. If you need to reset the PIN, use the PIN reset function in the system.",
+    "close": "Close"
   }
 }

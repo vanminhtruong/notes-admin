@@ -21,7 +21,10 @@
     "hidePhone": "전화번호 숨기기",
     "hideBirthDate": "생년월일 숨기기",
     "createdAt": "생성일",
-    "hasPIN": "PIN 설정됨"
+    "actions": "작업",
+    "hasPIN": "PIN 설정됨",
+    "viewPin": "PIN 보기",
+    "noPin": "PIN 설정 안됨"
   },
   "actions": {
     "updateSuccess": "성공적으로 업데이트되었습니다",
@@ -29,5 +32,19 @@
   },
   "errors": {
     "loadFailed": "채팅 설정 데이터를 로드할 수 없습니다"
+  },
+  "pinModal": {
+    "title": "E2EE PIN 해시",
+    "infoTitle": "중요 정보",
+    "infoText": "이것은 bcrypt로 암호화된 PIN 해시입니다. 원래 PIN은 이 해시에서 해독할 수 없습니다. 이 해시는 사용자가 PIN을 입력할 때 인증에 사용됩니다.",
+    "hashLabel": "PIN 해시 (Bcrypt)",
+    "copied": "복사됨",
+    "copy": "복사",
+    "hashAlgorithm": "해시 알고리즘",
+    "hashLength": "해시 길이",
+    "characters": "문자",
+    "warningTitle": "보안 경고",
+    "warningText": "이 해시를 사용자와 공유하지 마십시오. PIN을 재설정해야 하는 경우 시스템의 PIN 재설정 기능을 사용하십시오.",
+    "close": "닫기"
   }
 }
