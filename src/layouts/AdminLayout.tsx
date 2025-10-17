@@ -239,9 +239,6 @@ const AdminLayout: React.FC = () => {
       permission: 'manage_notes',
       submenu: [
         { id: 'notes-list', label: t('navigation.notesList'), path: '/notes' },
-        ...(hasPermission('manage_notes.create') ? [
-          { id: 'notes-create', label: t('navigation.notesCreate'), path: '/notes/create' }
-        ] : []),
         ...(hasPermission('manage_notes.categories.view') ? [
           { id: 'categories', label: t('navigation.categories', { defaultValue: 'Categories' }), path: '/categories' }
         ] : []),

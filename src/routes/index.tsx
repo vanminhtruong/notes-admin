@@ -10,7 +10,6 @@ import UsersList from '@pages/Users/UsersList'
 import UserActivity from '@pages/Users/UserActivity'
 import ChatSettings from '@pages/Users/ChatSettings/ChatSettings'
 import NotesList from '@pages/Notes/NotesList'
-import CreateNote from '@pages/Notes/CreateNote'
 import CategoriesList from '@pages/Categories/CategoriesList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
@@ -90,14 +89,6 @@ const router = createBrowserRouter([
         element: (
           <PermissionRoute permission="manage_notes" redirectTo="/dashboard">
             <NotesList />
-          </PermissionRoute>
-        )
-      },
-      { 
-        path: 'notes/create', 
-        element: (
-          <PermissionRoute permission="manage_notes.create" redirectTo="/notes">
-            <CreateNote />
           </PermissionRoute>
         )
       },

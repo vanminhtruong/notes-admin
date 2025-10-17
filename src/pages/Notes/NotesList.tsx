@@ -13,6 +13,7 @@ import NoteDetailModal from '@pages/Notes/components/NoteDetailModal';
 import SharedNotesList from '@pages/Notes/components/SharedNotesList';
 import FoldersList from '@pages/Notes/components/FoldersList';
 import MoveToFolderModal from '@pages/Notes/components/MoveToFolderModal';
+import CreateNoteModal from '@pages/Notes/components/CreateNoteModal';
 import Pagination from '@components/common/Pagination';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
@@ -507,6 +508,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   // Move to folder modal states
   const [showMoveToFolderModal, setShowMoveToFolderModal] = useState(false);
   const [noteToMove, setNoteToMove] = useState<Note | null>(null);
+  
+  // Create note modal state
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     loadNotes();
@@ -718,7 +722,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
           </div>
           {hasPermission('manage_notes.create') && tab !== 'archived' && (
             <button
-              onClick={() => window.location.href = '/notes/create'}
+              onClick={() => setShowCreateModal(true)}
               className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
             >
               {t('createNote')}
@@ -858,7 +862,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                 <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 mt-1">{t('empty.hint')}</p>
                 {hasPermission('manage_notes.create') && tab !== 'archived' && (
                   <button
-                    onClick={() => window.location.href = '/notes/create'}
+                    onClick={() => setShowCreateModal(true)}
                     className="mt-4 inline-flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-md text-sm xl-down:text-xs transition-colors shadow-sm"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14m-7-7h14"/></svg>
@@ -1381,6 +1385,15 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
           setShowMoveToFolderModal(false);
           setNoteToMove(null);
         }}
+        onSuccess={() => {
+          loadNotes();
+        }}
+      />
+
+      {/* Create Note Modal */}
+      <CreateNoteModal
+        show={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
         onSuccess={() => {
           loadNotes();
         }}
