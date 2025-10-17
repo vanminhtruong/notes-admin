@@ -21,6 +21,7 @@ interface Folder {
   name: string;
   color: string;
   icon: string;
+  isPinned: boolean;
   notesCount: number;
   userId: number;
   user: User;
@@ -97,6 +98,8 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
     s.on('user_folder_created', handleFolderEvent);
     s.on('user_folder_updated', handleFolderEvent);
     s.on('user_folder_deleted', handleFolderEvent);
+    s.on('user_folder_pinned', handleFolderEvent);
+    s.on('user_folder_unpinned', handleFolderEvent);
 
     return () => {
       try {
@@ -106,6 +109,8 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
         s.off('user_folder_created', handleFolderEvent);
         s.off('user_folder_updated', handleFolderEvent);
         s.off('user_folder_deleted', handleFolderEvent);
+        s.off('user_folder_pinned', handleFolderEvent);
+        s.off('user_folder_unpinned', handleFolderEvent);
       } catch {}
     };
   }, [loadFolders]);
@@ -248,6 +253,9 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                     {t('folders.table.notesCount')}
                   </th>
                   <th className="px-6 py-3 md-down:px-4 md-down:py-2.5 sm-down:px-3.5 sm-down:py-2 xs-down:px-3 xs-down:py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase whitespace-nowrap">
+                    {t('folders.table.pinStatus')}
+                  </th>
+                  <th className="px-6 py-3 md-down:px-4 md-down:py-2.5 sm-down:px-3.5 sm-down:py-2 xs-down:px-3 xs-down:py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase whitespace-nowrap">
                     {t('folders.table.createdAt')}
                   </th>
                   {hasAnyActionPermission && (
@@ -314,6 +322,20 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                       <span className="px-2 py-1 text-xs md-down:text-[11px] sm-down:text-[10px] font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                         {folder.notesCount} {t('title')}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 md-down:px-4 md-down:py-3 sm-down:px-3.5 sm-down:py-2.5 xs-down:px-3 xs-down:py-2">
+                      {folder.isPinned ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs md-down:text-[11px] sm-down:text-[10px] font-medium rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                          <svg className="w-3.5 h-3.5 md-down:w-3 md-down:h-3 fill-current" viewBox="0 0 24 24">
+                            <path d="M16 12V4H17V2H7V4H8V12L6 14V16H11.2V22H12.8V16H18V14L16 12Z" />
+                          </svg>
+                          {t('folders.status.pinned')}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-1 text-xs md-down:text-[11px] sm-down:text-[10px] font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                          {t('folders.status.unpinned')}
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 md-down:px-4 md-down:py-3 sm-down:px-3.5 sm-down:py-2.5 xs-down:px-3 xs-down:py-2 text-sm md-down:text-sm sm-down:text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                       {formatDate(folder.createdAt)}

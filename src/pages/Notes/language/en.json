@@ -256,8 +256,13 @@
       "folder": "Folder",
       "user": "User",
       "notesCount": "Notes Count",
+      "pinStatus": "Pin Status",
       "createdAt": "Created At",
       "actions": "Actions"
+    },
+    "status": {
+      "pinned": "Pinned",
+      "unpinned": "Not Pinned"
     },
     "form": {
       "name": {
