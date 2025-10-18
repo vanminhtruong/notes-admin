@@ -518,6 +518,65 @@ class AdminService {
   async getCategoriesStats() {
     return this.axiosInstance.get('/admin/categories/stats');
   }
+
+  // ============ Tags Management ============
+
+  // Get all tags
+  async getAllTags(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    userId?: string | number;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}) {
+    return this.axiosInstance.get('/admin/tags', { params });
+  }
+
+  // Get tags stats
+  async getTagsStats() {
+    return this.axiosInstance.get('/admin/tags/stats');
+  }
+
+  // Get tag detail
+  async getTagDetail(tagId: number, params: { page?: number; limit?: number } = {}) {
+    return this.axiosInstance.get(`/admin/tags/${tagId}`, { params });
+  }
+
+  // Create tag for user
+  async createTagForUser(data: {
+    userId: string | number;
+    name: string;
+    color: string;
+  }) {
+    return this.axiosInstance.post('/admin/tags', data);
+  }
+
+  // Update tag
+  async updateTag(tagId: number, data: {
+    name?: string;
+    color?: string;
+  }) {
+    return this.axiosInstance.put(`/admin/tags/${tagId}`, data);
+  }
+
+  // Delete tag
+  async deleteTag(tagId: number) {
+    return this.axiosInstance.delete(`/admin/tags/${tagId}`);
+  }
+
+  // Assign tag to note
+  async assignTagToNote(data: {
+    noteId: number;
+    tagId: number;
+  }) {
+    return this.axiosInstance.post('/admin/tags/assign', data);
+  }
+
+  // Remove tag from note
+  async removeTagFromNote(noteId: number, tagId: number) {
+    return this.axiosInstance.delete(`/admin/tags/${noteId}/${tagId}`);
+  }
 }
 
 export default new AdminService();

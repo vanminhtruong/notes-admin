@@ -449,6 +449,43 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             description: 'Xóa category (các ghi chú sẽ được giữ lại)'
           }
         ]
+      },
+      {
+        key: 'manage_notes.tags',
+        label: 'Quản lý Tags',
+        description: 'Quản lý các tags ghi chú của người dùng',
+        subPermissions: [
+          {
+            key: 'manage_notes.tags.view',
+            label: 'Xem tags',
+            description: 'Xem danh sách tags của người dùng'
+          },
+          {
+            key: 'manage_notes.tags.view_detail',
+            label: 'Xem chi tiết tag',
+            description: 'Xem chi tiết tag và danh sách ghi chú có tag khi click vào tag'
+          },
+          {
+            key: 'manage_notes.tags.create',
+            label: 'Tạo tag',
+            description: 'Tạo tag mới cho người dùng'
+          },
+          {
+            key: 'manage_notes.tags.edit',
+            label: 'Sửa tag',
+            description: 'Chỉnh sửa tên, màu sắc của tag'
+          },
+          {
+            key: 'manage_notes.tags.delete',
+            label: 'Xóa tag',
+            description: 'Xóa tag (tag sẽ bị xóa khỏi tất cả ghi chú)'
+          },
+          {
+            key: 'manage_notes.tags.assign',
+            label: 'Gắn/bỏ tag cho notes',
+            description: 'Gắn hoặc bỏ tag cho các ghi chú'
+          }
+        ]
       }
     ]
   },

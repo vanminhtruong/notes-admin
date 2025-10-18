@@ -110,6 +110,7 @@
     "archived": "Lưu trữ",
     "shared": "Chia sẻ",
     "folders": "Thư mục",
+    "tags": "Tags",
     "search": {
       "label": "Tìm kiếm",
       "placeholder": "Tìm kiếm ghi chú..."
@@ -135,9 +136,13 @@
     "user": "Người dùng",
     "category": "Danh mục", 
     "priority": "Độ ưu tiên",
+    "tags": "Tags",
     "status": "Trạng thái",
     "createdAt": "Ngày tạo",
-    "actions": "Thao tác"
+    "actions": "Thao tác",
+    "pin": "Ghim",
+    "tag": "Tag",
+    "notesCount": "Số ghi chú"
   },
   "constants": {
     "priority": {
@@ -331,6 +336,115 @@
       "deleteError": "Không thể xóa thư mục",
       "removeNoteSuccess": "Đã di chuyển ghi chú ra khỏi thư mục!",
       "removeNoteError": "Không thể di chuyển ghi chú"
+    }
+  },
+  "tags": {
+    "title": "Quản lý Tags",
+    "subtitle": "Xem và quản lý tags của người dùng",
+    "createTag": "Tạo tag",
+    "searchPlaceholder": "Tìm kiếm tags...",
+    "allUsers": "Tất cả người dùng",
+    "totalStats": "Tổng: {{total}} tags",
+    "loading": "Đang tải...",
+    "table": {
+      "tag": "Tag",
+      "user": "Người dùng",
+      "notesCount": "Số ghi chú",
+      "createdAt": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "form": {
+      "name": {
+        "label": "Tên tag",
+        "placeholder": "Nhập tên tag..."
+      },
+      "color": {
+        "label": "Màu sắc"
+      },
+      "user": {
+        "label": "Người dùng",
+        "required": "Người dùng *"
+      },
+      "selectUser": "Chọn người dùng",
+      "selectUserRequired": "Chọn người dùng *",
+      "searchUser": "Tìm kiếm người dùng...",
+      "changeUser": "Đổi",
+      "noUsers": "Không có người dùng nào",
+      "noUsersFound": "Không tìm thấy người dùng",
+      "loading": "Đang tải..."
+    },
+    "modal": {
+      "create": "Tạo Tag Mới",
+      "edit": "Chỉnh Sửa Tag",
+      "manage": "Quản lý Tags",
+      "creating": "Đang tạo...",
+      "saving": "Đang lưu...",
+      "saveChanges": "Lưu thay đổi"
+    },
+    "manage": {
+      "title": "Quản lý Tags",
+      "currentTags": "Tags hiện tại",
+      "addTag": "Thêm tag",
+      "noTags": "Chưa có tag nào",
+      "noAvailableTags": "Không có tag nào khả dụng",
+      "removeTag": "Xóa tag",
+      "loading": "Đang tải...",
+      "noPermission": "Bạn không có quyền quản lý tags"
+    },
+    "actions": {
+      "edit": "Sửa tag",
+      "editTooltip": "Sửa tag",
+      "delete": "Xóa tag",
+      "deleteTooltip": "Xóa tag",
+      "create": "Tạo Tag",
+      "update": "Cập nhật",
+      "close": "Đóng",
+      "cancel": "Hủy",
+      "add": "Thêm",
+      "remove": "Xóa"
+    },
+    "delete": {
+      "confirm": {
+        "title": "Xóa tag?",
+        "message": "Bạn có chắc muốn xóa tag này?",
+        "note": "Tag sẽ bị xóa khỏi tất cả các ghi chú đã gắn.",
+        "irreversible": "Hành động này không thể hoàn tác."
+      }
+    },
+    "empty": {
+      "title": "Không có tag nào",
+      "hint": "Chưa có tag nào được tạo",
+      "noResults": "Không tìm thấy tag nào",
+      "noTags": "Chưa có tag nào"
+    },
+    "detail": {
+      "user": "Người dùng",
+      "totalNotes": "Tổng số ghi chú",
+      "createdAt": "Ngày tạo",
+      "notesList": "Danh sách ghi chú sử dụng tag này",
+      "noNotes": "Chưa có ghi chú nào sử dụng tag này",
+      "archived": "Archived"
+    },
+    "notesCount": {
+      "label": "ghi chú"
+    },
+    "toasts": {
+      "createSuccess": "Tạo tag thành công!",
+      "createError": "Không thể tạo tag",
+      "updateSuccess": "Cập nhật tag thành công!",
+      "updateError": "Không thể cập nhật tag",
+      "deleteSuccess": "Xóa tag thành công!",
+      "deleteError": "Không thể xóa tag",
+      "addSuccess": "Thêm tag thành công",
+      "addError": "Lỗi khi thêm tag",
+      "removeSuccess": "Xóa tag thành công",
+      "removeError": "Lỗi khi xóa tag",
+      "loadError": "Lỗi khi tải danh sách tags",
+      "detailLoadError": "Lỗi khi tải chi tiết tag"
+    },
+    "cell": {
+      "noTags": "Chưa có",
+      "manageTags": "Quản lý tags"
     }
   }
 }

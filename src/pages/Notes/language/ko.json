@@ -110,6 +110,7 @@
     "archived": "보관됨",
     "shared": "공유됨",
     "folders": "폴더",
+    "tags": "태그",
     "search": {
       "label": "검색",
       "placeholder": "노트 검색..."
@@ -135,9 +136,13 @@
     "user": "사용자",
     "category": "카테고리", 
     "priority": "우선순위",
+    "tags": "태그",
     "status": "상태",
     "createdAt": "생성일",
-    "actions": "작업"
+    "actions": "작업",
+    "pin": "고정",
+    "tag": "태그",
+    "notesCount": "노트 수"
   },
   "constants": {
     "priority": {
@@ -331,6 +336,115 @@
       "deleteError": "폴더 삭제에 실패했습니다",
       "removeNoteSuccess": "노트가 폴더에서 이동되었습니다!",
       "removeNoteError": "노트 이동에 실패했습니다"
+    }
+  },
+  "tags": {
+    "title": "태그 관리",
+    "subtitle": "사용자 태그 보기 및 관리",
+    "createTag": "태그 생성",
+    "searchPlaceholder": "태그 검색...",
+    "allUsers": "모든 사용자",
+    "totalStats": "총 {{total}}개 태그",
+    "loading": "로딩 중...",
+    "table": {
+      "tag": "태그",
+      "user": "사용자",
+      "notesCount": "노트 수",
+      "createdAt": "생성일",
+      "actions": "작업"
+    },
+    "form": {
+      "name": {
+        "label": "태그 이름",
+        "placeholder": "태그 이름 입력..."
+      },
+      "color": {
+        "label": "색상"
+      },
+      "user": {
+        "label": "사용자",
+        "required": "사용자 *"
+      },
+      "selectUser": "사용자 선택",
+      "selectUserRequired": "사용자 선택 *",
+      "searchUser": "사용자 검색...",
+      "changeUser": "변경",
+      "noUsers": "사용자 없음",
+      "noUsersFound": "사용자를 찾을 수 없습니다",
+      "loading": "로딩 중..."
+    },
+    "modal": {
+      "create": "새 태그 만들기",
+      "edit": "태그 편집",
+      "manage": "태그 관리",
+      "creating": "생성 중...",
+      "saving": "저장 중...",
+      "saveChanges": "변경사항 저장"
+    },
+    "manage": {
+      "title": "태그 관리",
+      "currentTags": "현재 태그",
+      "addTag": "태그 추가",
+      "noTags": "아직 태그가 없습니다",
+      "noAvailableTags": "사용 가능한 태그가 없습니다",
+      "removeTag": "태그 제거",
+      "loading": "로딩 중...",
+      "noPermission": "태그를 관리할 권한이 없습니다"
+    },
+    "actions": {
+      "edit": "태그 편집",
+      "editTooltip": "태그 편집",
+      "delete": "태그 삭제",
+      "deleteTooltip": "태그 삭제",
+      "create": "태그 생성",
+      "update": "업데이트",
+      "close": "닫기",
+      "cancel": "취소",
+      "add": "추가",
+      "remove": "제거"
+    },
+    "delete": {
+      "confirm": {
+        "title": "태그 삭제?",
+        "message": "이 태그를 삭제하시겠습니까?",
+        "note": "태그가 연결된 모든 노트에서 제거됩니다.",
+        "irreversible": "이 작업은 되돌릴 수 없습니다."
+      }
+    },
+    "empty": {
+      "title": "태그 없음",
+      "hint": "아직 생성된 태그가 없습니다",
+      "noResults": "태그를 찾을 수 없습니다",
+      "noTags": "아직 태그가 없습니다"
+    },
+    "detail": {
+      "user": "사용자",
+      "totalNotes": "전체 노트",
+      "createdAt": "생성일",
+      "notesList": "이 태그를 사용하는 노트",
+      "noNotes": "이 태그를 사용하는 노트가 아직 없습니다",
+      "archived": "보관됨"
+    },
+    "notesCount": {
+      "label": "노트"
+    },
+    "toasts": {
+      "createSuccess": "태그가 성공적으로 생성되었습니다!",
+      "createError": "태그 생성에 실패했습니다",
+      "updateSuccess": "태그가 성공적으로 업데이트되었습니다!",
+      "updateError": "태그 업데이트에 실패했습니다",
+      "deleteSuccess": "태그가 성공적으로 삭제되었습니다!",
+      "deleteError": "태그 삭제에 실패했습니다",
+      "addSuccess": "태그가 성공적으로 추가되었습니다",
+      "addError": "태그 추가 중 오류가 발생했습니다",
+      "removeSuccess": "태그가 성공적으로 제거되었습니다",
+      "removeError": "태그 제거 중 오류가 발생했습니다",
+      "loadError": "태그 목록 로드 중 오류가 발생했습니다",
+      "detailLoadError": "태그 세부정보 로드 중 오류가 발생했습니다"
+    },
+    "cell": {
+      "noTags": "없음",
+      "manageTags": "태그 관리"
     }
   }
 }

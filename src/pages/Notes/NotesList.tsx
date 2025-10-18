@@ -12,8 +12,10 @@ import NotesFilters from '@pages/Notes/components/NotesFilters';
 import NoteDetailModal from '@pages/Notes/components/NoteDetailModal';
 import SharedNotesList from '@pages/Notes/components/SharedNotesList';
 import FoldersList from '@pages/Notes/components/FoldersList';
+import TagsList from '@pages/Notes/components/TagsList';
 import MoveToFolderModal from '@pages/Notes/components/MoveToFolderModal';
 import CreateNoteModal from '@pages/Notes/components/CreateNoteModal';
+import NoteTagsModal from '@pages/Notes/components/NoteTagsModal';
 import Pagination from '@components/common/Pagination';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
@@ -32,6 +34,12 @@ interface NoteCategory {
   icon: string;
 }
 
+interface NoteTag {
+  id: number;
+  name: string;
+  color: string;
+}
+
 interface Note {
   id: number;
   title: string;
@@ -48,6 +56,7 @@ interface Note {
   createdAt: string;
   updatedAt: string;
   user: User;
+  tags?: NoteTag[];
 }
 
 interface NotesListProps {
@@ -438,20 +447,21 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     );
   }
 
-  // Tabs state via URL ?tab=all|active|archived|shared|folders
-  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared' | 'folders';
-  const setTab = (next: 'all' | 'active' | 'archived' | 'shared' | 'folders') => {
+  // Tabs state via URL ?tab=all|active|archived|shared|folders|tags
+  const tab = (searchParams.get('tab') || 'all') as 'all' | 'active' | 'archived' | 'shared' | 'folders' | 'tags';
+  const setTab = (next: 'all' | 'active' | 'archived' | 'shared' | 'folders' | 'tags') => {
     searchParams.set('tab', next);
     setSearchParams(searchParams, { replace: true });
   };
 
   // Check if user has permission to access current tab, if not redirect to first available tab
   useEffect(() => {
-    const getFirstAvailableTab = (): 'all' | 'active' | 'archived' | 'shared' | 'folders' => {
+    const getFirstAvailableTab = (): 'all' | 'active' | 'archived' | 'shared' | 'folders' | 'tags' => {
       if (hasPermission('manage_notes.view')) return 'all';
       if (hasPermission('manage_notes.archive')) return 'archived';
       if (hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete')) return 'shared';
       if (hasPermission('manage_notes.folders.view')) return 'folders';
+      if (hasPermission('manage_notes.tags.view')) return 'tags';
       return 'all'; // fallback
     };
 
@@ -465,6 +475,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     } else if (tab === 'shared' && !hasPermission('manage_notes.shared.view') && !hasPermission('manage_notes.shared.delete')) {
       setTab(getFirstAvailableTab());
     } else if (tab === 'folders' && !hasPermission('manage_notes.folders.view')) {
+      setTab(getFirstAvailableTab());
+    } else if (tab === 'tags' && !hasPermission('manage_notes.tags.view')) {
       setTab(getFirstAvailableTab());
     }
   }, [tab]);
@@ -511,6 +523,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   
   // Create note modal state
   const [showCreateModal, setShowCreateModal] = useState(false);
+  
+  // Tags modal states
+  const [showTagsModal, setShowTagsModal] = useState(false);
+  const [noteForTags, setNoteForTags] = useState<Note | null>(null);
 
   useEffect(() => {
     loadNotes();
@@ -567,6 +583,12 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
     s.on('user_note_unpinned', handleNoteEvent);
     s.on('admin_note_pinned', handleNoteEvent);
     s.on('admin_note_unpinned', handleNoteEvent);
+    
+    // Tag events (admin and user)
+    s.on('admin_note_tag_assigned', handleNoteEvent);
+    s.on('admin_note_tag_removed', handleNoteEvent);
+    s.on('note_tag_added', handleNoteEvent);
+    s.on('note_tag_removed', handleNoteEvent);
 
     return () => {
       try {
@@ -583,6 +605,10 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         s.off('user_note_unpinned', handleNoteEvent);
         s.off('admin_note_pinned', handleNoteEvent);
         s.off('admin_note_unpinned', handleNoteEvent);
+        s.off('admin_note_tag_assigned', handleNoteEvent);
+        s.off('admin_note_tag_removed', handleNoteEvent);
+        s.off('note_tag_added', handleNoteEvent);
+        s.off('note_tag_removed', handleNoteEvent);
       } catch {}
     };
   }, [loadNotes]);
@@ -805,12 +831,26 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                 {t('filters.folders')}
               </button>
             )}
+            {hasPermission('manage_notes.tags.view') && (
+              <button
+                onClick={() => setTab('tags')}
+                aria-label={t('filters.tags') as string}
+                className={`flex items-center gap-2 px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 rounded-md text-sm xl-down:text-xs font-medium transition-all ${
+                  tab === 'tags'
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <Tag className="w-4 h-4" />
+                {t('filters.tags')}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Filters - only show for notes tabs, not shared/folders tabs */}
-      {tab !== 'shared' && tab !== 'folders' && (
+      {/* Filters - only show for notes tabs, not shared/folders/tags tabs */}
+      {tab !== 'shared' && tab !== 'folders' && tab !== 'tags' && (
         <NotesFilters
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -837,11 +877,13 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         />
       )}
 
-      {/* Render SharedNotesList for shared tab, FoldersList for folders tab */}
+      {/* Render SharedNotesList for shared tab, FoldersList for folders tab, TagsList for tags tab */}
       {tab === 'shared' ? (
         <SharedNotesList embedded />
       ) : tab === 'folders' ? (
         <FoldersList embedded />
+      ) : tab === 'tags' ? (
+        <TagsList embedded />
       ) : (
         /* Notes List */
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
@@ -877,31 +919,36 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                     <thead className="bg-gray-50 dark:bg-neutral-800 sticky top-0 z-10">
                       <tr>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th className="px-4 py-3 xl-down:px-3 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           {t('table.note')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           {t('table.user')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
+                        <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                           {t('table.category')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           {t('table.priority')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
+                        {hasPermission('manage_notes.tags.assign') && (
+                          <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider xl-down:hidden" style={{maxWidth: '180px'}}>
+                            {t('table.tags')}
+                          </th>
+                        )}
+                        <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                           {t('table.status')}
                         </th>
-                        <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
+                        <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                           {t('table.createdAt')}
                         </th>
                         {hasPermission('manage_notes.edit') && (
-                          <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Pin
+                          <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            {t('table.pin')}
                           </th>
                         )}
                         {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive') || hasPermission('manage_notes.folders.move')) && (
-                          <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          <th className="px-3 py-3 xl-down:px-2 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             {t('table.actions')}
                           </th>
                         )}
@@ -921,17 +968,17 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                             }
                           }}
                         >
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3">
+                          <td className="px-4 py-3 xl-down:px-3 xl-down:py-2" style={{maxWidth: '250px'}}>
                             <div className="flex items-start justify-between">
                               <div className="flex-1 min-w-0">
-                                <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{truncateWords(note.title, 5)}</h4>
-                                <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-                                  {truncateWords(getPlainText(note.content || ''), 5)}
+                                <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">{truncateWords(note.title, 4)}</h4>
+                                <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                                  {truncateWords(getPlainText(note.content || ''), 4)}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
+                          <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-8 w-8 xl-down:h-6 xl-down:w-6">
                                 {note.user.avatar ? (
@@ -958,11 +1005,11 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap md-down:hidden">
+                          <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap lg-down:hidden">
                             {note.category ? (
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1.5">
                                 <div
-                                  className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                                  className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
                                   style={{ backgroundColor: `${note.category.color}20` }}
                                 >
                                   {(() => {
@@ -971,18 +1018,18 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                                   })()}
                                 </div>
                                 <span 
-                                  className="text-sm xl-down:text-xs font-medium truncate"
+                                  className="text-xs xl-down:text-2xs font-medium truncate"
                                   style={{ color: note.category.color }}
                                 >
                                   {note.category.name}
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-sm xl-down:text-xs text-gray-500 dark:text-gray-400">-</span>
+                              <span className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
-                            <span className={`px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full ${
+                          <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap">
+                            <span className={`px-2 py-0.5 xl-down:px-1.5 text-xs xl-down:text-2xs font-medium rounded-full ${
                               note.priority === 'high' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' :
                               note.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
                               'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
@@ -992,8 +1039,31 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                                t('constants.priority.low')}
                             </span>
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap md-down:hidden">
-                            <span className={`px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full ${
+                          {hasPermission('manage_notes.tags.assign') && (
+                            <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 xl-down:hidden" onClick={(e) => e.stopPropagation()}>
+                              <button
+                                onClick={() => {
+                                  setNoteForTags(note);
+                                  setShowTagsModal(true);
+                                }}
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
+                                title={t('tags.cell.manageTags')}
+                              >
+                                <Tag className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                {note.tags && note.tags.length > 0 ? (
+                                  <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                                    {note.tags.length}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                                    {t('tags.cell.noTags')}
+                                  </span>
+                                )}
+                              </button>
+                            </td>
+                          )}
+                          <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap lg-down:hidden">
+                            <span className={`px-2 py-0.5 xl-down:px-1.5 text-xs xl-down:text-2xs font-medium rounded-full ${
                               note.isArchived 
                                 ? 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200' 
                                 : 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
@@ -1001,11 +1071,11 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                               {note.isArchived ? t('badges.status.archived') : t('badges.status.active')}
                             </span>
                           </td>
-                          <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
+                          <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 lg-down:hidden">
                             {formatDate(note.createdAt)}
                           </td>
                           {hasPermission('manage_notes.edit') && (
-                            <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
+                            <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap text-center">
                               <button
                                 onClick={async (e) => {
                                   e.stopPropagation();
@@ -1039,8 +1109,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                             </td>
                           )}
                           {(hasPermission('manage_notes.edit') || hasPermission('manage_notes.delete') || hasPermission('manage_notes.archive')) && (
-                            <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm font-medium">
-                              <div className="flex items-center gap-2 xl-down:gap-1">
+                            <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap text-xs xl-down:text-2xs font-medium">
+                              <div className="flex items-center gap-1.5 xl-down:gap-1">
                                 {hasPermission('manage_notes.edit') && (
                                   <button
                                     onClick={(e) => {
@@ -1398,6 +1468,24 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
           loadNotes();
         }}
       />
+
+      {/* Tags Management Modal */}
+      {noteForTags && hasPermission('manage_notes.tags.assign') && (
+        <NoteTagsModal
+          isOpen={showTagsModal}
+          onClose={() => {
+            setShowTagsModal(false);
+            setNoteForTags(null);
+          }}
+          noteId={noteForTags.id}
+          userId={noteForTags.user.id}
+          currentTags={noteForTags.tags || []}
+          noteTitle={noteForTags.title}
+          onTagsChange={() => {
+            loadNotes();
+          }}
+        />
+      )}
     </div>
   );
 };

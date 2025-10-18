@@ -332,6 +332,34 @@
           "label": "카테고리 삭제",
           "description": "카테고리 삭제 (노트는 유지됨)"
         }
+      },
+      "tags": {
+        "label": "태그 관리",
+        "description": "사용자 노트 태그 관리",
+        "view": {
+          "label": "태그 보기",
+          "description": "사용자 태그 목록 보기"
+        },
+        "view_detail": {
+          "label": "태그 세부정보 보기",
+          "description": "태그를 클릭할 때 태그 세부정보 및 이 태그가 있는 노트 목록 보기"
+        },
+        "create": {
+          "label": "태그 생성",
+          "description": "사용자를 위한 새 태그 생성"
+        },
+        "edit": {
+          "label": "태그 편집",
+          "description": "태그 이름 및 색상 편집"
+        },
+        "delete": {
+          "label": "태그 삭제",
+          "description": "태그 삭제 (태그가 모든 노트에서 제거됨)"
+        },
+        "assign": {
+          "label": "노트에 태그 할당/제거",
+          "description": "노트에 태그를 할당하거나 제거"
+        }
       }
     },
     "manage_admins": {

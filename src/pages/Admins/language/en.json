@@ -332,6 +332,34 @@
           "label": "Delete Category",
           "description": "Delete category (notes will be kept)"
         }
+      },
+      "tags": {
+        "label": "Manage Tags",
+        "description": "Manage user note tags",
+        "view": {
+          "label": "View Tags",
+          "description": "View list of user tags"
+        },
+        "view_detail": {
+          "label": "View Tag Details",
+          "description": "View tag details and list of notes with this tag when clicking on a tag"
+        },
+        "create": {
+          "label": "Create Tag",
+          "description": "Create new tag for users"
+        },
+        "edit": {
+          "label": "Edit Tag",
+          "description": "Edit tag name and color"
+        },
+        "delete": {
+          "label": "Delete Tag",
+          "description": "Delete tag (tag will be removed from all notes)"
+        },
+        "assign": {
+          "label": "Assign/Remove Tags from Notes",
+          "description": "Assign or remove tags from notes"
+        }
       }
     },
     "manage_admins": {

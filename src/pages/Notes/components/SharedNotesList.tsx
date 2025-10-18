@@ -6,6 +6,8 @@ import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { hasPermission } from '@utils/auth';
 import SharedNoteDetailModal from './SharedNoteDetailModal';
+import MobileCard from '@components/common/MobileCard';
+import Pagination from '@components/common/Pagination';
 
 interface User {
   id: number;
@@ -85,7 +87,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
       setLoading(true);
       const response: any = await adminService.getAllSharedNotes({
         page: currentPage,
-        limit: 20,
+        limit: 5,
         userId: selectedUserId ? parseInt(selectedUserId) : undefined,
         sharedByUserId: sharedByUserId ? parseInt(sharedByUserId) : undefined,
         search: searchTerm || undefined,
@@ -317,8 +319,10 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+              <>
+                {/* Desktop/Tablet Table View */}
+                <div className="overflow-x-auto md-down:hidden">
+                  <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                   <thead className="bg-gray-50 dark:bg-neutral-800">
                     <tr>
                       <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -327,13 +331,13 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                       <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         {t('sharedNotes.table.sharedBy')}
                       </th>
-                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                         {t('sharedNotes.table.sharedWith')}
                       </th>
-                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                         {t('sharedNotes.table.permissions')}
                       </th>
-                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                         {t('sharedNotes.table.sharedAt')}
                       </th>
                       {hasAnyActionPermission && (
@@ -390,7 +394,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
+                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap lg-down:hidden">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-8 w-8 xl-down:h-6 xl-down:w-6">
                               {sharedNote.shareType === 'group' && sharedNote.group ? (
@@ -459,7 +463,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap">
+                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap lg-down:hidden">
                           <div className="flex flex-nowrap gap-1 overflow-x-auto">
                             {sharedNote.canCreate && (
                               <span className="px-2 py-1 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 whitespace-nowrap">
@@ -483,7 +487,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                             )}
                           </div>
                         </td>
-                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400">
+                        <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 lg-down:hidden">
                           {formatDate(sharedNote.sharedAt)}
                         </td>
                         {hasAnyActionPermission && (
@@ -508,36 +512,116 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+                </div>
+
+                {/* Desktop/Tablet Pagination */}
+                {totalPages > 1 && (
+                  <div className="-mx-4 xl-down:-mx-3 px-4 xl-down:px-3 md-down:hidden">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                    />
+                  </div>
+                )}
+
+                {/* Mobile Card View */}
+                <div className="hidden md-down:block">
+                  <div className="space-y-3 p-3">
+                    {sharedNotes.map((sharedNote) => (
+                    <MobileCard
+                      key={sharedNote.id}
+                      title={truncateWords(sharedNote.note.title, 6)}
+                      subtitle={truncateWords(getPlainText(sharedNote.note.content || ''), 8)}
+                      icon={
+                        <div className="flex-shrink-0 h-10 w-10 xl-down:h-8 xl-down:w-8">
+                          {sharedNote.sharedByUser.avatar ? (
+                            <img
+                              className="h-10 w-10 xl-down:h-8 xl-down:w-8 rounded-full object-cover"
+                              src={sharedNote.sharedByUser.avatar}
+                              alt={sharedNote.sharedByUser.name}
+                            />
+                          ) : (
+                            <div className="h-10 w-10 xl-down:h-8 xl-down:w-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm xl-down:text-xs font-medium">
+                                {sharedNote.sharedByUser.name.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      }
+                      badges={
+                        <>
+                          {sharedNote.canCreate && (
+                            <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                              {t('sharedNotes.permissions.create', { defaultValue: 'Create' })}
+                            </span>
+                          )}
+                          {sharedNote.canEdit && (
+                            <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                              {t('sharedNotes.permissions.edit')}
+                            </span>
+                          )}
+                          {sharedNote.canDelete && (
+                            <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                              {t('sharedNotes.permissions.delete')}
+                            </span>
+                          )}
+                          {!sharedNote.canEdit && !sharedNote.canDelete && !sharedNote.canCreate && (
+                            <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                              {t('sharedNotes.permissions.view')}
+                            </span>
+                          )}
+                        </>
+                      }
+                      metadata={[
+                        { 
+                          label: t('sharedNotes.table.sharedBy'), 
+                          value: `${sharedNote.sharedByUser.name} (ID: ${sharedNote.sharedByUser.id})` 
+                        },
+                        { 
+                          label: t('sharedNotes.table.sharedAt'), 
+                          value: formatDate(sharedNote.sharedAt) 
+                        }
+                      ]}
+                      actions={
+                        canDelete && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteSharedNote(sharedNote.id);
+                            }}
+                            className="p-2 xl-down:p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg xl-down:rounded-md transition-colors"
+                            title={String(t('actions.delete'))}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )
+                      }
+                      onClick={() => {
+                        setSelectedSharedNote(sharedNote);
+                        setShowDetailModal(true);
+                      }}
+                    />
+                    ))}
+                  </div>
+
+                  {/* Mobile Pagination */}
+                  {totalPages > 1 && (
+                    <div className="-mx-4 xl-down:-mx-3 px-4 xl-down:px-3">
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </>
         )}
       </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 text-sm xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {t('pagination.prev', { defaultValue: 'Trước' })}
-          </button>
-          
-          <span className="text-sm xl-down:text-xs text-gray-700 dark:text-gray-300">
-            {t('pagination.title', { currentPage, totalPages, defaultValue: `Trang ${currentPage} / ${totalPages}` })}
-          </span>
-          
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 text-sm xl-down:text-xs font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {t('pagination.next', { defaultValue: 'Sau' })}
-          </button>
-        </div>
-      )}
 
       {/* Detail Modal */}
       <SharedNoteDetailModal
