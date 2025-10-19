@@ -342,6 +342,19 @@
       "removeNoteError": "Failed to move note"
     }
   },
+  "moveToFolder": {
+    "title": "Move to Folder",
+    "searchPlaceholder": "Search folders...",
+    "success": "Note moved to folder successfully",
+    "move": "Move",
+    "moving": "Moving...",
+    "noResults": "No folders found",
+    "empty": "User has no folders yet",
+    "errors": {
+      "loadFolders": "Failed to load folders list",
+      "move": "Failed to move note"
+    }
+  },
   "tags": {
     "title": "Manage Tags",
     "subtitle": "View and manage user tags",

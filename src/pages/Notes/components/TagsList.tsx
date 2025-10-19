@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTagsManagement } from '../hooks/useTagsManagement';
+import { useTagsManagement } from '../hooks/Manager-Effects/Manager-Tag/useTagsManagement.ts';
 import TagsTable from './TagsTable.tsx';
 import TagsHeader from './TagsHeader.tsx';
 import CreateTagModal from './CreateTagModal.tsx';

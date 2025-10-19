@@ -117,7 +117,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
     };
   }, [loadFolders]);
 
-  const handleDeleteFolder = async (folderId: number) => {
+  const handleDeleteFolder = async (folderId: number, userId: number) => {
     toast.warn(
       <div className="flex flex-col items-center p-2">
         <div className="mb-3 flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full">
@@ -143,7 +143,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
             onClick={async () => {
               toast.dismiss();
               try {
-                await adminService.deleteUserFolder(folderId);
+                await adminService.deleteUserFolder(folderId, userId);
                 await loadFolders();
                 toast.success(t('folders.toasts.deleteSuccess'));
               } catch (error) {
@@ -366,7 +366,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteFolder(folder.id);
+                                handleDeleteFolder(folder.id, folder.userId);
                               }}
                               className="p-2 xl-down:p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg xl-down:rounded-md transition-colors"
                               title={t('actions.delete') as string}
@@ -453,7 +453,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteFolder(folder.id);
+                                handleDeleteFolder(folder.id, folder.userId);
                               }}
                               className="p-2 xl-down:p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg xl-down:rounded-md transition-colors"
                               title={t('actions.delete') as string}

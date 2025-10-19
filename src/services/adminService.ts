@@ -267,8 +267,10 @@ class AdminService {
     return this.axiosInstance.put(`/admin/folders/${folderId}`, folderData);
   }
 
-  async deleteUserFolder(folderId: number) {
-    return this.axiosInstance.delete(`/admin/folders/${folderId}`);
+  async deleteUserFolder(folderId: number, userId: number) {
+    return this.axiosInstance.delete(`/admin/folders/${folderId}`, {
+      data: { userId }
+    });
   }
 
   async moveNoteToFolder(noteId: number, folderId: number | null) {

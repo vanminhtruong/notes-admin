@@ -338,6 +338,19 @@
       "removeNoteError": "Không thể di chuyển ghi chú"
     }
   },
+  "moveToFolder": {
+    "title": "Di chuyển vào thư mục",
+    "searchPlaceholder": "Tìm thư mục...",
+    "success": "Đã di chuyển ghi chú vào thư mục",
+    "move": "Di chuyển",
+    "moving": "Đang di chuyển...",
+    "noResults": "Không tìm thấy thư mục",
+    "empty": "Người dùng chưa có thư mục nào",
+    "errors": {
+      "loadFolders": "Không thể tải danh sách thư mục",
+      "move": "Không thể di chuyển ghi chú"
+    }
+  },
   "tags": {
     "title": "Quản lý Tags",
     "subtitle": "Xem và quản lý tags của người dùng",

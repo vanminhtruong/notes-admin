@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
+import { getFolderIcon, getFolderColorClass } from '@utils/folderIcons';
 
 interface Folder {
   id: number;
@@ -28,6 +30,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
   onClose,
   onSuccess
 }) => {
+  const { t } = useTranslation('notes');
   const [loading, setLoading] = useState(false);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,7 +62,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
       setFolders(response?.folders || []);
     } catch (error) {
       console.error('Error loading folders:', error);
-      toast.error('Không thể tải danh sách thư mục');
+      toast.error(t('moveToFolder.errors.loadFolders', { defaultValue: 'Không thể tải danh sách thư mục' }));
     } finally {
       setLoading(false);
     }
@@ -75,12 +78,12 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
     try {
       setLoading(true);
       await adminService.moveNoteToFolder(noteId, selectedFolderId);
-      toast.success('Đã di chuyển ghi chú vào thư mục');
+      toast.success(t('moveToFolder.success', { defaultValue: 'Đã di chuyển ghi chú vào thư mục' }));
       onSuccess();
       onClose();
     } catch (error: any) {
       console.error('Error moving note:', error);
-      toast.error(error.message || 'Không thể di chuyển ghi chú');
+      toast.error(error.message || t('moveToFolder.errors.move', { defaultValue: 'Không thể di chuyển ghi chú' }));
     } finally {
       setLoading(false);
     }
@@ -98,7 +101,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
               <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
-              Di chuyển vào thư mục
+              {t('moveToFolder.title', { defaultValue: 'Di chuyển vào thư mục' })}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 truncate">
               {noteTitle}
@@ -124,7 +127,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Tìm thư mục..."
+              placeholder={t('moveToFolder.searchPlaceholder', { defaultValue: 'Tìm thư mục...' })}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
             />
           </div>
@@ -142,7 +145,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
               <p className="text-gray-600 dark:text-gray-400">
-                {searchTerm ? 'Không tìm thấy thư mục' : 'Người dùng chưa có thư mục nào'}
+                {searchTerm ? t('moveToFolder.noResults', { defaultValue: 'Không tìm thấy thư mục' }) : t('moveToFolder.empty', { defaultValue: 'Người dùng chưa có thư mục nào' })}
               </p>
             </div>
           ) : (
@@ -157,17 +160,12 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
                       : 'bg-gray-50 dark:bg-neutral-800 border-2 border-transparent hover:border-gray-300 dark:hover:border-neutral-600'
                   }`}
                 >
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0"
-                    style={{ backgroundColor: folder.color || '#3B82F6' }}
-                  >
-                    {folder.icon && folder.icon !== 'folder' ? (
-                      <span className="text-xl">{folder.icon}</span>
-                    ) : (
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                      </svg>
-                    )}
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    {(() => {
+                      const IconComponent = getFolderIcon(folder.icon || 'folder');
+                      const colorClass = getFolderColorClass(folder.color);
+                      return <IconComponent className={`w-6 h-6 ${colorClass}`} strokeWidth={2} />;
+                    })()}
                   </div>
                   <div className="flex-1 text-left min-w-0">
                     <p className={`font-medium truncate ${
@@ -178,7 +176,7 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
                       {folder.name}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {folder.notesCount || 0} ghi chú
+                      {folder.notesCount || 0} {t('title', { defaultValue: 'ghi chú' })}
                     </p>
                   </div>
                   {selectedFolderId === folder.id && (
@@ -201,14 +199,14 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
             disabled={loading}
             className="flex-1 px-4 py-2.5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-neutral-600 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors font-medium"
           >
-            Hủy
+            {t('actions.cancel', { defaultValue: 'Hủy' })}
           </button>
           <button
             onClick={handleConfirm}
             disabled={!selectedFolderId || loading}
             className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
-            {loading ? 'Đang di chuyển...' : 'Di chuyển'}
+            {loading ? t('moveToFolder.moving', { defaultValue: 'Đang di chuyển...' }) : t('moveToFolder.move', { defaultValue: 'Di chuyển' })}
           </button>
         </div>
       </div>

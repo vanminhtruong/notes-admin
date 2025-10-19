@@ -60,3 +60,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+  overscroll-behavior-x: contain;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  width: 0 !important;   /* Chrome, Safari, new Edge */
+  height: 0 !important;
+}
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+.scrollbar-hide::-webkit-scrollbar-track {
+  background: transparent;
+}
