@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
-import type { Admin, AdminFilters, AdminListResponse } from '../interfaces/admin.types';
+import type { Admin, AdminFilters } from '../interfaces/admin.types';
 
 export interface UseAdminsListReturn {
   admins: Admin[];
@@ -44,14 +44,15 @@ export const useAdminsList = (): UseAdminsListReturn => {
         adminLevel: adminLevelFilter || undefined,
       };
 
-      const response: AdminListResponse = await adminService.getAllAdmins(filters);
+      const res = await adminService.getAllAdmins(filters);
+      const data: any = res || {};
       
-      setAdmins(response.admins || []);
-      setAvailablePermissions(response.availablePermissions || []);
+      setAdmins(data?.admins ?? []);
+      setAvailablePermissions(data?.availablePermissions ?? []);
       setPagination({
-        current: response.pagination?.page || 1,
-        pageSize: response.pagination?.limit || 20,
-        total: response.pagination?.total || 0,
+        current: data?.pagination?.page ?? 1,
+        pageSize: data?.pagination?.limit ?? 20,
+        total: data?.pagination?.total ?? 0,
       });
     } catch (error: any) {
       toast.error(error.message || 'Không thể tải danh sách admin');
@@ -68,8 +69,8 @@ export const useAdminsList = (): UseAdminsListReturn => {
   useEffect(() => {
     const fetchCurrentAdmin = async () => {
       try {
-        const response = await adminService.getMyPermissions();
-        setCurrentAdmin(response.admin);
+        const res = await adminService.getMyPermissions();
+        setCurrentAdmin((res as any)?.admin ?? null);
       } catch (error) {
         console.error('Failed to fetch current admin:', error);
       }
