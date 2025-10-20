@@ -487,6 +487,13 @@ class AdminService {
     return this.axiosInstance.get('/admin/categories', { params });
   }
 
+  // Search categories (optimized for dropdown)
+  async searchCategories(query: string, userId: number, limit?: number) {
+    return this.axiosInstance.get('/admin/categories/search', {
+      params: { q: query, userId, limit: limit || 4 }
+    });
+  }
+
   // Get category detail
   async getCategoryDetail(categoryId: number) {
     return this.axiosInstance.get(`/admin/categories/${categoryId}`);

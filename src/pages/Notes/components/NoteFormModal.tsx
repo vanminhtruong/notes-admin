@@ -1,10 +1,12 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
 import { useRichTextEditor } from '@components/RichTextEditor/useRichTextEditor';
+import * as LucideIcons from 'lucide-react';
+import { Tag, Search, Loader2 } from 'lucide-react';
 
 // MediaTabs Component
 const MediaTabs = memo(({ imageUrl, videoUrl, youtubeUrl, onImageChange, onVideoChange, onYoutubeChange }: {
@@ -187,12 +189,23 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
+  const [categoryId, setCategoryId] = useState<number | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [imageUrl, setImageUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [reminderAt, setReminderAt] = useState('');
+  
+  // Category states
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
+  const [categorySearchResults, setCategorySearchResults] = useState<any[]>([]);
+  const [isSearchingCategories, setIsSearchingCategories] = useState(false);
+  const categorySearchInputRef = useRef<HTMLInputElement>(null);
+  const categoryDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // RichTextEditor instance
   const editor = useRichTextEditor({
@@ -201,12 +214,35 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
     onUpdate: (html) => setContent(html),
   });
 
+  // Load categories when userId is available
+  useEffect(() => {
+    const loadCategories = async () => {
+      const targetUserId = userId || (note?.user as any)?.id;
+      if (!targetUserId) return;
+      
+      try {
+        setLoadingCategories(true);
+        const response: any = await adminService.getAllCategories({ userId: targetUserId, limit: 100 });
+        setCategories(response.categories || []);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    
+    if (show) {
+      loadCategories();
+    }
+  }, [show, userId, note]);
+
   useEffect(() => {
     if (show) {
       if (note) {
         setTitle(note.title);
         setContent(note.content || '');
-        setCategory(note.category || '');
+        setCategoryId((note as any).categoryId);
+        setSelectedCategory((note as any).category || null);
         setPriority(note.priority);
         setImageUrl((note as any).imageUrl || '');
         setVideoUrl((note as any).videoUrl || '');
@@ -215,7 +251,8 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
       } else {
         setTitle('');
         setContent('');
-        setCategory('');
+        setCategoryId(undefined);
+        setSelectedCategory(null);
         setPriority('medium');
         setImageUrl('');
         setVideoUrl('');
@@ -231,6 +268,74 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
     };
   }, [show, note]);
 
+  // Search categories function
+  const searchCategoriesFunc = useCallback(async (query: string) => {
+    const targetUserId = userId || (note?.user as any)?.id;
+    if (!query.trim() || !targetUserId) {
+      setCategorySearchResults([]);
+      setIsSearchingCategories(false);
+      return;
+    }
+
+    setIsSearchingCategories(true);
+    try {
+      const response: any = await adminService.searchCategories(query, targetUserId, 4);
+      setCategorySearchResults(response.categories || []);
+    } catch (error) {
+      console.error('Search categories error:', error);
+      setCategorySearchResults([]);
+    } finally {
+      setIsSearchingCategories(false);
+    }
+  }, [userId, note]);
+
+  // Debounce search effect
+  useEffect(() => {
+    if (categoryDebounceTimerRef.current) {
+      clearTimeout(categoryDebounceTimerRef.current);
+    }
+
+    categoryDebounceTimerRef.current = setTimeout(() => {
+      searchCategoriesFunc(categorySearchTerm);
+    }, 300);
+
+    return () => {
+      if (categoryDebounceTimerRef.current) {
+        clearTimeout(categoryDebounceTimerRef.current);
+      }
+    };
+  }, [categorySearchTerm, searchCategoriesFunc]);
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (showCategoryDropdown && categorySearchInputRef.current) {
+      setTimeout(() => {
+        categorySearchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [showCategoryDropdown]);
+
+  // Close category dropdown and reset search
+  const handleCloseCategoryDropdown = useCallback(() => {
+    setShowCategoryDropdown(false);
+    setCategorySearchTerm('');
+    setCategorySearchResults([]);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.category-dropdown-container')) {
+        handleCloseCategoryDropdown();
+      }
+    };
+    if (showCategoryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showCategoryDropdown, handleCloseCategoryDropdown]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -245,7 +350,7 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
       const data: any = {
         title: title.trim(),
         content: content.trim() || undefined,
-        category: category.trim() || undefined,
+        categoryId: categoryId || undefined,
         priority,
         imageUrl: imageUrl.trim() || undefined,
         videoUrl: videoUrl.trim() || undefined,
@@ -336,17 +441,105 @@ const NoteFormModal: React.FC<NoteFormModalProps> = ({ show, note, userId, folde
             </div>
 
             {/* Category */}
-            <div>
+            <div className="relative category-dropdown-container">
               <label className="block text-sm md-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('form.category.label')}
               </label>
-              <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder={t('form.placeholders.category')}
-                className="w-full px-4 py-2 md-down:px-3.5 md-down:py-2 sm-down:px-3 sm-down:py-1.5 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm md-down:text-sm sm-down:text-xs"
-              />
+              <button
+                type="button"
+                onClick={() => !loadingCategories && setShowCategoryDropdown(!showCategoryDropdown)}
+                disabled={loadingCategories}
+                className="w-full px-4 py-2 md-down:px-3.5 md-down:py-2 sm-down:px-3 sm-down:py-1.5 border border-gray-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 text-sm md-down:text-sm sm-down:text-xs text-left flex items-center justify-between"
+              >
+                {loadingCategories ? (
+                  <span>Loading...</span>
+                ) : selectedCategory ? (
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: `${selectedCategory.color}20` }}
+                    >
+                      {(() => {
+                        const Icon = (LucideIcons as any)[selectedCategory.icon] || Tag;
+                        return <Icon className="w-3 h-3" style={{ color: selectedCategory.color }} />;
+                      })()}
+                    </div>
+                    <span style={{ color: selectedCategory.color }}>{selectedCategory.name}</span>
+                  </div>
+                ) : (
+                  <span className="text-gray-500">No category</span>
+                )}
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {showCategoryDropdown && (
+                <div className="absolute z-50 w-full bottom-full mb-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md shadow-lg overflow-hidden">
+                  {/* Search Input */}
+                  <div className="p-2 border-b border-gray-200 dark:border-neutral-600">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        ref={categorySearchInputRef}
+                        type="text"
+                        value={categorySearchTerm}
+                        onChange={(e) => setCategorySearchTerm(e.target.value)}
+                        placeholder="Tìm kiếm danh mục..."
+                        className="w-full pl-9 pr-9 py-2 bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-md text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      {isSearchingCategories && (
+                        <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 animate-spin" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Categories List */}
+                  <div className="max-h-[200px] overflow-y-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCategoryId(undefined);
+                        setSelectedCategory(null);
+                        handleCloseCategoryDropdown();
+                      }}
+                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 text-sm transition-colors"
+                    >
+                      No category
+                    </button>
+                    {(categorySearchTerm ? categorySearchResults : categories).length > 0 ? (
+                      (categorySearchTerm ? categorySearchResults : categories).map((cat) => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => {
+                            setCategoryId(cat.id);
+                            setSelectedCategory(cat);
+                            handleCloseCategoryDropdown();
+                          }}
+                          className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 text-sm transition-colors"
+                        >
+                          <div
+                            className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: `${cat.color}20` }}
+                          >
+                            {(() => {
+                              const Icon = (LucideIcons as any)[cat.icon] || Tag;
+                              return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
+                            })()}
+                          </div>
+                          <span style={{ color: cat.color }}>{cat.name}</span>
+                        </button>
+                      ))
+                    ) : categorySearchTerm && !isSearchingCategories ? (
+                      <div className="px-3 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                        Không tìm thấy danh mục
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Media Section */}

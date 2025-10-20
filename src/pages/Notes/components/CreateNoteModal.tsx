@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X, Search, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Pagination from '@components/common/Pagination';
 import { useTranslation } from 'react-i18next';
@@ -161,6 +161,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
   const [categories, setCategories] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
+  const [categorySearchResults, setCategorySearchResults] = useState<any[]>([]);
+  const [isSearchingCategories, setIsSearchingCategories] = useState(false);
+  const categorySearchInputRef = useRef<HTMLInputElement>(null);
+  const categoryDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(false);
@@ -274,6 +279,59 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
       setLoadingCategories(false);
     }
   };
+
+  // Search categories function
+  const searchCategoriesFunc = useCallback(async (query: string) => {
+    if (!query.trim() || !formData.userId) {
+      setCategorySearchResults([]);
+      setIsSearchingCategories(false);
+      return;
+    }
+
+    setIsSearchingCategories(true);
+    try {
+      const response: any = await adminService.searchCategories(query, parseInt(formData.userId), 4);
+      setCategorySearchResults(response.categories || []);
+    } catch (error) {
+      console.error('Search categories error:', error);
+      setCategorySearchResults([]);
+    } finally {
+      setIsSearchingCategories(false);
+    }
+  }, [formData.userId]);
+
+  // Debounce search effect
+  useEffect(() => {
+    if (categoryDebounceTimerRef.current) {
+      clearTimeout(categoryDebounceTimerRef.current);
+    }
+
+    categoryDebounceTimerRef.current = setTimeout(() => {
+      searchCategoriesFunc(categorySearchTerm);
+    }, 300);
+
+    return () => {
+      if (categoryDebounceTimerRef.current) {
+        clearTimeout(categoryDebounceTimerRef.current);
+      }
+    };
+  }, [categorySearchTerm, searchCategoriesFunc]);
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (showCategoryDropdown && categorySearchInputRef.current) {
+      setTimeout(() => {
+        categorySearchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [showCategoryDropdown]);
+
+  // Reset category search when closing dropdown
+  const handleCloseCategoryDropdown = useCallback(() => {
+    setShowCategoryDropdown(false);
+    setCategorySearchTerm('');
+    setCategorySearchResults([]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -513,41 +571,69 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
               </button>
               
               {showCategoryDropdown && (
-                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setFormData({ ...formData, categoryId: null });
-                      setShowCategoryDropdown(false);
-                    }}
-                    className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 text-sm"
-                  >
-                    No category
-                  </button>
-                  {categories.map((cat) => (
+                <div className="absolute z-50 w-full bottom-full mb-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-lg shadow-lg overflow-hidden">
+                  {/* Search Input */}
+                  <div className="p-2 border-b border-gray-200 dark:border-neutral-600">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        ref={categorySearchInputRef}
+                        type="text"
+                        value={categorySearchTerm}
+                        onChange={(e) => setCategorySearchTerm(e.target.value)}
+                        placeholder="Tìm kiếm danh mục..."
+                        className="w-full pl-9 pr-9 py-2 bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      {isSearchingCategories && (
+                        <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 animate-spin" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Categories List */}
+                  <div className="max-h-[200px] overflow-y-auto">
                     <button
-                      key={cat.id}
                       type="button"
                       onClick={() => {
-                        setSelectedCategory(cat);
-                        setFormData({ ...formData, categoryId: cat.id });
-                        setShowCategoryDropdown(false);
+                        setSelectedCategory(null);
+                        setFormData({ ...formData, categoryId: null });
+                        handleCloseCategoryDropdown();
                       }}
-                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 text-sm"
+                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 text-sm transition-colors"
                     >
-                      <div
-                        className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: `${cat.color}20` }}
-                      >
-                        {(() => {
-                          const Icon = (LucideIcons as any)[cat.icon] || Tag;
-                          return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
-                        })()}
-                      </div>
-                      <span style={{ color: cat.color }}>{cat.name}</span>
+                      No category
                     </button>
-                  ))}
+                    {(categorySearchTerm ? categorySearchResults : categories).length > 0 ? (
+                      (categorySearchTerm ? categorySearchResults : categories).map((cat) => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory(cat);
+                            setFormData({ ...formData, categoryId: cat.id });
+                            handleCloseCategoryDropdown();
+                          }}
+                          className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 text-sm transition-colors"
+                        >
+                          <div
+                            className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: `${cat.color}20` }}
+                          >
+                            {(() => {
+                              const Icon = (LucideIcons as any)[cat.icon] || Tag;
+                              return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
+                            })()}
+                          </div>
+                          <span style={{ color: cat.color }}>{cat.name}</span>
+                        </button>
+                      ))
+                    ) : categorySearchTerm && !isSearchingCategories ? (
+                      <div className="px-3 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                        Không tìm thấy danh mục
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Tag, X } from 'lucide-react';
+import { Tag, X, Search, Loader2 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import RichTextEditor from '@components/RichTextEditor/RichTextEditor';
@@ -25,6 +25,14 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
     setLoadingCategories,
     showCategoryDropdown,
     setShowCategoryDropdown,
+    categorySearchTerm,
+    setCategorySearchTerm,
+    categorySearchResults,
+    setCategorySearchResults,
+    isSearchingCategories,
+    setIsSearchingCategories,
+    categorySearchInputRef,
+    categoryDebounceTimerRef,
   } = useEditNoteModalState();
   
   // Use effects hook
@@ -35,7 +43,19 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
     setLoadingCategories,
     showCategoryDropdown,
     setShowCategoryDropdown,
+    categorySearchTerm,
+    setCategorySearchResults,
+    setIsSearchingCategories,
+    categorySearchInputRef,
+    categoryDebounceTimerRef,
   });
+
+  // Close category dropdown and reset search
+  const handleCloseCategoryDropdown = useCallback(() => {
+    setShowCategoryDropdown(false);
+    setCategorySearchTerm('');
+    setCategorySearchResults([]);
+  }, [setShowCategoryDropdown, setCategorySearchTerm, setCategorySearchResults]);
 
   const { handleImageUpload, handleVideoUpload, handleYoutubeUrlChange } = useMediaUpload({
     editingNote,
@@ -133,39 +153,67 @@ const EditNoteModal: React.FC<EditNoteModalProps> = ({ show, editingNote, setEdi
                 </button>
                 
                 {showCategoryDropdown && (
-                  <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md shadow-lg max-h-[200px] overflow-y-auto">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingNote({ ...editingNote, categoryId: undefined, category: undefined });
-                        setShowCategoryDropdown(false);
-                      }}
-                      className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500"
-                    >
-                      No category
-                    </button>
-                    {categories.map((cat) => (
+                  <div className="absolute z-50 w-full bottom-full mb-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md shadow-lg overflow-hidden">
+                    {/* Search Input */}
+                    <div className="p-2 border-b border-gray-200 dark:border-neutral-600">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                          ref={categorySearchInputRef}
+                          type="text"
+                          value={categorySearchTerm}
+                          onChange={(e) => setCategorySearchTerm(e.target.value)}
+                          placeholder="Tìm kiếm danh mục..."
+                          className="w-full pl-9 pr-9 py-2 bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-md text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        {isSearchingCategories && (
+                          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 animate-spin" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Categories List */}
+                    <div className="max-h-[200px] overflow-y-auto">
                       <button
-                        key={cat.id}
                         type="button"
                         onClick={() => {
-                          setEditingNote({ ...editingNote, categoryId: cat.id, category: cat });
-                          setShowCategoryDropdown(false);
+                          setEditingNote({ ...editingNote, categoryId: undefined, category: undefined });
+                          handleCloseCategoryDropdown();
                         }}
-                        className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                        className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 transition-colors"
                       >
-                        <div
-                          className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `${cat.color}20` }}
-                        >
-                          {(() => {
-                            const Icon = (LucideIcons as any)[cat.icon] || Tag;
-                            return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
-                          })()}
-                        </div>
-                        <span style={{ color: cat.color }}>{cat.name}</span>
+                        No category
                       </button>
-                    ))}
+                      {(categorySearchTerm ? categorySearchResults : categories).length > 0 ? (
+                        (categorySearchTerm ? categorySearchResults : categories).map((cat) => (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            onClick={() => {
+                              setEditingNote({ ...editingNote, categoryId: cat.id, category: cat });
+                              handleCloseCategoryDropdown();
+                            }}
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 transition-colors"
+                          >
+                            <div
+                              className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0"
+                              style={{ backgroundColor: `${cat.color}20` }}
+                            >
+                              {(() => {
+                                const Icon = (LucideIcons as any)[cat.icon] || Tag;
+                                return <Icon className="w-3 h-3" style={{ color: cat.color }} />;
+                              })()}
+                            </div>
+                            <span style={{ color: cat.color }}>{cat.name}</span>
+                          </button>
+                        ))
+                      ) : categorySearchTerm && !isSearchingCategories ? (
+                        <div className="px-3 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                          Không tìm thấy danh mục
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                 )}
               </div>

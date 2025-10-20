@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { NoteCategory } from '../../interface/types';
 
 export const useEditNoteModalState = () => {
@@ -6,6 +6,13 @@ export const useEditNoteModalState = () => {
   const [categories, setCategories] = useState<NoteCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  
+  // Category search states
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
+  const [categorySearchResults, setCategorySearchResults] = useState<NoteCategory[]>([]);
+  const [isSearchingCategories, setIsSearchingCategories] = useState(false);
+  const categorySearchInputRef = useRef<HTMLInputElement>(null);
+  const categoryDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   return {
     activeMediaTab,
@@ -16,5 +23,13 @@ export const useEditNoteModalState = () => {
     setLoadingCategories,
     showCategoryDropdown,
     setShowCategoryDropdown,
+    categorySearchTerm,
+    setCategorySearchTerm,
+    categorySearchResults,
+    setCategorySearchResults,
+    isSearchingCategories,
+    setIsSearchingCategories,
+    categorySearchInputRef,
+    categoryDebounceTimerRef,
   };
 };
