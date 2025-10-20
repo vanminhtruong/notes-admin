@@ -28,69 +28,32 @@ import type { Category } from './interface/category.types';
 
 const CategoriesList: React.FC = () => {
   // Use hooks
-  const {
-    categories,
-    setCategories,
-    isLoading,
-    setIsLoading,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    setTotalPages,
-    total,
-    setTotal,
-  } = useCategoriesState();
-
-  const {
-    searchTerm,
-    selectedUserId,
-    handleSearchChange,
-    handleUserIdChange,
-  } = useCategoriesFilters();
-
-  const {
-    isCreateModalOpen,
-    isEditModalOpen,
-    isDetailModalOpen,
-    selectedCategory,
-    openCreateModal,
-    openEditModal,
-    openDetailModal,
-    closeCreateModal,
-    closeEditModal,
-    closeDetailModal,
-  } = useCategoriesModals();
-
-  const {
-    fetchCategories,
-    handleDelete,
-    canView,
-    canCreate,
-    canEdit,
-    canDelete,
-  } = useCategoriesHandlers({
-    setIsLoading,
-    setCategories,
-    setTotal,
-    setTotalPages,
-    currentPage,
-    searchTerm,
-    selectedUserId,
+  const state = useCategoriesState();
+  const filters = useCategoriesFilters();
+  const modals = useCategoriesModals();
+  const handlers = useCategoriesHandlers({
+    setIsLoading: state.setIsLoading,
+    setCategories: state.setCategories,
+    setTotal: state.setTotal,
+    setTotalPages: state.setTotalPages,
+    currentPage: state.currentPage,
+    searchTerm: filters.searchTerm,
+    selectedUserId: filters.selectedUserId,
   });
 
   // Handle effects (fetch and socket)
-  useCategoriesEffects({ fetchCategories });
+  useCategoriesEffects({ fetchCategories: handlers.fetchCategories });
 
   // Handle edit with permission check
   const handleEdit = (category: Category) => {
-    if (!canEdit) {
+    if (!handlers.canEdit) {
       toast.error('No permission to edit');
       return;
     }
-    openEditModal(category);
+    modals.openEditModal(category);
   };
 
-  if (!canView) {
+  if (!handlers.canView) {
     return <NoPermissionView />;
   }
 
@@ -102,41 +65,41 @@ const CategoriesList: React.FC = () => {
       {/* Filters and Actions */}
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 p-4 xl-down:p-3 sm-down:p-2">
         <CategoriesFilters
-          searchTerm={searchTerm}
-          selectedUserId={selectedUserId}
-          isLoading={isLoading}
-          canCreate={canCreate}
-          onSearchChange={(value) => handleSearchChange(value, () => setCurrentPage(1))}
-          onUserIdChange={(value) => handleUserIdChange(value, () => setCurrentPage(1))}
-          onRefresh={fetchCategories}
-          onCreateClick={openCreateModal}
+          searchTerm={filters.searchTerm}
+          selectedUserId={filters.selectedUserId}
+          isLoading={state.isLoading}
+          canCreate={handlers.canCreate}
+          onSearchChange={(value) => filters.handleSearchChange(value, () => state.setCurrentPage(1))}
+          onUserIdChange={(value) => filters.handleUserIdChange(value, () => state.setCurrentPage(1))}
+          onRefresh={handlers.fetchCategories}
+          onCreateClick={modals.openCreateModal}
         />
-        <CategoriesStats total={total} />
+        <CategoriesStats total={state.total} />
       </div>
 
       {/* Categories List */}
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
-        {isLoading ? (
+        {state.isLoading ? (
           <LoadingSpinner />
-        ) : categories.length === 0 ? (
-          <EmptyState hasFilters={!!(searchTerm || selectedUserId)} />
+        ) : state.categories.length === 0 ? (
+          <EmptyState hasFilters={!!(filters.searchTerm || filters.selectedUserId)} />
         ) : (
           <>
             <CategoriesGrid
-              categories={categories}
-              canEdit={canEdit}
-              canDelete={canDelete}
-              onView={openDetailModal}
+              categories={state.categories}
+              canEdit={handlers.canEdit}
+              canDelete={handlers.canDelete}
+              onView={modals.openDetailModal}
               onEdit={handleEdit}
-              onDelete={handleDelete}
+              onDelete={handlers.handleDelete}
             />
 
             {/* Pagination */}
-            {totalPages >= 2 && (
+            {state.totalPages >= 2 && (
               <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                currentPage={state.currentPage}
+                totalPages={state.totalPages}
+                onPageChange={state.setCurrentPage}
                 showInfo={true}
               />
             )}
@@ -145,28 +108,28 @@ const CategoriesList: React.FC = () => {
       </div>
 
       {/* Modals */}
-      {isCreateModalOpen && (
+      {modals.isCreateModalOpen && (
         <CreateCategoryModal
-          isOpen={isCreateModalOpen}
-          onClose={closeCreateModal}
-          onSuccess={fetchCategories}
+          isOpen={modals.isCreateModalOpen}
+          onClose={modals.closeCreateModal}
+          onSuccess={handlers.fetchCategories}
         />
       )}
 
-      {isEditModalOpen && selectedCategory && (
+      {modals.isEditModalOpen && modals.selectedCategory && (
         <EditCategoryModal
-          isOpen={isEditModalOpen}
-          category={selectedCategory}
-          onClose={closeEditModal}
-          onSuccess={fetchCategories}
+          isOpen={modals.isEditModalOpen}
+          category={modals.selectedCategory}
+          onClose={modals.closeEditModal}
+          onSuccess={handlers.fetchCategories}
         />
       )}
 
-      {isDetailModalOpen && selectedCategory && (
+      {modals.isDetailModalOpen && modals.selectedCategory && (
         <CategoryDetailModal
-          isOpen={isDetailModalOpen}
-          category={selectedCategory}
-          onClose={closeDetailModal}
+          isOpen={modals.isDetailModalOpen}
+          category={modals.selectedCategory}
+          onClose={modals.closeDetailModal}
         />
       )}
     </div>

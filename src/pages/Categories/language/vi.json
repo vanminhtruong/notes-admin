@@ -31,6 +31,7 @@
       "icon": "Icon",
       "color": "Màu sắc",
       "preview": "Xem trước",
+      "previewName": "Tên danh mục",
       "cancel": "Hủy",
       "submit": "Tạo danh mục",
       "submitting": "Đang tạo...",

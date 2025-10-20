@@ -31,6 +31,7 @@
       "icon": "아이콘",
       "color": "색상",
       "preview": "미리보기",
+      "previewName": "카테고리 이름",
       "cancel": "취소",
       "submit": "카테고리 생성",
       "submitting": "생성 중...",

@@ -8,6 +8,7 @@ import adminService from '@services/adminService';
 import ReactionChips from './ReactionChips';
 import { onAdminEvent } from '@services/adminEvents';
 import { getYouTubeEmbedUrl } from '@utils/youtube';
+import toast from '@utils/toast';
 
 interface MonitorTabProps {
   activityData: UserActivityData | null;
@@ -674,16 +675,20 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                             e.stopPropagation();
                                             setOpenMessageMenuId(null);
                                             if (!selectedUserId) return;
-                                            const ok = window.confirm(t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'));
-                                            if (!ok) return;
+                                            const confirmed = await toast.confirmDelete(
+                                              t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'),
+                                              undefined,
+                                              t('delete', 'Xóa'),
+                                              t('cancel', 'Hủy')
+                                            );
+                                            if (!confirmed) return;
                                             try {
                                               await adminService.deleteDMMessage(Number(m.id), Number(selectedUserId));
                                               // Reload DM sau khi xóa
                                               const friendId = (monitorState as any)?.selectedFriendId;
                                               if (friendId) { loadDm(friendId); }
                                             } catch (err: any) {
-                                              // no toast here to avoid import; native alert
-                                              alert(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
+                                              toast.error(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
                                             }
                                           }}
                                           className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"
@@ -1081,15 +1086,20 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                                             e.stopPropagation();
                                             setOpenMessageMenuId(null);
                                             if (!selectedUserId) return;
-                                            const ok = window.confirm(t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'));
-                                            if (!ok) return;
+                                            const confirmed = await toast.confirmDelete(
+                                              t('userActivity.messages.actions.confirmDeleteForUser', 'Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?'),
+                                              undefined,
+                                              t('delete', 'Xóa'),
+                                              t('cancel', 'Hủy')
+                                            );
+                                            if (!confirmed) return;
                                             try {
                                               await adminService.deleteGroupMessage(Number(m.id), Number(selectedUserId));
                                               // Reload Group sau khi xóa
                                               const gid = (monitorState as any)?.selectedGroupId;
                                               if (gid) { loadGroup(gid); }
                                             } catch (err: any) {
-                                              alert(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
+                                              toast.error(err?.message || t('userActivity.messages.actions.deleteError', 'Không thể xóa tin nhắn'));
                                             }
                                           }}
                                           className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center space-x-2"

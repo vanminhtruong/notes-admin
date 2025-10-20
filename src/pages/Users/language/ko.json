@@ -61,14 +61,25 @@
     "submit": "제출",
     "update": "업데이트",
     "loading": "로딩 중...",
-    "retry": "다시 시도"
+    "processing": "처리 중...",
+    "retry": "다시 시도",
+    "delete": "삭제"
   },
   "action": {
     "enable": "활성화",
     "disable": "비활성화",
     "enableAccount": "계정 활성화"
   },
+  "confirm": {
+    "enableTitle": "활성화 확인",
+    "enableMessage": "정말로 \"{{name}}\" 계정을 활성화하시겠습니까?",
+    "disableTitle": "비활성화 확인",
+    "disableMessage": "정말로 \"{{name}}\" 계정을 비활성화하시겠습니까?",
+    "deleteTitle": "영구 삭제 확인",
+    "deleteMessage": "⚠️ 경고: 정말로 \"{{name}}\" 계정을 영구 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다!"
+  },
   "alerts": {
+    "noPermission": "이 작업을 수행할 권한이 없습니다",
     "cannotChangeAdminStatus": "관리자 계정 상태를 변경할 수 없습니다",
     "confirmToggleStatus": "정말로 \"{{name}}\" 계정을 {{action}}하시겠습니까?",
     "cannotToggleStatus": "계정을 {{action}}할 수 없습니다",
@@ -76,7 +87,12 @@
     "confirmDeletePermanent1": "⚠️ 경고: 정말로 \"{{name}}\" 계정을 영구 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!",
     "confirmDeletePermanent2": "최종 확인: \"{{email}}\" 계정을 영구 삭제하시겠습니까?",
     "cannotDeleteUser": "계정을 삭제할 수 없습니다",
-    "deleteSuccess": "계정이 영구적으로 삭제되었습니다"
+    "deleteSuccess": "계정이 영구적으로 삭제되었습니다",
+    "enableSuccess": "계정이 성공적으로 활성화되었습니다",
+    "disableSuccess": "계정이 성공적으로 비활성화되었습니다",
+    "toggleError": "계정 상태를 변경할 수 없습니다",
+    "deleteError": "계정을 삭제할 수 없습니다",
+    "loadError": "사용자 목록을 로드할 수 없습니다"
   },
   "online": "온라인",
   "offline": "오프라인",

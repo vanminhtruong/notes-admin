@@ -6,9 +6,15 @@ import { getVisibleUserActivityTabs } from '@utils/auth';
 import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 
-import { useUserActivity } from './hooks/useUserActivity';
-import { useNotifications } from './hooks/useNotifications';
-import { useMonitor } from './hooks/useMonitor';
+import { useUserActivityState } from './hooks/Manager-useState/useUserActivityState';
+import { useNotificationsState } from './hooks/Manager-useState/useNotificationsState';
+import { useMonitorState } from './hooks/Manager-useState/useMonitorState';
+import { useUserActivityHandlers } from './hooks/Manager-handle/useUserActivityHandlers';
+import { useNotificationsHandlers } from './hooks/Manager-handle/useNotificationsHandlers';
+import { useMonitorHandlers } from './hooks/Manager-handle/useMonitorHandlers';
+import { useUserActivityEffects } from './hooks/Manager-Effects/useUserActivityEffects';
+import { useNotificationsEffects } from './hooks/Manager-Effects/useNotificationsEffects';
+import { useMonitorEffects } from './hooks/Manager-Effects/useMonitorEffects';
 import MessagesTab from './components/MessagesTab';
 import NotificationsTab from './components/NotificationsTab';
 import GroupsTab from './components/GroupsTab';
@@ -29,24 +35,76 @@ const UserActivity: React.FC = () => {
     return visibleTabs.length > 0 ? visibleTabs[0].key as any : 'messages';
   });
   
-  // Sử dụng custom hooks
+  // useState hooks
+  const userActivityState = useUserActivityState();
+  const notificationsState = useNotificationsState();
+  const monitorStateHook = useMonitorState();
+
+  // Handlers hooks
+  const { loadUserActivity, loadUsers, formatDate } = useUserActivityHandlers({
+    setActivityData: userActivityState.setActivityData,
+    setLoading: userActivityState.setLoading,
+    setUsers: userActivityState.setUsers,
+    setError: userActivityState.setError,
+    setLoadingUsers: userActivityState.setLoadingUsers,
+    searchTerm: userActivityState.searchTerm
+  });
+
+  const { loadNotifications } = useNotificationsHandlers({
+    setNotifications: notificationsState.setNotifications,
+    setLoadingNotifications: notificationsState.setLoadingNotifications,
+    setUnreadNotificationsCount: notificationsState.setUnreadNotificationsCount
+  });
+
   const {
-    activityData,
-    loading,
-    selectedUserId,
-    setSelectedUserId,
-    typingInfo,
+    updateMonitorState,
+    loadDm,
+    loadGroup,
+    openGroupMembersModal,
+    closeGroupMembersModal
+  } = useMonitorHandlers({
+    selectedUserId: userActivityState.selectedUserId,
+    monitorState: monitorStateHook.monitorState,
+    setMonitorState: monitorStateHook.setMonitorState,
+    setGroupInfo: monitorStateHook.setGroupInfo,
+    setGroupMemberInfo: monitorStateHook.setGroupMemberInfo,
+    setShowGroupMembers: monitorStateHook.setShowGroupMembers,
+    setMembersModalGroup: monitorStateHook.setMembersModalGroup,
+    setMembersModalList: monitorStateHook.setMembersModalList,
+    setLoadingMembersModal: monitorStateHook.setLoadingMembersModal
+  });
+
+  // Effects hooks
+  useUserActivityEffects({
+    selectedUserId: userActivityState.selectedUserId,
+    searchTerm: userActivityState.searchTerm,
+    userId,
+    setSelectedUserId: userActivityState.setSelectedUserId,
+    setTypingInfo: userActivityState.setTypingInfo,
+    setActivityData: userActivityState.setActivityData,
+    typingTimerRef: userActivityState.typingTimerRef,
     loadUserActivity,
-    formatDate
-  } = useUserActivity();
-  
-  const {
-    notifications,
-    loadingNotifications,
-    unreadNotificationsCount,
-    loadNotifications,
-  } = useNotifications(selectedUserId);
-  
+    loadUsers
+  });
+
+  useNotificationsEffects({
+    selectedUserId: userActivityState.selectedUserId,
+    setUnreadNotificationsCount: notificationsState.setUnreadNotificationsCount,
+    loadNotifications
+  });
+
+  useMonitorEffects({
+    selectedUserId: userActivityState.selectedUserId,
+    monitorState: monitorStateHook.monitorState,
+    setMonitorState: monitorStateHook.setMonitorState,
+    setGroupTypingUsers: monitorStateHook.setGroupTypingUsers,
+    setGroupTyping: monitorStateHook.setGroupTyping,
+    groupTypingTimersRef: monitorStateHook.groupTypingTimersRef
+  });
+
+  // Destructure để dùng trong component
+  const { activityData, loading, selectedUserId, typingInfo } = userActivityState;
+  const { notifications, loadingNotifications, unreadNotificationsCount } = notificationsState;
   const {
     monitorState,
     groupInfo,
@@ -58,13 +116,8 @@ const UserActivity: React.FC = () => {
     membersModalList,
     loadingMembersModal,
     openGroupMenuId,
-    loadDm,
-    loadGroup,
-    openGroupMembersModal,
-    closeGroupMembersModal,
-    setOpenGroupMenuId,
-    updateMonitorState
-  } = useMonitor(selectedUserId);
+    setOpenGroupMenuId
+  } = monitorStateHook;
 
   // Confirmation toast helper
   const showConfirmationToast = (message: string, onConfirm: () => void) => {
@@ -269,12 +322,6 @@ const UserActivity: React.FC = () => {
   
   // Không cần destructure monitorState nữa vì đã được truyền trực tiếp vào MonitorTab component
 
-  // Set userId from params
-  useEffect(() => {
-    if (userId) {
-      setSelectedUserId(parseInt(userId));
-    }
-  }, [userId, setSelectedUserId]);
 
   // Setup socket listeners for real-time message updates
   useEffect(() => {
@@ -383,7 +430,7 @@ const UserActivity: React.FC = () => {
         <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
       </div>
 
-      <UserSelector selectedUserId={selectedUserId} onUserSelect={setSelectedUserId} />
+      <UserSelector selectedUserId={selectedUserId} onUserSelect={userActivityState.setSelectedUserId} />
 
       {selectedUserId && (
         <>

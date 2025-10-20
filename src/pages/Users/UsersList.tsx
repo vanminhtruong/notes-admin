@@ -1,113 +1,83 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
 import Pagination from '@components/common/Pagination';
 
-import { useUsersList } from './hooks/useUsersList';
+import { useUsersListState } from './hooks/Manager-useState/useUsersListState';
+import { useUsersListModalsState } from './hooks/Manager-useState/useUsersListModalsState';
+import { useUsersListHandlers } from './hooks/Manager-handle/useUsersListHandlers';
+import { useUsersListModalsHandlers } from './hooks/Manager-handle/useUsersListModalsHandlers';
+import { useUsersListUIHelpers } from './hooks/Manager-handle/useUsersListUIHelpers.tsx';
+import { useUsersListEffects } from './hooks/Manager-Effects/useUsersListEffects';
+import { useUsersListModalsEffects } from './hooks/Manager-Effects/useUsersListModalsEffects';
 import UsersTable from './components/UsersTable';
 import ConfirmDialog from './components/ConfirmDialog';
 import UserDetailModal from './components/UserDetailModal';
 import CreateUserModal from './components/CreateUserModal';
 import UserSessionsModal from './components/UserSessionsModal';
-import type { User } from './interfaces';
 const UsersList: React.FC = () => {
   const { t } = useTranslation('users');
   const canViewActive = hasPermission('manage_users.view_active_accounts') || hasPermission('manage_users');
+  
+  // useState hooks
+  const usersListState = useUsersListState();
+  const modalsState = useUsersListModalsState();
+
+  // Handlers hooks
   const {
-    users,
-    setUsers,
-    loading,
-    totalPages,
-    totalItems,
-    filters,
-    confirmState,
+    loadUsers,
     updateFilters,
     clearFilters,
     handleToggleStatus,
     handleDeletePermanently,
-    closeConfirm,
-    setConfirmState
-  } = useUsersList();
+    closeConfirm
+  } = useUsersListHandlers({
+    filters: usersListState.filters,
+    setLoading: usersListState.setLoading,
+    setUsers: usersListState.setUsers,
+    setTotalPages: usersListState.setTotalPages,
+    setTotalItems: usersListState.setTotalItems,
+    setFilters: usersListState.setFilters,
+    setConfirmState: usersListState.setConfirmState
+  });
 
-  // Modal chi tiết user (hoist state)
-  const [openDetail, setOpenDetail] = useState(false);
-  const [detailUser, setDetailUser] = useState<User | null>(null);
-  const openUserModal = (user: User) => { setDetailUser(user); setOpenDetail(true); };
+  const {
+    openUserModal,
+    closeUserModal,
+    handleCreateSuccess,
+    handleViewSessions,
+    closeSessionsModal,
+    handleUserUpdated
+  } = useUsersListModalsHandlers({
+    setDetailUser: modalsState.setDetailUser,
+    setOpenDetail: modalsState.setOpenDetail,
+    setSessionUser: modalsState.setSessionUser,
+    setSessionsModalOpen: modalsState.setSessionsModalOpen,
+    setUsers: usersListState.setUsers,
+    detailUser: modalsState.detailUser
+  });
+
+  const { formatDate, getStatusBadge, getRoleBadge } = useUsersListUIHelpers();
+
+  // Effects hooks
+  useUsersListEffects({
+    loadUsers
+  });
+
+  useUsersListModalsEffects({
+    openDetail: modalsState.openDetail,
+    filters: usersListState.filters,
+    setOpenDetail: modalsState.setOpenDetail,
+    setDetailUser: modalsState.setDetailUser
+  });
+
+  // Destructure để dùng trong component
+  const { users, loading, totalPages, totalItems, filters, confirmState, setConfirmState } = usersListState;
+  const { openDetail, detailUser, openCreateModal, setOpenCreateModal, sessionsModalOpen, sessionUser } = modalsState;
+  
+  // Permissions
   const canViewDetail = hasPermission('manage_users.view_detail');
-  const closeUserModal = () => { setOpenDetail(false); setDetailUser(null); };
-
-  // Modal tạo user mới
-  const [openCreateModal, setOpenCreateModal] = useState(false);
   const canCreateUser = hasPermission('manage_users.create');
-  const handleCreateSuccess = () => {
-    // Reload users list after successful creation
-    window.location.reload();
-  };
-
-  // Modal quản lý sessions
-  const [sessionsModalOpen, setSessionsModalOpen] = useState(false);
-  const [sessionUser, setSessionUser] = useState<User | null>(null);
-  const handleViewSessions = (user: User) => {
-    setSessionUser(user);
-    setSessionsModalOpen(true);
-  };
-  const closeSessionsModal = () => {
-    setSessionsModalOpen(false);
-    setSessionUser(null);
-  };
-
-  const handleUserUpdated = (updatedUser: User) => {
-    // Update user in the current list
-    setUsers((prevUsers: User[]) => 
-      prevUsers.map((u: User) => u.id === updatedUser.id ? updatedUser : u)
-    );
-    // Update detail user if it's the same user
-    if (detailUser?.id === updatedUser.id) {
-      setDetailUser(updatedUser);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Đóng modal khi thay đổi phân trang/bộ lọc để tránh flicker
-  useEffect(() => {
-    if (openDetail) {
-      setOpenDetail(false);
-      setDetailUser(null);
-    }
-  }, [filters.currentPage, filters.searchTerm, filters.activeFilter]);
-
-  const getStatusBadge = (isActive: boolean) => {
-    return isActive ? (
-      <span className="px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
-        {t('status.active')}
-      </span>
-    ) : (
-      <span className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full">
-        {t('status.disabled')}
-      </span>
-    );
-  };
-
-  const getRoleBadge = (role: string) => {
-    return role === 'admin' ? (
-      <span className="px-2 py-1 text-xs font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full">
-        {t('roles.admin')}
-      </span>
-    ) : (
-      <span className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-        {t('roles.user')}
-      </span>
-    );
-  };
 
 
   return (

@@ -61,12 +61,22 @@
     "submit": "Xác nhận",
     "update": "Cập nhật",
     "loading": "Đang tải...",
-    "retry": "Thử lại"
+    "processing": "Đang xử lý...",
+    "retry": "Thử lại",
+    "delete": "Xóa"
   },
   "action": {
     "enable": "Kích hoạt tài khoản",
     "disable": "Vô hiệu hóa",
     "disableAccount": "Vô hiệu hóa tài khoản"
+  },
+  "confirm": {
+    "enableTitle": "Xác nhận kích hoạt",
+    "enableMessage": "Bạn có chắc muốn kích hoạt tài khoản \"{{name}}\"?",
+    "disableTitle": "Xác nhận vô hiệu hóa",
+    "disableMessage": "Bạn có chắc muốn vô hiệu hóa tài khoản \"{{name}}\"?",
+    "deleteTitle": "Xác nhận xóa vĩnh viễn",
+    "deleteMessage": "⚠️ CẢNH BÁO: Bạn có chắc muốn XÓA VĨNH VIỄN tài khoản \"{{name}}\"? Hành động này KHÔNG THỂ HOÀN TÁC!"
   },
   "alerts": {
     "noPermission": "Bạn không có quyền thực hiện hành động này",
@@ -77,7 +87,12 @@
     "confirmDeletePermanent1": "⚠️ CẢNH BÁO: Bạn có chắc muốn XÓA VĨNH VIỄN tài khoản \"{{name}}\"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!",
     "confirmDeletePermanent2": "Xác nhận lần cuối: Xóa vĩnh viễn tài khoản \"{{email}}\"?",
     "cannotDeleteUser": "Không thể xóa tài khoản",
-    "deleteSuccess": "Đã xóa tài khoản vĩnh viễn"
+    "deleteSuccess": "Đã xóa tài khoản vĩnh viễn",
+    "enableSuccess": "Đã kích hoạt tài khoản thành công",
+    "disableSuccess": "Đã vô hiệu hóa tài khoản thành công",
+    "toggleError": "Không thể thay đổi trạng thái tài khoản",
+    "deleteError": "Không thể xóa tài khoản",
+    "loadError": "Không thể tải danh sách người dùng"
   },
   "online": "Online",
   "offline": "Offline",

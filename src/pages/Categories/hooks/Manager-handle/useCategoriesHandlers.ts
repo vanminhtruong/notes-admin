@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
-import { toast } from 'react-toastify';
+import toast from '@utils/toast';
 import { useTranslation } from 'react-i18next';
 import type { Category, CategoryFilters } from '../../interface/category.types';
 
@@ -79,9 +79,15 @@ export const useCategoriesHandlers = ({
       return;
     }
 
-    if (!window.confirm(t('modal.detail.confirmDelete'))) {
-      return;
-    }
+    // Show confirmation dialog
+    const confirmed = await toast.confirmDelete(
+      t('modal.detail.confirmDelete'),
+      category.name,
+      t('delete'),
+      t('modal.create.cancel')
+    );
+
+    if (!confirmed) return;
 
     try {
       await adminService.deleteCategory(category.id);

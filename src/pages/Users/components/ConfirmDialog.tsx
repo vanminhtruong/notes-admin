@@ -49,7 +49,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ state, onClose, setState 
             disabled={state.confirming}
             className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 text-sm xl-down:text-xs rounded-md xl-down:rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
-            {state.confirming ? 'Đang xử lý...' : t('buttons.confirm')}
+            {state.confirming ? t('buttons.processing') : t('buttons.confirm')}
           </button>
         </div>
       </div>

@@ -1,159 +1,23 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import adminService from '@services/adminService';
+import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
-import type { MonitorState, GroupMemberInfo, GroupInfo } from '../interfaces';
+import type { MonitorState } from '../../interfaces';
 
-export const useMonitor = (selectedUserId: number | null) => {
-  const [monitorState, setMonitorState] = useState<MonitorState>({
-    monitorTab: 'dm',
-    selectedFriendId: null,
-    selectedGroupId: null,
-    dmMessages: [],
-    groupMessages: [],
-    loadingDm: false,
-    loadingGroup: false,
-    // Bổ sung map trạng thái theo messageId
-    dmStatusById: {},
-    groupStatusById: {},
-    // Người đã xem
-    dmReadBy: {},
-    groupReadBy: {}
-  });
+interface UseMonitorEffectsProps {
+  selectedUserId: number | null;
+  monitorState: MonitorState;
+  setMonitorState: (state: MonitorState | ((prev: MonitorState) => MonitorState)) => void;
+  setGroupTypingUsers: (users: Record<number, { name?: string; avatar?: string }> | ((prev: Record<number, { name?: string; avatar?: string }>) => Record<number, { name?: string; avatar?: string }>)) => void;
+  setGroupTyping: (typing: boolean) => void;
+  groupTypingTimersRef: React.MutableRefObject<Record<number, number>>;
+}
 
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
-  const [groupMemberInfo, setGroupMemberInfo] = useState<Record<number, GroupMemberInfo>>({});
-  const [groupTyping, setGroupTyping] = useState<boolean>(false);
-  // Theo dõi danh sách thành viên đang gõ trong group: userId -> { name, avatar }
-  const [groupTypingUsers, setGroupTypingUsers] = useState<Record<number, { name?: string; avatar?: string }>>({});
-  // Lưu timer riêng cho từng user để auto clear sau 5s không hoạt động
-  const groupTypingTimersRef = useRef<Record<number, number>>({});
-
-  // Group members modal state
-  const [showGroupMembers, setShowGroupMembers] = useState(false);
-  const [membersModalGroup, setMembersModalGroup] = useState<any | null>(null);
-  const [membersModalList, setMembersModalList] = useState<any[]>([]);
-  const [loadingMembersModal, setLoadingMembersModal] = useState(false);
-  const [openGroupMenuId, setOpenGroupMenuId] = useState<number | null>(null);
-
-  const updateMonitorState = (updates: Partial<MonitorState>) => {
-    setMonitorState(prev => ({ ...prev, ...updates }));
-  };
-
-  const resetMonitorState = () => {
-    setMonitorState(prev => ({
-      ...prev,
-      selectedFriendId: null,
-      selectedGroupId: null,
-      dmMessages: [],
-      groupMessages: []
-    }));
-  };
-
-  const loadDm = useCallback(async (friendId: number) => {
-    if (!selectedUserId) return;
-    try {
-      updateMonitorState({ loadingDm: true });
-      const res = await adminService.adminGetDMMessages(selectedUserId, friendId, { limit: 50 });
-      const messages = res?.data || res || [];
-      // Khởi tạo map trạng thái từ dữ liệu trả về
-      const nextStatus: Record<number, string> = {};
-      // Khởi tạo map người đã xem từ readByUserIds để sau F5 vẫn giữ avatar "Đã xem"
-      const nextReadBy: Record<number, number> = {};
-      (Array.isArray(messages) ? messages : []).forEach((m: any) => {
-        if (m && m.id != null && typeof m.status === 'string') {
-          nextStatus[Number(m.id)] = m.status;
-        }
-        if (m && m.id != null && Array.isArray(m.readByUserIds) && m.readByUserIds.length > 0) {
-          // Với DM: chọn người đọc khác người gửi nếu có, nếu không lấy phần tử đầu tiên
-          const senderId = Number(m.senderId);
-          const reader = m.readByUserIds.find((uid: any) => Number(uid) !== senderId);
-          const rid = Number(reader ?? m.readByUserIds[0]);
-          if (!Number.isNaN(rid)) nextReadBy[Number(m.id)] = rid;
-        }
-      });
-      updateMonitorState({ 
-        dmMessages: messages,
-        loadingDm: false,
-        dmStatusById: nextStatus,
-        dmReadBy: nextReadBy
-      });
-    } catch (e) {
-      updateMonitorState({ 
-        dmMessages: [],
-        loadingDm: false
-      });
-    }
-  }, [selectedUserId]);
-
-  const loadGroup = useCallback(async (groupId: number) => {
-    try {
-      updateMonitorState({ loadingGroup: true });
-      const [msgsRes, membersRes] = await Promise.all([
-        adminService.adminGetGroupMessages(groupId, { limit: 50 }),
-        adminService.adminGetGroupMembers(groupId)
-      ]);
-      
-      const messages = msgsRes?.data || msgsRes || [];
-      // Khởi tạo map trạng thái group từ dữ liệu
-      const nextGroupStatus: Record<number, string> = {};
-      const nextGroupReadBy: Record<number, number[]> = {};
-      (Array.isArray(messages) ? messages : []).forEach((m: any) => {
-        if (m && m.id != null && typeof m.status === 'string') {
-          nextGroupStatus[Number(m.id)] = m.status;
-        }
-        if (m && m.id != null && Array.isArray(m.readByUserIds)) {
-          nextGroupReadBy[Number(m.id)] = m.readByUserIds.map((x: any) => Number(x)).filter((x: number) => !Number.isNaN(x));
-        }
-      });
-      const groupData = membersRes?.data?.group || membersRes?.group || null;
-      const members = membersRes?.data?.members || membersRes?.members || [];
-      
-      updateMonitorState({ 
-        groupMessages: messages,
-        loadingGroup: false,
-        groupStatusById: nextGroupStatus,
-        groupReadBy: nextGroupReadBy
-      });
-      
-      setGroupInfo(groupData ? { ownerId: Number(groupData.ownerId) } : null);
-      
-      const map: Record<number, GroupMemberInfo> = {};
-      members.forEach((m: any) => {
-        map[Number(m.id)] = { avatar: m.avatar, role: m.role, name: m.name };
-      });
-      setGroupMemberInfo(map);
-    } catch (e) {
-      updateMonitorState({ 
-        groupMessages: [],
-        loadingGroup: false
-      });
-      setGroupMemberInfo({});
-      setGroupInfo(null);
-    }
-  }, []);
-
-  const openGroupMembersModal = useCallback(async (group: any) => {
-    try {
-      setLoadingMembersModal(true);
-      setMembersModalGroup(group);
-      setShowGroupMembers(true);
-      const res = await adminService.adminGetGroupMembers(group.id);
-      const members = res?.data?.members || res?.members || [];
-      setMembersModalList(Array.isArray(members) ? members : []);
-    } catch (e) {
-      setMembersModalList([]);
-    } finally {
-      setLoadingMembersModal(false);
-    }
-  }, []);
-
-  const closeGroupMembersModal = useCallback(() => {
-    setShowGroupMembers(false);
-    setMembersModalGroup(null);
-    setMembersModalList([]);
-  }, []);
-
-  // Realtime updates for monitor
+export const useMonitorEffects = ({
+  selectedUserId,
+  setMonitorState,
+  setGroupTypingUsers,
+  setGroupTyping,
+  groupTypingTimersRef
+}: UseMonitorEffectsProps) => {
   useEffect(() => {
     if (!selectedUserId) return;
     const s = getAdminSocket();
@@ -169,7 +33,6 @@ export const useMonitor = (selectedUserId: number | null) => {
           const betweenPair = (Number(p.senderId) === a && Number(p.receiverId) === b) || (Number(p.senderId) === b && Number(p.receiverId) === a);
           if (!betweenPair) return prevState;
           
-          // Kiểm tra duplicate bằng ID
           const messageExists = prevState.dmMessages.some(msg => msg.id === p.id);
           if (messageExists) return prevState;
           
@@ -195,7 +58,6 @@ export const useMonitor = (selectedUserId: number | null) => {
           if (!prevState.selectedGroupId) return prevState;
           if (Number(p.groupId) !== Number(prevState.selectedGroupId)) return prevState;
           
-          // Kiểm tra duplicate bằng ID
           const messageExists = prevState.groupMessages.some(msg => msg.id === p.id);
           if (messageExists) return prevState;
           
@@ -224,7 +86,6 @@ export const useMonitor = (selectedUserId: number | null) => {
           const typingUserId = Number(p.userId);
 
           if (p.isTyping) {
-            // Cập nhật map typing users
             setGroupTypingUsers(prev => {
               const next = { ...prev };
               next[typingUserId] = {
@@ -233,7 +94,6 @@ export const useMonitor = (selectedUserId: number | null) => {
               };
               return next;
             });
-            // Reset timer cho user này
             const timers = groupTypingTimersRef.current;
             if (timers[typingUserId]) window.clearTimeout(timers[typingUserId]);
             timers[typingUserId] = window.setTimeout(() => {
@@ -248,7 +108,6 @@ export const useMonitor = (selectedUserId: number | null) => {
 
             setGroupTyping(true);
           } else {
-            // Bỏ khỏi map ngay nếu user báo hết gõ
             setGroupTypingUsers(prev => {
               const next = { ...prev };
               if (next[typingUserId]) delete next[typingUserId];
@@ -338,7 +197,6 @@ export const useMonitor = (selectedUserId: number | null) => {
         s.off('admin_message_read', onAdminMessageRead);
         s.off('admin_group_message_delivered', onAdminGroupMessageDelivered);
         s.off('admin_group_message_read', onAdminGroupMessageRead);
-        // Clear tất cả timers khi unmount/đổi user
         const timers = groupTypingTimersRef.current;
         Object.keys(timers).forEach((k) => {
           const id = Number(k);
@@ -349,25 +207,5 @@ export const useMonitor = (selectedUserId: number | null) => {
         setGroupTyping(false);
       } catch {}
     };
-  }, [selectedUserId]);
-
-  return {
-    monitorState,
-    updateMonitorState,
-    resetMonitorState,
-    loadDm,
-    loadGroup,
-    groupInfo,
-    groupMemberInfo,
-    groupTyping,
-    groupTypingUsers,
-    showGroupMembers,
-    membersModalGroup,
-    membersModalList,
-    loadingMembersModal,
-    openGroupMenuId,
-    setOpenGroupMenuId,
-    openGroupMembersModal,
-    closeGroupMembersModal
-  };
+  }, [selectedUserId, setMonitorState, setGroupTypingUsers, setGroupTyping, groupTypingTimersRef]);
 };

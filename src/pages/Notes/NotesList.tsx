@@ -38,52 +38,6 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const notesState = useNotesState();
   const modalState = useModalState();
   const utilityHandlers = useUtilityHandlers();
-  
-  const {
-    notes,
-    setNotes,
-    loading,
-    setLoading,
-    searchTerm,
-    setSearchTerm,
-    selectedUserId,
-    setSelectedUserId,
-    categoryFilter,
-    setCategoryFilter,
-    priorityFilter,
-    setPriorityFilter,
-    archivedFilter,
-    setArchivedFilter,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    setTotalPages,
-    totalItems,
-    setTotalItems,
-  } = notesState;
-  
-  const {
-    editingNote,
-    setEditingNote,
-    showEditModal,
-    setShowEditModal,
-    selectedNote,
-    setSelectedNote,
-    showDetailModal,
-    setShowDetailModal,
-    showMoveToFolderModal,
-    setShowMoveToFolderModal,
-    noteToMove,
-    setNoteToMove,
-    showCreateModal,
-    setShowCreateModal,
-    showTagsModal,
-    setShowTagsModal,
-    noteForTags,
-    setNoteForTags,
-  } = modalState;
-  
-  const { formatDate, truncateWords, getPlainText } = utilityHandlers;
 
   // Check if user has any notes permission (flexible check)
   if (!hasAnyNotesPermission()) {
@@ -103,46 +57,44 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   }
 
   // Tab and URL effects
-  const { tab, setTab } = useTabEffects({
+  const tabEffects = useTabEffects({
     forcedArchived,
-    setArchivedFilter,
-    setCurrentPage,
-    setSelectedUserId,
+    setArchivedFilter: notesState.setArchivedFilter,
+    setCurrentPage: notesState.setCurrentPage,
+    setSelectedUserId: notesState.setSelectedUserId,
   });
 
   // Use handlers hook
   const handlers = useNotesHandlers({
-    setLoading,
-    setNotes,
-    setTotalPages,
-    setTotalItems,
-    currentPage,
-    selectedUserId,
-    searchTerm,
-    categoryFilter,
-    priorityFilter,
-    archivedFilter,
-    setShowEditModal,
-    setEditingNote,
+    setLoading: notesState.setLoading,
+    setNotes: notesState.setNotes,
+    setTotalPages: notesState.setTotalPages,
+    setTotalItems: notesState.setTotalItems,
+    currentPage: notesState.currentPage,
+    selectedUserId: notesState.selectedUserId,
+    searchTerm: notesState.searchTerm,
+    categoryFilter: notesState.categoryFilter,
+    priorityFilter: notesState.priorityFilter,
+    archivedFilter: notesState.archivedFilter,
+    setShowEditModal: modalState.setShowEditModal,
+    setEditingNote: modalState.setEditingNote,
     t,
   });
   
-  const { loadNotes, createHandleUpdateNote, createHandleDeleteNote, handleTogglePin, handleToggleArchive } = handlers;
-  
   // Use effects hook
   useNotesEffects({
-    loadNotes,
-    currentPage,
-    searchTerm,
-    selectedUserId,
-    categoryFilter,
-    priorityFilter,
-    archivedFilter,
+    loadNotes: handlers.loadNotes,
+    currentPage: notesState.currentPage,
+    searchTerm: notesState.searchTerm,
+    selectedUserId: notesState.selectedUserId,
+    categoryFilter: notesState.categoryFilter,
+    priorityFilter: notesState.priorityFilter,
+    archivedFilter: notesState.archivedFilter,
   });
 
 
   // Enable drag-to-scroll for tabs scroller
-  const { containerRef, onPointerDown, onPointerMove, endDrag, onClickCapture } = useHorizontalDragScroll();
+  const dragScroll = useHorizontalDragScroll();
 
   return (
     <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
@@ -152,9 +104,9 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
           </div>
-          {hasPermission('manage_notes.create') && tab !== 'archived' && (
+          {hasPermission('manage_notes.create') && tabEffects.tab !== 'archived' && (
             <button
-              onClick={() => setShowCreateModal(true)}
+              onClick={() => modalState.setShowCreateModal(true)}
               className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
             >
               {t('createNote')}
@@ -166,12 +118,12 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       {/* Tabs All / Active / Archived (segmented control) */}
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-x-hidden">
         <div
-          ref={containerRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerLeave={endDrag}
-          onClickCapture={onClickCapture}
+          ref={dragScroll.containerRef}
+          onPointerDown={dragScroll.onPointerDown}
+          onPointerMove={dragScroll.onPointerMove}
+          onPointerUp={dragScroll.endDrag}
+          onPointerLeave={dragScroll.endDrag}
+          onClickCapture={dragScroll.onClickCapture}
           className="px-4 xl-down:px-3 sm-down:px-2 py-3 xl-down:py-2 overflow-x-auto overflow-y-hidden scrollbar-hide md-down:cursor-grab"
           style={{ touchAction: 'pan-y' }}
         >
@@ -182,8 +134,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
           <div className="inline-flex items-center whitespace-nowrap p-1 rounded-lg bg-gray-100 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700">
             {hasPermission('manage_notes.view') && (
               <TabButton
-                active={tab === 'all'}
-                onClick={() => setTab('all')}
+                active={tabEffects.tab === 'all'}
+                onClick={() => tabEffects.setTab('all')}
                 icon={<svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h12v2H4v-2z"/></svg>}
                 label={t('filters.all')}
                 ariaLabel={t('filters.all') as string}
@@ -191,8 +143,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             )}
             {hasPermission('manage_notes.view') && (
               <TabButton
-                active={tab === 'active'}
-                onClick={() => setTab('active')}
+                active={tabEffects.tab === 'active'}
+                onClick={() => tabEffects.setTab('active')}
                 icon={<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4 1.5 1.5-5.5 5.5L7.5 13.5 9 12z"/></svg>}
                 label={t('filters.active')}
                 ariaLabel={t('filters.active') as string}
@@ -200,8 +152,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             )}
             {hasPermission('manage_notes.archive') && (
               <TabButton
-                active={tab === 'archived'}
-                onClick={() => setTab('archived')}
+                active={tabEffects.tab === 'archived'}
+                onClick={() => tabEffects.setTab('archived')}
                 icon={<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v4H3V3zm1 6h16v12H4V9zm4 2v2h8v-2H8z"/></svg>}
                 label={t('filters.archived')}
                 ariaLabel={t('filters.archived') as string}
@@ -209,8 +161,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             )}
             {(hasPermission('manage_notes.shared.view') || hasPermission('manage_notes.shared.delete')) && (
               <TabButton
-                active={tab === 'shared'}
-                onClick={() => setTab('shared')}
+                active={tabEffects.tab === 'shared'}
+                onClick={() => tabEffects.setTab('shared')}
                 icon={<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/></svg>}
                 label={t('filters.shared', { defaultValue: 'Chia sẻ' })}
                 ariaLabel={t('filters.shared', { defaultValue: 'Ghi chú chia sẻ' }) as string}
@@ -218,8 +170,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             )}
             {hasPermission('manage_notes.folders.view') && (
               <TabButton
-                active={tab === 'folders'}
-                onClick={() => setTab('folders')}
+                active={tabEffects.tab === 'folders'}
+                onClick={() => tabEffects.setTab('folders')}
                 icon={<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a2 2 0 0 1 2-2h4.586a1 1 0 0 1 .707.293l1.414 1.414a1 1 0 0 0 .707.293H19a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4z"/></svg>}
                 label={t('filters.folders')}
                 ariaLabel={t('filters.folders') as string}
@@ -227,8 +179,8 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
             )}
             {hasPermission('manage_notes.tags.view') && (
               <TabButton
-                active={tab === 'tags'}
-                onClick={() => setTab('tags')}
+                active={tabEffects.tab === 'tags'}
+                onClick={() => tabEffects.setTab('tags')}
                 icon={<Tag className="w-4 h-4" />}
                 label={t('filters.tags')}
                 ariaLabel={t('filters.tags') as string}
@@ -239,49 +191,49 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       </div>
 
       {/* Filters - only show for notes tabs, not shared/folders/tags tabs */}
-      {tab !== 'shared' && tab !== 'folders' && tab !== 'tags' && (
+      {tabEffects.tab !== 'shared' && tabEffects.tab !== 'folders' && tabEffects.tab !== 'tags' && (
         <NotesFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedUserId={selectedUserId}
-          setSelectedUserId={setSelectedUserId}
-          categoryFilter={categoryFilter}
-          setCategoryFilter={setCategoryFilter}
-          priorityFilter={priorityFilter}
-          setPriorityFilter={setPriorityFilter}
-          archivedFilter={archivedFilter}
-          setArchivedFilter={setArchivedFilter}
+          searchTerm={notesState.searchTerm}
+          setSearchTerm={notesState.setSearchTerm}
+          selectedUserId={notesState.selectedUserId}
+          setSelectedUserId={notesState.setSelectedUserId}
+          categoryFilter={notesState.categoryFilter}
+          setCategoryFilter={notesState.setCategoryFilter}
+          priorityFilter={notesState.priorityFilter}
+          setPriorityFilter={notesState.setPriorityFilter}
+          archivedFilter={notesState.archivedFilter}
+          setArchivedFilter={notesState.setArchivedFilter}
           onClear={() => {
-            setSearchTerm('');
-            setSelectedUserId('');
-            setCategoryFilter('');
-            setPriorityFilter('');
+            notesState.setSearchTerm('');
+            notesState.setSelectedUserId('');
+            notesState.setCategoryFilter('');
+            notesState.setPriorityFilter('');
             const next = forcedArchived
               ? (forcedArchived === 'all' ? '' : forcedArchived === 'active' ? 'false' : 'true')
-              : (tab === 'all' ? '' : tab === 'active' ? 'false' : 'true');
-            setArchivedFilter(next);
-            setCurrentPage(1);
+              : (tabEffects.tab === 'all' ? '' : tabEffects.tab === 'active' ? 'false' : 'true');
+            notesState.setArchivedFilter(next);
+            notesState.setCurrentPage(1);
           }}
           showStatusSelect={false}
         />
       )}
 
       {/* Render SharedNotesList for shared tab, FoldersList for folders tab, TagsList for tags tab */}
-      {tab === 'shared' ? (
+      {tabEffects.tab === 'shared' ? (
         <SharedNotesList embedded />
-      ) : tab === 'folders' ? (
+      ) : tabEffects.tab === 'folders' ? (
         <FoldersList embedded />
-      ) : tab === 'tags' ? (
+      ) : tabEffects.tab === 'tags' ? (
         <TagsList embedded />
       ) : (
         /* Notes List */
       <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
-        {loading ? (
+        {notesState.loading ? (
           <LoadingSpinner />
         ) : (
           <>
-            {notes.length === 0 ? (
-              <EmptyState tab={tab} onCreateClick={() => setShowCreateModal(true)} />
+            {notesState.notes.length === 0 ? (
+              <EmptyState tab={tabEffects.tab} onCreateClick={() => modalState.setShowCreateModal(true)} />
             ) : (
               <>
                 {/* Desktop Table View */}
@@ -325,34 +277,34 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
-                      {notes.map((note) => (
+                      {notesState.notes.map((note) => (
                         <NoteTableRow
                           key={note.id}
                           note={note}
                           onNoteClick={() => {
                             if (hasPermission('manage_notes.view_detail')) {
-                              setSelectedNote(note);
-                              setShowDetailModal(true);
+                              modalState.setSelectedNote(note);
+                              modalState.setShowDetailModal(true);
                             }
                           }}
                           onEdit={() => {
-                            setEditingNote(note);
-                            setShowEditModal(true);
+                            modalState.setEditingNote(note);
+                            modalState.setShowEditModal(true);
                           }}
-                          onArchive={() => handleToggleArchive(note)}
+                          onArchive={() => handlers.handleToggleArchive(note)}
                           onMove={() => {
-                            setNoteToMove(note);
-                            setShowMoveToFolderModal(true);
+                            modalState.setNoteToMove(note);
+                            modalState.setShowMoveToFolderModal(true);
                           }}
-                          onDelete={() => createHandleDeleteNote(note.id)()}
-                          onPin={() => handleTogglePin(note)}
+                          onDelete={() => handlers.createHandleDeleteNote(note.id)()}
+                          onPin={() => handlers.handleTogglePin(note)}
                           onTagsClick={() => {
-                            setNoteForTags(note);
-                            setShowTagsModal(true);
+                            modalState.setNoteForTags(note);
+                            modalState.setShowTagsModal(true);
                           }}
-                          truncateWords={truncateWords}
-                          getPlainText={getPlainText}
-                          formatDate={formatDate}
+                          truncateWords={utilityHandlers.truncateWords}
+                          getPlainText={utilityHandlers.getPlainText}
+                          formatDate={utilityHandlers.formatDate}
                         />
                       ))}
                     </tbody>
@@ -361,40 +313,40 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
 
                 {/* Mobile Card View */}
                 <div className="hidden lg-down:block space-y-3 sm-down:space-y-2 p-4 xl-down:p-3 sm-down:p-2">
-                  {notes.map((note) => (
+                  {notesState.notes.map((note) => (
                     <NoteMobileCard
                       key={note.id}
                       note={note}
                       onNoteClick={() => {
                         if (hasPermission('manage_notes.view_detail')) {
-                          setSelectedNote(note);
-                          setShowDetailModal(true);
+                          modalState.setSelectedNote(note);
+                          modalState.setShowDetailModal(true);
                         }
                       }}
                       onEdit={() => {
-                        setEditingNote(note);
-                        setShowEditModal(true);
+                        modalState.setEditingNote(note);
+                        modalState.setShowEditModal(true);
                       }}
-                      onArchive={() => handleToggleArchive(note)}
+                      onArchive={() => handlers.handleToggleArchive(note)}
                       onMove={() => {
-                        setNoteToMove(note);
-                        setShowMoveToFolderModal(true);
+                        modalState.setNoteToMove(note);
+                        modalState.setShowMoveToFolderModal(true);
                       }}
-                      onDelete={() => createHandleDeleteNote(note.id)()}
-                      onPin={() => handleTogglePin(note)}
-                      truncateWords={truncateWords}
-                      getPlainText={getPlainText}
-                      formatDate={formatDate}
+                      onDelete={() => handlers.createHandleDeleteNote(note.id)()}
+                      onPin={() => handlers.handleTogglePin(note)}
+                      truncateWords={utilityHandlers.truncateWords}
+                      getPlainText={utilityHandlers.getPlainText}
+                      formatDate={utilityHandlers.formatDate}
                     />
                   ))}
                 </div>
 
-                {totalPages > 1 && (
+                {notesState.totalPages > 1 && (
                   <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    totalItems={totalItems}
+                    currentPage={notesState.currentPage}
+                    totalPages={notesState.totalPages}
+                    onPageChange={notesState.setCurrentPage}
+                    totalItems={notesState.totalItems}
                     itemsPerPage={5}
                     showInfo={true}
                   />
@@ -408,64 +360,64 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
 
       {/* Edit Modal */}
       <EditNoteModal
-        show={showEditModal}
-        editingNote={editingNote}
-        setEditingNote={setEditingNote}
+        show={modalState.showEditModal}
+        editingNote={modalState.editingNote}
+        setEditingNote={modalState.setEditingNote}
         onClose={() => {
-          setShowEditModal(false);
-          setEditingNote(null);
+          modalState.setShowEditModal(false);
+          modalState.setEditingNote(null);
         }}
-        onSubmit={createHandleUpdateNote(editingNote)}
+        onSubmit={handlers.createHandleUpdateNote(modalState.editingNote)}
       />
 
       {/* Detail Modal */}
       <NoteDetailModal
-        show={showDetailModal}
-        note={selectedNote}
+        show={modalState.showDetailModal}
+        note={modalState.selectedNote}
         onClose={() => {
-          setShowDetailModal(false);
-          setSelectedNote(null);
+          modalState.setShowDetailModal(false);
+          modalState.setSelectedNote(null);
         }}
       />
 
       {/* Move to Folder Modal */}
       <MoveToFolderModal
-        show={showMoveToFolderModal}
-        noteId={noteToMove?.id || null}
-        noteTitle={noteToMove?.title || ''}
-        userId={noteToMove?.user?.id || 0}
+        show={modalState.showMoveToFolderModal}
+        noteId={modalState.noteToMove?.id || null}
+        noteTitle={modalState.noteToMove?.title || ''}
+        userId={modalState.noteToMove?.user?.id || 0}
         onClose={() => {
-          setShowMoveToFolderModal(false);
-          setNoteToMove(null);
+          modalState.setShowMoveToFolderModal(false);
+          modalState.setNoteToMove(null);
         }}
         onSuccess={() => {
-          loadNotes();
+          handlers.loadNotes();
         }}
       />
 
       {/* Create Note Modal */}
       <CreateNoteModal
-        show={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
+        show={modalState.showCreateModal}
+        onClose={() => modalState.setShowCreateModal(false)}
         onSuccess={() => {
-          loadNotes();
+          handlers.loadNotes();
         }}
       />
 
       {/* Tags Management Modal */}
-      {noteForTags && hasPermission('manage_notes.tags.assign') && (
+      {modalState.noteForTags && hasPermission('manage_notes.tags.assign') && (
         <NoteTagsModal
-          isOpen={showTagsModal}
+          isOpen={modalState.showTagsModal}
           onClose={() => {
-            setShowTagsModal(false);
-            setNoteForTags(null);
+            modalState.setShowTagsModal(false);
+            modalState.setNoteForTags(null);
           }}
-          noteId={noteForTags.id}
-          userId={noteForTags.user.id}
-          currentTags={noteForTags.tags || []}
-          noteTitle={noteForTags.title}
+          noteId={modalState.noteForTags.id}
+          userId={modalState.noteForTags.user.id}
+          currentTags={modalState.noteForTags.tags || []}
+          noteTitle={modalState.noteForTags.title}
           onTagsChange={() => {
-            loadNotes();
+            handlers.loadNotes();
           }}
         />
       )}

@@ -61,12 +61,22 @@
     "submit": "Submit",
     "update": "Update",
     "loading": "Loading...",
-    "retry": "Retry"
+    "processing": "Processing...",
+    "retry": "Retry",
+    "delete": "Delete"
   },
   "action": {
     "enable": "Enable account",
     "disable": "Disable",
     "disableAccount": "Disable account"
+  },
+  "confirm": {
+    "enableTitle": "Confirm Enable",
+    "enableMessage": "Are you sure you want to enable account \"{{name}}\"?",
+    "disableTitle": "Confirm Disable",
+    "disableMessage": "Are you sure you want to disable account \"{{name}}\"?",
+    "deleteTitle": "Confirm Permanent Deletion",
+    "deleteMessage": "⚠️ WARNING: Are you sure you want to PERMANENTLY DELETE account \"{{name}}\"? This action CANNOT BE UNDONE!"
   },
   "alerts": {
     "noPermission": "You do not have permission to perform this action",
@@ -77,7 +87,12 @@
     "confirmDeletePermanent1": "⚠️ WARNING: Are you sure you want to PERMANENTLY DELETE account \"{{name}}\"?\n\nThis action CANNOT BE UNDONE!",
     "confirmDeletePermanent2": "Final confirmation: Permanently delete account \"{{email}}\"?",
     "cannotDeleteUser": "Unable to delete account",
-    "deleteSuccess": "User has been permanently deleted"
+    "deleteSuccess": "User has been permanently deleted",
+    "enableSuccess": "Account has been enabled successfully",
+    "disableSuccess": "Account has been disabled successfully",
+    "toggleError": "Unable to change account status",
+    "deleteError": "Unable to delete account",
+    "loadError": "Unable to load users list"
   },
   "online": "Online",
   "offline": "Offline",

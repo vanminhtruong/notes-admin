@@ -31,6 +31,7 @@
       "icon": "Icon",
       "color": "Color",
       "preview": "Preview",
+      "previewName": "Category Name",
       "cancel": "Cancel",
       "submit": "Create Category",
       "submitting": "Creating...",
