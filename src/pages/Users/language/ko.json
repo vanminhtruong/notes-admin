@@ -206,7 +206,20 @@
           "admin": "관리자",
           "member": "멤버"
         }
-      }
+      },
+      "noPinnedDM": "고정된 메시지가 없습니다",
+      "noPinnedGroup": "고정된 메시지가 없습니다",
+      "pinnedMessages": "고정된 메시지",
+      "pinnedBy": "{{name}}님이 고정함",
+      "noBlockedUsers": "차단된 사용자 없음",
+      "blockedUsers": "차단된 사용자",
+      "blockedAt": "{{date}}에 차단됨",
+      "viewMessage": "보기",
+      "unknownUser": "사용자",
+      "blockedNotice": "모니터링되는 사용자가 {{name}}님을 차단했습니다",
+      "blockedNoticeDesc": "서로 메시지를 보낼 수 없습니다.",
+      "userBlockedFriend": "{{userName}}님이 {{friendName}}님을 차단했습니다",
+      "friendBlockedUser": "{{friendName}}님이 {{userName}}님을 차단했습니다"
     },
     "noteShare": {
       "cardTitle": "공유된 메모",

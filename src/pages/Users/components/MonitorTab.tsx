@@ -9,6 +9,7 @@ import ReactionChips from './ReactionChips';
 import { onAdminEvent } from '@services/adminEvents';
 import { getYouTubeEmbedUrl } from '@utils/youtube';
 import toast from '@utils/toast';
+import PinnedMessageBanner from './PinnedMessageBanner';
 
 interface MonitorTabProps {
   activityData: UserActivityData | null;
@@ -296,7 +297,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
 
   // ========= Reactions realtime (DM & Group) =========
   const [dmReactionsAgg, setDmReactionsAgg] = useState<Record<number, Record<string, number>>>({});
-  const [groupReactionsAgg, setGroupReactionsAgg] = useState<Record<number, Record<string, number>>>({});
+  const [_groupReactionsAgg, setGroupReactionsAgg] = useState<Record<number, Record<string, number>>>({});
 
   const computeAgg = (reactions: any[]): Record<string, number> => {
     const map: Record<string, number> = {};
@@ -511,6 +512,14 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   <div className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{t('userActivity.monitor.chatWith', { name: activityData?.activity.friends.find(f => f.id === selectedFriendId)?.name || selectedFriendId })}</div>
                   {/* Đưa typing xuống khung chat dưới dạng bubble, giữ header gọn gàng */}
                 </div>
+                {/* Pinned Message Banner */}
+                <PinnedMessageBanner
+                  pinnedMessages={monitorState.dmPinnedMessages || []}
+                  messages={dmMessages}
+                  isGroup={false}
+                  formatDate={formatDate}
+                  resolveAvatar={resolveAvatar}
+                />
                 <div ref={dmListRef} className="flex-1 overflow-auto p-4 xl-down:p-3 sm-down:p-2 space-y-3 xl-down:space-y-2">
                   {loadingDm ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('common:loading')}</div>
@@ -798,6 +807,57 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                     </div>
                   )}
                 </div>
+                {/* Blocked Notice - footer (under chat list) */}
+                {(() => {
+                  const blockedUsers = monitorState.blockedUsers || [];
+                  // Check CẢ HAI CHIỀU: A block B hoặc B block A
+                  const blockRelation = blockedUsers.find((bu: any) => {
+                    const blockerId = Number(bu.blockerId);
+                    const blockedId = Number(bu.blockedUserId);
+                    const userId = Number(selectedUserId);
+                    const friendId = Number(selectedFriendId);
+                    
+                    return (
+                      (blockerId === userId && blockedId === friendId) ||
+                      (blockerId === friendId && blockedId === userId)
+                    );
+                  });
+                  
+                  if (!blockRelation) return null;
+                  
+                  const isUserBlocked = Number(blockRelation.blockerId) === Number(selectedUserId);
+                  const blockedUser = activityData?.activity.friends.find(f => f.id === selectedFriendId);
+                  const userName = activityData?.user?.name || '';
+                  
+                  return (
+                    <div className="border-t border-red-200 dark:border-red-800 bg-red-50/70 dark:bg-red-900/10 px-4 py-2 xl-down:px-3 xl-down:py-1.5">
+                      <div className="flex items-start gap-2">
+                        <div className="flex-shrink-0 text-red-600 dark:text-red-400">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-red-900 dark:text-red-100">
+                            {isUserBlocked 
+                              ? t('userActivity.monitor.userBlockedFriend', {
+                                  userName: userName,
+                                  friendName: blockedUser?.name || t('userActivity.monitor.unknownUser', 'Người dùng')
+                                })
+                              : t('userActivity.monitor.friendBlockedUser', {
+                                  friendName: blockedUser?.name || t('userActivity.monitor.unknownUser', 'Người dùng'),
+                                  userName: userName
+                                })
+                            }
+                          </p>
+                          <p className="text-[11px] text-red-700 dark:text-red-300 mt-0.5">
+                            {t('userActivity.monitor.blockedNoticeDesc', 'Họ không thể gửi tin nhắn cho nhau.')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -907,6 +967,14 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
                   <div className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{t('userActivity.monitor.groupChat')}</div>
                   {/* Đưa typing xuống khung chat dưới dạng bubble cho từng thành viên */}
                 </div>
+                {/* Pinned Message Banner */}
+                <PinnedMessageBanner
+                  pinnedMessages={monitorState.groupPinnedMessages || []}
+                  messages={groupMessages}
+                  isGroup={true}
+                  formatDate={formatDate}
+                  resolveAvatar={resolveAvatar}
+                />
                 <div className="flex-1 overflow-auto p-4 xl-down:p-3 sm-down:p-2 space-y-3 xl-down:space-y-2">
                   {loadingGroup ? (
                     <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 text-sm xl-down:text-xs">{t('common:loading')}</div>

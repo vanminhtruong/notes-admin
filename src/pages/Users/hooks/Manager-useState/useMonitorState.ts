@@ -13,7 +13,13 @@ export const useMonitorState = () => {
     dmStatusById: {},
     groupStatusById: {},
     dmReadBy: {},
-    groupReadBy: {}
+    groupReadBy: {},
+    dmPinnedMessages: [],
+    groupPinnedMessages: [],
+    loadingDmPinned: false,
+    loadingGroupPinned: false,
+    blockedUsers: [],
+    loadingBlockedUsers: false
   });
 
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);

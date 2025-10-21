@@ -181,7 +181,17 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
   if (!open || !user) return null;
 
   const modal = (
-    <div className="fixed inset-0 z-[100000] flex items-center justify-center pointer-events-auto" role="dialog" aria-modal="true">
+    <div 
+      className="fixed inset-0 z-[100000] flex items-center justify-center pointer-events-auto" 
+      role="dialog" 
+      aria-modal="true"
+      onClick={(e) => {
+        // Đóng modal khi click overlay (chỉ khi không đang edit)
+        if (e.target === e.currentTarget && !isEditing) {
+          onClose();
+        }
+      }}
+    >
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -318,6 +328,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                     type="text"
                     value={editData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
+                    autoComplete="off"
                     className="w-full px-3 xl-down:px-2.5 sm-down:px-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 ) : (
@@ -337,6 +348,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                     value={editData.email}
                     disabled
                     readOnly
+                    autoComplete="off"
                     title="Email không thể thay đổi"
                     className="w-full px-3 xl-down:px-2.5 sm-down:px-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-200 dark:border-neutral-700 rounded-lg xl-down:rounded-md bg-gray-50 dark:bg-neutral-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                   />
@@ -359,6 +371,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                         value={editData.password}
                         onChange={(e) => handleInputChange('password', e.target.value)}
                         placeholder={t('edit.newPasswordPlaceholder') || 'Nhập mật khẩu mới (để trống nếu không đổi)'}
+                        autoComplete="new-password"
                         className="w-full pr-10 pl-3 xl-down:pl-2.5 sm-down:pl-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                       <button
@@ -393,6 +406,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                     value={editData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     placeholder={t('phoneOptional')}
+                    autoComplete="off"
                     className="w-full px-3 xl-down:px-2.5 sm-down:px-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 ) : (
@@ -411,6 +425,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                     type="date"
                     value={editData.birthDate}
                     onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                    autoComplete="off"
                     className="w-full px-3 xl-down:px-2.5 sm-down:px-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 ) : (
@@ -428,6 +443,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                   <select
                     value={editData.gender}
                     onChange={(e) => handleInputChange('gender', e.target.value)}
+                    autoComplete="off"
                     className="w-full px-3 xl-down:px-2.5 sm-down:px-2 py-2 xl-down:py-1.5 sm-down:py-1 text-sm xl-down:text-xs sm-down:text-[11px] border border-gray-300 dark:border-neutral-600 rounded-lg xl-down:rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="male">{t('gender.male')}</option>

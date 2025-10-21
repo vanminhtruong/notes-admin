@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
+import adminService from '@services/adminService';
 import type { MonitorState } from '../../interfaces';
 
 interface UseMonitorEffectsProps {
@@ -18,6 +19,29 @@ export const useMonitorEffects = ({
   setGroupTyping,
   groupTypingTimersRef
 }: UseMonitorEffectsProps) => {
+  // Load blocked users list whenever selectedUserId is available (includes mount after F5)
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      if (!selectedUserId) {
+        // Clear blocked users if no user selected
+        setMonitorState(prev => ({ ...prev, blockedUsers: [], loadingBlockedUsers: false }));
+        return;
+      }
+      try {
+        setMonitorState(prev => ({ ...prev, loadingBlockedUsers: true }));
+        const res = await adminService.adminGetUserBlockedList(Number(selectedUserId)).catch(() => ({ data: [] }));
+        const blockedUsers = (res as any)?.data || [];
+        if (!cancelled) {
+          setMonitorState(prev => ({ ...prev, blockedUsers, loadingBlockedUsers: false }));
+        }
+      } catch {
+        if (!cancelled) setMonitorState(prev => ({ ...prev, blockedUsers: [], loadingBlockedUsers: false }));
+      }
+    };
+    run();
+    return () => { cancelled = true; };
+  }, [selectedUserId, setMonitorState]);
   useEffect(() => {
     if (!selectedUserId) return;
     const s = getAdminSocket();
@@ -188,6 +212,142 @@ export const useMonitorEffects = ({
     };
     s.on('admin_group_message_read', onAdminGroupMessageRead);
 
+    // Realtime: DM message pinned/unpinned (handle both users)
+    const onAdminDmMessagePinned = async (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => {
+          // Check if this is relevant to current DM conversation
+          if (!prev.selectedFriendId) return prev;
+          const a = Number(selectedUserId);
+          const b = Number(prev.selectedFriendId);
+          const isRelevant = (Number(p.senderId) === a && Number(p.receiverId) === b) || 
+                            (Number(p.senderId) === b && Number(p.receiverId) === a);
+          if (!isRelevant) return prev;
+
+          const messageId = Number(p.messageId);
+          const pinned = !!p.pinned;
+          let nextPinned = [...(prev.dmPinnedMessages || [])];
+
+          if (pinned) {
+            // Find the message in dmMessages
+            const msg = prev.dmMessages.find(m => m.id === messageId);
+            if (msg && !nextPinned.some(pm => pm.messageId === messageId || pm.message?.id === messageId)) {
+              // Xác định ai là người ghim
+              const pinnerId = (Number(p.senderId) === a || Number(p.senderId) === b) ? Number(p.senderId) : a;
+              nextPinned.push({
+                id: Date.now(),
+                messageId: messageId,
+                userId: pinnerId,
+                pinnedAt: new Date().toISOString(),
+                message: msg
+              });
+            }
+          } else {
+            // Remove from pinned
+            nextPinned = nextPinned.filter(pm => pm.messageId !== messageId && pm.message?.id !== messageId);
+          }
+
+          return { ...prev, dmPinnedMessages: nextPinned };
+        });
+      } catch {}
+    };
+    s.on('admin_dm_message_pinned', onAdminDmMessagePinned);
+
+    // Realtime: Group message pinned/unpinned
+    const onAdminGroupMessagePinned = async (p: any) => {
+      try {
+        if (!p || p.messageId == null) return;
+        setMonitorState(prev => {
+          // Check if this is relevant to current group conversation
+          if (!prev.selectedGroupId) return prev;
+          if (Number(p.groupId) !== Number(prev.selectedGroupId)) return prev;
+
+          const messageId = Number(p.messageId);
+          const pinned = !!p.pinned;
+          let nextPinned = [...(prev.groupPinnedMessages || [])];
+
+          if (pinned) {
+            // Find the message in groupMessages
+            const msg = prev.groupMessages.find(m => m.id === messageId);
+            if (msg && !nextPinned.some(pm => pm.messageId === messageId || pm.groupMessage?.id === messageId)) {
+              nextPinned.push({
+                id: Date.now(),
+                messageId: messageId,
+                groupId: p.groupId,
+                userId: msg.senderId,
+                pinnedAt: new Date().toISOString(),
+                groupMessage: msg
+              });
+            }
+          } else {
+            // Remove from pinned
+            nextPinned = nextPinned.filter(pm => pm.messageId !== messageId && pm.groupMessage?.id !== messageId);
+          }
+
+          return { ...prev, groupPinnedMessages: nextPinned };
+        });
+      } catch {}
+    };
+    s.on('admin_group_message_pinned', onAdminGroupMessagePinned);
+
+    // Realtime: User blocked another user (handle both directions)
+    const onAdminUserBlocked = async (p: any) => {
+      try {
+        if (!p || p.blockerId == null || p.blockedUserId == null) return;
+        setMonitorState(prev => {
+          // Check if this affects the monitored user (CẢ HAI CHIỀU)
+          const userId = Number(selectedUserId);
+          const blockerId = Number(p.blockerId);
+          const blockedId = Number(p.blockedUserId);
+          
+          if (userId !== blockerId && userId !== blockedId) return prev;
+          
+          // Add to blocked list if not already there
+          const blocked = prev.blockedUsers || [];
+          const exists = blocked.some(bu => 
+            Number(bu.blockerId) === blockerId && Number(bu.blockedUserId) === blockedId
+          );
+          if (exists) return prev;
+          
+          return {
+            ...prev,
+            blockedUsers: [...blocked, {
+              id: Date.now(),
+              blockerId: blockerId,
+              blockedUserId: blockedId,
+              blockedAt: new Date().toISOString()
+            }]
+          };
+        });
+      } catch {}
+    };
+    s.on('admin_user_blocked', onAdminUserBlocked);
+
+    // Realtime: User unblocked another user (handle both directions)
+    const onAdminUserUnblocked = async (p: any) => {
+      try {
+        if (!p || p.blockerId == null || p.blockedUserId == null) return;
+        setMonitorState(prev => {
+          // Check if this affects the monitored user (CẢ HAI CHIỀU)
+          const userId = Number(selectedUserId);
+          const blockerId = Number(p.blockerId);
+          const blockedId = Number(p.blockedUserId);
+          
+          if (userId !== blockerId && userId !== blockedId) return prev;
+          
+          // Remove from blocked list
+          const blocked = prev.blockedUsers || [];
+          const filtered = blocked.filter(bu => 
+            !(Number(bu.blockerId) === blockerId && Number(bu.blockedUserId) === blockedId)
+          );
+          
+          return { ...prev, blockedUsers: filtered };
+        });
+      } catch {}
+    };
+    s.on('admin_user_unblocked', onAdminUserUnblocked);
+
     return () => {
       try {
         s.off('admin_dm_created', onAdminDmCreated);
@@ -197,6 +357,10 @@ export const useMonitorEffects = ({
         s.off('admin_message_read', onAdminMessageRead);
         s.off('admin_group_message_delivered', onAdminGroupMessageDelivered);
         s.off('admin_group_message_read', onAdminGroupMessageRead);
+        s.off('admin_dm_message_pinned', onAdminDmMessagePinned);
+        s.off('admin_group_message_pinned', onAdminGroupMessagePinned);
+        s.off('admin_user_blocked', onAdminUserBlocked);
+        s.off('admin_user_unblocked', onAdminUserUnblocked);
         const timers = groupTypingTimersRef.current;
         Object.keys(timers).forEach((k) => {
           const id = Number(k);

@@ -215,7 +215,20 @@
           "admin": "Admin",
           "member": "Member"
         }
-      }
+      },
+      "noPinnedDM": "No pinned messages",
+      "noPinnedGroup": "No pinned messages",
+      "pinnedMessages": "Pinned messages",
+      "pinnedBy": "Pinned by {{name}}",
+      "noBlockedUsers": "No blocked users",
+      "blockedUsers": "Blocked users",
+      "blockedAt": "Blocked at {{date}}",
+      "viewMessage": "View",
+      "unknownUser": "User",
+      "blockedNotice": "Monitored user has blocked {{name}}",
+      "blockedNoticeDesc": "They cannot send messages to each other.",
+      "userBlockedFriend": "{{userName}} has blocked {{friendName}}",
+      "friendBlockedUser": "{{friendName}} has blocked {{userName}}"
     },
     "noteShare": {
       "cardTitle": "Shared note",

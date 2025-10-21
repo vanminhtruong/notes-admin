@@ -112,6 +112,7 @@ const UsersList: React.FC = () => {
               value={filters.searchTerm}
               onChange={(e) => updateFilters({ searchTerm: e.target.value })}
               placeholder={t('searchPlaceholder')}
+              autoComplete="off"
               className="w-full px-3 py-2 xl-down:px-2 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-lg xl-down:rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm xl-down:text-xs"
             />
           </div>

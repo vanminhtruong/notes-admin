@@ -25,5 +25,6 @@ export const useUsersListModalsEffects = ({
       setOpenDetail(false);
       setDetailUser(null);
     }
-  }, [filters.currentPage, filters.searchTerm, filters.activeFilter, openDetail, setOpenDetail, setDetailUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.currentPage, filters.searchTerm, filters.activeFilter]);
 };

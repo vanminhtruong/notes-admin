@@ -94,6 +94,14 @@ export interface MonitorState {
   // Người đã xem: DM: messageId -> readerId; Group: messageId -> danh sách readerIds
   dmReadBy?: Record<number, number>;
   groupReadBy?: Record<number, number[]>;
+  // Pinned messages
+  dmPinnedMessages?: any[];
+  groupPinnedMessages?: any[];
+  loadingDmPinned?: boolean;
+  loadingGroupPinned?: boolean;
+  // Blocked users
+  blockedUsers?: any[];
+  loadingBlockedUsers?: boolean;
 }
 
 export interface GroupMemberInfo {

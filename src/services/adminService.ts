@@ -72,9 +72,24 @@ class AdminService {
     return this.axiosInstance.get(`/admin/users/${userId}/dm/${otherUserId}/messages`, { params });
   }
 
+  // Admin: Fetch pinned messages in DM conversation
+  async adminGetDMPinnedMessages(userId: number, otherUserId: number) {
+    return this.axiosInstance.get(`/admin/users/${userId}/dm/${otherUserId}/pinned-messages`);
+  }
+
+  // Admin: Fetch blocked users list of a user
+  async adminGetUserBlockedList(userId: number) {
+    return this.axiosInstance.get(`/admin/users/${userId}/blocked-users`);
+  }
+
   // Admin: Fetch Group messages for a specific group
   async adminGetGroupMessages(groupId: number, params: { page?: number; limit?: number } = {}) {
     return this.axiosInstance.get(`/admin/groups/${groupId}/messages`, { params });
+  }
+
+  // Admin: Fetch pinned messages in Group conversation
+  async adminGetGroupPinnedMessages(groupId: number) {
+    return this.axiosInstance.get(`/admin/groups/${groupId}/pinned-messages`);
   }
 
   // Admin login

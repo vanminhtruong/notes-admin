@@ -41,9 +41,17 @@ export const useMonitorHandlers = ({
   const loadDm = useCallback(async (friendId: number) => {
     if (!selectedUserId) return;
     try {
-      updateMonitorState({ loadingDm: true });
-      const res = await adminService.adminGetDMMessages(selectedUserId, friendId, { limit: 50 });
-      const messages = res?.data || res || [];
+      updateMonitorState({ loadingDm: true, loadingDmPinned: true, loadingBlockedUsers: true });
+      
+      const [messagesRes, pinnedRes, blockedRes] = await Promise.all([
+        adminService.adminGetDMMessages(selectedUserId, friendId, { limit: 50 }),
+        adminService.adminGetDMPinnedMessages(selectedUserId, friendId).catch(() => ({ data: [] })),
+        adminService.adminGetUserBlockedList(selectedUserId).catch(() => ({ data: [] }))
+      ]);
+      
+      const messages = messagesRes?.data || messagesRes || [];
+      const pinnedMessages = pinnedRes?.data || [];
+      const blockedUsers = blockedRes?.data || [];
       
       const nextStatus: Record<number, string> = {};
       const nextReadBy: Record<number, number> = {};
@@ -58,29 +66,42 @@ export const useMonitorHandlers = ({
           if (!Number.isNaN(rid)) nextReadBy[Number(m.id)] = rid;
         }
       });
+      
       updateMonitorState({ 
         dmMessages: messages,
         loadingDm: false,
         dmStatusById: nextStatus,
-        dmReadBy: nextReadBy
+        dmReadBy: nextReadBy,
+        dmPinnedMessages: pinnedMessages,
+        loadingDmPinned: false,
+        blockedUsers: blockedUsers,
+        loadingBlockedUsers: false
       });
     } catch (e) {
       updateMonitorState({ 
         dmMessages: [],
-        loadingDm: false
+        loadingDm: false,
+        dmPinnedMessages: [],
+        loadingDmPinned: false,
+        blockedUsers: [],
+        loadingBlockedUsers: false
       });
     }
   }, [selectedUserId, updateMonitorState]);
 
   const loadGroup = useCallback(async (groupId: number) => {
     try {
-      updateMonitorState({ loadingGroup: true });
-      const [msgsRes, membersRes] = await Promise.all([
+      updateMonitorState({ loadingGroup: true, loadingGroupPinned: true });
+      
+      const [msgsRes, membersRes, pinnedRes] = await Promise.all([
         adminService.adminGetGroupMessages(groupId, { limit: 50 }),
-        adminService.adminGetGroupMembers(groupId)
+        adminService.adminGetGroupMembers(groupId),
+        adminService.adminGetGroupPinnedMessages(groupId).catch(() => ({ data: [] }))
       ]);
       
       const messages = msgsRes?.data || msgsRes || [];
+      const groupPinnedMessages = pinnedRes?.data || [];
+      
       const nextGroupStatus: Record<number, string> = {};
       const nextGroupReadBy: Record<number, number[]> = {};
       (Array.isArray(messages) ? messages : []).forEach((m: any) => {
@@ -98,7 +119,9 @@ export const useMonitorHandlers = ({
         groupMessages: messages,
         loadingGroup: false,
         groupStatusById: nextGroupStatus,
-        groupReadBy: nextGroupReadBy
+        groupReadBy: nextGroupReadBy,
+        groupPinnedMessages: groupPinnedMessages,
+        loadingGroupPinned: false
       });
       
       setGroupInfo(groupData ? { ownerId: Number(groupData.ownerId) } : null);
@@ -111,7 +134,9 @@ export const useMonitorHandlers = ({
     } catch (e) {
       updateMonitorState({ 
         groupMessages: [],
-        loadingGroup: false
+        loadingGroup: false,
+        groupPinnedMessages: [],
+        loadingGroupPinned: false
       });
       setGroupMemberInfo({});
       setGroupInfo(null);

@@ -212,7 +212,20 @@
           "admin": "Admin",
           "member": "Thành viên"
         }
-      }
+      },
+      "noPinnedDM": "Chưa có tin nhắn ghim",
+      "noPinnedGroup": "Chưa có tin nhắn ghim",
+      "pinnedMessages": "Tin nhắn đã ghim",
+      "pinnedBy": "Đã ghim bởi {{name}}",
+      "noBlockedUsers": "Chưa chặn ai",
+      "blockedUsers": "Người dùng bị chặn",
+      "blockedAt": "Đã chặn lúc {{date}}",
+      "viewMessage": "Xem",
+      "unknownUser": "Người dùng",
+      "blockedNotice": "Người dùng đang theo dõi đã chặn {{name}}",
+      "blockedNoticeDesc": "Họ không thể gửi tin nhắn cho nhau.",
+      "userBlockedFriend": "{{userName}} đã chặn {{friendName}}",
+      "friendBlockedUser": "{{friendName}} đã chặn {{userName}}"
     },
     "noteShare": {
       "cardTitle": "Ghi chú được chia sẻ",

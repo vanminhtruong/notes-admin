@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { getVisibleUserActivityTabs } from '@utils/auth';
@@ -26,6 +26,7 @@ import MonitorTab from './components/MonitorTab';
 const UserActivity: React.FC = () => {
   const { t } = useTranslation('users');
   const { userId } = useParams<{ userId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   
   // Get visible tabs based on permissions
   const visibleTabs = useMemo(() => getVisibleUserActivityTabs(), []);
@@ -118,6 +119,40 @@ const UserActivity: React.FC = () => {
     openGroupMenuId,
     setOpenGroupMenuId
   } = monitorStateHook;
+
+  // Sync URL params with monitor state (preserve conversation after F5)
+  useEffect(() => {
+    if (!selectedUserId || !activityData) return;
+    
+    // Read URL params on mount (after F5)
+    const dmParam = searchParams.get('dm');
+    const groupParam = searchParams.get('group');
+    
+    if (dmParam && !monitorState.selectedFriendId) {
+      const friendId = Number(dmParam);
+      const friendExists = activityData.activity.friends?.some(f => f.id === friendId);
+      if (friendExists) {
+        updateMonitorState({ selectedFriendId: friendId, monitorTab: 'dm' });
+        loadDm(friendId);
+      }
+    } else if (groupParam && !monitorState.selectedGroupId) {
+      const gid = Number(groupParam);
+      const groupExists = activityData.activity.groups?.some((g: any) => g.id === gid);
+      if (groupExists) {
+        updateMonitorState({ selectedGroupId: gid, monitorTab: 'groups' });
+        loadGroup(gid);
+      }
+    }
+  }, [selectedUserId, activityData, searchParams, monitorState.selectedFriendId, monitorState.selectedGroupId, updateMonitorState, loadDm, loadGroup]);
+
+  // Update URL when conversation changes
+  useEffect(() => {
+    if (monitorState.monitorTab === 'dm' && monitorState.selectedFriendId) {
+      setSearchParams({ dm: String(monitorState.selectedFriendId) }, { replace: true });
+    } else if (monitorState.monitorTab === 'groups' && monitorState.selectedGroupId) {
+      setSearchParams({ group: String(monitorState.selectedGroupId) }, { replace: true });
+    }
+  }, [monitorState.selectedFriendId, monitorState.selectedGroupId, monitorState.monitorTab, setSearchParams]);
 
   // Confirmation toast helper
   const showConfirmationToast = (message: string, onConfirm: () => void) => {
