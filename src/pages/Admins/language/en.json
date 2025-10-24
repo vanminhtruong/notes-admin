@@ -457,6 +457,24 @@
     "uploadSuccess": "Avatar uploaded successfully",
     "uploadFailed": "Avatar upload failed"
   },
+  "password": {
+    "title": "Change Password",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "currentPasswordRequired": "Please enter current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password (minimum 6 characters)",
+    "newPasswordRequired": "Please enter new password",
+    "newPasswordMinLength": "New password must be at least 6 characters",
+    "confirmPassword": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Re-enter new password",
+    "passwordMismatch": "Passwords do not match",
+    "samePassword": "New password must be different from current password",
+    "changeButton": "Change Password",
+    "changing": "Changing password...",
+    "changeSuccess": "Password changed successfully",
+    "changeError": "Failed to change password"
+  },
   "messages": {
     "createSuccess": "Sub-admin created successfully",
     "createError": "Failed to create sub-admin",

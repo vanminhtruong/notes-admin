@@ -66,7 +66,7 @@ const AdminsList: React.FC = () => {
   });
 
   return (
-    <div className="p-6 xl-down:p-4 md-down:p-3 sm-down:p-2 min-h-screen bg-gray-50 dark:bg-neutral-900">
+    <div>
       <div className="max-w-7xl xl-down:max-w-full mx-auto">
         <AdminsListHeader
           t={t}

@@ -269,7 +269,12 @@ const AdminLayout: React.FC = () => {
     const next: Record<string, boolean> = {};
     for (const item of menuItems) {
       if ((item as any).submenu) {
-        next[item.id] = isActiveRoute(item.path);
+        // Mở menu cha nếu chính nó active hoặc bất kỳ submenu nào active
+        const hasActiveChild = (item as any).submenu?.some((sub: any) => {
+          const sp = sub.path as string;
+          return location.pathname === sp || location.pathname.startsWith(sp + '/');
+        });
+        next[item.id] = isActiveRoute(item.path) || !!hasActiveChild;
       }
     }
     setOpenMenus((prev) => ({ ...prev, ...next }));
@@ -328,7 +333,7 @@ const AdminLayout: React.FC = () => {
   }, [token, i18n]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 flex xl-down:flex-col">
+    <div className="min-h-screen flex xl-down:flex-col">
       {/* Sidebar - Desktop: Fixed width, Mobile: Full width overlay */}
       <div className={`bg-white dark:bg-neutral-900 shadow-lg transition-all duration-300 overflow-hidden
         xl-down:fixed xl-down:inset-y-0 xl-down:left-0 xl-down:z-50 xl-down:max-w-sm xl-down:overflow-hidden
@@ -607,7 +612,7 @@ const AdminLayout: React.FC = () => {
 
 
         {/* Content */}
-        <main className="flex-1 p-6 xl-down:p-4 md-down:p-3 sm-down:p-2 xs-down:p-1 overflow-auto bg-gray-50 dark:bg-neutral-950">
+        <main className="flex-1 p-6 xl-down:p-4 md-down:p-3 sm-down:p-2 xs-down:p-1 overflow-auto">
           <Outlet />
         </main>
         

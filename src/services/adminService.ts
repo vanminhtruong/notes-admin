@@ -488,6 +488,14 @@ class AdminService {
     return this.axiosInstance.put(`/admin/admins/${adminId}/profile`, data);
   }
 
+  // Change admin password by ID (Super Admin only)
+  async changeAdminPassword(adminId: number, data: {
+    currentPassword: string;
+    newPassword: string;
+  }) {
+    return this.axiosInstance.post(`/admin/admins/${adminId}/change-password`, data);
+  }
+
   // ============ Categories Management ============
 
   // Get all categories

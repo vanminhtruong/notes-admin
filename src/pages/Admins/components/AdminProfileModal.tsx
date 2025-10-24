@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
 import ImagePreviewModal from '@components/ImagePreviewModal';
+import PasswordChangeSection from './PasswordChangeSection';
+import { usePasswordChange } from '../hooks/usePasswordChange';
 import type { Admin } from '../interfaces/admin.types';
 
 interface AdminProfileModalProps {
@@ -31,6 +33,12 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
   // Image preview modal state
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string | null>(null);
+
+  // Password change hook
+  const passwordChange = usePasswordChange({
+    adminId: admin?.id || 0,
+    t,
+  });
 
   useEffect(() => {
     if (isOpen && admin) {
@@ -341,6 +349,18 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                     </p>
                   )}
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                    {t('password.title', { defaultValue: 'Mật khẩu' })}
+                  </label>
+                  <div className="px-3 py-2 text-sm sm:text-base bg-gray-50 dark:bg-neutral-900 rounded-md text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span className="tracking-wider">••••••••</span>
+                  </div>
+                </div>
               </div>
               </div>
 
@@ -383,6 +403,27 @@ const AdminProfileModal: React.FC<AdminProfileModalProps> = ({
                     </label>
                   </div>
                 </div>
+              )}
+
+              {/* Password Change Section */}
+              {editMode && (
+                <PasswordChangeSection
+                  currentPassword={passwordChange.state.currentPassword}
+                  newPassword={passwordChange.state.newPassword}
+                  confirmPassword={passwordChange.state.confirmPassword}
+                  showCurrentPassword={passwordChange.state.showCurrentPassword}
+                  showNewPassword={passwordChange.state.showNewPassword}
+                  showConfirmPassword={passwordChange.state.showConfirmPassword}
+                  changing={passwordChange.state.changing}
+                  onCurrentPasswordChange={passwordChange.state.setCurrentPassword}
+                  onNewPasswordChange={passwordChange.state.setNewPassword}
+                  onConfirmPasswordChange={passwordChange.state.setConfirmPassword}
+                  onToggleCurrentPassword={() => passwordChange.state.setShowCurrentPassword(!passwordChange.state.showCurrentPassword)}
+                  onToggleNewPassword={() => passwordChange.state.setShowNewPassword(!passwordChange.state.showNewPassword)}
+                  onToggleConfirmPassword={() => passwordChange.state.setShowConfirmPassword(!passwordChange.state.showConfirmPassword)}
+                  onSubmit={passwordChange.handlers.handlePasswordChange}
+                  t={t}
+                />
               )}
 
             </div>
