@@ -360,6 +360,26 @@
           "label": "Assign/Remove Tags from Notes",
           "description": "Assign or remove tags from notes"
         }
+      },
+      "backgrounds": {
+        "label": "Manage Backgrounds",
+        "description": "Manage backgrounds (colors and images) for notes",
+        "view": {
+          "label": "View Backgrounds",
+          "description": "View list of backgrounds (colors & images)"
+        },
+        "create": {
+          "label": "Create Background",
+          "description": "Create new background (color or image)"
+        },
+        "edit": {
+          "label": "Edit Background",
+          "description": "Edit background information"
+        },
+        "delete": {
+          "label": "Delete Background",
+          "description": "Delete background from system"
+        }
       }
     },
     "manage_admins": {

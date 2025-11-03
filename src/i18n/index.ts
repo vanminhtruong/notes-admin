@@ -31,6 +31,10 @@ import categoriesEn from '@pages/Categories/language/en.json';
 import categoriesKo from '@pages/Categories/language/ko.json';
 import categoriesVi from '@pages/Categories/language/vi.json';
 
+import backgroundsEn from '@pages/Backgrounds/language/en.json';
+import backgroundsKo from '@pages/Backgrounds/language/ko.json';
+import backgroundsVi from '@pages/Backgrounds/language/vi.json';
+
 import chatSettingsEn from '@pages/Users/ChatSettings/language/en.json';
 import chatSettingsKo from '@pages/Users/ChatSettings/language/ko.json';
 import chatSettingsVi from '@pages/Users/ChatSettings/language/vi.json';
@@ -50,6 +54,7 @@ const resources = {
     admins: adminsEn,
     profile: profileEn,
     categories: categoriesEn,
+    backgrounds: backgroundsEn,
     chatSettings: chatSettingsEn
   },
   ko: {
@@ -61,6 +66,7 @@ const resources = {
     admins: adminsKo,
     profile: profileKo,
     categories: categoriesKo,
+    backgrounds: backgroundsKo,
     chatSettings: chatSettingsKo
   },
   vi: {
@@ -72,6 +78,7 @@ const resources = {
     admins: adminsVi,
     profile: profileVi,
     categories: categoriesVi,
+    backgrounds: backgroundsVi,
     chatSettings: chatSettingsVi
   }
 };
@@ -87,7 +94,7 @@ const initI18n = async () => {
       
       // Namespace mặc định
       defaultNS: 'common',
-      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile', 'categories', 'chatSettings'],
+      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile', 'categories', 'backgrounds', 'chatSettings'],
 
       interpolation: {
         escapeValue: false, // React đã escape

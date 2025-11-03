@@ -360,6 +360,26 @@
           "label": "노트에 태그 할당/제거",
           "description": "노트에 태그를 할당하거나 제거"
         }
+      },
+      "backgrounds": {
+        "label": "배경 관리",
+        "description": "노트용 배경(색상 및 이미지) 관리",
+        "view": {
+          "label": "배경 보기",
+          "description": "배경 목록 보기 (색상 및 이미지)"
+        },
+        "create": {
+          "label": "배경 생성",
+          "description": "새 배경 생성 (색상 또는 이미지)"
+        },
+        "edit": {
+          "label": "배경 편집",
+          "description": "배경 정보 편집"
+        },
+        "delete": {
+          "label": "배경 삭제",
+          "description": "시스템에서 배경 삭제"
+        }
       }
     },
     "manage_admins": {

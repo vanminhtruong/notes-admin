@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
 import AdminLayout from '@layouts/AdminLayout'
-import ProtectedRoute from '@components/ProtectedRoute'
-import PermissionRoute from '@components/PermissionRoute'
+import ProtectedRoute from '@/middlewares/ProtectedRoute'
+import PermissionRoute from '@/middlewares/PermissionRoute'
 import UserActivityRoute from '@components/UserActivityRoute'
 import Login from '@/pages/Login/Login'
 import Dashboard from '@/pages/Dashboard/Dashboard'
@@ -11,6 +11,7 @@ import UserActivity from '@pages/Users/UserActivity'
 import ChatSettings from '@pages/Users/ChatSettings/ChatSettings'
 import NotesList from '@pages/Notes/NotesList'
 import CategoriesList from '@pages/Categories/CategoriesList'
+import BackgroundsList from '@pages/Backgrounds/BackgroundsList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
 import NoPermission from '@pages/NoPermission/NoPermission'
@@ -99,6 +100,16 @@ const router = createBrowserRouter([
         element: (
           <PermissionRoute permission="manage_notes.categories.view" redirectTo="/dashboard">
             <CategoriesList />
+          </PermissionRoute>
+        )
+      },
+
+      // Backgrounds
+      { 
+        path: 'backgrounds', 
+        element: (
+          <PermissionRoute permission="manage_notes.backgrounds.view" redirectTo="/dashboard">
+            <BackgroundsList />
           </PermissionRoute>
         )
       },

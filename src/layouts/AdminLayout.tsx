@@ -238,9 +238,14 @@ const AdminLayout: React.FC = () => {
       path: '/notes',
       permission: 'manage_notes',
       submenu: [
-        { id: 'notes-list', label: t('navigation.notesList'), path: '/notes' },
+        ...(hasPermission('manage_notes.view') ? [
+          { id: 'notes-list', label: t('navigation.notesList'), path: '/notes' }
+        ] : []),
         ...(hasPermission('manage_notes.categories.view') ? [
           { id: 'categories', label: t('navigation.categories', { defaultValue: 'Categories' }), path: '/categories' }
+        ] : []),
+        ...(hasPermission('manage_notes.backgrounds.view') ? [
+          { id: 'backgrounds', label: t('navigation.backgrounds', { defaultValue: 'Backgrounds' }), path: '/backgrounds' }
         ] : []),
       ],
     },
@@ -251,7 +256,17 @@ const AdminLayout: React.FC = () => {
       path: '/admins',
       permission: 'manage_admins',
     }] : []),
-  ].filter(item => !item.permission || hasPermission(item.permission));
+  ].filter(item => {
+    // Filter by permission
+    if (item.permission && !hasPermission(item.permission)) {
+      return false;
+    }
+    // Filter out items with empty submenu
+    if (item.submenu && item.submenu.length === 0) {
+      return false;
+    }
+    return true;
+  });
 
   // Redirect to no-permission page if admin has no permissions at all
   useEffect(() => {

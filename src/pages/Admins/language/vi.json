@@ -360,6 +360,26 @@
           "label": "Gắn/bỏ tag cho notes",
           "description": "Gắn hoặc bỏ tag cho các ghi chú"
         }
+      },
+      "backgrounds": {
+        "label": "Quản lý backgrounds",
+        "description": "Quản lý các backgrounds (màu sắc và hình ảnh) cho ghi chú",
+        "view": {
+          "label": "Xem backgrounds",
+          "description": "Xem danh sách backgrounds (colors & images)"
+        },
+        "create": {
+          "label": "Tạo background",
+          "description": "Tạo background mới (màu sắc hoặc hình ảnh)"
+        },
+        "edit": {
+          "label": "Sửa background",
+          "description": "Chỉnh sửa thông tin background"
+        },
+        "delete": {
+          "label": "Xóa background",
+          "description": "Xóa background khỏi hệ thống"
+        }
       }
     },
     "manage_admins": {

@@ -188,6 +188,9 @@ export const hasAnyNotesPermission = (): boolean => {
   
   const userPermissions = (__adminPermissionsOverride ?? adminData.adminPermissions) || [];
   
-  // Kiểm tra xem có bất kỳ quyền nào liên quan đến manage_notes không
-  return userPermissions.some(perm => perm.startsWith('manage_notes'));
+  // Chỉ hiển thị khi có ít nhất 1 quyền con cụ thể (không chỉ parent)
+  // Quyền con phải có dấu chấm và không phải chỉ là 'manage_notes'
+  return userPermissions.some(perm => 
+    perm.startsWith('manage_notes.') && perm !== 'manage_notes'
+  );
 };

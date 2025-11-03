@@ -486,6 +486,33 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
             description: 'Gắn hoặc bỏ tag cho các ghi chú'
           }
         ]
+      },
+      {
+        key: 'manage_notes.backgrounds',
+        label: 'Quản lý Backgrounds',
+        description: 'Quản lý các backgrounds (màu sắc và hình ảnh) cho ghi chú',
+        subPermissions: [
+          {
+            key: 'manage_notes.backgrounds.view',
+            label: 'Xem backgrounds',
+            description: 'Xem danh sách backgrounds (colors & images)'
+          },
+          {
+            key: 'manage_notes.backgrounds.create',
+            label: 'Tạo background',
+            description: 'Tạo background mới (màu sắc hoặc hình ảnh)'
+          },
+          {
+            key: 'manage_notes.backgrounds.edit',
+            label: 'Sửa background',
+            description: 'Chỉnh sửa thông tin background'
+          },
+          {
+            key: 'manage_notes.backgrounds.delete',
+            label: 'Xóa background',
+            description: 'Xóa background khỏi hệ thống'
+          }
+        ]
       }
     ]
   },

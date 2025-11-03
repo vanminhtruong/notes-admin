@@ -609,6 +609,87 @@ class AdminService {
   async removeTagFromNote(noteId: number, tagId: number) {
     return this.axiosInstance.delete(`/admin/tags/${noteId}/${tagId}`);
   }
+
+  // ============ Backgrounds Management ============
+
+  // Get colors
+  async getColors(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    category?: string;
+    isActive?: boolean;
+  } = {}) {
+    return this.axiosInstance.get('/admin/backgrounds/colors', { params });
+  }
+ 
+  // Get images
+  async getImages(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    category?: string;
+    isActive?: boolean;
+  } = {}) {
+    return this.axiosInstance.get('/admin/backgrounds/images', { params });
+  }
+
+  // Get all backgrounds (deprecated - for backward compatibility)
+  async getAllBackgrounds(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    type?: string;
+    category?: string;
+    isActive?: boolean;
+  } = {}) {
+    return this.axiosInstance.get('/admin/backgrounds', { params });
+  }
+
+  // Get background detail
+  async getBackgroundDetail(backgroundId: number) {
+    return this.axiosInstance.get(`/admin/backgrounds/${backgroundId}`);
+  }
+
+  // Create background
+  async createBackground(data: {
+    uniqueId: string;
+    type: 'color' | 'image';
+    value: string | null;
+    label: string;
+    category?: string;
+    sortOrder?: number;
+    isActive?: boolean;
+  }) {
+    // Route khác nhau dựa trên type
+    const endpoint = data.type === 'color' 
+      ? '/admin/backgrounds/colors' 
+      : '/admin/backgrounds/images';
+    return this.axiosInstance.post(endpoint, data);
+  }
+
+  // Update background
+  async updateBackground(backgroundId: number, data: {
+    uniqueId?: string;
+    type?: 'color' | 'image';
+    value?: string | null;
+    label?: string;
+    category?: string;
+    sortOrder?: number;
+    isActive?: boolean;
+  }) {
+    return this.axiosInstance.put(`/admin/backgrounds/${backgroundId}`, data);
+  }
+
+  // Delete background
+  async deleteBackground(backgroundId: number) {
+    return this.axiosInstance.delete(`/admin/backgrounds/${backgroundId}`);
+  }
+
+  // Toggle background active status
+  async toggleBackgroundActive(backgroundId: number) {
+    return this.axiosInstance.patch(`/admin/backgrounds/${backgroundId}/toggle-active`);
+  }
 }
 
 export default new AdminService();
