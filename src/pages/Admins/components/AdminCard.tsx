@@ -62,8 +62,8 @@ const AdminCard: React.FC<AdminCardProps> = ({
               className="w-10 h-10 xl-down:w-9 xl-down:h-9 sm-down:w-8 sm-down:h-8 rounded-full object-cover flex-shrink-0"
             />
           ) : (
-            <div className="w-10 h-10 xl-down:w-9 xl-down:h-9 sm-down:w-8 sm-down:h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-              <span className="text-gray-600 dark:text-gray-300 font-medium">
+            <div className="w-10 h-10 xl-down:w-9 xl-down:h-9 sm-down:w-8 sm-down:h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-medium">
                 {admin.name.charAt(0).toUpperCase()}
               </span>
             </div>

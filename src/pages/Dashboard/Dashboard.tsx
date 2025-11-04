@@ -1,113 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import adminService from '@services/adminService';
-import { getAdminSocket } from '@services/socket';
-
-interface DashboardStats {
-  totalUsers: number;
-  activeUsers: number;
-  totalNotes: number;
-  totalFolders: number;
-  notesInFolders: number;
-  recentActivity: any[];
-}
+import { useDashboardState } from './hooks/Manager-useState/useDashboardState';
+import { useDashboardHandlers } from './hooks/Manager-handle/useDashboardHandlers';
+import { useDashboardEffects } from './hooks/Manager-Effects/useDashboardEffects';
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation('dashboard');
-  const [stats, setStats] = useState<DashboardStats>({
-    totalUsers: 0,
-    activeUsers: 0,
-    totalNotes: 0,
-    totalFolders: 0,
-    notesInFolders: 0,
-    recentActivity: []
+  
+  // State
+  const { stats, setStats, loading, setLoading } = useDashboardState();
+  
+  // Handlers
+  const { loadDashboardData } = useDashboardHandlers({
+    setLoading,
+    setStats,
   });
-  const [loading, setLoading] = useState(true);
-
-  const loadDashboardData = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      // Tải dữ liệu thống kê
-      const [usersResponse, notesResponse, allActiveUsersResponse] = await Promise.all([
-        adminService.getAllUsers({ limit: 1 }),
-        adminService.getAllUsersNotes({ limit: 1 }),
-        adminService.getAllUsers({ limit: 1000, isActive: true }), // Lấy tất cả active users để đếm online users
-      ]);
-
-      // Chuẩn hóa tổng số người dùng từ cấu trúc response backend
-      const resolvedTotalUsers =
-        (typeof (usersResponse as any)?.totalUsers === 'number' ? (usersResponse as any).totalUsers : undefined) ??
-        (typeof (usersResponse as any)?.pagination?.total === 'number' ? (usersResponse as any).pagination.total : undefined) ?? 0;
-
-      // Đếm số users đang online từ danh sách active users
-      const activeUsersCount = (allActiveUsersResponse as any)?.users?.filter((user: any) => user.isOnline)?.length || 0;
-
-      setStats({
-        totalUsers: resolvedTotalUsers,
-        activeUsers: activeUsersCount,
-        totalNotes: (notesResponse as any).pagination?.total || 0,
-        totalFolders: (notesResponse as any)?.stats?.totalFolders || 0,
-        notesInFolders: (notesResponse as any)?.stats?.notesInFolders || 0,
-        recentActivity: []
-      });
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, [loadDashboardData]);
-
-  // Real-time dashboard updates
-  useEffect(() => {
-    const s = getAdminSocket();
-    
-    const handleStatsUpdate = () => {
-      // Reload dashboard data when any relevant changes occur
-      loadDashboardData();
-    };
-    
-    // Listen to events that affect dashboard stats
-    s.on('user_note_created', handleStatsUpdate);
-    s.on('user_note_deleted', handleStatsUpdate);
-    s.on('user_note_updated', handleStatsUpdate);
-    s.on('note_created_by_admin', handleStatsUpdate);
-    s.on('note_deleted_by_admin', handleStatsUpdate);
-    s.on('note_updated_by_admin', handleStatsUpdate);
-    s.on('folder_created', handleStatsUpdate);
-    s.on('folder_deleted', handleStatsUpdate);
-    s.on('folder_updated', handleStatsUpdate);
-    s.on('admin_folder_created', handleStatsUpdate);
-    s.on('admin_folder_deleted', handleStatsUpdate);
-    s.on('admin_folder_updated', handleStatsUpdate);
-    s.on('note_moved_to_folder', handleStatsUpdate);
-    s.on('admin_user_online', handleStatsUpdate);
-    s.on('admin_user_offline', handleStatsUpdate);
-    
-    return () => {
-      try {
-        s.off('user_note_created', handleStatsUpdate);
-        s.off('user_note_deleted', handleStatsUpdate);
-        s.off('user_note_updated', handleStatsUpdate);
-        s.off('note_created_by_admin', handleStatsUpdate);
-        s.off('note_deleted_by_admin', handleStatsUpdate);
-        s.off('note_updated_by_admin', handleStatsUpdate);
-        s.off('folder_created', handleStatsUpdate);
-        s.off('folder_deleted', handleStatsUpdate);
-        s.off('folder_updated', handleStatsUpdate);
-        s.off('admin_folder_created', handleStatsUpdate);
-        s.off('admin_folder_deleted', handleStatsUpdate);
-        s.off('admin_folder_updated', handleStatsUpdate);
-        s.off('note_moved_to_folder', handleStatsUpdate);
-        s.off('admin_user_online', handleStatsUpdate);
-        s.off('admin_user_offline', handleStatsUpdate);
-      } catch {}
-    };
-  }, [loadDashboardData]);
+  
+  // Effects
+  useDashboardEffects({
+    loadDashboardData,
+  });
 
   if (loading) {
     return (

@@ -42,7 +42,7 @@ const AdminProfile: React.FC = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await adminService.getMyProfile();
+      const res: any = await adminService.getMyProfile();
       setData(res?.admin || null);
     } catch (e: any) {
       // Nếu có error message cụ thể từ server thì hiển thị, còn không thì dùng key dịch
@@ -76,7 +76,7 @@ const AdminProfile: React.FC = () => {
   const onSubmit = async (patch: Partial<AdminProfileData>) => {
     setSaving(true);
     try {
-      const res = await adminService.updateMyProfile(patch as any);
+      const res: any = await adminService.updateMyProfile(patch as any);
       setData(res?.admin || null);
       toast.success(t('messages.updateSuccess', { defaultValue: 'Cập nhật hồ sơ thành công' }));
       setEditMode(false);
