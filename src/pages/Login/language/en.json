@@ -4,5 +4,16 @@
   "email": "Email",
   "password": "Password",
   "loginButton": "Sign In",
-  "rememberMe": "Remember me"
+  "rememberMe": "Remember me",
+  "loading": "Signing in...",
+  "toggleLight": "Switch to light mode",
+  "toggleDark": "Switch to dark mode",
+  "adminOnly": "For system administrators only",
+  "errors": {
+    "EMAIL_NOT_FOUND": "Email not found",
+    "NOT_ADMIN": "No admin access",
+    "ACCOUNT_DEACTIVATED": "Account has been deactivated",
+    "INVALID_PASSWORD": "Incorrect password",
+    "LOGIN_FAILED": "Login failed"
+  }
 }

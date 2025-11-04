@@ -31,8 +31,10 @@ class AdminService {
       (response) => response.data,
       (error: AxiosError<any>) => {
         const message = error.response?.data?.message || error.message || 'Đã xảy ra lỗi';
+        const code = error.response?.data?.code;
         const customError = new Error(message);
         (customError as any).status = error.response?.status;
+        (customError as any).code = code; // Giữ lại error code từ backend
         return Promise.reject(customError);
       }
     );

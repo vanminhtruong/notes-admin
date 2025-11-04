@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAdminsList } from './hooks/useAdminsList';
 import { useAdminActions } from './hooks/useAdminActions';
-import { useAdminSocket } from './hooks/useAdminSocket';
+import { useAdminSocket } from './hooks/Manager-Effects/useAdminSocket';
 import { useAdminsListState } from './hooks/Manager-useState/useAdminsListState';
 import { useBodyScrollLock } from './hooks/Manager-Effects/useBodyScrollLock';
 import { useAdminsListHandlers } from './hooks/Manager-handle/useAdminsListHandlers';
+import { useAdminsListEffects } from './hooks/Manager-Effects/useAdminsListEffects';
 import { isSuperAdmin } from '@utils/auth';
 import FilterBar from './components/FilterBar';
 import CreateAdminModal from './components/CreateAdminModal';
@@ -18,37 +18,22 @@ import ConfirmationDialog from './components/ConfirmationDialog';
 const AdminsList: React.FC = () => {
   const { t } = useTranslation('admins');
 
-  // State management
+  // State management từ useAdminsListState
   const adminState = useAdminsListState();
 
   // Disable body scroll when any modal or confirmation dialog is open
   const hasOpenModal = adminState.createModalOpen || adminState.editModalOpen || adminState.profileModalOpen || adminState.confirmAction !== null;
   useBodyScrollLock({ isLocked: hasOpenModal });
 
-  const {
-    admins,
-    loading,
-    currentAdmin,
-    pagination,
-    availablePermissions,
-    searchText,
-    adminLevelFilter,
-    setSearchText,
-    setAdminLevelFilter,
-    fetchAdmins,
-    refreshList,
-  } = useAdminsList();
-
-  // Sử dụng socket để listen real-time events
-  useAdminSocket({
-    onAdminListChange: refreshList,
-    currentAdminId: currentAdmin?.id,
-  });
-
+  // Admin actions
   const adminActions = useAdminActions();
 
-  // Handlers
+  // Handlers từ useAdminsListHandlers
   const handlers = useAdminsListHandlers({
+    setLoading: adminState.setLoading,
+    setAdmins: adminState.setAdmins,
+    setPagination: adminState.setPagination,
+    setAvailablePermissions: adminState.setAvailablePermissions,
     setSelectedAdmin: adminState.setSelectedAdmin,
     setEditModalOpen: adminState.setEditModalOpen,
     setProfileAdmin: adminState.setProfileAdmin,
@@ -60,9 +45,24 @@ const AdminsList: React.FC = () => {
     toggleAdminStatus: adminActions.toggleAdminStatus,
     deleteAdmin: adminActions.deleteAdmin,
     revokeAdminPermission: adminActions.revokeAdminPermission,
-    refreshList,
-    fetchAdmins,
     confirmAction: adminState.confirmAction,
+    pagination: adminState.pagination,
+    searchText: adminState.searchText,
+    adminLevelFilter: adminState.adminLevelFilter,
+  });
+
+  // Effects để fetch data
+  useAdminsListEffects({
+    setCurrentAdmin: adminState.setCurrentAdmin,
+    fetchAdmins: handlers.fetchAdmins,
+    searchText: adminState.searchText,
+    adminLevelFilter: adminState.adminLevelFilter,
+  });
+
+  // Sử dụng socket để listen real-time events
+  useAdminSocket({
+    onAdminListChange: handlers.refreshList,
+    currentAdminId: adminState.currentAdmin?.id,
   });
 
   return (
@@ -75,20 +75,20 @@ const AdminsList: React.FC = () => {
         />
 
         <FilterBar
-          searchText={searchText}
-          adminLevelFilter={adminLevelFilter}
-          onSearchChange={setSearchText}
-          onLevelFilterChange={setAdminLevelFilter}
-          onRefresh={refreshList}
-          loading={loading}
+          searchText={adminState.searchText}
+          adminLevelFilter={adminState.adminLevelFilter}
+          onSearchChange={adminState.setSearchText}
+          onLevelFilterChange={adminState.setAdminLevelFilter}
+          onRefresh={handlers.refreshList}
+          loading={adminState.loading}
         />
 
         <AdminsContent
-          loading={loading}
-          admins={admins}
+          loading={adminState.loading}
+          admins={adminState.admins}
           t={t}
-          currentAdmin={currentAdmin}
-          pagination={pagination}
+          currentAdmin={adminState.currentAdmin}
+          pagination={adminState.pagination}
           handlers={handlers}
         />
 
@@ -96,7 +96,7 @@ const AdminsList: React.FC = () => {
           isOpen={adminState.createModalOpen}
           onClose={() => adminState.setCreateModalOpen(false)}
           onSubmit={handlers.handleCreateAdmin}
-          availablePermissions={availablePermissions}
+          availablePermissions={adminState.availablePermissions}
           loading={adminActions.creating}
         />
 
@@ -108,7 +108,7 @@ const AdminsList: React.FC = () => {
             adminState.setSelectedAdmin(null);
           }}
           onSubmit={handlers.handleUpdateAdmin}
-          availablePermissions={availablePermissions}
+          availablePermissions={adminState.availablePermissions}
           loading={adminActions.updating}
         />
 

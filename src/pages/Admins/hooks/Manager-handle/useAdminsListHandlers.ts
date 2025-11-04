@@ -1,7 +1,13 @@
-import type { Admin } from '../../interfaces/admin.types';
+import { toast } from 'react-toastify';
+import adminService from '@services/adminService';
+import type { Admin, AdminFilters } from '../../interfaces/admin.types';
 import type { ConfirmAction } from '../Manager-useState/useAdminsListState';
 
 interface UseAdminsListHandlersProps {
+  setLoading: (loading: boolean) => void;
+  setAdmins: (admins: Admin[]) => void;
+  setPagination: (pagination: any) => void;
+  setAvailablePermissions: (permissions: string[]) => void;
   setSelectedAdmin: (admin: Admin | null) => void;
   setEditModalOpen: (open: boolean) => void;
   setProfileAdmin: (admin: Admin | null) => void;
@@ -13,12 +19,17 @@ interface UseAdminsListHandlersProps {
   toggleAdminStatus: (adminId: number) => Promise<boolean>;
   deleteAdmin: (adminId: number) => Promise<boolean>;
   revokeAdminPermission: (adminId: number, permission: string) => Promise<boolean>;
-  refreshList: () => void;
-  fetchAdmins: (page: number, size?: number) => void;
   confirmAction: ConfirmAction | null;
+  pagination: any;
+  searchText: string;
+  adminLevelFilter: string;
 }
 
 export const useAdminsListHandlers = ({
+  setLoading,
+  setAdmins,
+  setPagination,
+  setAvailablePermissions,
   setSelectedAdmin,
   setEditModalOpen,
   setProfileAdmin,
@@ -30,10 +41,42 @@ export const useAdminsListHandlers = ({
   toggleAdminStatus,
   deleteAdmin,
   revokeAdminPermission,
-  refreshList,
-  fetchAdmins,
   confirmAction,
+  pagination,
+  searchText,
+  adminLevelFilter,
 }: UseAdminsListHandlersProps) => {
+  const fetchAdmins = async (page = pagination.current, limit = pagination.pageSize) => {
+    try {
+      setLoading(true);
+      const filters: AdminFilters = {
+        page,
+        limit,
+        search: searchText || undefined,
+        adminLevel: adminLevelFilter || undefined,
+      };
+
+      const res = await adminService.getAllAdmins(filters);
+      const data: any = res || {};
+      
+      setAdmins(data?.admins ?? []);
+      setAvailablePermissions(data?.availablePermissions ?? []);
+      setPagination({
+        current: data?.pagination?.page ?? 1,
+        pageSize: data?.pagination?.limit ?? 20,
+        total: data?.pagination?.total ?? 0,
+      });
+    } catch (error: any) {
+      toast.error(error.message || 'Không thể tải danh sách admin');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshList = async () => {
+    await fetchAdmins(pagination.current, pagination.pageSize);
+  };
+
   const handleCreateAdmin = async (data: any) => {
     const success = await createAdmin(data);
     if (success) {
@@ -115,6 +158,8 @@ export const useAdminsListHandlers = ({
   };
 
   return {
+    fetchAdmins,
+    refreshList,
     handleCreateAdmin,
     handleEditAdmin,
     handleUpdateAdmin,

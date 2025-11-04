@@ -1,12 +1,13 @@
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import i18next from 'i18next';
-import { getAdminToken } from '@utils/auth';
+import { getAdminToken, getAdminFromToken, removeAdminToken, setAdminPermissionOverride } from '@utils/auth';
 import adminService from './adminService';
 import { emitAdminEvent } from './adminEvents';
 
 let socket: Socket | null = null;
 let listenersRegistered = false; // Guard để tránh đăng ký listener nhiều lần
+let currentAdminId: number | null = null; // Lưu id admin hiện tại để xử lý self events
 // Dedupe các sự kiện để không toast nhiều lần trong thời gian ngắn (HMR hoặc multi-mount)
 const recentEvents = new Map<string, number>();
 function shouldToastOnce(key: string, dedupeMs = 3000): boolean {
@@ -18,6 +19,14 @@ function shouldToastOnce(key: string, dedupeMs = 3000): boolean {
   if (recentEvents.has(key)) return false;
   recentEvents.set(key, now);
   return true;
+}
+
+// Logout helper: xóa token, reset override, đóng socket và chuyển hướng ngay lập tức
+function forceLogoutImmediately() {
+  try { removeAdminToken(); } catch {}
+  try { setAdminPermissionOverride(null as any); } catch {}
+  try { closeAdminSocket(); } catch {}
+  try { window.location.replace('/login?forced=1'); } catch { window.location.href = '/login?forced=1'; }
 }
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
@@ -44,10 +53,49 @@ export function getAdminSocket(): Socket {
   if (!listenersRegistered) {
     listenersRegistered = true;
 
+    // Thiết lập currentAdminId đồng bộ từ token để nhận diện self-case ngay lập tức
+    if (token) {
+      try {
+        const info = getAdminFromToken(token as string);
+        if (info?.id) currentAdminId = info.id as unknown as number;
+        else if ((info as any)?.userId) currentAdminId = (info as any).userId as number;
+      } catch {}
+    }
+
     // Debug logs for troubleshooting
     socket.on('connect', () => {
       // eslint-disable-next-line no-console
       console.log('[AdminSocket] CONNECTED with ID:', socket?.id);
+    });
+
+    // Handle admin status changed (global) -> nếu chính mình bị vô hiệu hóa thì đăng xuất NGAY
+    socket.on('admin_status_changed', (data: any) => {
+      try {
+        const eventKey = `admin_status_changed:${data?.timestamp || ''}:${data?.adminId || ''}`;
+        const canToast = shouldToastOnce(eventKey);
+
+        // Xác định self từ biến đã lưu, nếu chưa có thì decode token tại chỗ
+        let selfId = currentAdminId;
+        if (selfId == null) {
+          const t = getAdminToken();
+          if (t) {
+            const info = getAdminFromToken(t);
+            selfId = (info as any)?.id ?? (info as any)?.userId ?? null;
+          }
+        }
+        const isSelf = selfId != null && data?.adminId == selfId;
+        if (isSelf && data?.isActive === false) {
+          if (canToast) {
+            const msg = i18next.t('admins:messages.adminAccountDeactivated');
+            toast.error(msg);
+          }
+          forceLogoutImmediately();
+          return;
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('[AdminSocket] Error handling admin_status_changed', e);
+      }
     });
     socket.on('disconnect', (reason) => {
       // eslint-disable-next-line no-console
@@ -57,6 +105,17 @@ export function getAdminSocket(): Socket {
       // eslint-disable-next-line no-console
       console.error('[AdminSocket] CONNECT_ERROR:', err.message);
     });
+
+    // Lấy admin hiện tại để nhận diện self events
+    if (currentAdminId == null) {
+      try {
+        // Không chặn luồng nếu lỗi
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        adminService.getMyPermissions().then((res: any) => {
+          currentAdminId = res?.admin?.id ?? null;
+        }).catch(() => {});
+      } catch {}
+    }
 
     // Debug: listen to ALL admin events to verify they're being received (only once)
     const adminEvents = [
@@ -109,7 +168,7 @@ export function getAdminSocket(): Socket {
         await adminService.refreshToken();
         
         // Show notification to user with i18n
-        const msg = i18next.t('admins:messages.permissionsChanged', { defaultValue: 'Quyền hạn của bạn đã được cập nhật' }) || data.message;
+        const msg = i18next.t('admins:messages.permissionsChanged');
         toast.success(msg);
         
         // Reload the page to apply new permissions immediately
@@ -118,7 +177,7 @@ export function getAdminSocket(): Socket {
         }, 1000);
       } catch (error) {
         console.error('[AdminSocket] Failed to refresh token:', error);
-        toast.error(i18next.t('admins:messages.permissionsChangedError', { defaultValue: 'Không thể cập nhật quyền hạn. Vui lòng đăng nhập lại.' }));
+        toast.error(i18next.t('admins:messages.permissionsChangedError'));
       }
     });
 
@@ -126,30 +185,20 @@ export function getAdminSocket(): Socket {
     socket.on('admin_access_revoked', (data) => {
       console.log('[AdminSocket] Admin access revoked:', data);
       const eventKey = `admin_access_revoked:${data?.timestamp || ''}`;
-      if (!shouldToastOnce(eventKey)) return;
-      const msg = i18next.t('admins:messages.adminAccessRevoked', { defaultValue: 'Quyền truy cập admin đã bị thu hồi' }) || data.message;
-      toast.error(msg);
-      
-      // Clear admin token and redirect to login
-      localStorage.removeItem('adminToken');
-      setTimeout(() => {
-        window.location.href = '/admin/login';
-      }, 2000);
+      const canToast = shouldToastOnce(eventKey);
+      const msg = i18next.t('admins:messages.adminAccessRevoked');
+      if (canToast) toast.error(msg);
+      forceLogoutImmediately();
     });
 
     // Handle admin account deactivated
     socket.on('admin_account_deactivated', (data) => {
       console.log('[AdminSocket] Admin account deactivated:', data);
       const eventKey = `admin_account_deactivated:${data?.timestamp || ''}`;
-      if (!shouldToastOnce(eventKey)) return;
-      const msg = i18next.t('admins:messages.adminAccountDeactivated', { defaultValue: 'Tài khoản admin đã bị vô hiệu hóa' }) || data.message;
-      toast.error(msg);
-      
-      // Clear admin token and redirect to login
-      localStorage.removeItem('adminToken');
-      setTimeout(() => {
-        window.location.href = '/admin/login';
-      }, 2000);
+      const canToast = shouldToastOnce(eventKey);
+      const msg = i18next.t('admins:messages.adminAccountDeactivated');
+      if (canToast) toast.error(msg);
+      forceLogoutImmediately();
     });
 
     // Handle specific permission revoked
@@ -157,8 +206,8 @@ export function getAdminSocket(): Socket {
       console.log('[AdminSocket] Permission revoked:', data);
       const eventKey = `permission_revoked:${data?.timestamp || ''}:${data?.permission || ''}`;
       if (!shouldToastOnce(eventKey)) return;
-      const defaultMsg = i18next.t('admins:messages.permissionRevokedGeneric', { permission: data.permission, defaultValue: `Quyền "${data.permission}" đã bị thu hồi` });
-      toast.warning(defaultMsg || data.message);
+      const msg = i18next.t('admins:messages.permissionRevokedGeneric', { permission: data.permission });
+      toast.warning(msg);
       
       // Refresh token and reload page
       setTimeout(async () => {

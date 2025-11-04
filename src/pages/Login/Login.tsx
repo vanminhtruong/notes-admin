@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { toggleTheme } from '@store/slices/themeSlice';
 import type { RootState } from '@store/index';
@@ -14,6 +14,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Theme state
   const mode = useAppSelector((s: RootState) => s.theme.mode);
@@ -31,13 +32,21 @@ const Login: React.FC = () => {
   }, [mode]);
 
   useEffect(() => {
-    // Xóa token không hợp lệ và kiểm tra authentication
+    // Nếu bị ép đăng xuất (forced=1), đảm bảo xóa token và KHÔNG tự điều hướng về dashboard
+    const params = new URLSearchParams(location.search);
+    const isForced = params.get('forced') === '1';
+    if (isForced) {
+      removeAdminToken();
+      return; // Ở lại trang login
+    }
+
+    // Xóa token không hợp lệ và kiểm tra authentication bình thường
     if (isAdminAuthenticated()) {
       navigate('/dashboard', { replace: true });
     } else {
       removeAdminToken(); // Xóa token không hợp lệ nếu có
     }
-  }, [navigate]);
+  }, [navigate, location.search]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,14 +59,23 @@ const Login: React.FC = () => {
       // Validate token và kiểm tra quyền admin
       const adminData = validateAdminToken(response.token);
       if (!adminData || (adminData.role !== 'admin' && !adminData.adminLevel)) {
-        throw new Error('Không có quyền truy cập admin');
+        setError(t('errors.NOT_ADMIN'));
+        return;
       }
 
       // Lưu token và chuyển hướng
       setAdminToken(response.token);
       navigate('/dashboard');
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Đăng nhập thất bại');
+    } catch (error: any) {
+      // Xử lý error code từ backend
+      const errorCode = error?.code;
+      if (errorCode) {
+        // Dịch error message theo code
+        setError(t(`errors.${errorCode}`));
+      } else {
+        // Fallback về message gốc hoặc lỗi chung
+        setError(error?.message || t('errors.LOGIN_FAILED'));
+      }
     } finally {
       setLoading(false);
     }

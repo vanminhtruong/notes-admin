@@ -4,5 +4,16 @@
   "email": "Email",
   "password": "Mật khẩu",
   "loginButton": "Đăng nhập",
-  "rememberMe": "Ghi nhớ đăng nhập"
+  "rememberMe": "Ghi nhớ đăng nhập",
+  "loading": "Đang đăng nhập...",
+  "toggleLight": "Chuyển sang chế độ sáng",
+  "toggleDark": "Chuyển sang chế độ tối",
+  "adminOnly": "Chỉ dành cho quản trị viên hệ thống",
+  "errors": {
+    "EMAIL_NOT_FOUND": "Email không tồn tại",
+    "NOT_ADMIN": "Không có quyền truy cập admin",
+    "ACCOUNT_DEACTIVATED": "Tài khoản đã bị vô hiệu hóa",
+    "INVALID_PASSWORD": "Mật khẩu không đúng",
+    "LOGIN_FAILED": "Đăng nhập thất bại"
+  }
 }

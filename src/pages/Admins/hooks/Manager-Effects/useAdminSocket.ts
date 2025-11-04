@@ -70,22 +70,9 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
       if (data?.changedBy !== currentAdminId) {
         toast.success(t('messages.toggleStatusSuccess'));
       }
+      // Cập nhật list
       onAdminListChange?.();
-      
-      // Nếu là admin hiện tại bị thay đổi trạng thái
-      if (data.adminId === currentAdminId) {
-        const statusMessage = data.isActive 
-          ? 'Tài khoản của bạn đã được kích hoạt lại'
-          : 'Tài khoản của bạn đã bị vô hiệu hóa';
-        toast.warning(statusMessage);
-        
-        // Nếu bị vô hiệu hóa, có thể cần logout
-        if (!data.isActive) {
-          setTimeout(() => {
-            window.location.href = '/admin/login';
-          }, 3000);
-        }
-      }
+      // Self-case (current admin) sẽ do services/socket.ts xử lý logout + toast
     };
 
     // Admin bị xóa
@@ -97,23 +84,7 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
       onAdminListChange?.();
     };
 
-    const handlePermissionRevoked = (data: any) => {
-      toast.warning(data.message || 'Một quyền của bạn đã bị thu hồi');
-    };
-
-    const handleAdminAccessRevoked = (data: any) => {
-      toast.error(data.message || 'Quyền truy cập admin của bạn đã bị thu hồi');
-      setTimeout(() => {
-        window.location.href = '/admin/login';
-      }, 3000);
-    };
-
-    const handleAdminAccountDeactivated = (data: any) => {
-      toast.error(data.message || 'Tài khoản admin của bạn đã bị vô hiệu hóa');
-      setTimeout(() => {
-        window.location.href = '/admin/login';
-      }, 3000);
-    };
+    // Những sự kiện toàn cục (self-case) đã được xử lý ở services/socket.ts
 
     // Register event listeners
     socket.on('admin_created', handleAdminCreated);
@@ -121,10 +92,8 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
     socket.on('admin_permission_revoked', handleAdminPermissionRevoked);
     socket.on('admin_status_changed', handleAdminStatusChanged);
     socket.on('admin_removed', handleAdminRemoved);
-    // Gỡ bỏ listener 'permissions_changed' vì đã được xử lý tại services/socket.ts để tránh toast lặp
-    socket.on('permission_revoked', handlePermissionRevoked);
-    socket.on('admin_access_revoked', handleAdminAccessRevoked);
-    socket.on('admin_account_deactivated', handleAdminAccountDeactivated);
+    // Các sự kiện self-case như 'permission_revoked', 'admin_access_revoked', 'admin_account_deactivated'
+    // đã được xử lý tại services/socket.ts để tránh trùng lặp.
 
     // Cleanup function
     return () => {
@@ -133,10 +102,7 @@ export const useAdminSocket = ({ onAdminListChange, currentAdminId }: AdminSocke
       socket.off('admin_permission_revoked', handleAdminPermissionRevoked);
       socket.off('admin_status_changed', handleAdminStatusChanged);
       socket.off('admin_removed', handleAdminRemoved);
-      // Không cần off 'permissions_changed' do không đăng ký ở hook này
-      socket.off('permission_revoked', handlePermissionRevoked);
-      socket.off('admin_access_revoked', handleAdminAccessRevoked);
-      socket.off('admin_account_deactivated', handleAdminAccountDeactivated);
+      // Không cần off các self-case events vì không đăng ký ở hook này
     };
   }, [t, onAdminListChange, currentAdminId]);
 };
