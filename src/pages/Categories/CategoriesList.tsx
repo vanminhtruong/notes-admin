@@ -92,6 +92,8 @@ const CategoriesList: React.FC = () => {
               onView={modals.openDetailModal}
               onEdit={handleEdit}
               onDelete={handlers.handleDelete}
+              onPin={handlers.handlePin}
+              onUnpin={handlers.handleUnpin}
             />
 
             {/* Pagination */}

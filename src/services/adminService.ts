@@ -548,6 +548,16 @@ class AdminService {
     return this.axiosInstance.delete(`/admin/categories/${categoryId}`);
   }
 
+  // Pin category
+  async pinCategory(categoryId: number) {
+    return this.axiosInstance.patch(`/admin/categories/${categoryId}/pin`);
+  }
+
+  // Unpin category
+  async unpinCategory(categoryId: number) {
+    return this.axiosInstance.patch(`/admin/categories/${categoryId}/unpin`);
+  }
+
   // Get categories stats
   async getCategoriesStats() {
     return this.axiosInstance.get('/admin/categories/stats');

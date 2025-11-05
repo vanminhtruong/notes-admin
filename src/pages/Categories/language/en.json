@@ -18,6 +18,12 @@
   "view": "View",
   "edit": "Edit",
   "delete": "Delete",
+  "pin": "Pin Category",
+  "unpin": "Unpin Category",
+  "pinSuccess": "Category pinned successfully",
+  "pinError": "Failed to pin category",
+  "unpinSuccess": "Category unpinned successfully",
+  "unpinError": "Failed to unpin category",
   "noPermissionView": "You don't have permission to view categories",
   "modal": {
     "create": {

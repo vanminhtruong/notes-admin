@@ -18,6 +18,12 @@
   "view": "보기",
   "edit": "편집",
   "delete": "삭제",
+  "pin": "카테고리 고정",
+  "unpin": "카테고리 고정 해제",
+  "pinSuccess": "카테고리가 성공적으로 고정되었습니다",
+  "pinError": "카테고리 고정에 실패했습니다",
+  "unpinSuccess": "카테고리 고정이 성공적으로 해제되었습니다",
+  "unpinError": "카테고리 고정 해제에 실패했습니다",
   "noPermissionView": "카테고리를 볼 권한이 없습니다",
   "modal": {
     "create": {

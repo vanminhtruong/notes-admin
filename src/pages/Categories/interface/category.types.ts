@@ -10,6 +10,7 @@ export interface Category {
   name: string;
   color: string;
   icon: string;
+  isPinned: boolean;
   userId: number;
   user: User;
   createdAt: string;

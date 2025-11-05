@@ -31,24 +31,42 @@ export const useCategoriesEffects = ({ fetchCategories }: UseCategoriesEffectsPr
       fetchCategories();
     };
 
+    const handleCategoryPinned = (data: any) => {
+      console.log('Category pinned:', data);
+      fetchCategories();
+    };
+
+    const handleCategoryUnpinned = (data: any) => {
+      console.log('Category unpinned:', data);
+      fetchCategories();
+    };
+
     // Listen to events from both admin and user actions
     socket.on('admin_category_created', handleCategoryCreated);
     socket.on('admin_category_updated', handleCategoryUpdated);
     socket.on('admin_category_deleted', handleCategoryDeleted);
+    socket.on('admin_category_pinned', handleCategoryPinned);
+    socket.on('admin_category_unpinned', handleCategoryUnpinned);
     
     // Listen to events from user actions
     socket.on('user_category_created', handleCategoryCreated);
     socket.on('user_category_updated', handleCategoryUpdated);
     socket.on('user_category_deleted', handleCategoryDeleted);
+    socket.on('category_pinned', handleCategoryPinned);
+    socket.on('category_unpinned', handleCategoryUnpinned);
 
     return () => {
       socket.off('admin_category_created', handleCategoryCreated);
       socket.off('admin_category_updated', handleCategoryUpdated);
       socket.off('admin_category_deleted', handleCategoryDeleted);
+      socket.off('admin_category_pinned', handleCategoryPinned);
+      socket.off('admin_category_unpinned', handleCategoryUnpinned);
       
       socket.off('user_category_created', handleCategoryCreated);
       socket.off('user_category_updated', handleCategoryUpdated);
       socket.off('user_category_deleted', handleCategoryDeleted);
+      socket.off('category_pinned', handleCategoryPinned);
+      socket.off('category_unpinned', handleCategoryUnpinned);
     };
   }, [fetchCategories]);
 };

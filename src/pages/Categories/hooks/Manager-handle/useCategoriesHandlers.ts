@@ -18,6 +18,8 @@ export interface UseCategoriesHandlersProps {
 export interface UseCategoriesHandlersReturn {
   fetchCategories: () => Promise<void>;
   handleDelete: (category: Category) => Promise<void>;
+  handlePin: (category: Category) => Promise<void>;
+  handleUnpin: (category: Category) => Promise<void>;
   canView: boolean;
   canCreate: boolean;
   canEdit: boolean;
@@ -99,9 +101,45 @@ export const useCategoriesHandlers = ({
     }
   };
 
+  // Pin category
+  const handlePin = async (category: Category) => {
+    if (!canEdit) {
+      toast.error(t('noPermissionView'));
+      return;
+    }
+
+    try {
+      await adminService.pinCategory(category.id);
+      toast.success(t('pinSuccess'));
+      fetchCategories(); // Fetch lại để lấy thứ tự mới từ backend
+    } catch (error: any) {
+      console.error('Error pinning category:', error);
+      toast.error(error.message || t('pinError'));
+    }
+  };
+
+  // Unpin category
+  const handleUnpin = async (category: Category) => {
+    if (!canEdit) {
+      toast.error(t('noPermissionView'));
+      return;
+    }
+
+    try {
+      await adminService.unpinCategory(category.id);
+      toast.success(t('unpinSuccess'));
+      fetchCategories(); // Fetch lại để lấy thứ tự mới từ backend
+    } catch (error: any) {
+      console.error('Error unpinning category:', error);
+      toast.error(error.message || t('unpinError'));
+    }
+  };
+
   return {
     fetchCategories,
     handleDelete,
+    handlePin,
+    handleUnpin,
     canView,
     canCreate,
     canEdit,

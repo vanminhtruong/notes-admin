@@ -9,6 +9,8 @@ interface CategoriesGridProps {
   onView: (category: Category) => void;
   onEdit: (category: Category) => void;
   onDelete: (category: Category) => void;
+  onPin: (category: Category) => void;
+  onUnpin: (category: Category) => void;
 }
 
 const CategoriesGrid: React.FC<CategoriesGridProps> = ({
@@ -18,6 +20,8 @@ const CategoriesGrid: React.FC<CategoriesGridProps> = ({
   onView,
   onEdit,
   onDelete,
+  onPin,
+  onUnpin,
 }) => {
   return (
     <div className="p-4 xl-down:p-3">
@@ -31,6 +35,8 @@ const CategoriesGrid: React.FC<CategoriesGridProps> = ({
             onView={onView}
             onEdit={onEdit}
             onDelete={onDelete}
+            onPin={onPin}
+            onUnpin={onUnpin}
           />
         ))}
       </div>

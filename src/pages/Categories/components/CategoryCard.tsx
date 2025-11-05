@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Edit, Eye, User } from 'lucide-react';
+import { Trash2, Edit, Eye, User, Pin, PinOff } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Category } from '../interface/category.types';
@@ -11,6 +11,8 @@ interface CategoryCardProps {
   onView: (category: Category) => void;
   onEdit: (category: Category) => void;
   onDelete: (category: Category) => void;
+  onPin: (category: Category) => void;
+  onUnpin: (category: Category) => void;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
@@ -20,11 +22,32 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   onView,
   onEdit,
   onDelete,
+  onPin,
+  onUnpin,
 }) => {
   const { t } = useTranslation('categories');
 
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm hover:shadow-md transition-shadow p-4 xl-down:p-3 border border-gray-200 dark:border-neutral-700">
+    <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm hover:shadow-md transition-shadow p-4 xl-down:p-3 border border-gray-200 dark:border-neutral-700 relative">
+      {/* Pin Button - Top Right Corner */}
+      {canEdit && (
+        <button
+          onClick={() => category.isPinned ? onUnpin(category) : onPin(category)}
+          className={`absolute top-2 right-2 z-10 p-1.5 rounded-lg transition-all duration-200 ${
+            category.isPinned 
+              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600'
+          }`}
+          title={category.isPinned ? t('unpin') : t('pin')}
+        >
+          {category.isPinned ? (
+            <Pin className="w-3.5 h-3.5 fill-current" />
+          ) : (
+            <PinOff className="w-3.5 h-3.5" />
+          )}
+        </button>
+      )}
+
       {/* Category Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
