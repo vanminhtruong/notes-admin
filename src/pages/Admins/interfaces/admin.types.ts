@@ -51,9 +51,6 @@ export interface AdminPermissions {
     delete: boolean;
   };
   
-  // System permissions
-  system_settings: boolean;
-  delete_content: boolean;
 }
 
 export interface Permission {
@@ -564,16 +561,6 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
     key: 'view_messages',
     label: 'Xem tin nhắn',
     description: 'Xem tin nhắn và thông báo của người dùng'
-  },
-  {
-    key: 'delete_content',
-    label: 'Xóa nội dung',
-    description: 'Xóa tin nhắn, nội dung không phù hợp'
-  },
-  {
-    key: 'system_settings',
-    label: 'Cài đặt hệ thống',
-    description: 'Thay đổi cài đặt và cấu hình hệ thống'
   }
 ];
 
@@ -640,15 +627,5 @@ export const PERMISSION_LABELS: Record<string, Permission> = {
     key: 'view_messages',
     label: 'Xem tin nhắn',
     description: 'Xem tin nhắn và thông báo của người dùng'
-  },
-  delete_content: {
-    key: 'delete_content',
-    label: 'Xóa nội dung',
-    description: 'Xóa tin nhắn, nội dung không phù hợp'
-  },
-  system_settings: {
-    key: 'system_settings',
-    label: 'Cài đặt hệ thống',
-    description: 'Thay đổi cài đặt và cấu hình hệ thống'
   }
 };

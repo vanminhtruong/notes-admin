@@ -418,14 +418,6 @@
       "label": "메시지 보기",
       "description": "사용자 메시지 및 알림 조회"
     },
-    "delete_content": {
-      "label": "콘텐츠 삭제",
-      "description": "메시지 및 부적절한 콘텐츠 삭제"
-    },
-    "system_settings": {
-      "label": "시스템 설정",
-      "description": "시스템 설정 및 구성 변경"
-    },
     "profile": {
       "label": "프로필",
       "description": "관리자 프로필 관련 권한",

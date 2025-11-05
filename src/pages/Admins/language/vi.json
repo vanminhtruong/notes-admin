@@ -418,14 +418,6 @@
       "label": "Xem tin nhắn",
       "description": "Xem tin nhắn và thông báo của người dùng"
     },
-    "delete_content": {
-      "label": "Xóa nội dung",
-      "description": "Xóa tin nhắn, nội dung không phù hợp"
-    },
-    "system_settings": {
-      "label": "Cài đặt hệ thống",
-      "description": "Thay đổi cài đặt và cấu hình hệ thống"
-    },
     "profile": {
       "label": "Hồ sơ",
       "description": "Quyền liên quan đến hồ sơ admin",

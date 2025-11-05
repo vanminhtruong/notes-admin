@@ -19,10 +19,11 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
 
   // Nếu có đúng quyền cha nhưng KHÔNG có bất kỳ quyền con nào, và không phải super admin -> no-permission
   // Áp dụng cho các namespace như manage_users, manage_notes, ... (permission không chứa dấu '.')
+  // Bỏ qua view_analytics vì đây là quyền đơn không có quyền con
   if (permitted) {
     try {
       const isNamespace = !permission.includes('.');
-      if (isNamespace && !isSuperAdmin()) {
+      if (isNamespace && !isSuperAdmin() && permission !== 'view_analytics') {
         const adminInfo = getCurrentAdminInfo();
         const perms = adminInfo?.adminPermissions || [];
         const hasExactParent = perms.includes(permission);

@@ -418,14 +418,6 @@
       "label": "View Messages",
       "description": "View user messages and notifications"
     },
-    "delete_content": {
-      "label": "Delete Content",
-      "description": "Delete messages and inappropriate content"
-    },
-    "system_settings": {
-      "label": "System Settings",
-      "description": "Change system settings and configuration"
-    },
     "profile": {
       "label": "Manage profile",
       "description": "Permissions related to admin profile",
