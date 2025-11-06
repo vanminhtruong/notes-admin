@@ -213,7 +213,7 @@ const AdminLayout: React.FC = () => {
       label: t('navigation.dashboard'),
       icon: '📊',
       path: '/dashboard',
-      permission: 'view_analytics',
+      permission: 'view_dashboard',
     },
     {
       id: 'users',

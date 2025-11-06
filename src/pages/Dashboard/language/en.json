@@ -19,5 +19,37 @@
   "recent": {
     "title": "Recent activity",
     "empty": "No recent activity"
+  },
+  "charts": {
+    "topNotesCreators": {
+      "title": "Top Notes Creators",
+      "description": "Users who create the most notes",
+      "notesCount": "Number of Notes",
+      "topCreatorsList": "Top Notes Creators List",
+      "note": "note",
+      "notes": "notes"
+    },
+    "recentOnline": {
+      "title": "Recent Online Users",
+      "description": "User online activity in the last 24 hours",
+      "usersCount": "Number of Users",
+      "recentUsersList": "Recently Online Users"
+    },
+    "topOffline": {
+      "title": "Longest Offline Users",
+      "description": "Top users who have been inactive for the longest time",
+      "offlineDays": "Days Offline",
+      "offlineUsersList": "Longest Offline List",
+      "day": "day",
+      "days": "days"
+    },
+    "topCategoriesCreators": {
+      "title": "Top Categories Creators",
+      "description": "Users who create the most categories",
+      "categoriesCount": "Number of Categories",
+      "topCreatorsList": "Top Categories Creators List",
+      "category": "category",
+      "categories": "categories"
+    }
   }
 }

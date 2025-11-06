@@ -398,25 +398,9 @@
         "description": "Delete admin accounts"
       }
     },
-    "view_analytics": {
-      "label": "View Analytics",
-      "description": "Access dashboard and system analytics"
-    },
-    "manage_groups": {
-      "label": "Manage Groups",
-      "description": "Manage chat groups",
-      "view": {
-        "label": "View Groups",
-        "description": "View group list and information"
-      },
-      "moderate": {
-        "label": "Moderate Groups",
-        "description": "Moderate group content and members"
-      }
-    },
-    "view_messages": {
-      "label": "View Messages",
-      "description": "View user messages and notifications"
+    "view_dashboard": {
+      "label": "View Dashboard",
+      "description": "Access Dashboard page with statistics and charts"
     },
     "profile": {
       "label": "Manage profile",

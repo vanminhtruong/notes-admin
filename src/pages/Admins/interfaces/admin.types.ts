@@ -536,31 +536,9 @@ export const NESTED_PERMISSIONS: NestedPermission[] = [
     ]
   },
   {
-    key: 'view_analytics',
-    label: 'Xem thống kê',
-    description: 'Truy cập dashboard và thống kê hệ thống'
-  },
-  {
-    key: 'manage_groups',
-    label: 'Quản lý nhóm',
-    description: 'Quản lý các nhóm chat',
-    subPermissions: [
-      {
-        key: 'manage_groups.view',
-        label: 'Xem nhóm',
-        description: 'Xem danh sách và thông tin nhóm'
-      },
-      {
-        key: 'manage_groups.moderate',
-        label: 'Kiểm duyệt nhóm',
-        description: 'Kiểm duyệt nội dung và thành viên nhóm'
-      }
-    ]
-  },
-  {
-    key: 'view_messages',
-    label: 'Xem tin nhắn',
-    description: 'Xem tin nhắn và thông báo của người dùng'
+    key: 'view_dashboard',
+    label: 'Xem Dashboard',
+    description: 'Truy cập trang Dashboard với thống kê và biểu đồ'
   }
 ];
 
@@ -613,19 +591,9 @@ export const PERMISSION_LABELS: Record<string, Permission> = {
     label: 'Quản lý admin',
     description: 'Thêm, sửa, xóa admin khác (Chỉ Super Admin)'
   },
-  view_analytics: {
-    key: 'view_analytics',
-    label: 'Xem thống kê',
-    description: 'Truy cập dashboard và thống kê hệ thống'
-  },
-  manage_groups: {
-    key: 'manage_groups',
-    label: 'Quản lý nhóm',
-    description: 'Xem, quản lý các nhóm chat'
-  },
-  view_messages: {
-    key: 'view_messages',
-    label: 'Xem tin nhắn',
-    description: 'Xem tin nhắn và thông báo của người dùng'
+  view_dashboard: {
+    key: 'view_dashboard',
+    label: 'Xem Dashboard',
+    description: 'Truy cập trang Dashboard với thống kê và biểu đồ'
   }
 };

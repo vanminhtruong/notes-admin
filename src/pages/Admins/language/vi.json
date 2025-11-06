@@ -398,25 +398,9 @@
         "description": "Xóa tài khoản admin"
       }
     },
-    "view_analytics": {
-      "label": "Xem thống kê",
-      "description": "Truy cập dashboard và thống kê hệ thống"
-    },
-    "manage_groups": {
-      "label": "Quản lý nhóm",
-      "description": "Quản lý các nhóm chat",
-      "view": {
-        "label": "Xem nhóm",
-        "description": "Xem danh sách và thông tin nhóm"
-      },
-      "moderate": {
-        "label": "Kiểm duyệt nhóm",
-        "description": "Kiểm duyệt nội dung và thành viên nhóm"
-      }
-    },
-    "view_messages": {
-      "label": "Xem tin nhắn",
-      "description": "Xem tin nhắn và thông báo của người dùng"
+    "view_dashboard": {
+      "label": "Xem Dashboard",
+      "description": "Truy cập trang Dashboard với thống kê và biểu đồ"
     },
     "profile": {
       "label": "Hồ sơ",

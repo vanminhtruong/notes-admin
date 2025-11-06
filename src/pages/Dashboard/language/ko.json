@@ -20,5 +20,37 @@
   "recent": {
     "title": "최근 활동",
     "empty": "최근 활동이 없습니다"
+  },
+  "charts": {
+    "topNotesCreators": {
+      "title": "가장 많은 메모를 작성한 사용자",
+      "description": "메모를 가장 많이 작성한 상위 사용자",
+      "notesCount": "메모 수",
+      "topCreatorsList": "상위 메모 작성자 목록",
+      "note": "메모",
+      "notes": "메모"
+    },
+    "recentOnline": {
+      "title": "최근 온라인 사용자",
+      "description": "지난 24시간 동안의 사용자 온라인 활동",
+      "usersCount": "사용자 수",
+      "recentUsersList": "최근 온라인 사용자"
+    },
+    "topOffline": {
+      "title": "가장 오래 오프라인 사용자",
+      "description": "가장 오랫동안 활동하지 않은 상위 사용자",
+      "offlineDays": "오프라인 일수",
+      "offlineUsersList": "가장 오래 오프라인 목록",
+      "day": "일",
+      "days": "일"
+    },
+    "topCategoriesCreators": {
+      "title": "가장 많은 카테고리를 만든 사용자",
+      "description": "카테고리를 가장 많이 만든 상위 사용자",
+      "categoriesCount": "카테고리 수",
+      "topCreatorsList": "상위 카테고리 작성자 목록",
+      "category": "카테고리",
+      "categories": "카테고리"
+    }
   }
 }

@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       { 
         path: 'dashboard', 
         element: (
-          <PermissionRoute permission="view_analytics" redirectTo="/no-permission">
+          <PermissionRoute permission="view_dashboard" redirectTo="/no-permission">
             <Dashboard />
           </PermissionRoute>
         )

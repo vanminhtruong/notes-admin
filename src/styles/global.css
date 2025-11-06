@@ -1,4 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* Global styles */
+:root {
+  --tooltip-bg: #fff;
+  --tooltip-border: #ccc;
+  --tooltip-text: #000;
+}
+
+.dark {
+  --tooltip-bg: #374151;
+  --tooltip-border: #4b5563;
+  --tooltip-text: #f3f4f6;
+}

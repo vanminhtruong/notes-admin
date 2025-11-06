@@ -3,10 +3,12 @@ import { getAdminSocket } from '@services/socket';
 
 interface UseDashboardEffectsProps {
   loadDashboardData: () => void;
+  refreshDashboardData: () => void;
 }
 
 export const useDashboardEffects = ({
   loadDashboardData,
+  refreshDashboardData,
 }: UseDashboardEffectsProps) => {
   // Load dashboard data on mount
   useEffect(() => {
@@ -18,8 +20,8 @@ export const useDashboardEffects = ({
     const s = getAdminSocket();
     
     const handleStatsUpdate = () => {
-      // Reload dashboard data when any relevant changes occur
-      loadDashboardData();
+      // Refresh dashboard data KHÔNG có loading khi socket emit
+      refreshDashboardData();
     };
     
     // Listen to events that affect dashboard stats
@@ -58,5 +60,5 @@ export const useDashboardEffects = ({
         s.off('admin_user_offline', handleStatsUpdate);
       } catch {}
     };
-  }, [loadDashboardData]);
+  }, [refreshDashboardData]);
 };

@@ -398,25 +398,9 @@
         "description": "관리자 계정 삭제"
       }
     },
-    "view_analytics": {
-      "label": "분석 보기",
-      "description": "대시보드 및 시스템 분석 접근"
-    },
-    "manage_groups": {
-      "label": "그룹 관리",
-      "description": "채팅 그룹 관리",
-      "view": {
-        "label": "그룹 보기",
-        "description": "그룹 목록 및 정보 조회"
-      },
-      "moderate": {
-        "label": "그룹 조정",
-        "description": "그룹 콘텐츠 및 구성원 조정"
-      }
-    },
-    "view_messages": {
-      "label": "메시지 보기",
-      "description": "사용자 메시지 및 알림 조회"
+    "view_dashboard": {
+      "label": "대시보드 보기",
+      "description": "통계 및 차트가 있는 대시보드 페이지 접근"
     },
     "profile": {
       "label": "프로필",

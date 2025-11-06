@@ -20,5 +20,37 @@
   "recent": {
     "title": "Hoạt động gần đây",
     "empty": "Chưa có hoạt động nào"
+  },
+  "charts": {
+    "topNotesCreators": {
+      "title": "Người dùng tạo nhiều ghi chú nhất",
+      "description": "Top người dùng có số lượng ghi chú nhiều nhất",
+      "notesCount": "Số lượng ghi chú",
+      "topCreatorsList": "Top người tạo ghi chú",
+      "note": "ghi chú",
+      "notes": "ghi chú"
+    },
+    "recentOnline": {
+      "title": "Người dùng online gần đây",
+      "description": "Hoạt động online của người dùng trong 24 giờ qua",
+      "usersCount": "Số lượng người dùng",
+      "recentUsersList": "Người dùng online gần đây"
+    },
+    "topOffline": {
+      "title": "Người dùng offline lâu nhất",
+      "description": "Top người dùng không hoạt động trong thời gian dài nhất",
+      "offlineDays": "Số ngày offline",
+      "offlineUsersList": "Danh sách offline lâu nhất",
+      "day": "ngày",
+      "days": "ngày"
+    },
+    "topCategoriesCreators": {
+      "title": "Người dùng tạo nhiều danh mục nhất",
+      "description": "Top người dùng có số lượng danh mục nhiều nhất",
+      "categoriesCount": "Số lượng danh mục",
+      "topCreatorsList": "Top người tạo danh mục",
+      "category": "danh mục",
+      "categories": "danh mục"
+    }
   }
 }

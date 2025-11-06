@@ -707,6 +707,31 @@ class AdminService {
   async toggleBackgroundActive(backgroundId: number) {
     return this.axiosInstance.patch(`/admin/backgrounds/${backgroundId}/toggle-active`);
   }
+
+  // Dashboard stats
+  async getDashboardStats() {
+    return this.axiosInstance.get('/admin/dashboard/stats');
+  }
+
+  // Get top notes creators
+  async getTopNotesCreators(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/top-notes-creators', { params });
+  }
+
+  // Get recent online users
+  async getRecentOnlineUsers(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/recent-online-users', { params });
+  }
+
+  // Get top offline users
+  async getTopOfflineUsers(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/top-offline-users', { params });
+  }
+
+  // Get top categories creators
+  async getTopCategoriesCreators(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/top-categories-creators', { params });
+  }
 }
 
 export default new AdminService();

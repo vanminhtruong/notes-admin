@@ -19,11 +19,11 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
 
   // Nếu có đúng quyền cha nhưng KHÔNG có bất kỳ quyền con nào, và không phải super admin -> no-permission
   // Áp dụng cho các namespace như manage_users, manage_notes, ... (permission không chứa dấu '.')
-  // Bỏ qua view_analytics vì đây là quyền đơn không có quyền con
+  // Bỏ qua view_dashboard vì đây là quyền đơn không có quyền con
   if (permitted) {
     try {
       const isNamespace = !permission.includes('.');
-      if (isNamespace && !isSuperAdmin() && permission !== 'view_analytics') {
+      if (isNamespace && !isSuperAdmin() && permission !== 'view_dashboard') {
         const adminInfo = getCurrentAdminInfo();
         const perms = adminInfo?.adminPermissions || [];
         const hasExactParent = perms.includes(permission);
@@ -52,7 +52,7 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
         if (hasAnyChild('manage_notes')) {
           return <Navigate to="/notes" replace />;
         }
-        if (perms.includes('view_analytics')) {
+        if (perms.includes('view_dashboard')) {
           return <Navigate to="/dashboard" replace />;
         }
         // Có quyền nhưng không map được route cụ thể -> fallback về dashboard (nếu có layout), nếu cũng không thì no-permission
@@ -61,9 +61,9 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
         }
       }
     }
-    // Nếu đang redirect về dashboard nhưng không có quyền view_analytics
+    // Nếu đang redirect về dashboard nhưng không có quyền view_dashboard
     // và không phải super admin, kiểm tra xem có quyền nào không
-    if (redirectTo === '/dashboard' && !hasPermission('view_analytics') && !isSuperAdmin()) {
+    if (redirectTo === '/dashboard' && !hasPermission('view_dashboard') && !isSuperAdmin()) {
       const adminInfo = getCurrentAdminInfo();
       const permissions = adminInfo?.adminPermissions || [];
       

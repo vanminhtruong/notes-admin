@@ -3,22 +3,44 @@ import { useTranslation } from 'react-i18next';
 import { useDashboardState } from './hooks/Manager-useState/useDashboardState';
 import { useDashboardHandlers } from './hooks/Manager-handle/useDashboardHandlers';
 import { useDashboardEffects } from './hooks/Manager-Effects/useDashboardEffects';
+import TopNotesCreatorsChart from './components/TopNotesCreatorsChart';
+import RecentOnlineUsersChart from './components/RecentOnlineUsersChart';
+import TopOfflineUsersChart from './components/TopOfflineUsersChart';
+import TopCategoriesCreatorsChart from './components/TopCategoriesCreatorsChart';
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation('dashboard');
   
   // State
-  const { stats, setStats, loading, setLoading } = useDashboardState();
+  const { 
+    stats, 
+    setStats, 
+    loading, 
+    setLoading,
+    topNotesCreators,
+    setTopNotesCreators,
+    recentOnlineUsers,
+    setRecentOnlineUsers,
+    topOfflineUsers,
+    setTopOfflineUsers,
+    topCategoriesCreators,
+    setTopCategoriesCreators,
+  } = useDashboardState();
   
   // Handlers
-  const { loadDashboardData } = useDashboardHandlers({
+  const { loadDashboardData, refreshDashboardData } = useDashboardHandlers({
     setLoading,
     setStats,
+    setTopNotesCreators,
+    setRecentOnlineUsers,
+    setTopOfflineUsers,
+    setTopCategoriesCreators,
   });
   
   // Effects
   useDashboardEffects({
     loadDashboardData,
+    refreshDashboardData,
   });
 
   if (loading) {
@@ -146,13 +168,12 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
-        <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">{t('recent.title')}</h2>
-        <div className="text-center py-8 xl-down:py-6 sm-down:py-4 text-gray-500 dark:text-gray-400">
-          <span className="text-4xl xl-down:text-3xl sm-down:text-2xl mb-4 xl-down:mb-3 sm-down:mb-2 block">📊</span>
-          <p className="text-sm xl-down:text-xs">{t('recent.empty')}</p>
-        </div>
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3">
+        <TopNotesCreatorsChart data={topNotesCreators} />
+        <RecentOnlineUsersChart data={recentOnlineUsers} />
+        <TopCategoriesCreatorsChart data={topCategoriesCreators} />
+        <TopOfflineUsersChart data={topOfflineUsers} />
       </div>
     </div>
   );
