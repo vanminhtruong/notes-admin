@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
 
 interface UseNotesEffectsProps {
-  loadNotes: () => Promise<void>;
+  loadNotes: (showLoading?: boolean) => Promise<void>;
   currentPage: number;
   searchTerm: string;
   selectedUserId: string;
@@ -29,8 +29,8 @@ export const useNotesEffects = ({
   useEffect(() => {
     const s = getAdminSocket();
     const handleNoteEvent = () => {
-      // reload current filters/page
-      loadNotes();
+      // reload current filters/page without showing loading spinner
+      loadNotes(false);
     };
     
     // Admin events

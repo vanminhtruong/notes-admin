@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
 
 interface UseBackgroundsEffectsProps {
-  fetchBackgrounds: () => void;
+  fetchBackgrounds: (showLoading?: boolean) => void;
 }
 
 export const useBackgroundsEffects = ({ fetchBackgrounds }: UseBackgroundsEffectsProps) => {
@@ -16,15 +16,15 @@ export const useBackgroundsEffects = ({ fetchBackgrounds }: UseBackgroundsEffect
     const socket = getAdminSocket();
 
     const handleBackgroundCreated = () => {
-      fetchBackgrounds();
+      fetchBackgrounds(false);
     };
 
     const handleBackgroundUpdated = () => {
-      fetchBackgrounds();
+      fetchBackgrounds(false);
     };
 
     const handleBackgroundDeleted = () => {
-      fetchBackgrounds();
+      fetchBackgrounds(false);
     };
 
     socket.on('background_created', handleBackgroundCreated);

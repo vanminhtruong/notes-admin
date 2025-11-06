@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
 
 export interface UseCategoriesEffectsProps {
-  fetchCategories: () => Promise<void>;
+  fetchCategories: (showLoading?: boolean) => Promise<void>;
 }
 
 export const useCategoriesEffects = ({ fetchCategories }: UseCategoriesEffectsProps) => {
@@ -18,27 +18,27 @@ export const useCategoriesEffects = ({ fetchCategories }: UseCategoriesEffectsPr
 
     const handleCategoryCreated = (data: any) => {
       console.log('Category created:', data);
-      fetchCategories();
+      fetchCategories(false);
     };
 
     const handleCategoryUpdated = (data: any) => {
       console.log('Category updated:', data);
-      fetchCategories();
+      fetchCategories(false);
     };
 
     const handleCategoryDeleted = (data: any) => {
       console.log('Category deleted:', data);
-      fetchCategories();
+      fetchCategories(false);
     };
 
     const handleCategoryPinned = (data: any) => {
       console.log('Category pinned:', data);
-      fetchCategories();
+      fetchCategories(false);
     };
 
     const handleCategoryUnpinned = (data: any) => {
       console.log('Category unpinned:', data);
-      fetchCategories();
+      fetchCategories(false);
     };
 
     // Listen to events from both admin and user actions

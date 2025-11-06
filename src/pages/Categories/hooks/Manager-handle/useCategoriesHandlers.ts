@@ -16,7 +16,7 @@ export interface UseCategoriesHandlersProps {
 }
 
 export interface UseCategoriesHandlersReturn {
-  fetchCategories: () => Promise<void>;
+  fetchCategories: (showLoading?: boolean) => Promise<void>;
   handleDelete: (category: Category) => Promise<void>;
   handlePin: (category: Category) => Promise<void>;
   handleUnpin: (category: Category) => Promise<void>;
@@ -44,14 +44,14 @@ export const useCategoriesHandlers = ({
   const canDelete = hasPermission('manage_notes.categories.delete');
 
   // Fetch categories
-  const fetchCategories = useCallback(async () => {
+  const fetchCategories = useCallback(async (showLoading = true) => {
     if (!canView) {
       toast.error(t('noPermissionView'));
       return;
     }
 
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const params: CategoryFilters = {
         page: currentPage,
         limit: 8,
@@ -70,7 +70,7 @@ export const useCategoriesHandlers = ({
       console.error('Error fetching categories:', error);
       toast.error(error.message || t('loadingCategories'));
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   }, [currentPage, searchTerm, selectedUserId, canView, setIsLoading, setCategories, setTotal, setTotalPages, t]);
 

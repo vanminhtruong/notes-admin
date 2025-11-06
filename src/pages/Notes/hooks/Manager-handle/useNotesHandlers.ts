@@ -34,9 +34,9 @@ export const useNotesHandlers = ({
   setEditingNote,
   t,
 }: UseNotesHandlersProps) => {
-  const loadNotes = useCallback(async () => {
+  const loadNotes = useCallback(async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) setLoading(true);
       const response = await adminService.getAllUsersNotes({
         page: currentPage,
         limit: 5,
@@ -55,7 +55,7 @@ export const useNotesHandlers = ({
     } catch (error) {
       console.error('Error loading notes:', error);
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   }, [currentPage, selectedUserId, searchTerm, categoryFilter, priorityFilter, archivedFilter, setLoading, setNotes, setTotalPages, setTotalItems]);
 

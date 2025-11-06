@@ -32,10 +32,10 @@ export const useBackgroundsHandlers = ({
   const canEdit = hasPermission('manage_notes.backgrounds.edit');
   const canDelete = hasPermission('manage_notes.backgrounds.delete');
 
-  const fetchBackgrounds = useCallback(async () => {
+  const fetchBackgrounds = useCallback(async (showLoading = true) => {
     if (!canView) return;
 
-    setIsLoading(true);
+    if (showLoading) setIsLoading(true);
     try {
       const params: any = {
         page: currentPage,
@@ -61,7 +61,7 @@ export const useBackgroundsHandlers = ({
       console.error('Error fetching backgrounds:', error);
       toast.error(error.response?.data?.message || 'Failed to fetch backgrounds');
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   }, [
     canView,
