@@ -12,6 +12,7 @@ import ChatSettings from '@pages/Users/ChatSettings/ChatSettings'
 import NotesList from '@pages/Notes/NotesList'
 import CategoriesList from '@pages/Categories/CategoriesList'
 import BackgroundsList from '@pages/Backgrounds/BackgroundsList'
+import TagsList from '@pages/Tags/TagsList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
 import NoPermission from '@pages/NoPermission/NoPermission'
@@ -110,6 +111,16 @@ const router = createBrowserRouter([
         element: (
           <PermissionRoute permission="manage_notes.backgrounds.view" redirectTo="/dashboard">
             <BackgroundsList />
+          </PermissionRoute>
+        )
+      },
+
+      // Tags
+      { 
+        path: 'tags', 
+        element: (
+          <PermissionRoute permission="manage_notes.tags.view" redirectTo="/dashboard">
+            <TagsList />
           </PermissionRoute>
         )
       },

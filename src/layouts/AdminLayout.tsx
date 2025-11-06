@@ -247,6 +247,9 @@ const AdminLayout: React.FC = () => {
         ...(hasPermission('manage_notes.backgrounds.view') ? [
           { id: 'backgrounds', label: t('navigation.backgrounds', { defaultValue: 'Backgrounds' }), path: '/backgrounds' }
         ] : []),
+        ...(hasPermission('manage_notes.tags.view') ? [
+          { id: 'tags', label: t('navigation.tags', { defaultValue: 'Tags' }), path: '/tags' }
+        ] : []),
       ],
     },
     ...(isSuper ? [{

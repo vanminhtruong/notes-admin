@@ -609,6 +609,16 @@ class AdminService {
     return this.axiosInstance.delete(`/admin/tags/${tagId}`);
   }
 
+  // Pin tag
+  async pinTag(tagId: number) {
+    return this.axiosInstance.patch(`/admin/tags/${tagId}/pin`);
+  }
+
+  // Unpin tag
+  async unpinTag(tagId: number) {
+    return this.axiosInstance.patch(`/admin/tags/${tagId}/unpin`);
+  }
+
   // Assign tag to note
   async assignTagToNote(data: {
     noteId: number;
