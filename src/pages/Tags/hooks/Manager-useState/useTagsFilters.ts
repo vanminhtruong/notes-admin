@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export interface UseTagsFiltersReturn {
+export interface UseCategoriesFiltersReturn {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedUserId: number | '';
@@ -9,7 +9,7 @@ export interface UseTagsFiltersReturn {
   handleUserIdChange: (value: string, resetPage: () => void) => void;
 }
 
-export const useTagsFilters = (): UseTagsFiltersReturn => {
+export const useCategoriesFilters = (): UseCategoriesFiltersReturn => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<number | ''>('');
 

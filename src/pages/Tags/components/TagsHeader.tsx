@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const TagsHeader: React.FC = () => {
-  const { t } = useTranslation('tags');
+const CategoriesHeader: React.FC = () => {
+  const { t } = useTranslation('categories');
 
   return (
     <div>
@@ -16,4 +16,4 @@ const TagsHeader: React.FC = () => {
   );
 };
 
-export default TagsHeader;
+export default CategoriesHeader;

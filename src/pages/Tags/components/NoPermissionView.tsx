@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const NoPermissionView: React.FC = () => {
-  const { t } = useTranslation('tags');
+  const { t } = useTranslation('categories');
 
   return (
     <div className="flex items-center justify-center h-screen">

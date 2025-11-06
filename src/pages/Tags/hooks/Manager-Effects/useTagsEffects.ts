@@ -1,72 +1,72 @@
 import { useEffect } from 'react';
 import { getAdminSocket } from '@services/socket';
 
-export interface UseTagsEffectsProps {
-  fetchTags: () => Promise<void>;
+export interface UseCategoriesEffectsProps {
+  fetchCategories: () => Promise<void>;
 }
 
-export const useTagsEffects = ({ fetchTags }: UseTagsEffectsProps) => {
-  // Fetch tags on mount and when dependencies change
+export const useCategoriesEffects = ({ fetchCategories }: UseCategoriesEffectsProps) => {
+  // Fetch categories on mount and when dependencies change
   useEffect(() => {
-    fetchTags();
-  }, [fetchTags]);
+    fetchCategories();
+  }, [fetchCategories]);
 
   // Real-time socket updates
   useEffect(() => {
     const socket = getAdminSocket();
     if (!socket) return;
 
-    const handleTagCreated = (data: any) => {
-      console.log('Tag created:', data);
-      fetchTags();
+    const handleCategoryCreated = (data: any) => {
+      console.log('Category created:', data);
+      fetchCategories();
     };
 
-    const handleTagUpdated = (data: any) => {
-      console.log('Tag updated:', data);
-      fetchTags();
+    const handleCategoryUpdated = (data: any) => {
+      console.log('Category updated:', data);
+      fetchCategories();
     };
 
-    const handleTagDeleted = (data: any) => {
-      console.log('Tag deleted:', data);
-      fetchTags();
+    const handleCategoryDeleted = (data: any) => {
+      console.log('Category deleted:', data);
+      fetchCategories();
     };
 
-    const handleTagPinned = (data: any) => {
-      console.log('Tag pinned:', data);
-      fetchTags();
+    const handleCategoryPinned = (data: any) => {
+      console.log('Category pinned:', data);
+      fetchCategories();
     };
 
-    const handleTagUnpinned = (data: any) => {
-      console.log('Tag unpinned:', data);
-      fetchTags();
+    const handleCategoryUnpinned = (data: any) => {
+      console.log('Category unpinned:', data);
+      fetchCategories();
     };
 
     // Listen to events from both admin and user actions
-    socket.on('admin_tag_created', handleTagCreated);
-    socket.on('admin_tag_updated', handleTagUpdated);
-    socket.on('admin_tag_deleted', handleTagDeleted);
-    socket.on('admin_tag_pinned', handleTagPinned);
-    socket.on('admin_tag_unpinned', handleTagUnpinned);
+    socket.on('admin_category_created', handleCategoryCreated);
+    socket.on('admin_category_updated', handleCategoryUpdated);
+    socket.on('admin_category_deleted', handleCategoryDeleted);
+    socket.on('admin_category_pinned', handleCategoryPinned);
+    socket.on('admin_category_unpinned', handleCategoryUnpinned);
     
     // Listen to events from user actions
-    socket.on('user_tag_created', handleTagCreated);
-    socket.on('user_tag_updated', handleTagUpdated);
-    socket.on('user_tag_deleted', handleTagDeleted);
-    socket.on('tag_pinned', handleTagPinned);
-    socket.on('tag_unpinned', handleTagUnpinned);
+    socket.on('user_category_created', handleCategoryCreated);
+    socket.on('user_category_updated', handleCategoryUpdated);
+    socket.on('user_category_deleted', handleCategoryDeleted);
+    socket.on('category_pinned', handleCategoryPinned);
+    socket.on('category_unpinned', handleCategoryUnpinned);
 
     return () => {
-      socket.off('admin_tag_created', handleTagCreated);
-      socket.off('admin_tag_updated', handleTagUpdated);
-      socket.off('admin_tag_deleted', handleTagDeleted);
-      socket.off('admin_tag_pinned', handleTagPinned);
-      socket.off('admin_tag_unpinned', handleTagUnpinned);
+      socket.off('admin_category_created', handleCategoryCreated);
+      socket.off('admin_category_updated', handleCategoryUpdated);
+      socket.off('admin_category_deleted', handleCategoryDeleted);
+      socket.off('admin_category_pinned', handleCategoryPinned);
+      socket.off('admin_category_unpinned', handleCategoryUnpinned);
       
-      socket.off('user_tag_created', handleTagCreated);
-      socket.off('user_tag_updated', handleTagUpdated);
-      socket.off('user_tag_deleted', handleTagDeleted);
-      socket.off('tag_pinned', handleTagPinned);
-      socket.off('tag_unpinned', handleTagUnpinned);
+      socket.off('user_category_created', handleCategoryCreated);
+      socket.off('user_category_updated', handleCategoryUpdated);
+      socket.off('user_category_deleted', handleCategoryDeleted);
+      socket.off('category_pinned', handleCategoryPinned);
+      socket.off('category_unpinned', handleCategoryUnpinned);
     };
-  }, [fetchTags]);
+  }, [fetchCategories]);
 };

@@ -1,17 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Search, User, Tag as TagIcon } from 'lucide-react';
+import { X, Search, User } from 'lucide-react';
 import adminService from '@services/adminService';
 import { toast } from 'react-toastify';
+import * as LucideIcons from 'lucide-react';
 import Pagination from '@components/common/Pagination';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
-interface CreateTagModalProps {
+interface CreateCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
 
+// Popular icon names
+const ICON_OPTIONS = [
+  'Tag', 'Briefcase', 'Home', 'Heart', 'Star', 'Book', 'Coffee', 'Music',
+  'ShoppingCart', 'Camera', 'Plane', 'Car', 'Bike', 'Utensils', 'Gamepad2',
+  'Palette', 'Code', 'Database', 'Cpu', 'Zap', 'Shield', 'Award', 'Gift'
+];
+
+// Popular colors
 const COLOR_OPTIONS = [
   '#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6',
   '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16',
@@ -25,13 +34,15 @@ interface UserItem {
   avatar?: string;
 }
 
-const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const { t } = useTranslation('tags');
+const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const { t } = useTranslation('categories');
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [name, setName] = useState('');
   const [color, setColor] = useState(COLOR_OPTIONS[0]);
+  const [icon, setIcon] = useState(ICON_OPTIONS[0]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // User list state
   const [users, setUsers] = useState<UserItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +50,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const [showUserList, setShowUserList] = useState(true);
 
+  // Fetch users
   const fetchUsers = useCallback(async () => {
     try {
       setIsLoadingUsers(true);
@@ -48,7 +60,9 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
         search: searchTerm
       });
       
+      // API trả về response.data với totalPages trực tiếp
       const data = response.data || response;
+      
       setUsers(data.users || []);
       setTotalPages(data.totalPages || 1);
     } catch (error) {
@@ -75,16 +89,17 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
 
     try {
       setIsSubmitting(true);
-      await adminService.createTagForUser({
+      await adminService.createCategoryForUser({
         userId: selectedUser.id,
         name,
-        color
+        color,
+        icon
       });
       toast.success(t('modal.create.success'));
       onSuccess();
       handleClose();
     } catch (error: any) {
-      console.error('Error creating tag:', error);
+      console.error('Error creating category:', error);
       toast.error(error.response?.data?.message || t('modal.create.error'));
     } finally {
       setIsSubmitting(false);
@@ -95,6 +110,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
     setSelectedUser(null);
     setName('');
     setColor(COLOR_OPTIONS[0]);
+    setIcon(ICON_OPTIONS[0]);
     setSearchTerm('');
     setCurrentPage(1);
     setShowUserList(true);
@@ -103,9 +119,12 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
 
   if (!isOpen) return null;
 
+  const IconComponent = (LucideIcons as any)[icon] || LucideIcons.Tag;
+
   const modalContent = (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999]">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-neutral-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {t('modal.create.title')}
@@ -118,7 +137,9 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
           </button>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto flex-1">
+          {/* Selected User Display */}
           {selectedUser && (
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -147,6 +168,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
             </div>
           )}
 
+          {/* User Selection */}
           {!selectedUser && showUserList && (
             <div className="space-y-3">
               <div>
@@ -216,60 +238,94 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
             </div>
           )}
 
+          {/* Name */}
           {selectedUser && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('modal.create.tagName')} <span className="text-red-500">{t('modal.create.required')}</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
-                  placeholder={t('modal.create.tagNamePlaceholder')}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('modal.create.color')}
-                </label>
-                <div className="grid grid-cols-8 gap-2">
-                  {COLOR_OPTIONS.map((colorOption) => (
-                    <button
-                      key={colorOption}
-                      type="button"
-                      onClick={() => setColor(colorOption)}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${
-                        color === colorOption
-                          ? 'border-gray-900 dark:border-white scale-110'
-                          : 'border-gray-300 dark:border-neutral-600'
-                      }`}
-                      style={{ backgroundColor: colorOption }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('modal.create.preview')}</p>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${color}20` }}
-                  >
-                    <TagIcon className="w-5 h-5" style={{ color }} />
-                  </div>
-                  <span className="font-semibold" style={{ color }}>
-                    {name || t('modal.create.previewName')}
-                  </span>
-                </div>
-              </div>
-            </>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t('modal.create.categoryName')} <span className="text-red-500">{t('modal.create.required')}</span>
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100"
+                placeholder={t('modal.create.categoryNamePlaceholder')}
+              />
+            </div>
           )}
 
+          {/* Icon Selector */}
+          {selectedUser && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('modal.create.icon')}
+              </label>
+              <div className="grid grid-cols-8 gap-2">
+                {ICON_OPTIONS.map((iconName) => {
+                  const Icon = (LucideIcons as any)[iconName] || LucideIcons.Tag;
+                  return (
+                    <button
+                      key={iconName}
+                      type="button"
+                      onClick={() => setIcon(iconName)}
+                      className={`p-2 rounded border-2 transition-colors ${
+                        icon === iconName
+                          ? 'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                          : 'border-gray-300 dark:border-neutral-600 hover:border-gray-400 dark:hover:border-neutral-500'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 mx-auto" style={{ color }} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Color Selector */}
+          {selectedUser && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('modal.create.color')}
+              </label>
+              <div className="grid grid-cols-8 gap-2">
+                {COLOR_OPTIONS.map((colorOption) => (
+                  <button
+                    key={colorOption}
+                    type="button"
+                    onClick={() => setColor(colorOption)}
+                    className={`w-8 h-8 rounded-full border-2 transition-all ${
+                      color === colorOption
+                        ? 'border-gray-900 dark:border-white scale-110'
+                        : 'border-gray-300 dark:border-neutral-600'
+                    }`}
+                    style={{ backgroundColor: colorOption }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Preview */}
+          {selectedUser && (
+            <div className="p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{t('modal.create.preview')}</p>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: `${color}20` }}
+                >
+                  <IconComponent className="w-5 h-5" style={{ color }} />
+                </div>
+                <span className="font-semibold" style={{ color }}>
+                  {name || t('modal.create.previewName')}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Actions */}
           <div className="flex gap-2 pt-2">
             <button
               type="button"
@@ -294,4 +350,4 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ isOpen, onClose, onSucc
   return createPortal(modalContent, document.body);
 };
 
-export default CreateTagModal;
+export default CreateCategoryModal;

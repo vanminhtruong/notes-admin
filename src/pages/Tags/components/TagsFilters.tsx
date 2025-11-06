@@ -2,7 +2,7 @@ import React from 'react';
 import { Search, Plus, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-interface TagsFiltersProps {
+interface CategoriesFiltersProps {
   searchTerm: string;
   selectedUserId: number | '';
   isLoading: boolean;
@@ -13,7 +13,7 @@ interface TagsFiltersProps {
   onCreateClick: () => void;
 }
 
-const TagsFilters: React.FC<TagsFiltersProps> = ({
+const CategoriesFilters: React.FC<CategoriesFiltersProps> = ({
   searchTerm,
   selectedUserId,
   isLoading,
@@ -23,7 +23,7 @@ const TagsFilters: React.FC<TagsFiltersProps> = ({
   onRefresh,
   onCreateClick,
 }) => {
-  const { t } = useTranslation('tags');
+  const { t } = useTranslation('categories');
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
@@ -69,7 +69,7 @@ const TagsFilters: React.FC<TagsFiltersProps> = ({
             className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:text-sm bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4 xl-down:w-3.5 xl-down:h-3.5" />
-            {t('createTag')}
+            {t('createCategory')}
           </button>
         )}
       </div>
@@ -77,4 +77,4 @@ const TagsFilters: React.FC<TagsFiltersProps> = ({
   );
 };
 
-export default TagsFilters;
+export default CategoriesFilters;

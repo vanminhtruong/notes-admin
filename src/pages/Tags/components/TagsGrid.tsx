@@ -1,20 +1,20 @@
 import React from 'react';
-import TagCard from './TagCard';
-import type { Tag } from '../interface/Tags.types';
+import CategoryCard from './CategoryCard';
+import type { Category } from '../interface/category.types';
 
-interface TagsGridProps {
-  tags: Tag[];
+interface CategoriesGridProps {
+  categories: Category[];
   canEdit: boolean;
   canDelete: boolean;
-  onView: (tag: Tag) => void;
-  onEdit: (tag: Tag) => void;
-  onDelete: (tag: Tag) => void;
-  onPin: (tag: Tag) => void;
-  onUnpin: (tag: Tag) => void;
+  onView: (category: Category) => void;
+  onEdit: (category: Category) => void;
+  onDelete: (category: Category) => void;
+  onPin: (category: Category) => void;
+  onUnpin: (category: Category) => void;
 }
 
-const TagsGrid: React.FC<TagsGridProps> = ({
-  tags,
+const CategoriesGrid: React.FC<CategoriesGridProps> = ({
+  categories,
   canEdit,
   canDelete,
   onView,
@@ -26,10 +26,10 @@ const TagsGrid: React.FC<TagsGridProps> = ({
   return (
     <div className="p-4 xl-down:p-3">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 xl-down:gap-3">
-        {tags.map((tag) => (
-          <TagCard
-            key={tag.id}
-            tag={tag}
+        {categories.map((category) => (
+          <CategoryCard
+            key={category.id}
+            category={category}
             canEdit={canEdit}
             canDelete={canDelete}
             onView={onView}
@@ -44,4 +44,4 @@ const TagsGrid: React.FC<TagsGridProps> = ({
   );
 };
 
-export default TagsGrid;
+export default CategoriesGrid;

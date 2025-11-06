@@ -5,10 +5,11 @@ export interface User {
   avatar?: string;
 }
 
-export interface Tag {
+export interface Category {
   id: number;
   name: string;
   color: string;
+  icon: string;
   isPinned: boolean;
   userId: number;
   user: User;
@@ -17,7 +18,7 @@ export interface Tag {
   notesCount?: number;
 }
 
-export interface TagFilters {
+export interface CategoryFilters {
   page?: number;
   limit?: number;
   search?: string;
@@ -26,8 +27,8 @@ export interface TagFilters {
   sortOrder?: string;
 }
 
-export interface TagListResponse {
-  tags: Tag[];
+export interface CategoryListResponse {
+  categories: Category[];
   pagination: {
     page: number;
     limit: number;

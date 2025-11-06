@@ -1,38 +1,38 @@
 import { useState } from 'react';
-import type { Tag } from '../../interface/Tags.types';
+import type { Category } from '../../interface/category.types';
 
-export interface UseTagsModalsReturn {
+export interface UseCategoriesModalsReturn {
   isCreateModalOpen: boolean;
   setIsCreateModalOpen: (open: boolean) => void;
   isEditModalOpen: boolean;
   setIsEditModalOpen: (open: boolean) => void;
   isDetailModalOpen: boolean;
   setIsDetailModalOpen: (open: boolean) => void;
-  selectedTag: Tag | null;
-  setSelectedTag: (tag: Tag | null) => void;
+  selectedCategory: Category | null;
+  setSelectedCategory: (category: Category | null) => void;
   openCreateModal: () => void;
-  openEditModal: (tag: Tag) => void;
-  openDetailModal: (tag: Tag) => void;
+  openEditModal: (category: Category) => void;
+  openDetailModal: (category: Category) => void;
   closeCreateModal: () => void;
   closeEditModal: () => void;
   closeDetailModal: () => void;
 }
 
-export const useTagsModals = (): UseTagsModalsReturn => {
+export const useCategoriesModals = (): UseCategoriesModalsReturn => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   const openCreateModal = () => setIsCreateModalOpen(true);
   
-  const openEditModal = (tag: Tag) => {
-    setSelectedTag(tag);
+  const openEditModal = (category: Category) => {
+    setSelectedCategory(category);
     setIsEditModalOpen(true);
   };
   
-  const openDetailModal = (tag: Tag) => {
-    setSelectedTag(tag);
+  const openDetailModal = (category: Category) => {
+    setSelectedCategory(category);
     setIsDetailModalOpen(true);
   };
   
@@ -40,12 +40,12 @@ export const useTagsModals = (): UseTagsModalsReturn => {
   
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    setSelectedTag(null);
+    setSelectedCategory(null);
   };
   
   const closeDetailModal = () => {
     setIsDetailModalOpen(false);
-    setSelectedTag(null);
+    setSelectedCategory(null);
   };
 
   return {
@@ -55,8 +55,8 @@ export const useTagsModals = (): UseTagsModalsReturn => {
     setIsEditModalOpen,
     isDetailModalOpen,
     setIsDetailModalOpen,
-    selectedTag,
-    setSelectedTag,
+    selectedCategory,
+    setSelectedCategory,
     openCreateModal,
     openEditModal,
     openDetailModal,
