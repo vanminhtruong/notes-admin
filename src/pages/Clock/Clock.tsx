@@ -50,7 +50,7 @@ const Clock: React.FC = () => {
   const selectedTz = timezones.find(tz => tz.value === selectedTimezone);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 p-6 xl-down:p-5 lg-down:p-4 md-down:p-3 sm-down:p-2">
+    <div className="space-y-6 xl-down:space-y-5 lg-down:space-y-4 md-down:space-y-3 sm-down:space-y-2">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 xl-down:mb-6 sm-down:mb-4">
