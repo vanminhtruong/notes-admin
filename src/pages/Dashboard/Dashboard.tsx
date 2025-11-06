@@ -7,6 +7,9 @@ import TopNotesCreatorsChart from './components/TopNotesCreatorsChart';
 import RecentOnlineUsersChart from './components/RecentOnlineUsersChart';
 import TopOfflineUsersChart from './components/TopOfflineUsersChart';
 import TopCategoriesCreatorsChart from './components/TopCategoriesCreatorsChart';
+import TopChatUsersChart from './components/TopChatUsersChart';
+import TopNoteSharersChart from './components/TopNoteSharersChart';
+import CollapsibleSection from './components/CollapsibleSection';
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation('dashboard');
@@ -25,6 +28,10 @@ const Dashboard: React.FC = () => {
     setTopOfflineUsers,
     topCategoriesCreators,
     setTopCategoriesCreators,
+    topChatUsers,
+    setTopChatUsers,
+    topNoteSharers,
+    setTopNoteSharers,
   } = useDashboardState();
   
   // Handlers
@@ -35,6 +42,8 @@ const Dashboard: React.FC = () => {
     setRecentOnlineUsers,
     setTopOfflineUsers,
     setTopCategoriesCreators,
+    setTopChatUsers,
+    setTopNoteSharers,
   });
   
   // Effects
@@ -168,12 +177,31 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3">
-        <TopNotesCreatorsChart data={topNotesCreators} />
-        <RecentOnlineUsersChart data={recentOnlineUsers} />
-        <TopCategoriesCreatorsChart data={topCategoriesCreators} />
-        <TopOfflineUsersChart data={topOfflineUsers} />
+      {/* Charts Section - Organized in collapsible groups */}
+      <div className="space-y-6 xl-down:space-y-5 lg-down:space-y-4 md-down:gap-3.5 sm-down:space-y-3">
+        {/* Section 1: Top Notes Creators & Recent Online Users */}
+        <CollapsibleSection title={t('charts.section1.title', { defaultValue: 'Thống kê người dùng hoạt động' })} defaultOpen={false}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
+            <TopNotesCreatorsChart data={topNotesCreators} />
+            <RecentOnlineUsersChart data={recentOnlineUsers} />
+          </div>
+        </CollapsibleSection>
+
+        {/* Section 2: Top Categories Creators & Top Offline Users */}
+        <CollapsibleSection title={t('charts.section2.title', { defaultValue: 'Thống kê danh mục và người dùng offline' })} defaultOpen={false}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
+            <TopCategoriesCreatorsChart data={topCategoriesCreators} />
+            <TopOfflineUsersChart data={topOfflineUsers} />
+          </div>
+        </CollapsibleSection>
+
+        {/* Section 3: Top Chat Users & Top Note Sharers */}
+        <CollapsibleSection title={t('charts.section3.title', { defaultValue: 'Thống kê chat và chia sẻ ghi chú' })} defaultOpen={false}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
+            <TopChatUsersChart data={topChatUsers} />
+            <TopNoteSharersChart data={topNoteSharers} />
+          </div>
+        </CollapsibleSection>
       </div>
     </div>
   );

@@ -34,6 +34,22 @@ export interface TopCategoriesCreator {
   categoriesCount: number;
 }
 
+export interface TopChatUser {
+  userId: number;
+  username: string;
+  email: string;
+  avatar: string;
+  messagesCount: number;
+}
+
+export interface TopNoteSharer {
+  userId: number;
+  username: string;
+  email: string;
+  avatar: string;
+  sharedCount: number;
+}
+
 export interface DashboardStats {
   totalUsers: number;
   activeUsers: number;
@@ -55,6 +71,8 @@ export const useDashboardState = () => {
   const [recentOnlineUsers, setRecentOnlineUsers] = useState<RecentOnlineUser[]>([]);
   const [topOfflineUsers, setTopOfflineUsers] = useState<TopOfflineUser[]>([]);
   const [topCategoriesCreators, setTopCategoriesCreators] = useState<TopCategoriesCreator[]>([]);
+  const [topChatUsers, setTopChatUsers] = useState<TopChatUser[]>([]);
+  const [topNoteSharers, setTopNoteSharers] = useState<TopNoteSharer[]>([]);
 
   return {
     stats,
@@ -69,5 +87,9 @@ export const useDashboardState = () => {
     setTopOfflineUsers,
     topCategoriesCreators,
     setTopCategoriesCreators,
+    topChatUsers,
+    setTopChatUsers,
+    topNoteSharers,
+    setTopNoteSharers,
   };
 };

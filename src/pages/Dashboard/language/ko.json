@@ -22,6 +22,15 @@
     "empty": "최근 활동이 없습니다"
   },
   "charts": {
+    "section1": {
+      "title": "활성 사용자 통계"
+    },
+    "section2": {
+      "title": "카테고리 및 오프라인 사용자 통계"
+    },
+    "section3": {
+      "title": "채팅 및 메모 공유 통계"
+    },
     "topNotesCreators": {
       "title": "가장 많은 메모를 작성한 사용자",
       "description": "메모를 가장 많이 작성한 상위 사용자",
@@ -43,6 +52,22 @@
       "offlineUsersList": "가장 오래 오프라인 목록",
       "day": "일",
       "days": "일"
+    },
+    "topChatUsers": {
+      "title": "가장 많이 채팅하는 사용자",
+      "description": "메시지를 가장 많이 보내는 상위 사용자",
+      "messagesCount": "메시지 수",
+      "topUsersList": "상위 채팅 사용자 목록",
+      "message": "메시지",
+      "messages": "메시지"
+    },
+    "topNoteSharers": {
+      "title": "가장 많이 공유하는 사용자",
+      "description": "메모를 가장 많이 공유하는 상위 사용자",
+      "sharedCount": "공유 수",
+      "topSharersList": "상위 공유자 목록",
+      "share": "공유",
+      "shares": "공유"
     },
     "topCategoriesCreators": {
       "title": "가장 많은 카테고리를 만든 사용자",

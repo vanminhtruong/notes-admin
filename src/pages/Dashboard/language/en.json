@@ -21,6 +21,15 @@
     "empty": "No recent activity"
   },
   "charts": {
+    "section1": {
+      "title": "Active User Statistics"
+    },
+    "section2": {
+      "title": "Categories and Offline Users Statistics"
+    },
+    "section3": {
+      "title": "Chat and Note Sharing Statistics"
+    },
     "topNotesCreators": {
       "title": "Top Notes Creators",
       "description": "Users who create the most notes",
@@ -42,6 +51,22 @@
       "offlineUsersList": "Longest Offline List",
       "day": "day",
       "days": "days"
+    },
+    "topChatUsers": {
+      "title": "Top Chat Users",
+      "description": "Users who send the most messages",
+      "messagesCount": "Number of Messages",
+      "topUsersList": "Top Chat Users List",
+      "message": "message",
+      "messages": "messages"
+    },
+    "topNoteSharers": {
+      "title": "Top Note Sharers",
+      "description": "Users who share notes the most",
+      "sharedCount": "Number of Shares",
+      "topSharersList": "Top Sharers List",
+      "share": "share",
+      "shares": "shares"
     },
     "topCategoriesCreators": {
       "title": "Top Categories Creators",

@@ -22,6 +22,15 @@
     "empty": "Chưa có hoạt động nào"
   },
   "charts": {
+    "section1": {
+      "title": "Thống kê người dùng hoạt động"
+    },
+    "section2": {
+      "title": "Thống kê danh mục và người dùng offline"
+    },
+    "section3": {
+      "title": "Thống kê chat và chia sẻ ghi chú"
+    },
     "topNotesCreators": {
       "title": "Người dùng tạo nhiều ghi chú nhất",
       "description": "Top người dùng có số lượng ghi chú nhiều nhất",
@@ -43,6 +52,22 @@
       "offlineUsersList": "Danh sách offline lâu nhất",
       "day": "ngày",
       "days": "ngày"
+    },
+    "topChatUsers": {
+      "title": "Người dùng chat nhiều nhất",
+      "description": "Top người dùng có số lượng tin nhắn nhiều nhất",
+      "messagesCount": "Số lượng tin nhắn",
+      "topUsersList": "Top người dùng chat",
+      "message": "tin nhắn",
+      "messages": "tin nhắn"
+    },
+    "topNoteSharers": {
+      "title": "Người dùng chia sẻ ghi chú nhiều nhất",
+      "description": "Top người dùng chia sẻ ghi chú nhiều nhất",
+      "sharedCount": "Số lượng chia sẻ",
+      "topSharersList": "Top người chia sẻ",
+      "share": "lần chia sẻ",
+      "shares": "lần chia sẻ"
     },
     "topCategoriesCreators": {
       "title": "Người dùng tạo nhiều danh mục nhất",

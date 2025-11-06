@@ -1,0 +1,104 @@
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTranslation } from 'react-i18next';
+
+interface TopChatUser {
+  userId: number;
+  username: string;
+  email: string;
+  avatar: string;
+  messagesCount: number;
+}
+
+interface TopChatUsersChartProps {
+  data: TopChatUser[];
+}
+
+const TopChatUsersChart: React.FC<TopChatUsersChartProps> = ({ data }) => {
+  const { t } = useTranslation('dashboard');
+
+  // Transform data for chart
+  const chartData = data.map(item => ({
+    name: item.username,
+    messages: item.messagesCount,
+    email: item.email
+  }));
+
+  return (
+    <div className="bg-white dark:bg-neutral-900 rounded-xl xl-down:rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6 xl-down:p-4 sm-down:p-3">
+      <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">
+        {t('charts.topChatUsers.title')}
+      </h2>
+      <p className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mb-4 xl-down:mb-3 sm-down:mb-2">
+        {t('charts.topChatUsers.description')}
+      </p>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" className="dark:stroke-neutral-700" />
+          <XAxis 
+            dataKey="name" 
+            className="dark:fill-gray-300"
+            tick={{ fill: 'currentColor' }}
+          />
+          <YAxis 
+            className="dark:fill-gray-300"
+            tick={{ fill: 'currentColor' }}
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--tooltip-bg, #fff)',
+              border: '1px solid var(--tooltip-border, #ccc)',
+              borderRadius: '8px'
+            }}
+            labelStyle={{ color: 'var(--tooltip-text, #000)' }}
+          />
+          <Legend />
+          <Bar 
+            dataKey="messages" 
+            fill="#3b82f6" 
+            name={t('charts.topChatUsers.messagesCount')}
+            radius={[8, 8, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+      
+      {/* Top chat users list */}
+      <div className="mt-6 xl-down:mt-4 sm-down:mt-3">
+        <h3 className="text-lg xl-down:text-base sm-down:text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 xl-down:mb-2">
+          {t('charts.topChatUsers.topUsersList')}
+        </h3>
+        <div className="space-y-2 xl-down:space-y-1.5 sm-down:space-y-1 max-h-64 overflow-y-auto">
+          {data.slice(0, 5).map((user) => (
+            <div 
+              key={user.userId}
+              className="flex items-center gap-3 xl-down:gap-2 sm-down:gap-1.5 p-3 xl-down:p-2 sm-down:p-1.5 bg-gray-50 dark:bg-neutral-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
+            >
+              <div className="w-10 h-10 xl-down:w-8 xl-down:h-8 sm-down:w-7 sm-down:h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.username} className="w-full h-full rounded-full object-cover" />
+                ) : (
+                  user.username.charAt(0).toUpperCase()
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
+                  {user.username}
+                </p>
+                <p className="text-xs xl-down:text-[10px] text-gray-600 dark:text-gray-400 truncate">
+                  {user.email}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                  {user.messagesCount} {user.messagesCount === 1 ? t('charts.topChatUsers.message') : t('charts.topChatUsers.messages')}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TopChatUsersChart;

@@ -732,6 +732,16 @@ class AdminService {
   async getTopCategoriesCreators(params: { limit?: number } = {}) {
     return this.axiosInstance.get('/admin/dashboard/top-categories-creators', { params });
   }
+
+  // Get top chat users
+  async getTopChatUsers(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/top-chat-users', { params });
+  }
+
+  // Get top note sharers
+  async getTopNoteSharers(params: { limit?: number } = {}) {
+    return this.axiosInstance.get('/admin/dashboard/top-note-sharers', { params });
+  }
 }
 
 export default new AdminService();

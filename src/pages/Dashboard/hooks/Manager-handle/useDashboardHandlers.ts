@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import adminService from '@services/adminService';
-import type { DashboardStats, TopNotesCreator, RecentOnlineUser, TopOfflineUser, TopCategoriesCreator } from '../Manager-useState/useDashboardState';
+import type { DashboardStats, TopNotesCreator, RecentOnlineUser, TopOfflineUser, TopCategoriesCreator, TopChatUser, TopNoteSharer } from '../Manager-useState/useDashboardState';
 
 interface UseDashboardHandlersProps {
   setLoading: (loading: boolean) => void;
@@ -9,6 +9,8 @@ interface UseDashboardHandlersProps {
   setRecentOnlineUsers: (data: RecentOnlineUser[]) => void;
   setTopOfflineUsers: (data: TopOfflineUser[]) => void;
   setTopCategoriesCreators: (data: TopCategoriesCreator[]) => void;
+  setTopChatUsers: (data: TopChatUser[]) => void;
+  setTopNoteSharers: (data: TopNoteSharer[]) => void;
 }
 
 export const useDashboardHandlers = ({
@@ -18,11 +20,13 @@ export const useDashboardHandlers = ({
   setRecentOnlineUsers,
   setTopOfflineUsers,
   setTopCategoriesCreators,
+  setTopChatUsers,
+  setTopNoteSharers,
 }: UseDashboardHandlersProps) => {
   // Hàm fetch data chung (không set loading)
   const fetchDashboardData = useCallback(async () => {
     // Tải dữ liệu thống kê gốc và biểu đồ mới
-    const [usersResponse, notesResponse, allActiveUsersResponse, topNotesResponse, recentOnlineResponse, topOfflineResponse, topCategoriesResponse] = await Promise.all([
+    const [usersResponse, notesResponse, allActiveUsersResponse, topNotesResponse, recentOnlineResponse, topOfflineResponse, topCategoriesResponse, topChatResponse, topSharersResponse] = await Promise.all([
       adminService.getAllUsers({ limit: 1 }),
       adminService.getAllUsersNotes({ limit: 1 }),
       adminService.getAllUsers({ limit: 1000, isActive: true }),
@@ -30,6 +34,8 @@ export const useDashboardHandlers = ({
       adminService.getRecentOnlineUsers({ limit: 10 }),
       adminService.getTopOfflineUsers({ limit: 10 }),
       adminService.getTopCategoriesCreators({ limit: 10 }),
+      adminService.getTopChatUsers({ limit: 10 }),
+      adminService.getTopNoteSharers({ limit: 10 }),
     ]);
 
     // Chuẩn hóa tổng số người dùng từ cấu trúc response backend (giữ logic gốc)
@@ -52,7 +58,9 @@ export const useDashboardHandlers = ({
     setRecentOnlineUsers((recentOnlineResponse as any)?.data || []);
     setTopOfflineUsers((topOfflineResponse as any)?.data || []);
     setTopCategoriesCreators((topCategoriesResponse as any)?.data || []);
-  }, [setStats, setTopNotesCreators, setRecentOnlineUsers, setTopOfflineUsers, setTopCategoriesCreators]);
+    setTopChatUsers((topChatResponse as any)?.data || []);
+    setTopNoteSharers((topSharersResponse as any)?.data || []);
+  }, [setStats, setTopNotesCreators, setRecentOnlineUsers, setTopOfflineUsers, setTopCategoriesCreators, setTopChatUsers, setTopNoteSharers]);
 
   // Load data lần đầu với loading
   const loadDashboardData = useCallback(async () => {
