@@ -15,44 +15,27 @@ const Dashboard: React.FC = () => {
   const { t } = useTranslation('dashboard');
   
   // State
-  const { 
-    stats, 
-    setStats, 
-    loading, 
-    setLoading,
-    topNotesCreators,
-    setTopNotesCreators,
-    recentOnlineUsers,
-    setRecentOnlineUsers,
-    topOfflineUsers,
-    setTopOfflineUsers,
-    topCategoriesCreators,
-    setTopCategoriesCreators,
-    topChatUsers,
-    setTopChatUsers,
-    topNoteSharers,
-    setTopNoteSharers,
-  } = useDashboardState();
+  const state = useDashboardState();
   
   // Handlers
-  const { loadDashboardData, refreshDashboardData } = useDashboardHandlers({
-    setLoading,
-    setStats,
-    setTopNotesCreators,
-    setRecentOnlineUsers,
-    setTopOfflineUsers,
-    setTopCategoriesCreators,
-    setTopChatUsers,
-    setTopNoteSharers,
+  const handlers = useDashboardHandlers({
+    setLoading: state.setLoading,
+    setStats: state.setStats,
+    setTopNotesCreators: state.setTopNotesCreators,
+    setRecentOnlineUsers: state.setRecentOnlineUsers,
+    setTopOfflineUsers: state.setTopOfflineUsers,
+    setTopCategoriesCreators: state.setTopCategoriesCreators,
+    setTopChatUsers: state.setTopChatUsers,
+    setTopNoteSharers: state.setTopNoteSharers,
   });
   
   // Effects
   useDashboardEffects({
-    loadDashboardData,
-    refreshDashboardData,
+    loadDashboardData: handlers.loadDashboardData,
+    refreshDashboardData: handlers.refreshDashboardData,
   });
 
-  if (loading) {
+  if (state.loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -74,7 +57,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-3 xl-down:pr-2.5 sm-down:pr-2">
               <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-semibold text-blue-600 dark:text-blue-400 mb-1 sm-down:mb-0.5 truncate">{t('cards.totalUsers')}</p>
-              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-blue-900 dark:text-blue-100">{stats.totalUsers}</p>
+              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-blue-900 dark:text-blue-100">{state.stats.totalUsers}</p>
             </div>
             <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 lg-down:w-11 lg-down:h-11 md-down:w-10 md-down:h-10 sm-down:w-9 sm-down:h-9 xs-down:w-8 xs-down:h-8 bg-blue-500 dark:bg-blue-600 rounded-xl xl-down:rounded-lg md-down:rounded-md flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">👥</span>
@@ -87,7 +70,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-3 xl-down:pr-2.5 sm-down:pr-2">
               <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-semibold text-green-600 dark:text-green-400 mb-1 sm-down:mb-0.5 truncate">{t('cards.activeUsers')}</p>
-              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-green-900 dark:text-green-100">{stats.activeUsers}</p>
+              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-green-900 dark:text-green-100">{state.stats.activeUsers}</p>
             </div>
             <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 lg-down:w-11 lg-down:h-11 md-down:w-10 md-down:h-10 sm-down:w-9 sm-down:h-9 xs-down:w-8 xs-down:h-8 bg-green-500 dark:bg-green-600 rounded-xl xl-down:rounded-lg md-down:rounded-md flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">✅</span>
@@ -100,7 +83,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-3 xl-down:pr-2.5 sm-down:pr-2">
               <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-semibold text-purple-600 dark:text-purple-400 mb-1 sm-down:mb-0.5 truncate">{t('cards.totalNotes')}</p>
-              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-purple-900 dark:text-purple-100">{stats.totalNotes}</p>
+              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-purple-900 dark:text-purple-100">{state.stats.totalNotes}</p>
             </div>
             <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 lg-down:w-11 lg-down:h-11 md-down:w-10 md-down:h-10 sm-down:w-9 sm-down:h-9 xs-down:w-8 xs-down:h-8 bg-purple-500 dark:bg-purple-600 rounded-xl xl-down:rounded-lg md-down:rounded-md flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">📝</span>
@@ -113,7 +96,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-3 xl-down:pr-2.5 sm-down:pr-2">
               <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-semibold text-orange-600 dark:text-orange-400 mb-1 sm-down:mb-0.5 truncate">{t('cards.totalFolders')}</p>
-              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-orange-900 dark:text-orange-100">{stats.totalFolders}</p>
+              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-orange-900 dark:text-orange-100">{state.stats.totalFolders}</p>
             </div>
             <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 lg-down:w-11 lg-down:h-11 md-down:w-10 md-down:h-10 sm-down:w-9 sm-down:h-9 xs-down:w-8 xs-down:h-8 bg-orange-500 dark:bg-orange-600 rounded-xl xl-down:rounded-lg md-down:rounded-md flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">📁</span>
@@ -126,7 +109,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-3 xl-down:pr-2.5 sm-down:pr-2">
               <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-semibold text-cyan-600 dark:text-cyan-400 mb-1 sm-down:mb-0.5 truncate">{t('cards.notesInFolders')}</p>
-              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-cyan-900 dark:text-cyan-100">{stats.notesInFolders}</p>
+              <p className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base font-bold text-cyan-900 dark:text-cyan-100">{state.stats.notesInFolders}</p>
             </div>
             <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 lg-down:w-11 lg-down:h-11 md-down:w-10 md-down:h-10 sm-down:w-9 sm-down:h-9 xs-down:w-8 xs-down:h-8 bg-cyan-500 dark:bg-cyan-600 rounded-xl xl-down:rounded-lg md-down:rounded-md flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-3xl xl-down:text-2xl lg-down:text-xl md-down:text-lg sm-down:text-base xs-down:text-sm">📄</span>
@@ -190,8 +173,8 @@ const Dashboard: React.FC = () => {
           defaultOpen={false}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
-            <TopNotesCreatorsChart data={topNotesCreators} />
-            <RecentOnlineUsersChart data={recentOnlineUsers} />
+            <TopNotesCreatorsChart data={state.topNotesCreators} />
+            <RecentOnlineUsersChart data={state.recentOnlineUsers} />
           </div>
         </CollapsibleSection>
 
@@ -206,8 +189,8 @@ const Dashboard: React.FC = () => {
           defaultOpen={false}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
-            <TopCategoriesCreatorsChart data={topCategoriesCreators} />
-            <TopOfflineUsersChart data={topOfflineUsers} />
+            <TopCategoriesCreatorsChart data={state.topCategoriesCreators} />
+            <TopOfflineUsersChart data={state.topOfflineUsers} />
           </div>
         </CollapsibleSection>
 
@@ -222,8 +205,8 @@ const Dashboard: React.FC = () => {
           defaultOpen={false}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl-down:gap-5 lg-down:gap-4 md-down:gap-3.5 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
-            <TopChatUsersChart data={topChatUsers} />
-            <TopNoteSharersChart data={topNoteSharers} />
+            <TopChatUsersChart data={state.topChatUsers} />
+            <TopNoteSharersChart data={state.topNoteSharers} />
           </div>
         </CollapsibleSection>
       </div>
