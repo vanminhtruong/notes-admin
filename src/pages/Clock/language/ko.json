@@ -1,0 +1,34 @@
+{
+  "title": "세계 시계",
+  "subtitle": "다양한 시간대의 시간 보기",
+  "selectTimezone": "시간대 선택",
+  "timezones": {
+    "vietnam": "베트남",
+    "usa": "미국 (EST)",
+    "korea": "대한민국"
+  },
+  "info": "시계는 실시간으로 업데이트됩니다",
+  "weekdays": {
+    "monday": "월요일",
+    "tuesday": "화요일",
+    "wednesday": "수요일",
+    "thursday": "목요일",
+    "friday": "금요일",
+    "saturday": "토요일",
+    "sunday": "일요일"
+  },
+  "months": {
+    "january": "1월",
+    "february": "2월",
+    "march": "3월",
+    "april": "4월",
+    "may": "5월",
+    "june": "6월",
+    "july": "7월",
+    "august": "8월",
+    "september": "9월",
+    "october": "10월",
+    "november": "11월",
+    "december": "12월"
+  }
+}

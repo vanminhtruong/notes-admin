@@ -26,7 +26,8 @@
     "notesList": "메모 목록",
     "notesCreate": "메모 생성",
     "notesShared": "공유된 메모",
-    "categories": "카테고리"
+    "categories": "카테고리",
+    "clock": "시계"
   },
   "layout": {
     "adminPanel": "관리자 패널",

@@ -26,7 +26,8 @@
     "notesList": "Danh sách ghi chú",
     "notesCreate": "Tạo ghi chú",
     "notesShared": "Ghi chú chia sẻ",
-    "categories": "Categories"
+    "categories": "Categories",
+    "clock": "Đồng Hồ"
   },
   "layout": {
     "adminPanel": "Bảng quản trị",

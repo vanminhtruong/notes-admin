@@ -39,6 +39,10 @@ import chatSettingsEn from '@pages/Users/ChatSettings/language/en.json';
 import chatSettingsKo from '@pages/Users/ChatSettings/language/ko.json';
 import chatSettingsVi from '@pages/Users/ChatSettings/language/vi.json';
 
+import clockEn from '@pages/Clock/language/en.json';
+import clockKo from '@pages/Clock/language/ko.json';
+import clockVi from '@pages/Clock/language/vi.json';
+
 // Common translations
 import commonEn from './locales/en/common.json';
 import commonKo from './locales/ko/common.json';
@@ -55,7 +59,8 @@ const resources = {
     profile: profileEn,
     categories: categoriesEn,
     backgrounds: backgroundsEn,
-    chatSettings: chatSettingsEn
+    chatSettings: chatSettingsEn,
+    clock: clockEn
   },
   ko: {
     common: commonKo,
@@ -67,7 +72,8 @@ const resources = {
     profile: profileKo,
     categories: categoriesKo,
     backgrounds: backgroundsKo,
-    chatSettings: chatSettingsKo
+    chatSettings: chatSettingsKo,
+    clock: clockKo
   },
   vi: {
     common: commonVi,
@@ -79,7 +85,8 @@ const resources = {
     profile: profileVi,
     categories: categoriesVi,
     backgrounds: backgroundsVi,
-    chatSettings: chatSettingsVi
+    chatSettings: chatSettingsVi,
+    clock: clockVi
   }
 };
 
@@ -94,7 +101,7 @@ const initI18n = async () => {
       
       // Namespace mặc định
       defaultNS: 'common',
-      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile', 'categories', 'backgrounds', 'chatSettings'],
+      ns: ['common', 'dashboard', 'login', 'notes', 'users', 'admins', 'profile', 'categories', 'backgrounds', 'chatSettings', 'clock'],
 
       interpolation: {
         escapeValue: false, // React đã escape

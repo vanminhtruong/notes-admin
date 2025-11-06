@@ -256,6 +256,12 @@ const AdminLayout: React.FC = () => {
       path: '/admins',
       permission: 'manage_admins',
     }] : []),
+    {
+      id: 'clock',
+      label: t('navigation.clock', { defaultValue: 'Đồng Hồ' }),
+      icon: '🕐',
+      path: '/clock',
+    },
   ].filter(item => {
     // Filter by permission
     if (item.permission && !hasPermission(item.permission)) {

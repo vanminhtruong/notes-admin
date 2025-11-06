@@ -15,6 +15,7 @@ import BackgroundsList from '@pages/Backgrounds/BackgroundsList'
 import AdminsList from '@pages/Admins/AdminsList'
 import AdminProfile from '@pages/Profile/AdminProfile'
 import NoPermission from '@pages/NoPermission/NoPermission'
+import Clock from '@pages/Clock/Clock'
 
 const router = createBrowserRouter([
   // Public
@@ -123,6 +124,9 @@ const router = createBrowserRouter([
           </PermissionRoute>
         )
       },
+
+      // Clock (Public for all admins)
+      { path: 'clock', element: <Clock /> },
     ],
   },
 

@@ -1,0 +1,34 @@
+{
+  "title": "Đồng Hồ Thế Giới",
+  "subtitle": "Xem giờ các múi giờ khác nhau",
+  "selectTimezone": "Chọn múi giờ",
+  "timezones": {
+    "vietnam": "Việt Nam",
+    "usa": "Hoa Kỳ (EST)",
+    "korea": "Hàn Quốc"
+  },
+  "info": "Đồng hồ được cập nhật theo thời gian thực",
+  "weekdays": {
+    "monday": "Thứ Hai",
+    "tuesday": "Thứ Ba",
+    "wednesday": "Thứ Tư",
+    "thursday": "Thứ Năm",
+    "friday": "Thứ Sáu",
+    "saturday": "Thứ Bảy",
+    "sunday": "Chủ Nhật"
+  },
+  "months": {
+    "january": "Tháng Một",
+    "february": "Tháng Hai",
+    "march": "Tháng Ba",
+    "april": "Tháng Tư",
+    "may": "Tháng Năm",
+    "june": "Tháng Sáu",
+    "july": "Tháng Bảy",
+    "august": "Tháng Tám",
+    "september": "Tháng Chín",
+    "october": "Tháng Mười",
+    "november": "Tháng Mười Một",
+    "december": "Tháng Mười Hai"
+  }
+}
