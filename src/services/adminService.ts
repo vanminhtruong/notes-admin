@@ -609,6 +609,11 @@ class AdminService {
     return this.axiosInstance.delete(`/admin/tags/${tagId}`);
   }
 
+  // Toggle pin tag (admin)
+  async togglePinTag(tagId: number) {
+    return this.axiosInstance.patch(`/admin/tags/${tagId}/pin`);
+  }
+
   // Assign tag to note
   async assignTagToNote(data: {
     noteId: number;

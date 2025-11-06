@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag, Users, Edit, Trash2 } from 'lucide-react';
+import { Tag, Users, Edit, Trash2, Pin, PinOff } from 'lucide-react';
 import Pagination from '@components/common/Pagination';
 import { useTranslation } from 'react-i18next';
 import MobileCard from '@components/common/MobileCard';
@@ -10,7 +10,7 @@ interface TagsTableProps {
 
 const TagsTable: React.FC<TagsTableProps> = ({ hook }) => {
   const { t } = useTranslation('notes');
-  const { tags, loading, totalPages, currentPage, setCurrentPage, canEdit, canDelete, openEditModal, openDetailModal, handleDelete } = hook;
+  const { tags, loading, totalPages, currentPage, setCurrentPage, canEdit, canDelete, openEditModal, openDetailModal, handleDelete, handleTogglePin } = hook;
 
   if (loading) {
     return (
@@ -47,6 +47,9 @@ const TagsTable: React.FC<TagsTableProps> = ({ hook }) => {
               </th>
               <th className="px-4 py-3 xl-down:px-3 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 {t('tags.table.notesCount')}
+              </th>
+              <th className="px-4 py-3 xl-down:px-3 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                {t('tags.table.pinned')}
               </th>
               <th className="px-4 py-3 xl-down:px-3 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider lg-down:hidden">
                 {t('tags.table.createdAt')}
@@ -90,6 +93,31 @@ const TagsTable: React.FC<TagsTableProps> = ({ hook }) => {
                   <span className="inline-flex items-center px-2.5 py-0.5 xl-down:px-2 xl-down:py-0.5 rounded-full text-xs xl-down:text-2xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                     {tag.notesCount} {t('tags.notesCount.label')}
                   </span>
+                </td>
+                <td className="px-4 py-3 xl-down:px-3 xl-down:py-2">
+                  {canEdit ? (
+                    <button
+                      onClick={() => handleTogglePin(tag)}
+                      className={`p-2 xl-down:p-1.5 rounded-lg xl-down:rounded-md transition-colors ${tag.isPinned ? 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-neutral-800'}`}
+                      title={tag.isPinned ? t('tags.actions.unpinTooltip') : t('tags.actions.pinTooltip')}
+                    >
+                      {tag.isPinned ? (
+                        <Pin className="w-4 h-4 xl-down:w-3.5 xl-down:h-3.5" />
+                      ) : (
+                        <PinOff className="w-4 h-4 xl-down:w-3.5 xl-down:h-3.5" />
+                      )}
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-1 text-xs xl-down:text-2xs">
+                      {tag.isPinned ? (
+                        <span className="inline-flex items-center gap-1 text-amber-600">
+                          <Pin className="w-3.5 h-3.5" /> {t('tags.status.pinned') || 'Pinned'}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">{t('tags.status.unpinned') || 'Not pinned'}</span>
+                      )}
+                    </div>
+                  )}
                 </td>
                 <td className="px-4 py-3 xl-down:px-3 xl-down:py-2 text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 lg-down:hidden">
                   {new Date(tag.createdAt).toLocaleDateString('vi-VN')}
@@ -165,6 +193,18 @@ const TagsTable: React.FC<TagsTableProps> = ({ hook }) => {
             actions={
               (canEdit || canDelete) && (
                 <>
+                  {canEdit && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTogglePin(tag);
+                      }}
+                      className={`p-2 xl-down:p-1.5 rounded-lg xl-down:rounded-md transition-colors ${tag.isPinned ? 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-neutral-800'}`}
+                      title={tag.isPinned ? t('tags.actions.unpinTooltip') : t('tags.actions.pinTooltip')}
+                    >
+                      {tag.isPinned ? <Pin className="w-4 h-4" /> : <PinOff className="w-4 h-4" />}
+                    </button>
+                  )}
                   {canEdit && (
                     <button
                       onClick={(e) => {

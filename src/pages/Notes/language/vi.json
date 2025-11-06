@@ -363,6 +363,7 @@
       "tag": "Tag",
       "user": "Người dùng",
       "notesCount": "Số ghi chú",
+      "pinned": "Đã ghim",
       "createdAt": "Ngày tạo",
       "actions": "Thao tác"
     },
@@ -409,12 +410,18 @@
       "editTooltip": "Sửa tag",
       "delete": "Xóa tag",
       "deleteTooltip": "Xóa tag",
+      "pinTooltip": "Ghim tag",
+      "unpinTooltip": "Bỏ ghim tag",
       "create": "Tạo Tag",
       "update": "Cập nhật",
       "close": "Đóng",
       "cancel": "Hủy",
       "add": "Thêm",
       "remove": "Xóa"
+    },
+    "status": {
+      "pinned": "Đã ghim",
+      "unpinned": "Chưa ghim"
     },
     "delete": {
       "confirm": {

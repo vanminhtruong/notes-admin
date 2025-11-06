@@ -367,6 +367,7 @@
       "tag": "Tag",
       "user": "User",
       "notesCount": "Notes Count",
+      "pinned": "Pinned",
       "createdAt": "Created At",
       "actions": "Actions"
     },
@@ -413,12 +414,18 @@
       "editTooltip": "Edit tag",
       "delete": "Delete Tag",
       "deleteTooltip": "Delete tag",
+      "pinTooltip": "Pin tag",
+      "unpinTooltip": "Unpin tag",
       "create": "Create Tag",
       "update": "Update",
       "close": "Close",
       "cancel": "Cancel",
       "add": "Add",
       "remove": "Remove"
+    },
+    "status": {
+      "pinned": "Pinned",
+      "unpinned": "Not pinned"
     },
     "delete": {
       "confirm": {

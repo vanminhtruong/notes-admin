@@ -16,6 +16,7 @@ interface TagItem {
   color: string;
   userId: number;
   user: User;
+  isPinned: boolean;
   notesCount: number;
   createdAt: string;
   updatedAt: string;
@@ -69,7 +70,11 @@ export const useTagsManagement = () => {
         search: searchTerm,
         userId: selectedUserId,
       });
-      setTags(response.tags || []);
+      const sortTags = (list: TagItem[]) =>
+        [...list].sort((a, b) => (a.isPinned === b.isPinned
+          ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          : (b.isPinned ? 1 : -1)));
+      setTags(sortTags(response.tags || []));
       setTotalPages(response.pagination?.totalPages || 1);
       setTotal(response.pagination?.total || 0);
     } catch (error: any) {
@@ -169,6 +174,23 @@ export const useTagsManagement = () => {
     setSelectedTag(null);
   };
 
+  // Toggle pin tag
+  const handleTogglePin = async (tag: TagItem) => {
+    if (!canEdit) return;
+    try {
+      await adminService.togglePinTag(tag.id);
+      setTags((prev) => {
+        const next = prev.map((t) => (t.id === tag.id ? { ...t, isPinned: !t.isPinned } : t));
+        return [...next].sort((a, b) => (a.isPinned === b.isPinned
+          ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          : (b.isPinned ? 1 : -1)));
+      });
+    } catch (error: any) {
+      console.error('Error toggling pin tag:', error);
+      toast.error(error.response?.data?.message || 'Lỗi khi ghim/bỏ ghim tag');
+    }
+  };
+
   // Real-time updates
   useEffect(() => {
     const socket = getAdminSocket();
@@ -180,7 +202,12 @@ export const useTagsManagement = () => {
     };
 
     const handleTagUpdated = (data: { tag: TagItem }) => {
-      setTags((prev) => prev.map((tag) => (tag.id === data.tag.id ? data.tag : tag)));
+      setTags((prev) => {
+        const next = prev.map((tag) => (tag.id === data.tag.id ? data.tag : tag));
+        return [...next].sort((a, b) => (a.isPinned === b.isPinned
+          ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          : (b.isPinned ? 1 : -1)));
+      });
     };
 
     const handleTagDeleted = (data: { id: number }) => {
@@ -238,6 +265,7 @@ export const useTagsManagement = () => {
     handleCreate,
     handleUpdate,
     handleDelete,
+    handleTogglePin,
     openCreateModal,
     closeCreateModal,
     openEditModal,

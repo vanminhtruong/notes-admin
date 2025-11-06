@@ -363,6 +363,7 @@
       "tag": "태그",
       "user": "사용자",
       "notesCount": "노트 수",
+      "pinned": "고정됨",
       "createdAt": "생성일",
       "actions": "작업"
     },
@@ -409,12 +410,18 @@
       "editTooltip": "태그 편집",
       "delete": "태그 삭제",
       "deleteTooltip": "태그 삭제",
+      "pinTooltip": "태그 고정",
+      "unpinTooltip": "태그 고정 해제",
       "create": "태그 생성",
       "update": "업데이트",
       "close": "닫기",
       "cancel": "취소",
       "add": "추가",
       "remove": "제거"
+    },
+    "status": {
+      "pinned": "고정됨",
+      "unpinned": "고정 안 됨"
     },
     "delete": {
       "confirm": {
