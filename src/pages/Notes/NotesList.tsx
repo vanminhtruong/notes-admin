@@ -99,24 +99,38 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   return (
     <div className="space-y-6 xl-down:space-y-4 sm-down:space-y-3">
       {!embedded && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between xl-down:flex-col xl-down:items-start xl-down:space-y-3">
-          <div className="xl-down:w-full">
-            <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1 xl-down:mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
+        <div className="relative mb-2">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 via-violet-600/5 to-purple-600/5 dark:from-indigo-500/10 dark:via-violet-500/10 dark:to-purple-500/10 rounded-2xl xl-down:rounded-xl -z-10" />
+          
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 xl-down:p-4 sm-down:p-3">
+            <div className="flex items-center gap-4 xl-down:gap-3">
+              <div className="w-14 h-14 xl-down:w-12 xl-down:h-12 sm-down:w-10 sm-down:h-10 rounded-2xl xl-down:rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 dark:shadow-indigo-500/15">
+                <svg className="w-7 h-7 xl-down:w-6 xl-down:h-6 sm-down:w-5 sm-down:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-2xl xl-down:text-xl md-down:text-lg sm-down:text-base font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">{t('title')}</h1>
+                <p className="text-gray-500 dark:text-gray-400 mt-0.5 text-sm xl-down:text-xs">{t('subtitle')}</p>
+              </div>
+            </div>
+            {hasPermission('manage_notes.create') && tabEffects.tab !== 'archived' && (
+              <button
+                onClick={() => modalState.setShowCreateModal(true)}
+                className="group mt-4 sm:mt-0 px-5 py-2.5 xl-down:px-4 xl-down:py-2 sm-down:px-3 sm-down:py-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl xl-down:rounded-lg shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all duration-300 flex items-center gap-2.5 text-sm xl-down:text-xs font-medium"
+              >
+                <svg className="w-5 h-5 xl-down:w-4 xl-down:h-4 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                <span className="sm-down:hidden">{t('createNote')}</span>
+              </button>
+            )}
           </div>
-          {hasPermission('manage_notes.create') && tabEffects.tab !== 'archived' && (
-            <button
-              onClick={() => modalState.setShowCreateModal(true)}
-              className="mt-4 sm:mt-0 xl-down:mt-0 xl-down:w-full sm-down:w-full px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-3 sm-down:py-1.5 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-sm xl-down:text-xs font-medium"
-            >
-              {t('createNote')}
-            </button>
-          )}
         </div>
       )}
 
       {/* Tabs All / Active / Archived (segmented control) */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-x-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-x-hidden hover:shadow-md transition-shadow duration-300">
         <div
           ref={dragScroll.containerRef}
           onPointerDown={dragScroll.onPointerDown}
@@ -227,7 +241,7 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
         <TagsList embedded />
       ) : (
         /* Notes List */
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden hover:shadow-md transition-shadow duration-300">
         {notesState.loading ? (
           <LoadingSpinner />
         ) : (

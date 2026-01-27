@@ -1,0 +1,50 @@
+{
+  "title": "聊天設定管理",
+  "subtitle": "管理使用者聊天設定（端對端加密、已讀狀態、隱私...）",
+  "noPermission": "您沒有權限存取此頁面",
+  "noData": "暫無資料",
+  "filters": {
+    "search": "搜尋",
+    "searchPlaceholder": "按使用者名稱或電子郵件搜尋...",
+    "e2ee": "端對端加密",
+    "readStatus": "已讀狀態",
+    "all": "全部",
+    "enabled": "已啟用",
+    "disabled": "已停用",
+    "clear": "清除篩選"
+  },
+  "table": {
+    "user": "使用者",
+    "e2ee": "端對端加密",
+    "readStatus": "已讀狀態",
+    "allowNonFriends": "允許非好友",
+    "hidePhone": "隱藏電話",
+    "hideBirthDate": "隱藏生日",
+    "createdAt": "建立時間",
+    "actions": "操作",
+    "hasPIN": "已設定PIN",
+    "viewPin": "檢視PIN",
+    "noPin": "未設定PIN"
+  },
+  "actions": {
+    "updateSuccess": "更新成功",
+    "updateFailed": "更新失敗"
+  },
+  "errors": {
+    "loadFailed": "載入聊天設定資料失敗"
+  },
+  "pinModal": {
+    "title": "端對端加密PIN雜湊",
+    "infoTitle": "重要資訊",
+    "infoText": "這是使用bcrypt加密的PIN雜湊。無法從此雜湊解密出原始PIN。此雜湊用於使用者輸入PIN時的身分驗證。",
+    "hashLabel": "PIN雜湊（Bcrypt）",
+    "copied": "已複製",
+    "copy": "複製",
+    "hashAlgorithm": "雜湊演算法",
+    "hashLength": "雜湊長度",
+    "characters": "個字元",
+    "warningTitle": "安全警告",
+    "warningText": "請勿與使用者分享此雜湊。如需重設PIN，請使用系統中的PIN重設功能。",
+    "close": "關閉"
+  }
+}

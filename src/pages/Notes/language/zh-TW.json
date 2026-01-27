@@ -1,0 +1,474 @@
+{
+  "title": "筆記管理",
+  "subtitle": "檢視和管理所有使用者筆記",
+  "createNote": "建立筆記",
+  "modal": {
+    "detailTitle": "筆記詳情",
+    "editTitle": "編輯筆記"
+  },
+  "create": {
+    "title": "建立新筆記",
+    "subtitle": "為特定使用者建立筆記",
+    "selectUserLabel": "選擇使用者 *",
+    "searchUserPlaceholder": "搜尋使用者...",
+    "changeUser": "更換",
+    "noUsers": "找不到使用者"
+  },
+  "editor": {
+    "loading": "載入編輯器...",
+    "link": {
+      "placeholder": "https://...",
+      "add": "新增",
+      "cancel": "取消",
+      "invalidUrl": "無效的URL",
+      "inserted": "連結已插入",
+      "addTitle": "新增連結"
+    },
+    "toolbar": {
+      "bold": "粗體 (Ctrl+B)",
+      "italic": "斜體 (Ctrl+I)",
+      "underline": "底線 (Ctrl+U)",
+      "strike": "刪除線",
+      "code": "程式碼",
+      "h1": "標題1",
+      "h2": "標題2",
+      "h3": "標題3",
+      "bulletList": "無序列表",
+      "orderedList": "有序列表",
+      "alignLeft": "靠左對齊",
+      "alignCenter": "置中對齊",
+      "alignRight": "靠右對齊",
+      "alignJustify": "左右對齊",
+      "blockquote": "引用",
+      "horizontalRule": "水平線",
+      "undo": "復原 (Ctrl+Z)",
+      "redo": "重做 (Ctrl+Y)"
+    }
+  },
+  "form": {
+    "title": {
+      "label": "標題",
+      "placeholder": "輸入筆記標題"
+    },
+    "content": {
+      "label": "內容",
+      "placeholder": "輸入筆記內容"
+    },
+    "media": {
+      "label": "媒體",
+      "fullLabel": "媒體（圖片/影片/YouTube）",
+      "tabs": {
+        "image": "圖片",
+        "video": "影片",
+        "youtube": "YouTube"
+      },
+      "uploading": "上傳中...",
+      "uploadSuccess": {
+        "image": "圖片上傳成功！",
+        "video": "影片上傳成功！"
+      },
+      "uploadError": "上傳失敗",
+      "youtubePlaceholder": "https://www.youtube.com/watch?v=..."
+    },
+    "imageUrl": {
+      "label": "圖片"
+    },
+    "videoUrl": {
+      "label": "影片"
+    },
+    "youtubeUrl": {
+      "label": "YouTube連結"
+    },
+    "category": {
+      "label": "分類",
+      "placeholder": "輸入分類"
+    },
+    "priority": {
+      "label": "優先級",
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "reminder": {
+      "label": "提醒"
+    },
+    "archive": {
+      "label": "封存"
+    },
+    "placeholders": {
+      "title": "輸入筆記標題...",
+      "content": "輸入筆記內容...",
+      "category": "輸入分類...",
+      "imageUrl": "https://example.com/image.jpg",
+      "youtubeUrl": "輸入YouTube影片連結（支援Shorts）",
+      "searchUser": "搜尋使用者..."
+    }
+  },
+  "filters": {
+    "all": "全部",
+    "active": "活動",
+    "archived": "已封存",
+    "shared": "已共享",
+    "folders": "資料夾",
+    "tags": "標籤",
+    "search": {
+      "label": "搜尋",
+      "placeholder": "搜尋筆記..."
+    },
+    "userId": {
+      "label": "使用者ID",
+      "placeholder": "輸入使用者ID"
+    },
+    "category": {
+      "label": "分類",
+      "placeholder": "輸入分類"
+    },
+    "priority": {
+      "label": "優先級"
+    },
+    "status": {
+      "label": "狀態"
+    },
+    "clear": "清除篩選"
+  },
+  "table": {
+    "note": "筆記",
+    "user": "使用者",
+    "category": "分類",
+    "priority": "優先級",
+    "tags": "標籤",
+    "status": "狀態",
+    "createdAt": "建立時間",
+    "actions": "操作",
+    "pin": "置頂",
+    "tag": "標籤",
+    "notesCount": "筆記數量"
+  },
+  "constants": {
+    "priority": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    }
+  },
+  "badges": {
+    "status": {
+      "active": "活動",
+      "archived": "已封存"
+    }
+  },
+  "actions": {
+    "edit": "編輯",
+    "delete": "刪除",
+    "archive": "封存",
+    "unarchive": "取消封存",
+    "pin": "置頂筆記",
+    "unpin": "取消置頂",
+    "close": "關閉",
+    "cancel": "取消",
+    "update": "更新",
+    "createNew": "建立筆記",
+    "creating": "建立中...",
+    "updating": "更新中..."
+  },
+  "detail": {
+    "userInfo": "建立者資訊",
+    "updatedAt": "更新時間",
+    "metadata": "詳細資訊"
+  },
+  "empty": {
+    "title": "找不到筆記",
+    "hint": "尚未建立任何筆記",
+    "content": "暫無內容"
+  },
+  "sharedNotes": {
+    "title": "共享筆記",
+    "subtitle": "檢視和管理使用者之間共享的筆記",
+    "searchFilters": {
+      "search": {
+        "placeholder": "搜尋共享筆記..."
+      },
+      "sharedWith": "共享給（使用者ID）",
+      "sharedBy": "共享者（使用者ID）"
+    },
+    "empty": {
+      "title": "暫無共享筆記",
+      "hint": "尚未有任何共享筆記"
+    },
+    "table": {
+      "note": "筆記",
+      "sharedBy": "共享者",
+      "sharedWith": "共享給",
+      "permissions": "權限",
+      "sharedAt": "共享時間"
+    },
+    "permissions": {
+      "view": "檢視",
+      "edit": "編輯",
+      "delete": "刪除",
+      "create": "建立"
+    },
+    "detail": {
+      "title": "共享筆記詳情",
+      "noteInfo": "筆記資訊",
+      "noteOwner": "筆記擁有者",
+      "sharingInfo": "共享資訊",
+      "message": "共享訊息"
+    },
+    "delete": {
+      "confirm": {
+        "title": "確認刪除共享",
+        "message": "確定要刪除此筆記共享嗎？"
+      }
+    }
+  },
+  "alerts": {
+    "loadFailed": "載入共享筆記失敗",
+    "deleteSuccess": "共享筆記刪除成功",
+    "deleteFailed": "共享筆記刪除失敗",
+    "missingUserOrTitle": "請選擇使用者並輸入標題",
+    "createSuccess": "筆記建立成功",
+    "createFailed": "無法建立筆記",
+    "uploadImageError": "無法上傳圖片"
+  },
+  "delete": {
+    "confirm": {
+      "title": "確認刪除",
+      "message": "確定要刪除此筆記嗎？",
+      "irreversible": "此操作無法復原。"
+    }
+  },
+  "toasts": {
+    "updateSuccess": "筆記更新成功！",
+    "updateError": "筆記更新失敗",
+    "deleteSuccess": "筆記刪除成功！",
+    "deleteError": "筆記刪除失敗",
+    "archiveSuccess": "筆記封存成功",
+    "archiveError": "筆記封存失敗",
+    "unarchiveSuccess": "筆記取消封存成功",
+    "unarchiveError": "筆記取消封存失敗",
+    "pinSuccess": "筆記置頂成功",
+    "unpinSuccess": "筆記取消置頂成功",
+    "pinError": "無法變更置頂狀態",
+    "uploadImageError": "圖片上傳失敗"
+  },
+  "folders": {
+    "title": "資料夾管理",
+    "subtitle": "檢視和管理使用者筆記資料夾",
+    "createFolder": "建立資料夾",
+    "searchPlaceholder": "搜尋資料夾...",
+    "table": {
+      "folder": "資料夾",
+      "user": "使用者",
+      "notesCount": "筆記數量",
+      "pinStatus": "置頂狀態",
+      "createdAt": "建立時間",
+      "actions": "操作"
+    },
+    "status": {
+      "pinned": "已置頂",
+      "unpinned": "未置頂"
+    },
+    "form": {
+      "name": {
+        "label": "資料夾名稱",
+        "placeholder": "輸入資料夾名稱..."
+      },
+      "color": {
+        "label": "顏色"
+      },
+      "icon": {
+        "label": "圖示"
+      },
+      "selectUser": "選擇使用者",
+      "selectUserRequired": "選擇使用者 *",
+      "searchUser": "按姓名、電子郵件或ID搜尋...",
+      "changeUser": "更換",
+      "noUsers": "暫無使用者",
+      "noUsersFound": "找不到使用者",
+      "loading": "載入中..."
+    },
+    "modal": {
+      "create": "建立新資料夾",
+      "edit": "編輯資料夾",
+      "creating": "建立中...",
+      "saving": "儲存中...",
+      "saveChanges": "儲存變更"
+    },
+    "detail": {
+      "title": "資料夾詳情",
+      "inFolder": "在資料夾中",
+      "createNoteInFolder": "在資料夾中建立新筆記",
+      "noNotes": "此資料夾中暫無筆記",
+      "viewingFolder": "正在檢視資料夾",
+      "userLabel": "使用者：",
+      "notesCount": "則筆記"
+    },
+    "actions": {
+      "edit": "編輯資料夾",
+      "delete": "刪除資料夾",
+      "viewDetail": "檢視詳情",
+      "removeFromFolder": "移出資料夾",
+      "create": "建立資料夾",
+      "update": "更新"
+    },
+    "delete": {
+      "confirm": {
+        "title": "刪除資料夾？",
+        "message": "確定要刪除此資料夾嗎？",
+        "note": "筆記將被保留並移動到活動標籤頁。",
+        "irreversible": "此操作無法復原。"
+      }
+    },
+    "remove": {
+      "confirm": {
+        "title": "移動筆記",
+        "message": "要將此筆記移出資料夾嗎？",
+        "note": "筆記將被移動到活動標籤頁。"
+      }
+    },
+    "empty": {
+      "title": "暫無資料夾",
+      "hint": "尚未建立任何資料夾"
+    },
+    "toasts": {
+      "createSuccess": "資料夾建立成功！",
+      "createError": "資料夾建立失敗",
+      "updateSuccess": "資料夾更新成功！",
+      "updateError": "資料夾更新失敗",
+      "deleteSuccess": "資料夾刪除成功！",
+      "deleteError": "資料夾刪除失敗",
+      "removeNoteSuccess": "筆記已移出資料夾！",
+      "removeNoteError": "筆記移動失敗"
+    }
+  },
+  "moveToFolder": {
+    "title": "移動到資料夾",
+    "searchPlaceholder": "搜尋資料夾...",
+    "success": "筆記已成功移動到資料夾",
+    "move": "移動",
+    "moving": "移動中...",
+    "noResults": "找不到資料夾",
+    "empty": "使用者暫無資料夾",
+    "errors": {
+      "loadFolders": "載入資料夾列表失敗",
+      "move": "移動筆記失敗"
+    }
+  },
+  "tags": {
+    "title": "標籤管理",
+    "subtitle": "檢視和管理使用者標籤",
+    "createTag": "建立標籤",
+    "searchPlaceholder": "搜尋標籤...",
+    "allUsers": "所有使用者",
+    "totalStats": "共 {{total}} 個標籤",
+    "loading": "載入中...",
+    "table": {
+      "tag": "標籤",
+      "user": "使用者",
+      "notesCount": "筆記數量",
+      "pinned": "已置頂",
+      "createdAt": "建立時間",
+      "actions": "操作"
+    },
+    "form": {
+      "name": {
+        "label": "標籤名稱",
+        "placeholder": "輸入標籤名稱..."
+      },
+      "color": {
+        "label": "顏色"
+      },
+      "user": {
+        "label": "使用者",
+        "required": "使用者 *"
+      },
+      "selectUser": "選擇使用者",
+      "selectUserRequired": "選擇使用者 *",
+      "searchUser": "搜尋使用者...",
+      "changeUser": "更換",
+      "noUsers": "暫無使用者",
+      "noUsersFound": "找不到使用者",
+      "loading": "載入中..."
+    },
+    "modal": {
+      "create": "建立新標籤",
+      "edit": "編輯標籤",
+      "manage": "管理標籤",
+      "creating": "建立中...",
+      "saving": "儲存中...",
+      "saveChanges": "儲存變更"
+    },
+    "manage": {
+      "title": "管理標籤",
+      "currentTags": "目前標籤",
+      "addTag": "新增標籤",
+      "noTags": "暫無標籤",
+      "noAvailableTags": "暫無可用標籤",
+      "removeTag": "移除標籤",
+      "loading": "載入中...",
+      "noPermission": "您沒有權限管理標籤"
+    },
+    "actions": {
+      "edit": "編輯標籤",
+      "editTooltip": "編輯標籤",
+      "delete": "刪除標籤",
+      "deleteTooltip": "刪除標籤",
+      "pinTooltip": "置頂標籤",
+      "unpinTooltip": "取消置頂標籤",
+      "create": "建立標籤",
+      "update": "更新",
+      "close": "關閉",
+      "cancel": "取消",
+      "add": "新增",
+      "remove": "移除"
+    },
+    "status": {
+      "pinned": "已置頂",
+      "unpinned": "未置頂"
+    },
+    "delete": {
+      "confirm": {
+        "title": "刪除標籤？",
+        "message": "確定要刪除此標籤嗎？",
+        "note": "標籤將從所有關聯筆記中移除。",
+        "irreversible": "此操作無法復原。"
+      }
+    },
+    "empty": {
+      "title": "暫無標籤",
+      "hint": "尚未建立任何標籤",
+      "noResults": "找不到標籤",
+      "noTags": "暫無標籤"
+    },
+    "detail": {
+      "user": "使用者",
+      "totalNotes": "筆記總數",
+      "createdAt": "建立時間",
+      "notesList": "使用此標籤的筆記",
+      "noNotes": "暫無使用此標籤的筆記",
+      "archived": "已封存"
+    },
+    "notesCount": {
+      "label": "則筆記"
+    },
+    "toasts": {
+      "createSuccess": "標籤建立成功！",
+      "createError": "標籤建立失敗",
+      "updateSuccess": "標籤更新成功！",
+      "updateError": "標籤更新失敗",
+      "deleteSuccess": "標籤刪除成功！",
+      "deleteError": "標籤刪除失敗",
+      "addSuccess": "標籤新增成功",
+      "addError": "標籤新增失敗",
+      "removeSuccess": "標籤移除成功",
+      "removeError": "標籤移除失敗",
+      "loadError": "載入標籤列表失敗",
+      "detailLoadError": "載入標籤詳情失敗"
+    },
+    "cell": {
+      "noTags": "無",
+      "manageTags": "管理標籤"
+    }
+  }
+}

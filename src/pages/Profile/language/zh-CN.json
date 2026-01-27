@@ -1,0 +1,51 @@
+{
+  "title": "管理员资料",
+  "edit": "编辑信息",
+  "loadFailed": "加载资料失败",
+  "name": "姓名",
+  "namePlaceholder": "输入姓名",
+  "level": "级别",
+  "phone": "电话号码",
+  "birthDate": "出生日期",
+  "gender": {
+    "title": "性别",
+    "male": "男",
+    "female": "女",
+    "other": "其他",
+    "unspecified": "未指定"
+  },
+  "language": "语言",
+  "theme": {
+    "title": "主题",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "rememberLogin": "记住登录",
+  "hidePhone": "隐藏电话号码",
+  "hideBirthDate": "隐藏出生日期",
+  "allowMessagesFromNonFriends": "允许非好友发送消息",
+  "actions": {
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "保存中...",
+    "reset": "重置",
+    "enhance": "增强",
+    "showOriginal": "原图"
+  },
+  "messages": {
+    "updateSuccess": "资料更新成功",
+    "updateFailed": "更新失败"
+  },
+  "noPermission": "您没有权限查看此资料",
+  "avatar": {
+    "title": "头像",
+    "upload": "选择图片",
+    "uploading": "上传中...",
+    "remove": "移除图片",
+    "hint": "支持 JPG、PNG 或 GIF，最大 5MB。",
+    "invalidFileType": "仅支持图片文件",
+    "fileTooLarge": "文件过大，最大 5MB",
+    "uploadSuccess": "头像上传成功",
+    "uploadFailed": "头像上传失败"
+  }
+}

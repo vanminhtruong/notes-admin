@@ -1,0 +1,80 @@
+{
+  "title": "仪表盘",
+  "subtitle": "管理控制面板概览",
+  "cards": {
+    "totalUsers": "用户总数",
+    "activeUsers": "活跃用户",
+    "totalNotes": "笔记总数",
+    "totalFolders": "文件夹总数",
+    "notesInFolders": "文件夹中的笔记",
+    "todayActivity": "今日活动"
+  },
+  "actions": {
+    "title": "快捷操作",
+    "users": { "title": "用户管理", "desc": "查看和管理账户" },
+    "notes": { "title": "笔记管理", "desc": "用户笔记增删改查" },
+    "activity": { "title": "用户活动", "desc": "跟踪消息和群组" },
+    "createNote": { "title": "创建笔记", "desc": "为用户创建笔记" }
+  },
+  "recent": {
+    "title": "最近活动",
+    "empty": "暂无最近活动"
+  },
+  "charts": {
+    "section1": {
+      "title": "活跃用户统计"
+    },
+    "section2": {
+      "title": "分类和离线用户统计"
+    },
+    "section3": {
+      "title": "聊天和笔记分享统计"
+    },
+    "topNotesCreators": {
+      "title": "笔记创建排行",
+      "description": "创建笔记最多的用户",
+      "notesCount": "笔记数量",
+      "topCreatorsList": "笔记创建排行榜",
+      "note": "条笔记",
+      "notes": "条笔记"
+    },
+    "recentOnline": {
+      "title": "最近在线用户",
+      "description": "过去24小时内的用户在线活动",
+      "usersCount": "用户数量",
+      "recentUsersList": "最近在线用户列表"
+    },
+    "topOffline": {
+      "title": "最长离线用户",
+      "description": "离线时间最长的用户排行",
+      "offlineDays": "离线天数",
+      "offlineUsersList": "最长离线排行榜",
+      "day": "天",
+      "days": "天"
+    },
+    "topChatUsers": {
+      "title": "聊天活跃排行",
+      "description": "发送消息最多的用户",
+      "messagesCount": "消息数量",
+      "topUsersList": "聊天活跃排行榜",
+      "message": "条消息",
+      "messages": "条消息"
+    },
+    "topNoteSharers": {
+      "title": "笔记分享排行",
+      "description": "分享笔记最多的用户",
+      "sharedCount": "分享次数",
+      "topSharersList": "分享排行榜",
+      "share": "次分享",
+      "shares": "次分享"
+    },
+    "topCategoriesCreators": {
+      "title": "分类创建排行",
+      "description": "创建分类最多的用户",
+      "categoriesCount": "分类数量",
+      "topCreatorsList": "分类创建排行榜",
+      "category": "个分类",
+      "categories": "个分类"
+    }
+  }
+}

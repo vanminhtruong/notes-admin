@@ -379,17 +379,24 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
   const selectedUser = users.find(user => user.id.toString() === formData.userId);
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-[9999]">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md max-w-2xl xl-down:max-w-xl md-down:max-w-lg sm-down:max-w-sm w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 xl-down:p-3 sm-down:p-2 z-[9999]">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl max-w-2xl xl-down:max-w-xl md-down:max-w-lg sm-down:max-w-sm w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl shadow-black/20 border border-gray-100 dark:border-neutral-800">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 xl-down:p-3 sm-down:p-2 border-b border-gray-200 dark:border-neutral-700">
-          <h3 className="text-lg xl-down:text-base sm-down:text-sm font-semibold text-gray-900 dark:text-gray-100">
-            {t('create.title')}
-          </h3>
+        <div className="flex items-center justify-between p-5 xl-down:p-4 sm-down:p-3 border-b border-gray-100 dark:border-neutral-800 bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-900/20 dark:to-violet-900/20 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 xl-down:w-9 xl-down:h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+              <svg className="w-5 h-5 xl-down:w-4 xl-down:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <h3 className="text-lg xl-down:text-base sm-down:text-sm font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+              {t('create.title')}
+            </h3>
+          </div>
           <button
             onClick={onClose}
             type="button"
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className="p-2 rounded-xl bg-white/80 dark:bg-neutral-800/80 hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 shadow-sm"
           >
             <X className="w-5 h-5" />
           </button>
@@ -679,11 +686,11 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
         </div>
 
         {/* Footer - Action Buttons */}
-        <div className="flex justify-end gap-2 xl-down:gap-1.5 sm-down:gap-1 p-4 xl-down:p-3 sm-down:p-2 border-t border-gray-200 dark:border-neutral-700">
+        <div className="flex justify-end gap-3 xl-down:gap-2 p-5 xl-down:p-4 sm-down:p-3 border-t border-gray-100 dark:border-neutral-800 bg-gray-50/50 dark:bg-neutral-800/50 flex-shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-neutral-600 rounded-md xl-down:rounded hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors text-sm xl-down:text-xs"
+            className="px-5 py-2.5 xl-down:px-4 xl-down:py-2 sm-down:px-3 sm-down:py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl xl-down:rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
           >
             {t('actions.cancel')}
           </button>
@@ -691,15 +698,20 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
             type="submit"
             onClick={handleSubmit}
             disabled={loading || !formData.userId || !formData.title}
-            className="px-4 py-2 xl-down:px-3 xl-down:py-1.5 sm-down:px-2 sm-down:py-1 bg-blue-600 dark:bg-blue-500 text-white rounded-md xl-down:rounded hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm xl-down:text-xs"
+            className="group px-5 py-2.5 xl-down:px-4 xl-down:py-2 sm-down:px-3 sm-down:py-1.5 text-sm font-medium bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl xl-down:rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 flex items-center justify-center gap-2"
           >
             {loading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-4 w-4 xl-down:h-3.5 xl-down:w-3.5 border-b-2 border-white mr-2 xl-down:mr-1.5"></div>
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 {t('actions.creating')}
-              </div>
+              </>
             ) : (
-              t('actions.createNew')
+              <>
+                <svg className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                {t('actions.createNew')}
+              </>
             )}
           </button>
         </div>

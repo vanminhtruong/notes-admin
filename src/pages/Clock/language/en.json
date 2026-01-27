@@ -5,7 +5,8 @@
   "timezones": {
     "vietnam": "Vietnam",
     "usa": "United States (EST)",
-    "korea": "South Korea"
+    "korea": "South Korea",
+    "china": "China"
   },
   "info": "Clock updates in real-time",
   "weekdays": {

@@ -27,40 +27,60 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ t, confirmActio
       });
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-      <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-md w-full mx-4 border border-gray-200 dark:border-neutral-700">
-        <div className="p-6">
-          <div className="flex items-center mb-4">
-            <div className="flex-shrink-0">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl shadow-black/20 max-w-md w-full border border-gray-100 dark:border-neutral-800 overflow-hidden">
+        {/* Header with icon */}
+        <div className={`p-6 ${
+          confirmAction.type === 'delete' 
+            ? 'bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20' 
+            : 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20'
+        }`}>
+          <div className="flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
+              confirmAction.type === 'delete'
+                ? 'bg-gradient-to-br from-red-500 to-orange-600 shadow-red-500/25'
+                : 'bg-gradient-to-br from-amber-500 to-yellow-600 shadow-amber-500/25'
+            }`}>
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {confirmAction.type === 'delete' ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                )}
               </svg>
             </div>
-            <div className="ml-3">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{title}</h3>
             </div>
           </div>
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300">{message}</p>
-          </div>
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-700"
-            >
-              {t('confirmDialog.cancel')}
-            </button>
-            <button
-              onClick={onConfirm}
-              className={`px-4 py-2 text-sm font-medium text-white rounded-md transition-colors ${
-                confirmAction.type === 'delete'
-                  ? 'bg-red-600 hover:bg-red-700'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}
-            >
-              {t('confirmDialog.confirm')}
-            </button>
-          </div>
+        </div>
+        
+        {/* Content */}
+        <div className="p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{message}</p>
+        </div>
+        
+        {/* Footer */}
+        <div className="flex justify-end gap-3 p-6 pt-0">
+          <button
+            onClick={onCancel}
+            className="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl hover:bg-gray-50 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+          >
+            {t('confirmDialog.cancel')}
+          </button>
+          <button
+            onClick={onConfirm}
+            className={`px-5 py-2.5 text-sm font-medium text-white rounded-xl transition-all duration-200 shadow-lg flex items-center gap-2 ${
+              confirmAction.type === 'delete'
+                ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 shadow-red-500/25 hover:shadow-red-500/40'
+                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25 hover:shadow-blue-500/40'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            {t('confirmDialog.confirm')}
+          </button>
         </div>
       </div>
     </div>,

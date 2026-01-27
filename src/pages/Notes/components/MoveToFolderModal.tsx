@@ -92,29 +92,35 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
   if (!show) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg max-w-lg w-full max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl max-w-lg w-full max-h-[80vh] flex flex-col shadow-2xl shadow-black/20 border border-gray-100 dark:border-neutral-800">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-200 dark:border-neutral-700">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        <div className="p-5 sm:p-6 border-b border-gray-100 dark:border-neutral-800 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                  {t('moveToFolder.title', { defaultValue: 'Di chuyển vào thư mục' })}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[200px]">
+                  {noteTitle}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl bg-white/80 dark:bg-neutral-800/80 hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 shadow-sm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              {t('moveToFolder.title', { defaultValue: 'Di chuyển vào thư mục' })}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 truncate">
-              {noteTitle}
-            </p>
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="ml-4 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
 
         {/* Search */}
@@ -193,20 +199,32 @@ const MoveToFolderModal: React.FC<MoveToFolderModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 px-6 pb-6 pt-4 border-t border-gray-200 dark:border-neutral-700">
+        <div className="flex gap-3 p-5 sm:p-6 border-t border-gray-100 dark:border-neutral-800 bg-gray-50/50 dark:bg-neutral-800/50 flex-shrink-0">
           <button
             onClick={onClose}
             disabled={loading}
-            className="flex-1 px-4 py-2.5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-neutral-600 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors font-medium"
+            className="flex-1 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl hover:bg-gray-50 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm disabled:opacity-50"
           >
             {t('actions.cancel', { defaultValue: 'Hủy' })}
           </button>
           <button
             onClick={handleConfirm}
             disabled={!selectedFolderId || loading}
-            className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="group flex-1 px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center justify-center gap-2"
           >
-            {loading ? t('moveToFolder.moving', { defaultValue: 'Đang di chuyển...' }) : t('moveToFolder.move', { defaultValue: 'Di chuyển' })}
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                {t('moveToFolder.moving', { defaultValue: 'Đang di chuyển...' })}
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                {t('moveToFolder.move', { defaultValue: 'Di chuyển' })}
+              </>
+            )}
           </button>
         </div>
       </div>

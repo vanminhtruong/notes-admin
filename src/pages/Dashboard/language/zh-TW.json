@@ -1,0 +1,80 @@
+{
+  "title": "儀表板",
+  "subtitle": "管理控制面板概覽",
+  "cards": {
+    "totalUsers": "使用者總數",
+    "activeUsers": "活躍使用者",
+    "totalNotes": "筆記總數",
+    "totalFolders": "資料夾總數",
+    "notesInFolders": "資料夾中的筆記",
+    "todayActivity": "今日活動"
+  },
+  "actions": {
+    "title": "快捷操作",
+    "users": { "title": "使用者管理", "desc": "檢視和管理帳戶" },
+    "notes": { "title": "筆記管理", "desc": "使用者筆記增刪改查" },
+    "activity": { "title": "使用者活動", "desc": "追蹤訊息和群組" },
+    "createNote": { "title": "建立筆記", "desc": "為使用者建立筆記" }
+  },
+  "recent": {
+    "title": "最近活動",
+    "empty": "暫無最近活動"
+  },
+  "charts": {
+    "section1": {
+      "title": "活躍使用者統計"
+    },
+    "section2": {
+      "title": "分類和離線使用者統計"
+    },
+    "section3": {
+      "title": "聊天和筆記分享統計"
+    },
+    "topNotesCreators": {
+      "title": "筆記建立排行",
+      "description": "建立筆記最多的使用者",
+      "notesCount": "筆記數量",
+      "topCreatorsList": "筆記建立排行榜",
+      "note": "則筆記",
+      "notes": "則筆記"
+    },
+    "recentOnline": {
+      "title": "最近上線使用者",
+      "description": "過去24小時內的使用者上線活動",
+      "usersCount": "使用者數量",
+      "recentUsersList": "最近上線使用者列表"
+    },
+    "topOffline": {
+      "title": "最長離線使用者",
+      "description": "離線時間最長的使用者排行",
+      "offlineDays": "離線天數",
+      "offlineUsersList": "最長離線排行榜",
+      "day": "天",
+      "days": "天"
+    },
+    "topChatUsers": {
+      "title": "聊天活躍排行",
+      "description": "發送訊息最多的使用者",
+      "messagesCount": "訊息數量",
+      "topUsersList": "聊天活躍排行榜",
+      "message": "則訊息",
+      "messages": "則訊息"
+    },
+    "topNoteSharers": {
+      "title": "筆記分享排行",
+      "description": "分享筆記最多的使用者",
+      "sharedCount": "分享次數",
+      "topSharersList": "分享排行榜",
+      "share": "次分享",
+      "shares": "次分享"
+    },
+    "topCategoriesCreators": {
+      "title": "分類建立排行",
+      "description": "建立分類最多的使用者",
+      "categoriesCount": "分類數量",
+      "topCreatorsList": "分類建立排行榜",
+      "category": "個分類",
+      "categories": "個分類"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "title": "管理員資料",
+  "edit": "編輯資訊",
+  "loadFailed": "載入資料失敗",
+  "name": "姓名",
+  "namePlaceholder": "輸入姓名",
+  "level": "級別",
+  "phone": "電話號碼",
+  "birthDate": "出生日期",
+  "gender": {
+    "title": "性別",
+    "male": "男",
+    "female": "女",
+    "other": "其他",
+    "unspecified": "未指定"
+  },
+  "language": "語言",
+  "theme": {
+    "title": "主題",
+    "light": "淺色",
+    "dark": "深色"
+  },
+  "rememberLogin": "記住登入",
+  "hidePhone": "隱藏電話號碼",
+  "hideBirthDate": "隱藏出生日期",
+  "allowMessagesFromNonFriends": "允許非好友發送訊息",
+  "actions": {
+    "cancel": "取消",
+    "save": "儲存",
+    "saving": "儲存中...",
+    "reset": "重設",
+    "enhance": "增強",
+    "showOriginal": "原圖"
+  },
+  "messages": {
+    "updateSuccess": "資料更新成功",
+    "updateFailed": "更新失敗"
+  },
+  "noPermission": "您沒有權限檢視此資料",
+  "avatar": {
+    "title": "頭像",
+    "upload": "選擇圖片",
+    "uploading": "上傳中...",
+    "remove": "移除圖片",
+    "hint": "支援 JPG、PNG 或 GIF，最大 5MB。",
+    "invalidFileType": "僅支援圖片檔案",
+    "fileTooLarge": "檔案過大，最大 5MB",
+    "uploadSuccess": "頭像上傳成功",
+    "uploadFailed": "頭像上傳失敗"
+  }
+}

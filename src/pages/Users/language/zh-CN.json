@@ -1,0 +1,362 @@
+{
+  "title": "用户列表",
+  "subtitle": "管理系统中的所有用户",
+  "searchUser": "搜索用户",
+  "searchPlaceholder": "姓名或邮箱...",
+  "userList": "用户列表",
+  "loadingUsers": "加载用户列表中...",
+  "noUsersFound": "未找到匹配的用户",
+  "enterKeywordToSearch": "输入关键词搜索用户",
+  "cannotLoadUserInfo": "无法加载用户信息",
+  "noPermissionForUserActivity": "您没有权限访问用户活动的任何标签页",
+  "lastActivity": "最后活动",
+  "createdAt": "创建时间",
+  "actions": "操作",
+  "status": {
+    "active": "活跃",
+    "disabled": "已禁用"
+  },
+  "roles": {
+    "admin": "管理员",
+    "user": "用户"
+  },
+  "filters": {
+    "role": "角色",
+    "status": "状态",
+    "userType": "用户类型",
+    "only": "- 仅显示",
+    "all": "全部",
+    "clear": "清除筛选"
+  },
+  "pagination": {
+    "title": "第 {{currentPage}} 页 / 共 {{totalPages}} 页",
+    "prev": "上一页",
+    "next": "下一页"
+  },
+  "create": {
+    "title": "创建用户账户",
+    "success": "账户创建成功",
+    "failed": "无法创建账户",
+    "creating": "创建中...",
+    "submit": "创建账户",
+    "form": {
+      "name": "姓名",
+      "namePlaceholder": "输入姓名...",
+      "email": "邮箱",
+      "emailPlaceholder": "输入邮箱地址...",
+      "password": "密码",
+      "passwordPlaceholder": "输入密码..."
+    },
+    "validation": {
+      "nameRequired": "姓名为必填项",
+      "emailRequired": "邮箱为必填项",
+      "emailInvalid": "邮箱格式无效",
+      "passwordRequired": "密码为必填项",
+      "passwordMinLength": "密码至少需要6个字符"
+    }
+  },
+  "buttons": {
+    "cancel": "取消",
+    "confirm": "确认",
+    "submit": "提交",
+    "update": "更新",
+    "loading": "加载中...",
+    "processing": "处理中...",
+    "retry": "重试",
+    "delete": "删除"
+  },
+  "action": {
+    "enable": "启用账户",
+    "disable": "禁用",
+    "disableAccount": "禁用账户"
+  },
+  "confirm": {
+    "enableTitle": "确认启用",
+    "enableMessage": "确定要启用账户 \"{{name}}\" 吗？",
+    "disableTitle": "确认禁用",
+    "disableMessage": "确定要禁用账户 \"{{name}}\" 吗？",
+    "deleteTitle": "确认永久删除",
+    "deleteMessage": "⚠️ 警告：确定要永久删除账户 \"{{name}}\" 吗？此操作无法撤销！"
+  },
+  "alerts": {
+    "noPermission": "您没有权限执行此操作",
+    "cannotChangeAdminStatus": "无法更改管理员账户状态",
+    "confirmToggleStatus": "确定要{{action}}账户 \"{{name}}\" 吗？",
+    "cannotToggleStatus": "无法{{action}}账户",
+    "cannotDeleteAdmin": "无法删除管理员账户",
+    "confirmDeletePermanent1": "⚠️ 警告：确定要永久删除账户 \"{{name}}\" 吗？\n\n此操作无法撤销！",
+    "confirmDeletePermanent2": "最终确认：永久删除账户 \"{{email}}\"？",
+    "cannotDeleteUser": "无法删除账户",
+    "deleteSuccess": "用户已被永久删除",
+    "enableSuccess": "账户已成功启用",
+    "disableSuccess": "账户已成功禁用",
+    "toggleError": "无法更改账户状态",
+    "deleteError": "无法删除账户",
+    "loadError": "无法加载用户列表"
+  },
+  "online": "在线",
+  "offline": "离线",
+  "neverLoggedIn": "从未登录",
+  "userActivity": {
+    "tabs": {
+      "messages": "消息",
+      "groups": "群组",
+      "friends": "好友",
+      "notifications": "通知",
+      "monitor": "监控"
+    },
+    "errors": {
+      "cannotLoadUsers": "无法加载用户。",
+      "serverError": "服务器错误。"
+    },
+    "messages": {
+      "noMessages": "暂无消息",
+      "sentTo": "发送给",
+      "receivedFrom": "收到来自",
+      "unknownUser": "用户",
+      "noteShare": "{{name}} 分享了一条笔记",
+      "actions": {
+        "menu": "菜单",
+        "recall": "撤回消息",
+        "delete": "删除消息",
+        "edit": "编辑消息",
+        "deleteForUser": "为用户删除",
+        "confirmDeleteForUser": "确定要为被监控用户删除此消息吗？",
+        "deleteError": "无法删除消息"
+      }
+    },
+    "groups": {
+      "noGroups": "暂无群组",
+      "groupOwner": "群主",
+      "joined": "已加入"
+    },
+    "friends": {
+      "noFriends": "暂无好友",
+      "activity": "最后在线"
+    },
+    "typing": {
+      "typingWith": "正在与 {{name}} 输入...",
+      "typingInGroup": "正在群组中输入..."
+    },
+    "callLog": {
+      "video": "视频通话",
+      "audio": "语音通话",
+      "duration": "{{m}} 分 {{s}} 秒",
+      "incomingVideoFrom": "来自 {{name}} 的视频来电",
+      "incomingAudioFrom": "来自 {{name}} 的语音来电",
+      "outgoingVideoTo": "拨打给 {{name}} 的视频电话",
+      "outgoingAudioTo": "拨打给 {{name}} 的语音电话",
+      "toUserMissed": "拨打给 {{name}} 的电话未接",
+      "missedFromUser": "来自 {{name}} 的未接来电",
+      "userCancelled": "{{name}} 取消了通话"
+    },
+    "notifications": {
+      "noNotifications": "暂无通知",
+      "unknown": "未知",
+      "types": {
+        "message": "消息",
+        "friend_request": "好友请求",
+        "group_invite": "群组邀请"
+      },
+      "actions": {
+        "menu": "菜单",
+        "delete": "删除通知",
+        "clearAll": "清除全部",
+        "confirmClearAll": "清除此用户的所有通知？",
+        "clearAllSuccess": "所有通知已清除",
+        "clearAllError": "无法清除通知"
+      },
+      "message": {
+        "title": "来自 {{name}} 的新消息",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "来自 {{name}} 的好友请求"
+      },
+      "groupInvite": {
+        "title": "加入 {{name}} 的邀请"
+      },
+      "deleteSuccess": "通知已删除",
+      "deleteError": "无法删除通知"
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "私聊",
+        "groups": "群组"
+      },
+      "friendsList": "好友",
+      "selectFriendToView": "选择好友查看",
+      "noFriends": "此用户暂无好友",
+      "chatWith": "与 {{name}} 的聊天",
+      "noMessages": "暂无消息",
+      "groupsList": "群组",
+      "noGroups": "此用户尚未加入任何群组",
+      "selectGroupToView": "选择群组查看",
+      "groupChat": "群聊",
+      "actions": {
+        "viewMembers": "查看成员和角色",
+        "close": "关闭"
+      },
+      "daySeparator": {
+        "today": "今天",
+        "yesterday": "昨天"
+      },
+      "status": {
+        "sent": "已发送",
+        "delivered": "已送达",
+        "read": "已读"
+      },
+      "members": {
+        "title": "成员和角色",
+        "empty": "暂无成员",
+        "id": "ID",
+        "roles": {
+          "owner": "群主",
+          "admin": "管理员",
+          "member": "成员"
+        }
+      },
+      "noPinnedDM": "暂无置顶消息",
+      "noPinnedGroup": "暂无置顶消息",
+      "pinnedMessages": "置顶消息",
+      "pinnedBy": "由 {{name}} 置顶",
+      "noBlockedUsers": "暂无屏蔽用户",
+      "blockedUsers": "已屏蔽用户",
+      "blockedAt": "屏蔽于 {{date}}",
+      "viewMessage": "查看",
+      "unknownUser": "用户",
+      "blockedNotice": "被监控用户已屏蔽 {{name}}",
+      "blockedNoticeDesc": "他们无法互相发送消息。",
+      "userBlockedFriend": "{{userName}} 已屏蔽 {{friendName}}",
+      "friendBlockedUser": "{{friendName}} 已屏蔽 {{userName}}"
+    },
+    "noteShare": {
+      "cardTitle": "分享的笔记",
+      "untitled": "无标题笔记",
+      "noContent": "无内容",
+      "priority": {
+        "low": "低优先级",
+        "medium": "中优先级",
+        "high": "高优先级"
+      },
+      "category": {
+        "general": "通用",
+        "work": "工作",
+        "personal": "个人"
+      }
+    },
+    "messageActions": {
+      "editPrompt": "输入消息的新内容：",
+      "editEmpty": "内容不能为空",
+      "editSuccess": "消息编辑成功",
+      "editError": "无法编辑消息"
+    }
+  },
+  "messageActions": {
+    "confirmRecall": "确定要撤回此消息吗？",
+    "recallSuccess": "消息撤回成功",
+    "recallError": "无法撤回消息",
+    "confirmDelete": "确定要删除此消息吗？",
+    "deleteSuccess": "消息删除成功",
+    "deleteError": "无法删除消息"
+  },
+  "edit": {
+    "title": "编辑用户信息",
+    "button": "编辑",
+    "save": "保存",
+    "cancel": "取消",
+    "saving": "保存中...",
+    "success": "用户信息更新成功！",
+    "failed": "用户信息更新失败",
+    "changeAvatar": "更换头像",
+    "changeAvatarSuccess": "头像已更新",
+    "changeAvatarFailed": "无法更新头像",
+    "newPasswordPlaceholder": "输入新密码（留空保持不变）",
+    "passwordHint": "如不更改请留空。最少6个字符。",
+    "validation": {
+      "nameRequired": "姓名为必填项",
+      "emailRequired": "邮箱为必填项",
+      "emailInvalid": "邮箱格式无效",
+      "phoneInvalid": "电话号码无效。仅可使用数字、+、空格、短横线、括号"
+    }
+  },
+  "personalInfo": "个人信息",
+  "accountSettings": "账户设置",
+  "privacySettings": "隐私设置",
+  "timestamps": "时间戳",
+  "name": "姓名",
+  "email": "邮箱",
+  "phone": "电话",
+  "phoneOptional": "电话（可选）",
+  "birthDate": "出生日期",
+  "genderLabel": "性别",
+  "gender": {
+    "male": "男",
+    "female": "女",
+    "other": "其他",
+    "unspecified": "未指定"
+  },
+  "role": "角色",
+  "theme": "主题",
+  "language": "语言",
+  "e2eeEnabled": "端到端加密",
+  "readStatusEnabled": "已读状态",
+  "hidePhone": "隐藏电话",
+  "hideBirthDate": "隐藏生日",
+  "allowMessagesFromNonFriends": "允许非好友发送消息",
+  "updatedAt": "最后更新",
+  "lastSeenAt": "最后在线",
+  "notProvided": "未提供",
+  "notAvailable": "不可用",
+  "enabled": "已启用",
+  "disabled": "已禁用",
+  "hidden": "已隐藏",
+  "visible": "可见",
+  "allowed": "允许",
+  "blocked": "已屏蔽",
+  "detail": {
+    "title": "用户详情",
+    "close": "关闭"
+  },
+  "sessions": {
+    "title": "管理登录设备",
+    "subtitle": "管理 {{userName}} 的登录设备",
+    "noSessions": "暂无活跃登录设备",
+    "activeSessions": "{{count}} 个活跃设备",
+    "unknownDevice": "未知设备",
+    "browser": "浏览器",
+    "os": "操作系统",
+    "ip": "IP地址",
+    "location": "位置",
+    "lastActivity": "最后活动",
+    "time": {
+      "justNow": "刚刚",
+      "minutesAgo": "{{count}} 分钟前",
+      "hoursAgo": "{{count}} 小时前",
+      "daysAgo": "{{count}} 天前"
+    },
+    "actions": {
+      "logout": "退出登录",
+      "logoutAll": "全部退出"
+    },
+    "confirm": {
+      "logoutTitle": "确认退出",
+      "logoutMessage": "确定要退出此设备的登录吗？",
+      "logoutAllTitle": "确认全部退出",
+      "logoutAllMessage": "确定要退出此用户的所有设备吗？"
+    },
+    "messages": {
+      "logoutSuccess": "设备已成功退出",
+      "logoutAllSuccess": "所有设备已成功退出"
+    },
+    "errors": {
+      "fetchFailed": "加载设备列表失败",
+      "logoutFailed": "设备退出失败",
+      "logoutAllFailed": "全部设备退出失败",
+      "noPermission": "您没有权限查看登录设备"
+    }
+  },
+  "common": {
+    "close": "关闭"
+  }
+}

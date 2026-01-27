@@ -1,0 +1,50 @@
+{
+  "title": "聊天设置管理",
+  "subtitle": "管理用户聊天设置（端到端加密、已读状态、隐私...）",
+  "noPermission": "您没有权限访问此页面",
+  "noData": "暂无数据",
+  "filters": {
+    "search": "搜索",
+    "searchPlaceholder": "按用户名或邮箱搜索...",
+    "e2ee": "端到端加密",
+    "readStatus": "已读状态",
+    "all": "全部",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "clear": "清除筛选"
+  },
+  "table": {
+    "user": "用户",
+    "e2ee": "端到端加密",
+    "readStatus": "已读状态",
+    "allowNonFriends": "允许非好友",
+    "hidePhone": "隐藏电话",
+    "hideBirthDate": "隐藏生日",
+    "createdAt": "创建时间",
+    "actions": "操作",
+    "hasPIN": "已设置PIN",
+    "viewPin": "查看PIN",
+    "noPin": "未设置PIN"
+  },
+  "actions": {
+    "updateSuccess": "更新成功",
+    "updateFailed": "更新失败"
+  },
+  "errors": {
+    "loadFailed": "加载聊天设置数据失败"
+  },
+  "pinModal": {
+    "title": "端到端加密PIN哈希",
+    "infoTitle": "重要信息",
+    "infoText": "这是使用bcrypt加密的PIN哈希。无法从此哈希解密出原始PIN。此哈希用于用户输入PIN时的身份验证。",
+    "hashLabel": "PIN哈希（Bcrypt）",
+    "copied": "已复制",
+    "copy": "复制",
+    "hashAlgorithm": "哈希算法",
+    "hashLength": "哈希长度",
+    "characters": "个字符",
+    "warningTitle": "安全警告",
+    "warningText": "请勿与用户分享此哈希。如需重置PIN，请使用系统中的PIN重置功能。",
+    "close": "关闭"
+  }
+}

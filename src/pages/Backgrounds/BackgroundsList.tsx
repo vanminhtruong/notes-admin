@@ -98,7 +98,7 @@ const BackgroundsList: React.FC = () => {
       <BackgroundsHeader />
 
       {/* Tabs and Filters */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden hover:shadow-md transition-shadow duration-300">
         {/* Tabs */}
         <BackgroundsTabs
           activeTab={state.activeTab}
@@ -127,7 +127,7 @@ const BackgroundsList: React.FC = () => {
       </div>
 
       {/* Backgrounds List */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden hover:shadow-md transition-shadow duration-300">
         {state.isLoading ? (
           <LoadingSpinner />
         ) : state.backgrounds.length === 0 ? (

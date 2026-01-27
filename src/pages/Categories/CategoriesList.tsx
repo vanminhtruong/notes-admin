@@ -63,7 +63,7 @@ const CategoriesList: React.FC = () => {
       <CategoriesHeader />
 
       {/* Filters and Actions */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 p-4 xl-down:p-3 sm-down:p-2">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 p-5 xl-down:p-4 sm-down:p-3 hover:shadow-md transition-shadow duration-300">
         <CategoriesFilters
           searchTerm={filters.searchTerm}
           selectedUserId={filters.selectedUserId}
@@ -78,7 +78,7 @@ const CategoriesList: React.FC = () => {
       </div>
 
       {/* Categories List */}
-      <div className="bg-white dark:bg-neutral-900 rounded-lg xl-down:rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl shadow-sm border border-gray-100 dark:border-neutral-800 overflow-hidden hover:shadow-md transition-shadow duration-300">
         {state.isLoading ? (
           <LoadingSpinner />
         ) : state.categories.length === 0 ? (

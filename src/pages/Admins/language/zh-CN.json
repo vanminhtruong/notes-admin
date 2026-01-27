@@ -1,0 +1,495 @@
+{
+  "title": "管理员管理",
+  "subtitle": "管理系统中管理员的权限和状态",
+  "addAdmin": "添加副管理员",
+  "searchPlaceholder": "按姓名或邮箱搜索...",
+  "filterByLevel": "按级别筛选",
+  "allLevels": "所有级别",
+  "superAdmin": "超级管理员",
+  "subAdmin": "副管理员",
+  "dev": "开发者",
+  "mod": "版主",
+  "refresh": "刷新",
+  "loading": "加载中...",
+  "noAdminsFound": "未找到管理员",
+  "createNewAdmin": "开始创建新的副管理员。",
+  "active": "活跃",
+  "inactive": "未激活",
+  "edit": "编辑",
+  "activate": "激活",
+  "deactivate": "停用",
+  "delete": "删除",
+  "permissionsLabel": "权限",
+  "createdAt": "创建时间",
+  "status": "状态",
+  "level": "级别",
+  "actions": "操作",
+  "showingResults": "显示 {{start}} 至 {{end}}，共 {{total}} 条结果",
+  "itemsPerPage": "/ 页",
+  "previous": "上一页",
+  "next": "下一页",
+  "createModal": {
+    "title": "创建新副管理员",
+    "email": "邮箱",
+    "emailPlaceholder": "admin@example.com",
+    "emailRequired": "邮箱不能为空",
+    "emailInvalid": "邮箱格式无效",
+    "name": "姓名",
+    "namePlaceholder": "张三",
+    "nameRequired": "姓名不能为空",
+    "password": "密码",
+    "passwordPlaceholder": "至少6个字符",
+    "passwordRequired": "密码不能为空",
+    "passwordMinLength": "密码至少需要6个字符",
+    "permissions": "权限",
+    "cancel": "取消",
+    "create": "创建管理员",
+    "creating": "创建中..."
+  },
+  "editModal": {
+    "title": "编辑权限：{{name}}",
+    "permissions": "权限",
+    "cancel": "取消",
+    "save": "保存更改",
+    "saving": "保存中..."
+  },
+  "confirmDialog": {
+    "changeStatus": "更改状态",
+    "confirmDelete": "确认删除",
+    "changeStatusMessage": "确定要更改管理员 \"{{name}}\" 的状态吗？",
+    "deleteMessage": "确定要删除管理员 \"{{name}}\" 吗？此操作无法撤销。",
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "permissions": {
+    "manage_users": {
+      "label": "用户管理",
+      "description": "管理用户账户和信息",
+      "view": {
+        "label": "查看用户信息",
+        "description": "查看用户列表和基本信息"
+      },
+      "view_detail": {
+        "label": "查看用户详情",
+        "description": "允许在用户列表中打开用户详情弹窗"
+      },
+      "create": {
+        "label": "创建用户账户",
+        "description": "创建新用户账户"
+      },
+      "edit": {
+        "label": "编辑用户信息",
+        "description": "编辑用户个人信息"
+      },
+      "activate": {
+        "label": "激活/停用",
+        "description": "激活或停用用户账户"
+      },
+      "view_active_accounts": {
+        "label": "查看活跃账户",
+        "description": "查看当前活跃账户列表"
+      },
+      "delete_permanently": {
+        "label": "永久删除账户",
+        "description": "从系统中永久删除用户账户"
+      },
+      "activity": {
+        "label": "查看用户活动",
+        "description": "访问用户活动页面查看详细用户活动",
+        "messages": {
+          "label": "消息标签页",
+          "description": "查看和管理用户消息",
+          "recall": {
+            "label": "撤回消息（私聊）",
+            "description": "允许实时撤回一对一消息"
+          },
+          "delete": {
+            "label": "删除消息（私聊）",
+            "description": "允许实时删除一对一消息（单方或双方删除）"
+          }
+        },
+        "groups": {
+          "label": "群组标签页",
+          "description": "查看和管理用户参与的群组",
+          "recall": {
+            "label": "撤回群组消息",
+            "description": "允许实时撤回群聊消息"
+          },
+          "delete": {
+            "label": "删除群组消息",
+            "description": "允许实时删除群聊消息"
+          }
+        },
+        "friends": {
+          "label": "好友标签页",
+          "description": "查看用户好友列表"
+        },
+        "notifications": {
+          "label": "通知标签页",
+          "description": "查看用户通知",
+          "delete": {
+            "label": "删除通知",
+            "description": "允许实时删除用户通知"
+          },
+          "clear_all": {
+            "label": "清除所有通知",
+            "description": "允许清除用户的所有通知（仅超级管理员或授权管理员）"
+          }
+        },
+        "monitor": {
+          "label": "监控标签页",
+          "description": "监控用户实时活动",
+          "message_status": {
+            "label": "跟踪消息状态",
+            "description": "实时查看消息发送、送达、已读状态",
+            "sent": {
+              "label": "已发送状态",
+              "description": "跟踪消息发送时间"
+            },
+            "delivered": {
+              "label": "已送达状态",
+              "description": "跟踪消息被接收者收到的时间"
+            },
+            "read": {
+              "label": "已读状态",
+              "description": "跟踪消息被接收者阅读的时间"
+            }
+          }
+        }
+      },
+      "sessions": {
+        "label": "管理登录设备",
+        "description": "管理用户登录会话和设备",
+        "view": {
+          "label": "查看登录设备",
+          "description": "查看活跃登录设备列表"
+        },
+        "logout": {
+          "label": "退出特定设备",
+          "description": "从特定设备退出用户登录"
+        },
+        "logout_all": {
+          "label": "退出所有设备",
+          "description": "从所有设备退出用户登录"
+        }
+      },
+      "chat_settings": {
+        "label": "管理聊天设置",
+        "description": "管理用户聊天设置（端到端加密、已读状态、隐私）",
+        "view": {
+          "label": "查看聊天设置",
+          "description": "查看所有用户聊天设置"
+        },
+        "edit": {
+          "label": "编辑聊天设置",
+          "description": "编辑用户聊天设置"
+        },
+        "e2ee": {
+          "label": "管理端到端加密",
+          "description": "管理端到端加密",
+          "toggle": {
+            "label": "切换端到端加密",
+            "description": "允许为用户启用或禁用端到端加密"
+          }
+        },
+        "read_status": {
+          "label": "管理已读状态",
+          "description": "管理消息已读状态",
+          "toggle": {
+            "label": "切换已读状态",
+            "description": "允许启用或禁用已读状态显示"
+          }
+        },
+        "privacy": {
+          "label": "管理隐私",
+          "description": "管理用户隐私设置",
+          "allow_non_friends": {
+            "label": "非好友消息",
+            "description": "允许或禁止非好友发送消息"
+          },
+          "hide_phone": {
+            "label": "隐藏/显示电话号码",
+            "description": "管理电话号码可见性"
+          },
+          "hide_birthdate": {
+            "label": "隐藏/显示出生日期",
+            "description": "管理出生日期可见性"
+          }
+        }
+      }
+    },
+    "manage_notes": {
+      "label": "笔记管理",
+      "description": "管理用户笔记",
+      "create": {
+        "label": "创建笔记",
+        "description": "为用户创建新笔记"
+      },
+      "edit": {
+        "label": "编辑笔记",
+        "description": "编辑现有笔记"
+      },
+      "delete": {
+        "label": "删除笔记",
+        "description": "删除用户笔记"
+      },
+      "view": {
+        "label": "查看笔记",
+        "description": "查看所有用户笔记"
+      },
+      "view_detail": {
+        "label": "查看笔记详情",
+        "description": "点击列表时通过弹窗查看详细笔记信息"
+      },
+      "archive": {
+        "label": "归档笔记",
+        "description": "归档和取消归档笔记"
+      },
+      "shared": {
+        "label": "管理共享笔记",
+        "description": "管理系统中的共享笔记",
+        "view": {
+          "label": "查看共享笔记",
+          "description": "查看共享笔记列表和详情"
+        },
+        "edit": {
+          "label": "编辑共享笔记",
+          "description": "编辑共享笔记的权限和消息"
+        },
+        "delete": {
+          "label": "删除共享笔记",
+          "description": "删除共享笔记和相关消息"
+        }
+      },
+      "folders": {
+        "label": "管理笔记文件夹",
+        "description": "管理用户笔记文件夹",
+        "view": {
+          "label": "查看文件夹",
+          "description": "查看笔记文件夹列表",
+          "view_detail": {
+            "label": "查看文件夹详情",
+            "description": "点击文件夹时查看文件夹详情和内部笔记"
+          }
+        },
+        "view_detail": {
+          "label": "查看文件夹详情",
+          "description": "点击文件夹时查看文件夹详情和内部笔记"
+        },
+        "create": {
+          "label": "创建文件夹",
+          "description": "为用户创建新文件夹"
+        },
+        "edit": {
+          "label": "编辑文件夹",
+          "description": "编辑文件夹名称、颜色和图标"
+        },
+        "delete": {
+          "label": "删除文件夹",
+          "description": "删除文件夹（笔记将被保留）"
+        },
+        "move": {
+          "label": "移动笔记到文件夹",
+          "description": "将笔记从活动/归档标签页移动到文件夹"
+        },
+        "notes": {
+          "label": "管理文件夹中的笔记",
+          "description": "管理文件夹内的笔记",
+          "create": {
+            "label": "在文件夹中创建笔记",
+            "description": "在文件夹中创建新笔记"
+          },
+          "edit": {
+            "label": "编辑文件夹中的笔记",
+            "description": "编辑文件夹内的笔记"
+          },
+          "delete": {
+            "label": "删除文件夹中的笔记",
+            "description": "删除文件夹内的笔记"
+          },
+          "remove": {
+            "label": "将笔记移出文件夹",
+            "description": "将笔记从文件夹移动到活动标签页"
+          }
+        }
+      },
+      "categories": {
+        "label": "管理分类",
+        "description": "管理用户笔记分类",
+        "view": {
+          "label": "查看分类",
+          "description": "查看用户分类列表"
+        },
+        "create": {
+          "label": "创建分类",
+          "description": "为用户创建新分类"
+        },
+        "edit": {
+          "label": "编辑分类",
+          "description": "编辑分类名称、颜色和图标"
+        },
+        "delete": {
+          "label": "删除分类",
+          "description": "删除分类（笔记将被保留）"
+        }
+      },
+      "tags": {
+        "label": "管理标签",
+        "description": "管理用户笔记标签",
+        "view": {
+          "label": "查看标签",
+          "description": "查看用户标签列表"
+        },
+        "view_detail": {
+          "label": "查看标签详情",
+          "description": "点击标签时查看标签详情和使用该标签的笔记列表"
+        },
+        "create": {
+          "label": "创建标签",
+          "description": "为用户创建新标签"
+        },
+        "edit": {
+          "label": "编辑标签",
+          "description": "编辑标签名称和颜色"
+        },
+        "delete": {
+          "label": "删除标签",
+          "description": "删除标签（标签将从所有笔记中移除）"
+        },
+        "assign": {
+          "label": "为笔记分配/移除标签",
+          "description": "为笔记分配或移除标签"
+        }
+      },
+      "backgrounds": {
+        "label": "管理背景",
+        "description": "管理笔记的背景（颜色和图片）",
+        "view": {
+          "label": "查看背景",
+          "description": "查看背景列表（颜色和图片）"
+        },
+        "create": {
+          "label": "创建背景",
+          "description": "创建新背景（颜色或图片）"
+        },
+        "edit": {
+          "label": "编辑背景",
+          "description": "编辑背景信息"
+        },
+        "delete": {
+          "label": "删除背景",
+          "description": "从系统中删除背景"
+        }
+      }
+    },
+    "manage_admins": {
+      "label": "管理员管理",
+      "description": "管理其他管理员账户（仅超级管理员）",
+      "create": {
+        "label": "创建管理员",
+        "description": "创建新管理员账户"
+      },
+      "edit": {
+        "label": "编辑管理员权限",
+        "description": "编辑其他管理员的权限"
+      },
+      "delete": {
+        "label": "删除管理员",
+        "description": "删除管理员账户"
+      }
+    },
+    "view_dashboard": {
+      "label": "查看仪表盘",
+      "description": "访问带有统计和图表的仪表盘页面"
+    },
+    "profile": {
+      "label": "管理资料",
+      "description": "与管理员资料相关的权限",
+      "self": {
+        "label": "个人资料",
+        "description": "访问和编辑个人资料的权限",
+        "view": {
+          "label": "查看个人资料",
+          "description": "允许副管理员访问自己的资料页面"
+        },
+        "edit": {
+          "label": "编辑个人资料",
+          "description": "允许副管理员编辑自己的资料"
+        }
+      }
+    }
+  },
+  "revokePermission": "撤销权限",
+  "confirmRevokePermission": "确认撤销权限",
+  "revokePermissionMessage": "确定要撤销管理员 \"{{name}}\" 的权限 \"{{permission}}\" 吗？",
+  "viewProfile": "查看资料",
+  "profileTitle": "管理员资料",
+  "editProfile": "编辑资料",
+  "name": "姓名",
+  "adminLevel": "级别",
+  "phone": "电话号码",
+  "birthDate": "出生日期",
+  "gender": "性别",
+  "settings": "设置",
+  "rememberLogin": "记住登录",
+  "hidePhone": "隐藏电话号码",
+  "cancel": "取消",
+  "save": "保存",
+  "saving": "保存中...",
+  "genderOptions": {
+    "male": "男",
+    "female": "女",
+    "other": "其他",
+    "unspecified": "未指定"
+  },
+  "avatar": {
+    "title": "头像",
+    "upload": "选择图片",
+    "uploading": "上传中...",
+    "remove": "移除图片",
+    "hint": "支持 JPG、PNG 或 GIF，最大 5MB。",
+    "invalidFileType": "仅支持图片文件",
+    "fileTooLarge": "文件过大，最大 5MB",
+    "uploadSuccess": "头像上传成功",
+    "uploadFailed": "头像上传失败"
+  },
+  "password": {
+    "title": "修改密码",
+    "currentPassword": "当前密码",
+    "currentPasswordPlaceholder": "输入当前密码",
+    "currentPasswordRequired": "请输入当前密码",
+    "newPassword": "新密码",
+    "newPasswordPlaceholder": "输入新密码（至少6个字符）",
+    "newPasswordRequired": "请输入新密码",
+    "newPasswordMinLength": "新密码至少需要6个字符",
+    "confirmPassword": "确认新密码",
+    "confirmPasswordPlaceholder": "再次输入新密码",
+    "passwordMismatch": "密码不匹配",
+    "samePassword": "新密码必须与当前密码不同",
+    "changeButton": "修改密码",
+    "changing": "修改密码中...",
+    "changeSuccess": "密码修改成功",
+    "changeError": "密码修改失败"
+  },
+  "messages": {
+    "createSuccess": "副管理员创建成功",
+    "createError": "副管理员创建失败",
+    "updateSuccess": "管理员权限更新成功",
+    "updateError": "管理员权限更新失败",
+    "revokeSuccess": "权限撤销成功",
+    "revokeError": "权限撤销失败",
+    "toggleStatusSuccess": "管理员状态更改成功",
+    "toggleStatusError": "管理员状态更改失败",
+    "deleteSuccess": "管理员删除成功",
+    "deleteError": "管理员删除失败",
+    "loadError": "管理员列表加载失败",
+    "loadProfileError": "管理员资料加载失败",
+    "updateProfileSuccess": "资料更新成功",
+    "updateProfileError": "资料更新失败",
+    "permissionsChanged": "您的权限已更新",
+    "permissionsChangedError": "无法更新权限。请重新登录。",
+    "adminAccessRevoked": "管理员权限已被撤销",
+    "adminAccountDeactivated": "管理员账户已被停用",
+    "permissionRevokedGeneric": "权限 \"{{permission}}\" 已被撤销"
+  }
+}

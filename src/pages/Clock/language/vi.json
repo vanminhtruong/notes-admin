@@ -5,7 +5,8 @@
   "timezones": {
     "vietnam": "Việt Nam",
     "usa": "Hoa Kỳ (EST)",
-    "korea": "Hàn Quốc"
+    "korea": "Hàn Quốc",
+    "china": "Trung Quốc"
   },
   "info": "Đồng hồ được cập nhật theo thời gian thực",
   "weekdays": {

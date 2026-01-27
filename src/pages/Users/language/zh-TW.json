@@ -1,0 +1,362 @@
+{
+  "title": "使用者列表",
+  "subtitle": "管理系統中的所有使用者",
+  "searchUser": "搜尋使用者",
+  "searchPlaceholder": "姓名或電子郵件...",
+  "userList": "使用者列表",
+  "loadingUsers": "載入使用者列表中...",
+  "noUsersFound": "找不到符合的使用者",
+  "enterKeywordToSearch": "輸入關鍵字搜尋使用者",
+  "cannotLoadUserInfo": "無法載入使用者資訊",
+  "noPermissionForUserActivity": "您沒有權限存取使用者活動的任何標籤頁",
+  "lastActivity": "最後活動",
+  "createdAt": "建立時間",
+  "actions": "操作",
+  "status": {
+    "active": "活躍",
+    "disabled": "已停用"
+  },
+  "roles": {
+    "admin": "管理員",
+    "user": "使用者"
+  },
+  "filters": {
+    "role": "角色",
+    "status": "狀態",
+    "userType": "使用者類型",
+    "only": "- 僅顯示",
+    "all": "全部",
+    "clear": "清除篩選"
+  },
+  "pagination": {
+    "title": "第 {{currentPage}} 頁 / 共 {{totalPages}} 頁",
+    "prev": "上一頁",
+    "next": "下一頁"
+  },
+  "create": {
+    "title": "建立使用者帳戶",
+    "success": "帳戶建立成功",
+    "failed": "無法建立帳戶",
+    "creating": "建立中...",
+    "submit": "建立帳戶",
+    "form": {
+      "name": "姓名",
+      "namePlaceholder": "輸入姓名...",
+      "email": "電子郵件",
+      "emailPlaceholder": "輸入電子郵件地址...",
+      "password": "密碼",
+      "passwordPlaceholder": "輸入密碼..."
+    },
+    "validation": {
+      "nameRequired": "姓名為必填項",
+      "emailRequired": "電子郵件為必填項",
+      "emailInvalid": "電子郵件格式無效",
+      "passwordRequired": "密碼為必填項",
+      "passwordMinLength": "密碼至少需要6個字元"
+    }
+  },
+  "buttons": {
+    "cancel": "取消",
+    "confirm": "確認",
+    "submit": "提交",
+    "update": "更新",
+    "loading": "載入中...",
+    "processing": "處理中...",
+    "retry": "重試",
+    "delete": "刪除"
+  },
+  "action": {
+    "enable": "啟用帳戶",
+    "disable": "停用",
+    "disableAccount": "停用帳戶"
+  },
+  "confirm": {
+    "enableTitle": "確認啟用",
+    "enableMessage": "確定要啟用帳戶 \"{{name}}\" 嗎？",
+    "disableTitle": "確認停用",
+    "disableMessage": "確定要停用帳戶 \"{{name}}\" 嗎？",
+    "deleteTitle": "確認永久刪除",
+    "deleteMessage": "⚠️ 警告：確定要永久刪除帳戶 \"{{name}}\" 嗎？此操作無法復原！"
+  },
+  "alerts": {
+    "noPermission": "您沒有權限執行此操作",
+    "cannotChangeAdminStatus": "無法更改管理員帳戶狀態",
+    "confirmToggleStatus": "確定要{{action}}帳戶 \"{{name}}\" 嗎？",
+    "cannotToggleStatus": "無法{{action}}帳戶",
+    "cannotDeleteAdmin": "無法刪除管理員帳戶",
+    "confirmDeletePermanent1": "⚠️ 警告：確定要永久刪除帳戶 \"{{name}}\" 嗎？\n\n此操作無法復原！",
+    "confirmDeletePermanent2": "最終確認：永久刪除帳戶 \"{{email}}\"？",
+    "cannotDeleteUser": "無法刪除帳戶",
+    "deleteSuccess": "使用者已被永久刪除",
+    "enableSuccess": "帳戶已成功啟用",
+    "disableSuccess": "帳戶已成功停用",
+    "toggleError": "無法更改帳戶狀態",
+    "deleteError": "無法刪除帳戶",
+    "loadError": "無法載入使用者列表"
+  },
+  "online": "線上",
+  "offline": "離線",
+  "neverLoggedIn": "從未登入",
+  "userActivity": {
+    "tabs": {
+      "messages": "訊息",
+      "groups": "群組",
+      "friends": "好友",
+      "notifications": "通知",
+      "monitor": "監控"
+    },
+    "errors": {
+      "cannotLoadUsers": "無法載入使用者。",
+      "serverError": "伺服器錯誤。"
+    },
+    "messages": {
+      "noMessages": "暫無訊息",
+      "sentTo": "發送給",
+      "receivedFrom": "收到來自",
+      "unknownUser": "使用者",
+      "noteShare": "{{name}} 分享了一則筆記",
+      "actions": {
+        "menu": "選單",
+        "recall": "收回訊息",
+        "delete": "刪除訊息",
+        "edit": "編輯訊息",
+        "deleteForUser": "為使用者刪除",
+        "confirmDeleteForUser": "確定要為被監控使用者刪除此訊息嗎？",
+        "deleteError": "無法刪除訊息"
+      }
+    },
+    "groups": {
+      "noGroups": "暫無群組",
+      "groupOwner": "群主",
+      "joined": "已加入"
+    },
+    "friends": {
+      "noFriends": "暫無好友",
+      "activity": "最後上線"
+    },
+    "typing": {
+      "typingWith": "正在與 {{name}} 輸入...",
+      "typingInGroup": "正在群組中輸入..."
+    },
+    "callLog": {
+      "video": "視訊通話",
+      "audio": "語音通話",
+      "duration": "{{m}} 分 {{s}} 秒",
+      "incomingVideoFrom": "來自 {{name}} 的視訊來電",
+      "incomingAudioFrom": "來自 {{name}} 的語音來電",
+      "outgoingVideoTo": "撥打給 {{name}} 的視訊電話",
+      "outgoingAudioTo": "撥打給 {{name}} 的語音電話",
+      "toUserMissed": "撥打給 {{name}} 的電話未接",
+      "missedFromUser": "來自 {{name}} 的未接來電",
+      "userCancelled": "{{name}} 取消了通話"
+    },
+    "notifications": {
+      "noNotifications": "暫無通知",
+      "unknown": "未知",
+      "types": {
+        "message": "訊息",
+        "friend_request": "好友請求",
+        "group_invite": "群組邀請"
+      },
+      "actions": {
+        "menu": "選單",
+        "delete": "刪除通知",
+        "clearAll": "清除全部",
+        "confirmClearAll": "清除此使用者的所有通知？",
+        "clearAllSuccess": "所有通知已清除",
+        "clearAllError": "無法清除通知"
+      },
+      "message": {
+        "title": "來自 {{name}} 的新訊息",
+        "preview": "{{preview}}"
+      },
+      "friendRequest": {
+        "title": "來自 {{name}} 的好友請求"
+      },
+      "groupInvite": {
+        "title": "加入 {{name}} 的邀請"
+      },
+      "deleteSuccess": "通知已刪除",
+      "deleteError": "無法刪除通知"
+    },
+    "monitor": {
+      "tabs": {
+        "dm": "私訊",
+        "groups": "群組"
+      },
+      "friendsList": "好友",
+      "selectFriendToView": "選擇好友檢視",
+      "noFriends": "此使用者暫無好友",
+      "chatWith": "與 {{name}} 的聊天",
+      "noMessages": "暫無訊息",
+      "groupsList": "群組",
+      "noGroups": "此使用者尚未加入任何群組",
+      "selectGroupToView": "選擇群組檢視",
+      "groupChat": "群聊",
+      "actions": {
+        "viewMembers": "檢視成員和角色",
+        "close": "關閉"
+      },
+      "daySeparator": {
+        "today": "今天",
+        "yesterday": "昨天"
+      },
+      "status": {
+        "sent": "已發送",
+        "delivered": "已送達",
+        "read": "已讀"
+      },
+      "members": {
+        "title": "成員和角色",
+        "empty": "暫無成員",
+        "id": "ID",
+        "roles": {
+          "owner": "群主",
+          "admin": "管理員",
+          "member": "成員"
+        }
+      },
+      "noPinnedDM": "暫無置頂訊息",
+      "noPinnedGroup": "暫無置頂訊息",
+      "pinnedMessages": "置頂訊息",
+      "pinnedBy": "由 {{name}} 置頂",
+      "noBlockedUsers": "暫無封鎖使用者",
+      "blockedUsers": "已封鎖使用者",
+      "blockedAt": "封鎖於 {{date}}",
+      "viewMessage": "檢視",
+      "unknownUser": "使用者",
+      "blockedNotice": "被監控使用者已封鎖 {{name}}",
+      "blockedNoticeDesc": "他們無法互相發送訊息。",
+      "userBlockedFriend": "{{userName}} 已封鎖 {{friendName}}",
+      "friendBlockedUser": "{{friendName}} 已封鎖 {{userName}}"
+    },
+    "noteShare": {
+      "cardTitle": "分享的筆記",
+      "untitled": "無標題筆記",
+      "noContent": "無內容",
+      "priority": {
+        "low": "低優先級",
+        "medium": "中優先級",
+        "high": "高優先級"
+      },
+      "category": {
+        "general": "一般",
+        "work": "工作",
+        "personal": "個人"
+      }
+    },
+    "messageActions": {
+      "editPrompt": "輸入訊息的新內容：",
+      "editEmpty": "內容不能為空",
+      "editSuccess": "訊息編輯成功",
+      "editError": "無法編輯訊息"
+    }
+  },
+  "messageActions": {
+    "confirmRecall": "確定要收回此訊息嗎？",
+    "recallSuccess": "訊息收回成功",
+    "recallError": "無法收回訊息",
+    "confirmDelete": "確定要刪除此訊息嗎？",
+    "deleteSuccess": "訊息刪除成功",
+    "deleteError": "無法刪除訊息"
+  },
+  "edit": {
+    "title": "編輯使用者資訊",
+    "button": "編輯",
+    "save": "儲存",
+    "cancel": "取消",
+    "saving": "儲存中...",
+    "success": "使用者資訊更新成功！",
+    "failed": "使用者資訊更新失敗",
+    "changeAvatar": "更換頭像",
+    "changeAvatarSuccess": "頭像已更新",
+    "changeAvatarFailed": "無法更新頭像",
+    "newPasswordPlaceholder": "輸入新密碼（留空保持不變）",
+    "passwordHint": "如不更改請留空。最少6個字元。",
+    "validation": {
+      "nameRequired": "姓名為必填項",
+      "emailRequired": "電子郵件為必填項",
+      "emailInvalid": "電子郵件格式無效",
+      "phoneInvalid": "電話號碼無效。僅可使用數字、+、空格、短橫線、括號"
+    }
+  },
+  "personalInfo": "個人資訊",
+  "accountSettings": "帳戶設定",
+  "privacySettings": "隱私設定",
+  "timestamps": "時間戳記",
+  "name": "姓名",
+  "email": "電子郵件",
+  "phone": "電話",
+  "phoneOptional": "電話（選填）",
+  "birthDate": "出生日期",
+  "genderLabel": "性別",
+  "gender": {
+    "male": "男",
+    "female": "女",
+    "other": "其他",
+    "unspecified": "未指定"
+  },
+  "role": "角色",
+  "theme": "主題",
+  "language": "語言",
+  "e2eeEnabled": "端對端加密",
+  "readStatusEnabled": "已讀狀態",
+  "hidePhone": "隱藏電話",
+  "hideBirthDate": "隱藏生日",
+  "allowMessagesFromNonFriends": "允許非好友發送訊息",
+  "updatedAt": "最後更新",
+  "lastSeenAt": "最後上線",
+  "notProvided": "未提供",
+  "notAvailable": "不可用",
+  "enabled": "已啟用",
+  "disabled": "已停用",
+  "hidden": "已隱藏",
+  "visible": "可見",
+  "allowed": "允許",
+  "blocked": "已封鎖",
+  "detail": {
+    "title": "使用者詳情",
+    "close": "關閉"
+  },
+  "sessions": {
+    "title": "管理登入裝置",
+    "subtitle": "管理 {{userName}} 的登入裝置",
+    "noSessions": "暫無活躍登入裝置",
+    "activeSessions": "{{count}} 個活躍裝置",
+    "unknownDevice": "未知裝置",
+    "browser": "瀏覽器",
+    "os": "作業系統",
+    "ip": "IP位址",
+    "location": "位置",
+    "lastActivity": "最後活動",
+    "time": {
+      "justNow": "剛剛",
+      "minutesAgo": "{{count}} 分鐘前",
+      "hoursAgo": "{{count}} 小時前",
+      "daysAgo": "{{count}} 天前"
+    },
+    "actions": {
+      "logout": "登出",
+      "logoutAll": "全部登出"
+    },
+    "confirm": {
+      "logoutTitle": "確認登出",
+      "logoutMessage": "確定要登出此裝置嗎？",
+      "logoutAllTitle": "確認全部登出",
+      "logoutAllMessage": "確定要登出此使用者的所有裝置嗎？"
+    },
+    "messages": {
+      "logoutSuccess": "裝置已成功登出",
+      "logoutAllSuccess": "所有裝置已成功登出"
+    },
+    "errors": {
+      "fetchFailed": "載入裝置列表失敗",
+      "logoutFailed": "裝置登出失敗",
+      "logoutAllFailed": "全部裝置登出失敗",
+      "noPermission": "您沒有權限檢視登入裝置"
+    }
+  },
+  "common": {
+    "close": "關閉"
+  }
+}

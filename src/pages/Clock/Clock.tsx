@@ -8,7 +8,7 @@ const LOCALE_MAP: Record<string, string> = {
   ko: 'ko-KR',
 };
 
-type Timezone = 'vietnam' | 'usa' | 'korea';
+type Timezone = 'vietnam' | 'usa' | 'korea' | 'china';
 
 interface TimezoneOption {
   value: Timezone;
@@ -28,6 +28,7 @@ const Clock: React.FC = () => {
     { value: 'vietnam', label: t('timezones.vietnam', { defaultValue: 'Việt Nam' }), offset: 7, flag: '🇻🇳' },
     { value: 'usa', label: t('timezones.usa', { defaultValue: 'Hoa Kỳ (EST)' }), offset: -5, flag: '🇺🇸' },
     { value: 'korea', label: t('timezones.korea', { defaultValue: 'Hàn Quốc' }), offset: 9, flag: '🇰🇷' },
+    { value: 'china', label: t('timezones.china', { defaultValue: 'Trung Quốc' }), offset: 8, flag: '🇨🇳' },
   ];
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const Clock: React.FC = () => {
           <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">
             {t('selectTimezone', { defaultValue: 'Chọn múi giờ' })}
           </h2>
-          <div className="grid grid-cols-3 md-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
+          <div className="grid grid-cols-4 md-down:grid-cols-2 sm-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
             {timezones.map((tz) => (
               <button
                 key={tz.value}
@@ -113,10 +114,10 @@ const Clock: React.FC = () => {
                   hour: '2-digit', 
                   minute: '2-digit', 
                   second: '2-digit',
-                  hour12: selectedTimezone !== 'vietnam' 
+                  hour12: selectedTimezone !== 'vietnam' && selectedTimezone !== 'china'
                 })}
               </div>
-              {selectedTimezone !== 'vietnam' && (
+              {selectedTimezone !== 'vietnam' && selectedTimezone !== 'china' && (
                 <div className="text-3xl xl-down:text-2xl md-down:text-xl sm-down:text-lg font-bold text-blue-600 dark:text-blue-400">
                   {displayTime.toLocaleTimeString('en-US', { 
                     hour12: true 

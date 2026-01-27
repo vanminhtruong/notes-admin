@@ -22,23 +22,26 @@ interface AdminsContentProps {
 const AdminsContent: React.FC<AdminsContentProps> = ({ loading, admins, t, currentAdmin, pagination, handlers }) => {
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600 dark:text-gray-400">{t('loading')}</span>
+      <div className="flex flex-col justify-center items-center py-16 xl-down:py-12 sm-down:py-8">
+        <div className="relative">
+          <div className="w-16 h-16 xl-down:w-12 xl-down:h-12 rounded-full border-4 border-blue-100 dark:border-blue-900/30"></div>
+          <div className="absolute top-0 left-0 w-16 h-16 xl-down:w-12 xl-down:h-12 rounded-full border-4 border-transparent border-t-blue-600 animate-spin"></div>
+        </div>
+        <span className="mt-4 text-gray-600 dark:text-gray-400 font-medium">{t('loading')}</span>
       </div>
     );
   }
 
   if (admins.length === 0) {
     return (
-      <div className="text-center py-8">
-        <div className="text-gray-400 mb-4">
-          <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-3-3v0a3 3 0 00-3 3v2zM9 12a4 4 0 100-8 4 4 0 000 8zM11 14a6 6 0 016 6H5a6 6 0 016-6z" />
+      <div className="text-center py-16 xl-down:py-12 sm-down:py-8 px-4">
+        <div className="w-20 h-20 xl-down:w-16 xl-down:h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-50 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center">
+          <svg className="w-10 h-10 xl-down:w-8 xl-down:h-8 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-3-3v0a3 3 0 00-3 3v2zM9 12a4 4 0 100-8 4 4 0 000 8zM11 14a6 6 0 016 6H5a6 6 0 016-6z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">{t('noAdminsFound')}</h3>
-        <p className="text-gray-500 dark:text-gray-400 mb-4">
+        <h3 className="text-xl xl-down:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('noAdminsFound')}</h3>
+        <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
           {t('createNewAdmin')}
         </p>
       </div>
@@ -46,8 +49,8 @@ const AdminsContent: React.FC<AdminsContentProps> = ({ loading, admins, t, curre
   }
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700">
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 xl-down:gap-3 sm-down:gap-2 p-4 xl-down:p-3 sm-down:p-2">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl xl-down:rounded-xl border border-gray-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl-down:gap-4 sm-down:gap-3 p-6 xl-down:p-4 sm-down:p-3">
         {admins.map((admin) => (
           <AdminCard
             key={admin.id}

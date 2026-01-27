@@ -5,7 +5,8 @@
   "timezones": {
     "vietnam": "베트남",
     "usa": "미국 (EST)",
-    "korea": "대한민국"
+    "korea": "대한민국",
+    "china": "중국"
   },
   "info": "시계는 실시간으로 업데이트됩니다",
   "weekdays": {

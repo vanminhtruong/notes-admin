@@ -1,0 +1,19 @@
+{
+  "title": "登入",
+  "subtitle": "登入管理面板",
+  "email": "電子郵件",
+  "password": "密碼",
+  "loginButton": "登入",
+  "rememberMe": "記住我",
+  "loading": "登入中...",
+  "toggleLight": "切換到淺色模式",
+  "toggleDark": "切換到深色模式",
+  "adminOnly": "僅限系統管理員",
+  "errors": {
+    "EMAIL_NOT_FOUND": "電子郵件不存在",
+    "NOT_ADMIN": "無管理員權限",
+    "ACCOUNT_DEACTIVATED": "帳戶已被停用",
+    "INVALID_PASSWORD": "密碼錯誤",
+    "LOGIN_FAILED": "登入失敗"
+  }
+}

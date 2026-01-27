@@ -56,10 +56,13 @@ const AdminLayout: React.FC = () => {
     (async () => {
       try {
         const res: any = await adminService.getLanguage();
-        const serverLang = (res?.language || 'vi').split('-')[0];
-        const currentLang = (i18n.language || 'vi').split('-')[0];
-        if (!cancelled && serverLang && serverLang !== currentLang) {
-          await i18n.changeLanguage(serverLang);
+        const serverLang = res?.language || 'vi';
+        // Giữ nguyên zh-CN và zh-TW, chỉ normalize các ngôn ngữ khác
+        const normalizedServerLang = serverLang.startsWith('zh') ? serverLang : serverLang.split('-')[0];
+        const currentLang = i18n.language || 'vi';
+        const normalizedCurrentLang = currentLang.startsWith('zh') ? currentLang : currentLang.split('-')[0];
+        if (!cancelled && normalizedServerLang && normalizedServerLang !== normalizedCurrentLang) {
+          await i18n.changeLanguage(normalizedServerLang);
         }
       } catch {}
     })();

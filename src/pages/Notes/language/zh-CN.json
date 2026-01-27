@@ -1,0 +1,474 @@
+{
+  "title": "笔记管理",
+  "subtitle": "查看和管理所有用户笔记",
+  "createNote": "创建笔记",
+  "modal": {
+    "detailTitle": "笔记详情",
+    "editTitle": "编辑笔记"
+  },
+  "create": {
+    "title": "创建新笔记",
+    "subtitle": "为特定用户创建笔记",
+    "selectUserLabel": "选择用户 *",
+    "searchUserPlaceholder": "搜索用户...",
+    "changeUser": "更换",
+    "noUsers": "未找到用户"
+  },
+  "editor": {
+    "loading": "加载编辑器...",
+    "link": {
+      "placeholder": "https://...",
+      "add": "添加",
+      "cancel": "取消",
+      "invalidUrl": "无效的URL",
+      "inserted": "链接已插入",
+      "addTitle": "添加链接"
+    },
+    "toolbar": {
+      "bold": "粗体 (Ctrl+B)",
+      "italic": "斜体 (Ctrl+I)",
+      "underline": "下划线 (Ctrl+U)",
+      "strike": "删除线",
+      "code": "代码",
+      "h1": "标题1",
+      "h2": "标题2",
+      "h3": "标题3",
+      "bulletList": "无序列表",
+      "orderedList": "有序列表",
+      "alignLeft": "左对齐",
+      "alignCenter": "居中对齐",
+      "alignRight": "右对齐",
+      "alignJustify": "两端对齐",
+      "blockquote": "引用",
+      "horizontalRule": "水平线",
+      "undo": "撤销 (Ctrl+Z)",
+      "redo": "重做 (Ctrl+Y)"
+    }
+  },
+  "form": {
+    "title": {
+      "label": "标题",
+      "placeholder": "输入笔记标题"
+    },
+    "content": {
+      "label": "内容",
+      "placeholder": "输入笔记内容"
+    },
+    "media": {
+      "label": "媒体",
+      "fullLabel": "媒体（图片/视频/YouTube）",
+      "tabs": {
+        "image": "图片",
+        "video": "视频",
+        "youtube": "YouTube"
+      },
+      "uploading": "上传中...",
+      "uploadSuccess": {
+        "image": "图片上传成功！",
+        "video": "视频上传成功！"
+      },
+      "uploadError": "上传失败",
+      "youtubePlaceholder": "https://www.youtube.com/watch?v=..."
+    },
+    "imageUrl": {
+      "label": "图片"
+    },
+    "videoUrl": {
+      "label": "视频"
+    },
+    "youtubeUrl": {
+      "label": "YouTube链接"
+    },
+    "category": {
+      "label": "分类",
+      "placeholder": "输入分类"
+    },
+    "priority": {
+      "label": "优先级",
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "reminder": {
+      "label": "提醒"
+    },
+    "archive": {
+      "label": "归档"
+    },
+    "placeholders": {
+      "title": "输入笔记标题...",
+      "content": "输入笔记内容...",
+      "category": "输入分类...",
+      "imageUrl": "https://example.com/image.jpg",
+      "youtubeUrl": "输入YouTube视频链接（支持Shorts）",
+      "searchUser": "搜索用户..."
+    }
+  },
+  "filters": {
+    "all": "全部",
+    "active": "活动",
+    "archived": "已归档",
+    "shared": "已共享",
+    "folders": "文件夹",
+    "tags": "标签",
+    "search": {
+      "label": "搜索",
+      "placeholder": "搜索笔记..."
+    },
+    "userId": {
+      "label": "用户ID",
+      "placeholder": "输入用户ID"
+    },
+    "category": {
+      "label": "分类",
+      "placeholder": "输入分类"
+    },
+    "priority": {
+      "label": "优先级"
+    },
+    "status": {
+      "label": "状态"
+    },
+    "clear": "清除筛选"
+  },
+  "table": {
+    "note": "笔记",
+    "user": "用户",
+    "category": "分类",
+    "priority": "优先级",
+    "tags": "标签",
+    "status": "状态",
+    "createdAt": "创建时间",
+    "actions": "操作",
+    "pin": "置顶",
+    "tag": "标签",
+    "notesCount": "笔记数量"
+  },
+  "constants": {
+    "priority": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    }
+  },
+  "badges": {
+    "status": {
+      "active": "活动",
+      "archived": "已归档"
+    }
+  },
+  "actions": {
+    "edit": "编辑",
+    "delete": "删除",
+    "archive": "归档",
+    "unarchive": "取消归档",
+    "pin": "置顶笔记",
+    "unpin": "取消置顶",
+    "close": "关闭",
+    "cancel": "取消",
+    "update": "更新",
+    "createNew": "创建笔记",
+    "creating": "创建中...",
+    "updating": "更新中..."
+  },
+  "detail": {
+    "userInfo": "创建者信息",
+    "updatedAt": "更新时间",
+    "metadata": "详细信息"
+  },
+  "empty": {
+    "title": "未找到笔记",
+    "hint": "尚未创建任何笔记",
+    "content": "暂无内容"
+  },
+  "sharedNotes": {
+    "title": "共享笔记",
+    "subtitle": "查看和管理用户之间共享的笔记",
+    "searchFilters": {
+      "search": {
+        "placeholder": "搜索共享笔记..."
+      },
+      "sharedWith": "共享给（用户ID）",
+      "sharedBy": "共享者（用户ID）"
+    },
+    "empty": {
+      "title": "暂无共享笔记",
+      "hint": "尚未有任何共享笔记"
+    },
+    "table": {
+      "note": "笔记",
+      "sharedBy": "共享者",
+      "sharedWith": "共享给",
+      "permissions": "权限",
+      "sharedAt": "共享时间"
+    },
+    "permissions": {
+      "view": "查看",
+      "edit": "编辑",
+      "delete": "删除",
+      "create": "创建"
+    },
+    "detail": {
+      "title": "共享笔记详情",
+      "noteInfo": "笔记信息",
+      "noteOwner": "笔记所有者",
+      "sharingInfo": "共享信息",
+      "message": "共享消息"
+    },
+    "delete": {
+      "confirm": {
+        "title": "确认删除共享",
+        "message": "确定要删除此笔记共享吗？"
+      }
+    }
+  },
+  "alerts": {
+    "loadFailed": "加载共享笔记失败",
+    "deleteSuccess": "共享笔记删除成功",
+    "deleteFailed": "共享笔记删除失败",
+    "missingUserOrTitle": "请选择用户并输入标题",
+    "createSuccess": "笔记创建成功",
+    "createFailed": "无法创建笔记",
+    "uploadImageError": "无法上传图片"
+  },
+  "delete": {
+    "confirm": {
+      "title": "确认删除",
+      "message": "确定要删除此笔记吗？",
+      "irreversible": "此操作无法撤销。"
+    }
+  },
+  "toasts": {
+    "updateSuccess": "笔记更新成功！",
+    "updateError": "笔记更新失败",
+    "deleteSuccess": "笔记删除成功！",
+    "deleteError": "笔记删除失败",
+    "archiveSuccess": "笔记归档成功",
+    "archiveError": "笔记归档失败",
+    "unarchiveSuccess": "笔记取消归档成功",
+    "unarchiveError": "笔记取消归档失败",
+    "pinSuccess": "笔记置顶成功",
+    "unpinSuccess": "笔记取消置顶成功",
+    "pinError": "无法更改置顶状态",
+    "uploadImageError": "图片上传失败"
+  },
+  "folders": {
+    "title": "文件夹管理",
+    "subtitle": "查看和管理用户笔记文件夹",
+    "createFolder": "创建文件夹",
+    "searchPlaceholder": "搜索文件夹...",
+    "table": {
+      "folder": "文件夹",
+      "user": "用户",
+      "notesCount": "笔记数量",
+      "pinStatus": "置顶状态",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "status": {
+      "pinned": "已置顶",
+      "unpinned": "未置顶"
+    },
+    "form": {
+      "name": {
+        "label": "文件夹名称",
+        "placeholder": "输入文件夹名称..."
+      },
+      "color": {
+        "label": "颜色"
+      },
+      "icon": {
+        "label": "图标"
+      },
+      "selectUser": "选择用户",
+      "selectUserRequired": "选择用户 *",
+      "searchUser": "按姓名、邮箱或ID搜索...",
+      "changeUser": "更换",
+      "noUsers": "暂无用户",
+      "noUsersFound": "未找到用户",
+      "loading": "加载中..."
+    },
+    "modal": {
+      "create": "创建新文件夹",
+      "edit": "编辑文件夹",
+      "creating": "创建中...",
+      "saving": "保存中...",
+      "saveChanges": "保存更改"
+    },
+    "detail": {
+      "title": "文件夹详情",
+      "inFolder": "在文件夹中",
+      "createNoteInFolder": "在文件夹中创建新笔记",
+      "noNotes": "此文件夹中暂无笔记",
+      "viewingFolder": "正在查看文件夹",
+      "userLabel": "用户：",
+      "notesCount": "条笔记"
+    },
+    "actions": {
+      "edit": "编辑文件夹",
+      "delete": "删除文件夹",
+      "viewDetail": "查看详情",
+      "removeFromFolder": "移出文件夹",
+      "create": "创建文件夹",
+      "update": "更新"
+    },
+    "delete": {
+      "confirm": {
+        "title": "删除文件夹？",
+        "message": "确定要删除此文件夹吗？",
+        "note": "笔记将被保留并移动到活动标签页。",
+        "irreversible": "此操作无法撤销。"
+      }
+    },
+    "remove": {
+      "confirm": {
+        "title": "移动笔记",
+        "message": "要将此笔记移出文件夹吗？",
+        "note": "笔记将被移动到活动标签页。"
+      }
+    },
+    "empty": {
+      "title": "暂无文件夹",
+      "hint": "尚未创建任何文件夹"
+    },
+    "toasts": {
+      "createSuccess": "文件夹创建成功！",
+      "createError": "文件夹创建失败",
+      "updateSuccess": "文件夹更新成功！",
+      "updateError": "文件夹更新失败",
+      "deleteSuccess": "文件夹删除成功！",
+      "deleteError": "文件夹删除失败",
+      "removeNoteSuccess": "笔记已移出文件夹！",
+      "removeNoteError": "笔记移动失败"
+    }
+  },
+  "moveToFolder": {
+    "title": "移动到文件夹",
+    "searchPlaceholder": "搜索文件夹...",
+    "success": "笔记已成功移动到文件夹",
+    "move": "移动",
+    "moving": "移动中...",
+    "noResults": "未找到文件夹",
+    "empty": "用户暂无文件夹",
+    "errors": {
+      "loadFolders": "加载文件夹列表失败",
+      "move": "移动笔记失败"
+    }
+  },
+  "tags": {
+    "title": "标签管理",
+    "subtitle": "查看和管理用户标签",
+    "createTag": "创建标签",
+    "searchPlaceholder": "搜索标签...",
+    "allUsers": "所有用户",
+    "totalStats": "共 {{total}} 个标签",
+    "loading": "加载中...",
+    "table": {
+      "tag": "标签",
+      "user": "用户",
+      "notesCount": "笔记数量",
+      "pinned": "已置顶",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "form": {
+      "name": {
+        "label": "标签名称",
+        "placeholder": "输入标签名称..."
+      },
+      "color": {
+        "label": "颜色"
+      },
+      "user": {
+        "label": "用户",
+        "required": "用户 *"
+      },
+      "selectUser": "选择用户",
+      "selectUserRequired": "选择用户 *",
+      "searchUser": "搜索用户...",
+      "changeUser": "更换",
+      "noUsers": "暂无用户",
+      "noUsersFound": "未找到用户",
+      "loading": "加载中..."
+    },
+    "modal": {
+      "create": "创建新标签",
+      "edit": "编辑标签",
+      "manage": "管理标签",
+      "creating": "创建中...",
+      "saving": "保存中...",
+      "saveChanges": "保存更改"
+    },
+    "manage": {
+      "title": "管理标签",
+      "currentTags": "当前标签",
+      "addTag": "添加标签",
+      "noTags": "暂无标签",
+      "noAvailableTags": "暂无可用标签",
+      "removeTag": "移除标签",
+      "loading": "加载中...",
+      "noPermission": "您没有权限管理标签"
+    },
+    "actions": {
+      "edit": "编辑标签",
+      "editTooltip": "编辑标签",
+      "delete": "删除标签",
+      "deleteTooltip": "删除标签",
+      "pinTooltip": "置顶标签",
+      "unpinTooltip": "取消置顶标签",
+      "create": "创建标签",
+      "update": "更新",
+      "close": "关闭",
+      "cancel": "取消",
+      "add": "添加",
+      "remove": "移除"
+    },
+    "status": {
+      "pinned": "已置顶",
+      "unpinned": "未置顶"
+    },
+    "delete": {
+      "confirm": {
+        "title": "删除标签？",
+        "message": "确定要删除此标签吗？",
+        "note": "标签将从所有关联笔记中移除。",
+        "irreversible": "此操作无法撤销。"
+      }
+    },
+    "empty": {
+      "title": "暂无标签",
+      "hint": "尚未创建任何标签",
+      "noResults": "未找到标签",
+      "noTags": "暂无标签"
+    },
+    "detail": {
+      "user": "用户",
+      "totalNotes": "笔记总数",
+      "createdAt": "创建时间",
+      "notesList": "使用此标签的笔记",
+      "noNotes": "暂无使用此标签的笔记",
+      "archived": "已归档"
+    },
+    "notesCount": {
+      "label": "条笔记"
+    },
+    "toasts": {
+      "createSuccess": "标签创建成功！",
+      "createError": "标签创建失败",
+      "updateSuccess": "标签更新成功！",
+      "updateError": "标签更新失败",
+      "deleteSuccess": "标签删除成功！",
+      "deleteError": "标签删除失败",
+      "addSuccess": "标签添加成功",
+      "addError": "标签添加失败",
+      "removeSuccess": "标签移除成功",
+      "removeError": "标签移除失败",
+      "loadError": "加载标签列表失败",
+      "detailLoadError": "加载标签详情失败"
+    },
+    "cell": {
+      "noTags": "无",
+      "manageTags": "管理标签"
+    }
+  }
+}
