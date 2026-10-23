@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useEffect, useRef, useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import { createPortal } from 'react-dom';
@@ -62,6 +63,7 @@ const MonitorTab: React.FC<MonitorTabProps> = ({
   onDeleteMessage,
   onEditMessage
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const [openMessageMenuId, setOpenMessageMenuId] = useState<number | null>(null);
   const { monitorTab, selectedFriendId, selectedGroupId, dmMessages, groupMessages, loadingDm, loadingGroup, dmStatusById = {}, groupStatusById = {} } = monitorState;

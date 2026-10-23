@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import type { UserChatSettings } from '../interfaces';
@@ -26,6 +27,7 @@ const UserChatSettingsTable: React.FC<UserChatSettingsTableProps> = ({
   onToggleHideBirthDate,
   formatDate,
 }) => {
+  useAdminPermissions();
   const [selectedUser, setSelectedUser] = useState<UserChatSettings | null>(null);
   const [showPinModal, setShowPinModal] = useState(false);
 

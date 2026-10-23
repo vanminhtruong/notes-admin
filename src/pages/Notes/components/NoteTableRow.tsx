@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { hasPermission } from '@utils/auth';
 import UserAvatar from './UserAvatar';
@@ -35,6 +36,7 @@ const NoteTableRow: React.FC<NoteTableRowProps> = ({
   getPlainText,
   formatDate
 }) => {
+  useAdminPermissions();
 
   return (
     <tr 

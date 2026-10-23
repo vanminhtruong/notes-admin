@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
@@ -8,6 +9,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ tab, onCreateClick }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
 
   return (

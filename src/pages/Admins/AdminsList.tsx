@@ -1,7 +1,9 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAdminActions } from './hooks/useAdminActions';
 import { useAdminSocket } from './hooks/Manager-Effects/useAdminSocket';
+import { useAdminPresence } from './hooks/Manager-Effects/useAdminPresence';
 import { useAdminsListState } from './hooks/Manager-useState/useAdminsListState';
 import { useBodyScrollLock } from './hooks/Manager-Effects/useBodyScrollLock';
 import { useAdminsListHandlers } from './hooks/Manager-handle/useAdminsListHandlers';
@@ -16,6 +18,7 @@ import AdminsContent from './components/AdminsContent';
 import ConfirmationDialog from './components/ConfirmationDialog';
 
 const AdminsList: React.FC = () => {
+  useAdminPermissions();
   const { t } = useTranslation('admins');
 
   // State management từ useAdminsListState
@@ -60,6 +63,7 @@ const AdminsList: React.FC = () => {
   });
 
   // Sử dụng socket để listen real-time events
+  useAdminPresence(adminState.setAdmins, handlers.refreshList);
   useAdminSocket({
     onAdminListChange: handlers.refreshList,
     currentAdminId: adminState.currentAdmin?.id,

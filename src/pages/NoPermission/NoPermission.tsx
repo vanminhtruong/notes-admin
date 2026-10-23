@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShieldOff, LogOut } from 'lucide-react';
-import { removeAdminToken } from '@utils/auth';
+import { removeAdminToken, getCurrentAdminInfo, hasPermission, isSuperAdmin } from '@utils/auth';
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useNavigate } from 'react-router-dom';
 
 const NoPermission: React.FC = () => {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
+  const permissionsRevision = useAdminPermissions();
+
+  useEffect(() => {
+    if (isSuperAdmin() || hasPermission('view_dashboard')) {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+    const permissions = getCurrentAdminInfo()?.adminPermissions ?? [];
+    const destinations = [
+      ['manage_users.view', '/users'],
+      ['manage_users.chat_settings.view', '/users/chat-settings'],
+      ['manage_notes.view', '/notes'],
+      ['manage_notes.archive', '/notes?tab=archived'],
+      ['manage_notes.shared.view', '/notes?tab=shared'],
+      ['manage_notes.shared.delete', '/notes?tab=shared'],
+      ['manage_notes.folders.view', '/notes?tab=folders'],
+      ['manage_notes.tags.view', '/notes?tab=tags'],
+      ['manage_notes.categories.view', '/categories'],
+      ['manage_notes.backgrounds.view', '/backgrounds'],
+    ];
+    const destination = destinations.find(([permission]) => permissions.includes(permission));
+    if (destination) navigate(destination[1], { replace: true });
+    else if (permissions.some(permission => permission.startsWith('manage_users.activity.'))) {
+      navigate('/users/activity', { replace: true });
+    }
+  }, [permissionsRevision, navigate]);
 
   const handleLogout = () => {
     removeAdminToken();
@@ -40,7 +67,7 @@ const NoPermission: React.FC = () => {
           </button>
           
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {t('noPermission.hint', { defaultValue: 'Sau khi được cấp quyền, vui lòng đăng nhập lại.' })}
+            {t('noPermission.hint', { defaultValue: 'Quyền mới sẽ tự động cập nhật tại đây.' })}
           </p>
         </div>
       </div>

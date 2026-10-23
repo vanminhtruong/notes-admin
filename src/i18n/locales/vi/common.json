@@ -65,7 +65,7 @@
   "noPermission": {
     "title": "Không có quyền truy cập",
     "message": "Tài khoản của bạn hiện không có quyền truy cập nào. Vui lòng liên hệ Super Admin để được cấp quyền.",
-    "hint": "Sau khi được cấp quyền, vui lòng đăng nhập lại."
+    "hint": "Quyền mới sẽ tự động cập nhật tại đây."
   },
   "categories": {
     "title": "Quản lý Categories",

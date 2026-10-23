@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import adminService from '@services/adminService';
@@ -30,6 +31,7 @@ interface AdminProfileData {
 }
 
 const AdminProfile: React.FC = () => {
+  useAdminPermissions();
   const { t } = useTranslation('profile');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

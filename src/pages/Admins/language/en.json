@@ -1,4 +1,5 @@
 {
+  "presenceUnknown": "Connection status unavailable",
   "title": "Admin Management",
   "subtitle": "Manage admin permissions and status in the system",
   "addAdmin": "Add Sub Admin",

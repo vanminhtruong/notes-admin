@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -36,6 +37,7 @@ interface FoldersListProps {
 }
 
 const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
   
   // States

@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
@@ -16,6 +17,7 @@ import UserDetailModal from './components/UserDetailModal';
 import CreateUserModal from './components/CreateUserModal';
 import UserSessionsModal from './components/UserSessionsModal';
 const UsersList: React.FC = () => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const canViewActive = hasPermission('manage_users.view_active_accounts') || hasPermission('manage_users');
   

@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isSuperAdmin } from '@utils/auth';
@@ -22,7 +23,11 @@ const AdminCard: React.FC<AdminCardProps> = ({
   onRevokePermission,
   onViewProfile,
 }) => {
+  useAdminPermissions();
   const { t, i18n } = useTranslation('admins');
+  const presenceLabel = admin.isOnline === undefined
+    ? t('presenceUnknown')
+    : t(admin.isOnline ? 'online' : 'offline', { ns: 'users' });
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +67,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
                 alt={admin.name}
                 className="w-12 h-12 xl-down:w-10 xl-down:h-10 sm-down:w-9 sm-down:h-9 rounded-xl xl-down:rounded-lg object-cover flex-shrink-0 ring-2 ring-white dark:ring-neutral-700 shadow-md"
               />
-              <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-neutral-800 ${admin.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />
+              <div role="img" aria-label={presenceLabel} title={presenceLabel} data-online={admin.isOnline === undefined ? 'unknown' : String(admin.isOnline)} className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-neutral-800 ${admin.isOnline === true ? 'bg-green-500' : 'bg-gray-400'}`} />
             </div>
           ) : (
             <div className="relative">
@@ -71,7 +76,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
                   {admin.name.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-neutral-800 ${admin.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />
+              <div role="img" aria-label={presenceLabel} title={presenceLabel} data-online={admin.isOnline === undefined ? 'unknown' : String(admin.isOnline)} className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-neutral-800 ${admin.isOnline === true ? 'bg-green-500' : 'bg-gray-400'}`} />
             </div>
           )}
           <div className="min-w-0 flex-1">

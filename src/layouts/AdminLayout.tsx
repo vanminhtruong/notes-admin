@@ -1,10 +1,11 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { toggleTheme } from '@store/slices/themeSlice';
 import type { RootState } from '@store/index';
-import { removeAdminToken, getAdminToken, hasPermission, isSuperAdmin, getCurrentAdminInfo, getVisibleUserActivityTabs, setAdminPermissionOverride } from '@utils/auth';
+import { removeAdminToken, getAdminToken, hasPermission, isSuperAdmin, getCurrentAdminInfo, getVisibleUserActivityTabs } from '@utils/auth';
 import { getAdminSocket, closeAdminSocket } from '@services/socket';
 import adminService from '@services/adminService';
 import LanguageSwitcher from '@components/LanguageSwitcher';
@@ -13,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AdminLayout: React.FC = () => {
+  useAdminPermissions();
   const { t, i18n } = useTranslation('common');
   // Mặc định: Desktop (>=1280px) mở, Mobile (<1280px) đóng
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => (typeof window !== 'undefined' ? window.innerWidth > 1279 : true));
@@ -152,7 +154,12 @@ const AdminLayout: React.FC = () => {
     };
   }, []);
 
-  const currentAdmin = currentAdminProfile || getCurrentAdminInfo();
+  const currentAuth = getCurrentAdminInfo();
+  const currentAdmin = currentAdminProfile ? {
+    ...currentAdminProfile,
+    adminPermissions: currentAuth?.adminPermissions ?? currentAdminProfile.adminPermissions,
+    adminLevel: currentAuth?.adminLevel ?? currentAdminProfile.adminLevel,
+  } : currentAuth;
   const isSuper = isSuperAdmin();
 
   // Helper function to handle avatar click
@@ -332,15 +339,6 @@ const AdminLayout: React.FC = () => {
       };
       s.on('connected', onConnected);
       s.on('language_updated', onLanguageUpdated);
-      const onPermissionsChanged = (p: any) => {
-        try {
-          setAdminPermissionOverride({ permissions: p?.permissions || [], adminLevel: p?.adminLevel });
-          // Force re-render by updating local state
-          setCurrentAdminProfile(prev => prev ? { ...prev, adminPermissions: p?.permissions || prev.adminPermissions, adminLevel: p?.adminLevel || prev.adminLevel } : prev);
-          console.log('[AdminLayout] Permissions changed:', p);
-        } catch {}
-      };
-      s.on('permissions_changed', onPermissionsChanged);
       s.on('admin_profile_updated', onProfileUpdated);
 
       return () => {
@@ -348,7 +346,6 @@ const AdminLayout: React.FC = () => {
           s.off('connected', onConnected);
           s.off('language_updated', onLanguageUpdated);
           s.off('admin_profile_updated', onProfileUpdated);
-          s.off('permissions_changed', onPermissionsChanged);
         } catch {}
       };
     } else {

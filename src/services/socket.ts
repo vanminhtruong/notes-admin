@@ -4,10 +4,26 @@ import i18next from 'i18next';
 import { getAdminToken, getAdminFromToken, removeAdminToken, setAdminPermissionOverride } from '@utils/auth';
 import adminService from './adminService';
 import { emitAdminEvent } from './adminEvents';
+import { applyLiveAdminPermissions } from './liveAdminPermissions';
 
 let socket: Socket | null = null;
 let listenersRegistered = false; // Guard để tránh đăng ký listener nhiều lần
 let currentAdminId: number | null = null; // Lưu id admin hiện tại để xử lý self events
+// Serialize refreshes; an older response must not replace a newer snapshot.
+let permissionUpdateVersion = 0;
+let permissionsRefreshQueue: Promise<unknown> = Promise.resolve();
+function refreshPermissionsInSession() {
+  const connection = socket;
+  permissionsRefreshQueue = permissionsRefreshQueue.catch(() => {}).then(async () => {
+    if (!connection || socket !== connection || !getAdminToken()) return;
+    const version = permissionUpdateVersion;
+    const result = await adminService.refreshToken();
+    if (socket === connection && version === permissionUpdateVersion && result?.user) {
+      applyLiveAdminPermissions({ permissions: result.user.adminPermissions, adminLevel: result.user.adminLevel });
+    }
+  });
+  return permissionsRefreshQueue;
+}
 // Dedupe các sự kiện để không toast nhiều lần trong thời gian ngắn (HMR hoặc multi-mount)
 const recentEvents = new Map<string, number>();
 function shouldToastOnce(key: string, dedupeMs = 3000): boolean {
@@ -44,7 +60,7 @@ export function getAdminSocket(): Socket {
   socket = io(SOCKET_URL, {
     autoConnect: false,
     transports: ['websocket'],
-    auth: { token },
+    auth: callback => callback({ token: getAdminToken() }),
   });
 
   // Safe connect
@@ -66,6 +82,7 @@ export function getAdminSocket(): Socket {
     socket.on('connect', () => {
       // eslint-disable-next-line no-console
       console.log('[AdminSocket] CONNECTED with ID:', socket?.id);
+      void refreshPermissionsInSession().catch(error => console.error('[AdminSocket] Failed to sync permissions:', error));
     });
 
     // Handle admin status changed (global) -> nếu chính mình bị vô hiệu hóa thì đăng xuất NGAY
@@ -159,25 +176,15 @@ export function getAdminSocket(): Socket {
 
     // Handle permissions changed event for real-time updates
     socket.on('permissions_changed', async (data) => {
-      console.log('[AdminSocket] Permissions changed:', data);
-      // Dedupe theo timestamp (server gửi kèm), fallback theo thời gian hiện tại và payload hash
-      const eventKey = `permissions_changed:${data?.timestamp || ''}`;
-      if (!shouldToastOnce(eventKey)) return;
+      permissionUpdateVersion++;
+      applyLiveAdminPermissions(data);
+      const canToast = shouldToastOnce('permissions_changed:' + (data?.timestamp || ''));
+      if (canToast) toast.success(i18next.t('admins:messages.permissionsChanged'));
       try {
-        // Refresh token to get new permissions
-        await adminService.refreshToken();
-        
-        // Show notification to user with i18n
-        const msg = i18next.t('admins:messages.permissionsChanged');
-        toast.success(msg);
-        
-        // Reload the page to apply new permissions immediately
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        await refreshPermissionsInSession();
       } catch (error) {
         console.error('[AdminSocket] Failed to refresh token:', error);
-        toast.error(i18next.t('admins:messages.permissionsChangedError'));
+        if (canToast) toast.error(i18next.t('admins:messages.permissionsChangedError'));
       }
     });
 
@@ -202,22 +209,18 @@ export function getAdminSocket(): Socket {
     });
 
     // Handle specific permission revoked
-    socket.on('permission_revoked', (data) => {
-      console.log('[AdminSocket] Permission revoked:', data);
-      const eventKey = `permission_revoked:${data?.timestamp || ''}:${data?.permission || ''}`;
-      if (!shouldToastOnce(eventKey)) return;
-      const msg = i18next.t('admins:messages.permissionRevokedGeneric', { permission: data.permission });
-      toast.warning(msg);
-      
-      // Refresh token and reload page
-      setTimeout(async () => {
-        try {
-          await adminService.refreshToken();
-          window.location.reload();
-        } catch (error) {
-          console.error('[AdminSocket] Failed to refresh after permission revocation:', error);
-        }
-      }, 1000);
+    socket.on('permission_revoked', async (data) => {
+      permissionUpdateVersion++;
+      applyLiveAdminPermissions(data);
+      const eventKey = 'permission_revoked:' + (data?.timestamp || '') + ':' + (data?.permission || '');
+      if (shouldToastOnce(eventKey)) {
+        toast.warning(i18next.t('admins:messages.permissionRevokedGeneric', { permission: data.permission }));
+      }
+      try {
+        await refreshPermissionsInSession();
+      } catch (error) {
+        console.error('[AdminSocket] Failed to refresh after permission revocation:', error);
+      }
     });
   }
 
@@ -231,4 +234,6 @@ export function closeAdminSocket() {
   } catch {}
   socket = null;
   listenersRegistered = false;
+  currentAdminId = null;
+  recentEvents.clear();
 }

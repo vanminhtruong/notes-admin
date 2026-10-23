@@ -405,10 +405,11 @@ class AdminService {
 
   // Refresh token để get permissions mới
   async refreshToken() {
+    const sessionToken = getAdminToken();
     const data: any = await this.axiosInstance.post('/admin/refresh-token');
     
     // Cập nhật token mới vào localStorage
-    if (data.token) {
+    if (data.token && getAdminToken() === sessionToken) {
       setAdminToken(data.token);
     }
 

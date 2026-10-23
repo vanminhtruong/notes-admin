@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { hasPermission } from '@utils/auth';
@@ -15,6 +16,7 @@ export const useTabEffects = ({
   setCurrentPage,
   setSelectedUserId,
 }: UseTabEffectsProps) => {
+  const permissionsRevision = useAdminPermissions();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Tabs state via URL ?tab=all|active|archived|shared|folders|tags
@@ -49,7 +51,7 @@ export const useTabEffects = ({
     } else if (tab === 'tags' && !hasPermission('manage_notes.tags.view')) {
       setTab(getFirstAvailableTab());
     }
-  }, [tab]);
+  }, [tab, permissionsRevision]);
 
   // Initialize selectedUserId from URL params and update when URL changes
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +33,7 @@ const UserSessionsModal: React.FC<UserSessionsModalProps> = ({
   userId,
   userName,
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [loading, setLoading] = useState(false);

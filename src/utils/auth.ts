@@ -1,5 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 import type { AdminTokenPayload } from '../types/auth';
+import { notifyAdminPermissionsChanged } from './adminPermissionStore';
 
 // Runtime overrides for real-time permission updates via sockets
 let __adminPermissionsOverride: string[] | null = null;
@@ -8,6 +9,7 @@ let __adminLevelOverride: AdminTokenPayload['adminLevel'] | null = null;
 export const setAdminPermissionOverride = (data: { permissions?: string[]; adminLevel?: AdminTokenPayload['adminLevel'] } | null) => {
   __adminPermissionsOverride = data?.permissions ?? null;
   __adminLevelOverride = data?.adminLevel ?? null;
+  notifyAdminPermissionsChanged();
 };
 
 export const validateAdminToken = (token: string): AdminTokenPayload | null => {
@@ -46,6 +48,7 @@ export const isTokenExpired = (token: string): boolean => {
 
 export const setAdminToken = (token: string): void => {
   localStorage.setItem('admin_token', token);
+  notifyAdminPermissionsChanged();
 };
 
 export const getAdminToken = (): string | null => {
@@ -54,6 +57,7 @@ export const getAdminToken = (): string | null => {
 
 export const removeAdminToken = (): void => {
   localStorage.removeItem('admin_token');
+  setAdminPermissionOverride(null);
 };
 
 export const isAdminAuthenticated = (): boolean => {
@@ -75,7 +79,7 @@ export const isSuperAdmin = (): boolean => {
     if (!token) return false;
     
     const adminData = validateAdminToken(token);
-    return adminData !== null && adminData.adminLevel === 'super_admin';
+    return adminData !== null && (__adminLevelOverride ?? adminData.adminLevel) === 'super_admin';
   } catch (error) {
     console.error('Error checking super admin:', error);
     return false;
@@ -137,7 +141,12 @@ export const getCurrentAdminInfo = (): AdminTokenPayload | null => {
     const token = getAdminToken();
     if (!token) return null;
     
-    return validateAdminToken(token);
+    const admin = validateAdminToken(token);
+    return admin ? {
+      ...admin,
+      adminPermissions: __adminPermissionsOverride ?? admin.adminPermissions,
+      adminLevel: __adminLevelOverride ?? admin.adminLevel,
+    } : null;
   } catch (error) {
     console.error('Error getting admin info:', error);
     return null;

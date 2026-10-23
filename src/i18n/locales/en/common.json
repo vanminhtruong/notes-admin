@@ -65,7 +65,7 @@
   "noPermission": {
     "title": "No Access Permission",
     "message": "Your account currently has no access permissions. Please contact Super Admin to be granted permissions.",
-    "hint": "After being granted permissions, please log in again."
+    "hint": "New permissions will appear here automatically."
   },
   "categories": {
     "title": "Manage Categories",

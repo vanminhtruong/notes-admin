@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { Tag } from 'lucide-react';
 import { hasPermission, hasAnyNotesPermission } from '@utils/auth';
@@ -32,6 +33,7 @@ import {
 
 
 const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
   
   // Use custom hooks for state management

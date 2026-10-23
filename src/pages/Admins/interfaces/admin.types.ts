@@ -6,6 +6,7 @@ export interface Admin {
   adminLevel: 'super_admin' | 'sub_admin' | 'dev' | 'mod';
   adminPermissions: string[];
   isActive: boolean;
+  isOnline?: boolean;
   avatar?: string;
   lastSeenAt?: string;
   createdAt: string;

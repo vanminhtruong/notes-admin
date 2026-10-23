@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,12 +25,13 @@ import UserInfoCard from './components/UserInfoCard';
 import MonitorTab from './components/MonitorTab';
 
 const UserActivity: React.FC = () => {
+  const permissionsRevision = useAdminPermissions();
   const { t } = useTranslation('users');
   const { userId } = useParams<{ userId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Get visible tabs based on permissions
-  const visibleTabs = useMemo(() => getVisibleUserActivityTabs(), []);
+  const visibleTabs = useMemo(() => getVisibleUserActivityTabs(), [permissionsRevision]);
   
   // Set default active tab to first visible tab
   const [activeTab, setActiveTab] = useState<'messages' | 'groups' | 'friends' | 'notifications' | 'monitor'>(() => {

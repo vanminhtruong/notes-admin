@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -59,6 +60,7 @@ interface SharedNotesListProps {
 }
 
 const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
   
   // States

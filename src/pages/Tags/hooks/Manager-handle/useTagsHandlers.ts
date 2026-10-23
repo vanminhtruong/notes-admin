@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useCallback } from 'react';
 import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
@@ -35,6 +36,7 @@ export const useCategoriesHandlers = ({
   searchTerm,
   selectedUserId,
 }: UseCategoriesHandlersProps): UseCategoriesHandlersReturn => {
+  useAdminPermissions();
   const { t } = useTranslation('categories');
 
   // Check permissions

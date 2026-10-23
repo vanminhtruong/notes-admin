@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
@@ -50,6 +51,7 @@ interface FolderDetailModalProps {
 }
 
 const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, onClose }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
   const [loading, setLoading] = useState(false);
   const [folder, setFolder] = useState<Folder | null>(null);

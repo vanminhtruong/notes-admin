@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePagination } from '@hooks/usePagination';
@@ -14,6 +15,7 @@ interface NotificationsTabProps {
 }
 
 const NotificationsTab: React.FC<NotificationsTabProps> = ({ notifications, loadingNotifications, formatDate, onDelete, onClearAll }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const [openMenuId, setOpenMenuId] = React.useState<number | null>(null);
   const canDelete = hasPermission('manage_users.activity.notifications.delete');

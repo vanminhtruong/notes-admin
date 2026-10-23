@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
@@ -26,6 +27,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
   onRowClick,
   onViewSessions
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const canViewActiveAccounts = hasPermission('manage_users.view_active_accounts');
   const canViewSessions = hasPermission('manage_users.sessions.view');

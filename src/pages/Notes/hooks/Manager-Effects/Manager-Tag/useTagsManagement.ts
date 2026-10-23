@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
@@ -29,6 +30,7 @@ interface TagFormData {
 }
 
 export const useTagsManagement = () => {
+  useAdminPermissions();
   const [tags, setTags] = useState<TagItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');

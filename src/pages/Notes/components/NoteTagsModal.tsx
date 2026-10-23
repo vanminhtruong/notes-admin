@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Plus, Tag as TagIcon } from 'lucide-react';
@@ -31,6 +32,7 @@ const NoteTagsModal: React.FC<NoteTagsModalProps> = ({
   noteTitle,
   onTagsChange,
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
   const [availableTags, setAvailableTags] = useState<NoteTag[]>([]);
   const [loading, setLoading] = useState(false);

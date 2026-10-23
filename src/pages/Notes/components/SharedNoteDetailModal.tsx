@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -67,6 +68,7 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
   onDelete,
   onUpdate
 }) => {
+  const permissionsRevision = useAdminPermissions();
   const { t } = useTranslation('notes');
 
   const formatDate = (dateString: string) => {
@@ -106,8 +108,8 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
   }));
 
   // Permission check is static per admin session
-  const canEditShare = useMemo(() => hasPermission('manage_notes.shared.edit'), []);
-  const canDeleteShare = useMemo(() => hasPermission('manage_notes.shared.delete'), []);
+  const canEditShare = useMemo(() => hasPermission('manage_notes.shared.edit'), [permissionsRevision]);
+  const canDeleteShare = useMemo(() => hasPermission('manage_notes.shared.delete'), [permissionsRevision]);
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(false);
 

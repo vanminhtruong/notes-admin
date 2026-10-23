@@ -1,4 +1,5 @@
 {
+  "presenceUnknown": "連線狀態未知",
   "title": "管理員管理",
   "subtitle": "管理系統中管理員的權限和狀態",
   "addAdmin": "新增副管理員",

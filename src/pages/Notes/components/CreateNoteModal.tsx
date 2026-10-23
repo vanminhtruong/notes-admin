@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Search, Loader2 } from 'lucide-react';
@@ -135,6 +136,7 @@ interface CreateNoteModalProps {
 }
 
 const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSuccess }) => {
+  useAdminPermissions();
   if (!show) return null;
   const { t } = useTranslation('notes');
   const [formData, setFormData] = useState({

@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -21,6 +22,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   onDelete,
   size = 'md'
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('notes');
 
   const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5 xl-down:w-4 xl-down:h-4';

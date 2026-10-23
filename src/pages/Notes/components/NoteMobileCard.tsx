@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import * as LucideIcons from 'lucide-react';
 import { Tag } from 'lucide-react';
@@ -33,6 +34,7 @@ const NoteMobileCard: React.FC<NoteMobileCardProps> = ({
   getPlainText,
   formatDate
 }) => {
+  useAdminPermissions();
   return (
     <div 
       className={`bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2 border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 ${

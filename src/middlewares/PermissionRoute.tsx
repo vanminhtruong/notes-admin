@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { hasPermission, getCurrentAdminInfo, isSuperAdmin } from '@utils/auth';
@@ -13,6 +14,7 @@ const PermissionRoute: React.FC<PermissionRouteProps> = ({
   permission, 
   redirectTo = '/dashboard' 
 }) => {
+  useAdminPermissions();
   const location = useLocation();
   
   const permitted = hasPermission(permission);

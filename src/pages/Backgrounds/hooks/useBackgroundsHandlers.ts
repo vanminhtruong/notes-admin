@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
@@ -27,6 +28,7 @@ export const useBackgroundsHandlers = ({
   selectedCategory,
   selectedStatus,
 }: UseBackgroundsHandlersProps) => {
+  useAdminPermissions();
   const canView = hasPermission('manage_notes.backgrounds.view');
   const canCreate = hasPermission('manage_notes.backgrounds.create');
   const canEdit = hasPermission('manage_notes.backgrounds.edit');

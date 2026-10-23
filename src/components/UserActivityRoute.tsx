@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { isSuperAdmin, getVisibleUserActivityTabs } from '@utils/auth';
@@ -11,6 +12,7 @@ const UserActivityRoute: React.FC<UserActivityRouteProps> = ({
   children, 
   redirectTo = '/dashboard' 
 }) => {
+  useAdminPermissions();
   // Super admin has access to everything
   if (isSuperAdmin()) {
     return <>{children}</>;

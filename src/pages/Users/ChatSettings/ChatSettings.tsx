@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@utils/auth';
@@ -7,6 +8,7 @@ import FilterBar from './components/FilterBar';
 import UserChatSettingsTable from './components/UserChatSettingsTable';
 
 const ChatSettings: React.FC = () => {
+  useAdminPermissions();
   const { t } = useTranslation('chatSettings');
   const {
     users,

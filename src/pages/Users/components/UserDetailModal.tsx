@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ interface UserDetailModalProps {
 }
 
 const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, formatDate, getStatusBadge, getRoleBadge, onUserUpdated }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const canEdit = hasPermission('manage_users.edit');
   

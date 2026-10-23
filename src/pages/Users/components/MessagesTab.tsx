@@ -1,3 +1,4 @@
+import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ const MessagesTab: React.FC<MessagesTabProps> = ({
   onRecallMessage, 
   onDeleteMessage 
 }) => {
+  useAdminPermissions();
   const { t } = useTranslation('users');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   

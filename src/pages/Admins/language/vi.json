@@ -1,4 +1,5 @@
 {
+  "presenceUnknown": "Chưa xác định trạng thái kết nối",
   "title": "Quản lý Admin",
   "subtitle": "Quản lý quyền hạn và trạng thái của các admin trong hệ thống",
   "addAdmin": "Thêm Phó Admin",
