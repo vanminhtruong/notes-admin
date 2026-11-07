@@ -1,5 +1,6 @@
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Tag } from 'lucide-react';
 import { hasPermission, hasAnyNotesPermission } from '@utils/auth';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,14 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
   const notesState = useNotesState();
   const modalState = useModalState();
   const utilityHandlers = useUtilityHandlers();
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('create') !== 'true') return;
+    if (hasPermission('manage_notes.create')) modalState.setShowCreateModal(true);
+    const next = new URLSearchParams(searchParams);
+    next.delete('create');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams, modalState.setShowCreateModal]);
 
   // Check if user has any notes permission (flexible check)
   if (!hasAnyNotesPermission()) {
@@ -210,15 +219,15 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       {tabEffects.tab !== 'shared' && tabEffects.tab !== 'folders' && tabEffects.tab !== 'tags' && (
         <NotesFilters
           searchTerm={notesState.searchTerm}
-          setSearchTerm={notesState.setSearchTerm}
+            setSearchTerm={(value) => { notesState.setCurrentPage(1); notesState.setSearchTerm(value); }}
           selectedUserId={notesState.selectedUserId}
-          setSelectedUserId={notesState.setSelectedUserId}
+            setSelectedUserId={(value) => { notesState.setCurrentPage(1); notesState.setSelectedUserId(value); }}
           categoryFilter={notesState.categoryFilter}
-          setCategoryFilter={notesState.setCategoryFilter}
+            setCategoryFilter={(value) => { notesState.setCurrentPage(1); notesState.setCategoryFilter(value); }}
           priorityFilter={notesState.priorityFilter}
-          setPriorityFilter={notesState.setPriorityFilter}
+            setPriorityFilter={(value) => { notesState.setCurrentPage(1); notesState.setPriorityFilter(value); }}
           archivedFilter={notesState.archivedFilter}
-          setArchivedFilter={notesState.setArchivedFilter}
+            setArchivedFilter={(value) => { notesState.setCurrentPage(1); notesState.setArchivedFilter(value); }}
           onClear={() => {
             notesState.setSearchTerm('');
             notesState.setSelectedUserId('');
@@ -412,13 +421,13 @@ const NotesList: React.FC<NotesListProps> = ({ forcedArchived, embedded }) => {
       />
 
       {/* Create Note Modal */}
-      <CreateNoteModal
+      {modalState.showCreateModal && <CreateNoteModal
         show={modalState.showCreateModal}
         onClose={() => modalState.setShowCreateModal(false)}
         onSuccess={() => {
           handlers.loadNotes();
         }}
-      />
+      />}
 
       {/* Tags Management Modal */}
       {modalState.noteForTags && hasPermission('manage_notes.tags.assign') && (

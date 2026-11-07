@@ -2,7 +2,7 @@ import React from 'react';
 import { Trash2, Edit, Eye, User, Pin, PinOff } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Category } from '../interface/category.types';
+import type { Category } from '../interface/Tags.types';
 
 interface CategoryCardProps {
   category: Category;

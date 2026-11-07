@@ -1,5 +1,6 @@
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { TaskList, TaskItem } from '@tiptap/extension-list';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
@@ -22,10 +23,14 @@ export const useRichTextEditor = ({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        link: false,
+        underline: false,
         heading: {
           levels: [1, 2, 3],
         },
       }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {

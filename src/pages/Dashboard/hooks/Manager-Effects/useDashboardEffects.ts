@@ -29,6 +29,8 @@ export const useDashboardEffects = ({
     s.on('user_note_created', handleStatsUpdate);
     s.on('user_note_deleted', handleStatsUpdate);
     s.on('user_note_updated', handleStatsUpdate);
+    s.on('user_note_archived', handleStatsUpdate);
+    s.on('admin_note_moved_to_folder', handleStatsUpdate);
     s.on('note_created_by_admin', handleStatsUpdate);
     s.on('note_deleted_by_admin', handleStatsUpdate);
     s.on('note_updated_by_admin', handleStatsUpdate);
@@ -69,6 +71,8 @@ export const useDashboardEffects = ({
         s.off('user_note_created', handleStatsUpdate);
         s.off('user_note_deleted', handleStatsUpdate);
         s.off('user_note_updated', handleStatsUpdate);
+        s.off('user_note_archived', handleStatsUpdate);
+        s.off('admin_note_moved_to_folder', handleStatsUpdate);
         s.off('note_created_by_admin', handleStatsUpdate);
         s.off('note_deleted_by_admin', handleStatsUpdate);
         s.off('note_updated_by_admin', handleStatsUpdate);

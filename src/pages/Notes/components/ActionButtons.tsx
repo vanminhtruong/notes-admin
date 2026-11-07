@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +34,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     e.stopPropagation();
     toast.warn(
       <ConfirmDeleteDialog onConfirm={onDelete} />,
-      { position: 'top-center', autoClose: false, closeOnClick: false, draggable: false }
+      { transition: ToastConfirmTransition, position: 'top-center', autoClose: false, closeOnClick: false, draggable: false }
     );
   };
 

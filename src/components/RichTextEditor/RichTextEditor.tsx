@@ -139,10 +139,10 @@ const RichTextEditor = memo(({ editor, placeholder: _placeholder, className = ''
             return;
           }
           editor.chain().focus().setLink({ href }).run();
-          toast.dismiss(toastEvt.id);
+          toast.remove(toastEvt.id);
           toast.success(t('editor.link.inserted', { defaultValue: 'Link inserted' }));
         }}
-        onCancel={() => toast.dismiss(toastEvt.id)}
+        onCancel={() => toast.remove(toastEvt.id)}
       />
     ), { duration: 60000, position: 'top-center' });
     return id;

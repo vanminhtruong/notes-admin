@@ -27,7 +27,8 @@
     "notesCreate": "创建笔记",
     "notesShared": "共享笔记",
     "categories": "分类",
-    "clock": "时钟"
+    "clock": "时钟",
+    "noteTrash": "笔记回收站"
   },
   "layout": {
     "adminPanel": "管理面板",

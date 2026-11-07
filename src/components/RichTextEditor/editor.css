@@ -179,3 +179,13 @@
   background-color: #3b82f6;
   color: white;
 }
+/* Preserve Front checklist layout in saved content and the admin editor. */
+.prose ul[data-type='taskList'] { list-style: none; padding-left: 0; }
+.prose ul[data-type='taskList'] > li { display: flex; align-items: flex-start; gap: .625rem; }
+.prose ul[data-type='taskList'] > li > label { flex: 0 0 auto; pointer-events: none; }
+.ProseMirror[contenteditable='true'] ul[data-type='taskList'] > li > label { pointer-events: auto; }
+.prose ul[data-type='taskList'] > li > div { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.prose ul[data-type='taskList'] > li > div > p { margin: 0; }
+.prose ul[data-type='taskList'] > li[data-checked='true'] > div > p { text-decoration: line-through; opacity: .6; }
+.prose ul[data-type='taskList'] input[type='checkbox'] { accent-color: #2563eb; }
+.dark .prose ul[data-type='taskList'] input[type='checkbox'] { color-scheme: dark; accent-color: #60a5fa; }

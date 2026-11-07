@@ -229,19 +229,20 @@
     "missingUserOrTitle": "请选择用户并输入标题",
     "createSuccess": "笔记创建成功",
     "createFailed": "无法创建笔记",
-    "uploadImageError": "无法上传图片"
+    "uploadImageError": "无法上传图片",
+    "uploadVideoError": "无法上传视频"
   },
   "delete": {
     "confirm": {
       "title": "确认删除",
-      "message": "确定要删除此笔记吗？",
-      "irreversible": "此操作无法撤销。"
+      "message": "此笔记将在回收站保留30天。",
+      "irreversible": "笔记将在回收站保留30天，可随时恢复。"
     }
   },
   "toasts": {
     "updateSuccess": "笔记更新成功！",
     "updateError": "笔记更新失败",
-    "deleteSuccess": "笔记删除成功！",
+    "deleteSuccess": "笔记已移至回收站！",
     "deleteError": "笔记删除失败",
     "archiveSuccess": "笔记归档成功",
     "archiveError": "笔记归档失败",
@@ -250,7 +251,8 @@
     "pinSuccess": "笔记置顶成功",
     "unpinSuccess": "笔记取消置顶成功",
     "pinError": "无法更改置顶状态",
-    "uploadImageError": "图片上传失败"
+    "uploadImageError": "图片上传失败",
+    "noCreatePermission": "您没有创建笔记的权限"
   },
   "folders": {
     "title": "文件夹管理",
@@ -464,7 +466,8 @@
       "removeSuccess": "标签移除成功",
       "removeError": "标签移除失败",
       "loadError": "加载标签列表失败",
-      "detailLoadError": "加载标签详情失败"
+      "detailLoadError": "加载标签详情失败",
+      "pinError": "无法更改标签置顶状态"
     },
     "cell": {
       "noTags": "无",

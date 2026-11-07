@@ -26,10 +26,8 @@ export const useDashboardHandlers = ({
   // Hàm fetch data chung (không set loading)
   const fetchDashboardData = useCallback(async () => {
     // Tải dữ liệu thống kê gốc và biểu đồ mới
-    const [usersResponse, notesResponse, allActiveUsersResponse, topNotesResponse, recentOnlineResponse, topOfflineResponse, topCategoriesResponse, topChatResponse, topSharersResponse] = await Promise.all([
-      adminService.getAllUsers({ limit: 1 }),
-      adminService.getAllUsersNotes({ limit: 1 }),
-      adminService.getAllUsers({ limit: 1000, isActive: true }),
+    const [statsResponse, topNotesResponse, recentOnlineResponse, topOfflineResponse, topCategoriesResponse, topChatResponse, topSharersResponse] = await Promise.all([
+      adminService.getDashboardStats(),
       adminService.getTopNotesCreators({ limit: 10 }),
       adminService.getRecentOnlineUsers({ limit: 10 }),
       adminService.getTopOfflineUsers({ limit: 10 }),
@@ -38,20 +36,14 @@ export const useDashboardHandlers = ({
       adminService.getTopNoteSharers({ limit: 10 }),
     ]);
 
-    // Chuẩn hóa tổng số người dùng từ cấu trúc response backend (giữ logic gốc)
-    const resolvedTotalUsers =
-      (typeof (usersResponse as any)?.totalUsers === 'number' ? (usersResponse as any).totalUsers : undefined) ??
-      (typeof (usersResponse as any)?.pagination?.total === 'number' ? (usersResponse as any).pagination.total : undefined) ?? 0;
-
-    // Đếm số users đang online từ danh sách active users (giữ logic gốc)
-    const activeUsersCount = (allActiveUsersResponse as any)?.users?.filter((user: any) => user.isOnline)?.length || 0;
-
+    // Use aggregate statistics, independent of list filters, tags and pagination.
+    const stats = (statsResponse as any)?.data;
     setStats({
-      totalUsers: resolvedTotalUsers,
-      activeUsers: activeUsersCount,
-      totalNotes: (notesResponse as any).pagination?.total || 0,
-      totalFolders: (notesResponse as any)?.stats?.totalFolders || 0,
-      notesInFolders: (notesResponse as any)?.stats?.notesInFolders || 0
+      totalUsers: stats?.totalUsers ?? 0,
+      activeUsers: stats?.activeUsers ?? 0,
+      totalNotes: stats?.totalNotes ?? 0,
+      totalFolders: stats?.totalFolders ?? 0,
+      notesInFolders: stats?.notesInFolders ?? 0
     });
 
     setTopNotesCreators((topNotesResponse as any)?.data || []);

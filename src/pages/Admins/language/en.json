@@ -250,7 +250,7 @@
         "label": "Manage Shared Notes",
         "description": "Manage shared notes in the system",
         "view": {
-          "label": "View Shared Notes", 
+          "label": "View Shared Notes",
           "description": "View shared notes list and details"
         },
         "edit": {
@@ -492,5 +492,9 @@
     "adminAccessRevoked": "Admin access has been revoked",
     "adminAccountDeactivated": "Admin account has been deactivated",
     "permissionRevokedGeneric": "Permission \"{{permission}}\" has been revoked"
-  }
+  },
+  "loadProfileError": "Unable to load admin profile",
+  "updateProfileSuccess": "Profile updated successfully",
+  "updateProfileError": "Unable to update profile",
+  "loadAdminsError": "Unable to load admins"
 }

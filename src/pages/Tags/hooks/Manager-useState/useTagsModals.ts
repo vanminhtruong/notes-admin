@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Category } from '../../interface/category.types';
+import type { Category } from '../../interface/Tags.types';
 
 export interface UseCategoriesModalsReturn {
   isCreateModalOpen: boolean;

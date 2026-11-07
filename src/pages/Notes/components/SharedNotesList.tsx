@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Trash2 } from 'lucide-react';
@@ -193,7 +194,7 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,

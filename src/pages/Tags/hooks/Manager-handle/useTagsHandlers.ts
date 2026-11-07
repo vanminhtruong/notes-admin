@@ -4,7 +4,7 @@ import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
 import toast from '@utils/toast';
 import { useTranslation } from 'react-i18next';
-import type { Category, CategoryFilters } from '../../interface/category.types';
+import type { Category, CategoryFilters } from '../../interface/Tags.types';
 
 export interface UseCategoriesHandlersProps {
   setIsLoading: (loading: boolean) => void;

@@ -1,6 +1,8 @@
+import toastI18n from 'i18next';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { toast as confirmationToast } from '@utils/toast';
 import adminService from '@services/adminService';
 import { hasPermission } from '@utils/auth';
 import { getAdminSocket } from '@services/socket';
@@ -81,7 +83,7 @@ export const useTagsManagement = () => {
       setTotal(response.pagination?.total || 0);
     } catch (error: any) {
       console.error('Error fetching tags:', error);
-      toast.error(error.response?.data?.message || 'Lỗi khi tải danh sách tags');
+      toast.error(error.response?.data?.message || toastI18n.t('notes:tags.toasts.loadError'));
     } finally {
       setLoading(false);
     }
@@ -104,13 +106,13 @@ export const useTagsManagement = () => {
 
     try {
       await adminService.createTagForUser(formData);
-      toast.success('Tạo tag thành công');
+      toast.success(toastI18n.t('notes:tags.toasts.createSuccess'));
       setShowCreateModal(false);
       setFormData({ userId: '', name: '', color: '#3B82F6' });
       fetchTags();
     } catch (error: any) {
       console.error('Error creating tag:', error);
-      toast.error(error.response?.data?.message || 'Lỗi khi tạo tag');
+      toast.error(error.response?.data?.message || toastI18n.t('notes:tags.toasts.createError'));
     }
   };
 
@@ -124,28 +126,28 @@ export const useTagsManagement = () => {
         name: editingTag.name,
         color: editingTag.color,
       });
-      toast.success('Cập nhật tag thành công');
+      toast.success(toastI18n.t('notes:tags.toasts.updateSuccess'));
       setShowEditModal(false);
       setEditingTag(null);
       fetchTags();
     } catch (error: any) {
       console.error('Error updating tag:', error);
-      toast.error(error.response?.data?.message || 'Lỗi khi cập nhật tag');
+      toast.error(error.response?.data?.message || toastI18n.t('notes:tags.toasts.updateError'));
     }
   };
 
   // Delete tag
   const handleDelete = async (tagId: number) => {
     if (!canDelete) return;
-    if (!confirm('Bạn có chắc muốn xóa tag này? Tag sẽ bị xóa khỏi tất cả ghi chú.')) return;
+    if (!await confirmationToast.confirmDelete(toastI18n.t('notes:tags.delete.confirm.title'), toastI18n.t('notes:tags.delete.confirm.message'))) return;
 
     try {
       await adminService.deleteTag(tagId);
-      toast.success('Xóa tag thành công');
+      toast.success(toastI18n.t('notes:tags.toasts.deleteSuccess'));
       fetchTags();
     } catch (error: any) {
       console.error('Error deleting tag:', error);
-      toast.error(error.response?.data?.message || 'Lỗi khi xóa tag');
+      toast.error(error.response?.data?.message || toastI18n.t('notes:tags.toasts.deleteError'));
     }
   };
 
@@ -189,7 +191,7 @@ export const useTagsManagement = () => {
       });
     } catch (error: any) {
       console.error('Error toggling pin tag:', error);
-      toast.error(error.response?.data?.message || 'Lỗi khi ghim/bỏ ghim tag');
+      toast.error(error.response?.data?.message || toastI18n.t('notes:tags.toasts.pinError'));
     }
   };
 

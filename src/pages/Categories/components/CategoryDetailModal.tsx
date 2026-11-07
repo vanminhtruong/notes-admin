@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import React, { useState, useEffect } from 'react';
 import { X, User, Calendar, FileText } from 'lucide-react';
 import adminService from '@services/adminService';
@@ -47,7 +48,7 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({ isOpen, categ
       setDetail(response.category);
     } catch (error: any) {
       console.error('Error fetching category detail:', error);
-      toast.error('Cannot load category detail');
+      toast.error(toastI18n.t('categories:toasts.detailLoadError'));
     } finally {
       setIsLoading(false);
     }

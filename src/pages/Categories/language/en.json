@@ -82,5 +82,9 @@
     "title": "Page {{currentPage}} / {{totalPages}}",
     "prev": "Previous",
     "next": "Next"
+  },
+  "toasts": {
+    "noEditPermission": "You do not have permission to edit categories",
+    "detailLoadError": "Unable to load category details"
   }
 }

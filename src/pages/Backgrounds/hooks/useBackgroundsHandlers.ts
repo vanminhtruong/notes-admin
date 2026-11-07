@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
@@ -61,7 +62,7 @@ export const useBackgroundsHandlers = ({
       setTotalPages(pagination.totalPages);
     } catch (error: any) {
       console.error('Error fetching backgrounds:', error);
-      toast.error(error.response?.data?.message || 'Failed to fetch backgrounds');
+      toast.error(error.response?.data?.message || toastI18n.t('backgrounds:toasts.loadError'));
     } finally {
       if (showLoading) setIsLoading(false);
     }
@@ -81,7 +82,7 @@ export const useBackgroundsHandlers = ({
   const handleDelete = useCallback(
     async (id: number) => {
       if (!canDelete) {
-        toast.error('No permission to delete');
+        toast.error(toastI18n.t('backgrounds:toasts.noDeletePermission'));
         return;
       }
 
@@ -95,11 +96,11 @@ export const useBackgroundsHandlers = ({
     async (id: number) => {
       try {
         await adminService.deleteBackground(id);
-        toast.success('Background deleted successfully');
+        toast.success(toastI18n.t('backgrounds:modal.detail.deleteSuccess'));
         fetchBackgrounds();
       } catch (error: any) {
         console.error('Error deleting background:', error);
-        toast.error(error.response?.data?.message || 'Failed to delete background');
+        toast.error(error.response?.data?.message || toastI18n.t('backgrounds:modal.detail.deleteError'));
       }
     },
     [fetchBackgrounds]
@@ -108,17 +109,17 @@ export const useBackgroundsHandlers = ({
   const handleToggleActive = useCallback(
     async (id: number) => {
       if (!canEdit) {
-        toast.error('No permission to edit');
+        toast.error(toastI18n.t('backgrounds:toasts.noEditPermission'));
         return;
       }
 
       try {
         await adminService.toggleBackgroundActive(id);
-        toast.success('Background status updated successfully');
+        toast.success(toastI18n.t('backgrounds:toasts.statusSuccess'));
         fetchBackgrounds();
       } catch (error: any) {
         console.error('Error toggling background status:', error);
-        toast.error(error.response?.data?.message || 'Failed to update background status');
+        toast.error(error.response?.data?.message || toastI18n.t('backgrounds:toasts.statusError'));
       }
     },
     [canEdit, fetchBackgrounds]

@@ -27,7 +27,8 @@
     "notesCreate": "Create Note",
     "notesShared": "Shared Notes",
     "categories": "Categories",
-    "clock": "Clock"
+    "clock": "Clock",
+    "noteTrash": "Note trash"
   },
   "layout": {
     "adminPanel": "Admin Panel",

@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Pagination from '@components/common/Pagination';
@@ -58,7 +59,7 @@ const BackgroundsList: React.FC = () => {
   // Handle edit with permission check
   const handleEdit = (background: Background) => {
     if (!handlers.canEdit) {
-      toast.error('No permission to edit');
+      toast.error(toastI18n.t('backgrounds:toasts.noEditPermission'));
       return;
     }
     modals.openEditModal(background);

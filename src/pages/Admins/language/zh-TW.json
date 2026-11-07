@@ -492,5 +492,9 @@
     "adminAccessRevoked": "管理員權限已被撤銷",
     "adminAccountDeactivated": "管理員帳戶已被停用",
     "permissionRevokedGeneric": "權限 \"{{permission}}\" 已被撤銷"
-  }
+  },
+  "loadProfileError": "無法載入管理員資料",
+  "updateProfileSuccess": "個人資料更新成功",
+  "updateProfileError": "無法更新個人資料",
+  "loadAdminsError": "無法載入管理員清單"
 }

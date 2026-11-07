@@ -22,7 +22,7 @@
   },
   "filters": {
     "role": "역할",
-    "status": "상태", 
+    "status": "상태",
     "userType": "사용자 유형",
     "only": "- 만 표시중",
     "all": "전체",
@@ -57,7 +57,7 @@
   },
   "buttons": {
     "cancel": "취소",
-    "confirm": "확인", 
+    "confirm": "확인",
     "submit": "제출",
     "update": "업데이트",
     "loading": "로딩 중...",
@@ -119,7 +119,10 @@
         "menu": "메뉴",
         "recall": "메시지 회수",
         "delete": "메시지 삭제",
-        "edit": "메시지 편집"
+        "edit": "메시지 편집",
+        "confirmDeleteForUser": "모니터링 중인 사용자 쪽의 메시지를 삭제하시겠습니까?",
+        "deleteError": "메시지를 삭제하지 못했습니다",
+        "deleteForUser": "사용자 쪽에서 삭제"
       }
     },
     "groups": {
@@ -172,7 +175,9 @@
       },
       "groupInvite": {
         "title": "그룹 {{name}} 초대"
-      }
+      },
+      "deleteSuccess": "알림을 삭제했습니다",
+      "deleteError": "알림을 삭제하지 못했습니다"
     },
     "monitor": {
       "tabs": {
@@ -219,7 +224,11 @@
       "blockedNotice": "모니터링되는 사용자가 {{name}}님을 차단했습니다",
       "blockedNoticeDesc": "서로 메시지를 보낼 수 없습니다.",
       "userBlockedFriend": "{{userName}}님이 {{friendName}}님을 차단했습니다",
-      "friendBlockedUser": "{{friendName}}님이 {{userName}}님을 차단했습니다"
+      "friendBlockedUser": "{{friendName}}님이 {{userName}}님을 차단했습니다",
+      "daySeparator": {
+        "today": "오늘",
+        "yesterday": "어제"
+      }
     },
     "noteShare": {
       "cardTitle": "공유된 메모",
@@ -249,7 +258,10 @@
     "recallError": "메시지를 회수할 수 없습니다",
     "confirmDelete": "이 메시지를 삭제하시겠습니까?",
     "deleteSuccess": "메시지가 삭제되었습니다",
-    "deleteError": "메시지를 삭제할 수 없습니다"
+    "deleteError": "메시지를 삭제할 수 없습니다",
+    "editEmpty": "메시지 내용은 비워 둘 수 없습니다",
+    "editSuccess": "메시지를 수정했습니다",
+    "editError": "메시지를 수정하지 못했습니다"
   },
   "edit": {
     "title": "사용자 정보 수정",
@@ -349,5 +361,7 @@
   },
   "common": {
     "close": "닫기"
-  }
+  },
+  "delete": "삭제",
+  "cancel": "취소"
 }

@@ -119,7 +119,10 @@
         "menu": "Menu",
         "recall": "Thu hồi tin nhắn",
         "delete": "Xóa tin nhắn",
-        "edit": "Chỉnh sửa tin nhắn"
+        "edit": "Chỉnh sửa tin nhắn",
+        "confirmDeleteForUser": "Bạn có chắc muốn xóa tin nhắn này phía người dùng đang theo dõi?",
+        "deleteError": "Không thể xóa tin nhắn",
+        "deleteForUser": "Xóa phía người dùng"
       }
     },
     "groups": {
@@ -261,7 +264,10 @@
     "recallError": "Không thể thu hồi tin nhắn",
     "confirmDelete": "Bạn có chắc muốn xóa tin nhắn này?",
     "deleteSuccess": "Đã xóa tin nhắn",
-    "deleteError": "Không thể xóa tin nhắn"
+    "deleteError": "Không thể xóa tin nhắn",
+    "editEmpty": "Nội dung tin nhắn không được để trống",
+    "editSuccess": "Đã chỉnh sửa tin nhắn",
+    "editError": "Không thể chỉnh sửa tin nhắn"
   },
   "edit": {
     "title": "Chỉnh sửa thông tin người dùng",
@@ -295,7 +301,7 @@
   "genderLabel": "Giới tính",
   "gender": {
     "male": "Nam",
-    "female": "Nữ", 
+    "female": "Nữ",
     "other": "Khác",
     "unspecified": "Không xác định"
   },
@@ -361,5 +367,7 @@
   },
   "common": {
     "close": "Đóng"
-  }
+  },
+  "delete": "Xóa",
+  "cancel": "Hủy"
 }

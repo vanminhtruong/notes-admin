@@ -134,7 +134,7 @@
   "table": {
     "note": "Ghi chú",
     "user": "Người dùng",
-    "category": "Danh mục", 
+    "category": "Danh mục",
     "priority": "Độ ưu tiên",
     "tags": "Tags",
     "status": "Trạng thái",
@@ -147,7 +147,7 @@
   "constants": {
     "priority": {
       "high": "Cao",
-      "medium": "Trung bình", 
+      "medium": "Trung bình",
       "low": "Thấp"
     }
   },
@@ -230,28 +230,30 @@
     "missingUserOrTitle": "Vui lòng chọn người dùng và nhập tiêu đề",
     "createSuccess": "Tạo ghi chú thành công",
     "createFailed": "Không thể tạo ghi chú",
-    "uploadImageError": "Không thể tải lên ảnh"
+    "uploadImageError": "Không thể tải lên ảnh",
+    "uploadVideoError": "Không thể tải video lên"
   },
   "delete": {
     "confirm": {
       "title": "Xác nhận xóa",
-      "message": "Bạn có chắc muốn xóa ghi chú này không?",
-      "irreversible": "Hành động này không thể hoàn tác."
+      "message": "Ghi chú sẽ chuyển vào thùng rác trong 30 ngày.",
+      "irreversible": "Ghi chú sẽ chuyển vào thùng rác trong 30 ngày và có thể khôi phục."
     }
   },
   "toasts": {
     "updateSuccess": "Cập nhật ghi chú thành công!",
     "updateError": "Không thể cập nhật ghi chú",
-    "deleteSuccess": "Xóa ghi chú thành công!",
+    "deleteSuccess": "Đã chuyển ghi chú vào thùng rác!",
     "deleteError": "Không thể xóa ghi chú",
     "archiveSuccess": "Đã lưu trữ ghi chú",
     "archiveError": "Không thể lưu trữ",
-    "unarchiveSuccess": "Đã bỏ lưu trữ ghi chú", 
+    "unarchiveSuccess": "Đã bỏ lưu trữ ghi chú",
     "unarchiveError": "Không thể bỏ lưu trữ",
     "pinSuccess": "Đã ghim ghi chú thành công",
     "unpinSuccess": "Đã bỏ ghim ghi chú thành công",
     "pinError": "Không thể thay đổi trạng thái ghim",
-    "uploadImageError": "Không thể tải lên ảnh"
+    "uploadImageError": "Không thể tải lên ảnh",
+    "noCreatePermission": "Bạn không có quyền tạo ghi chú"
   },
   "folders": {
     "title": "Quản lý thư mục",
@@ -460,7 +462,8 @@
       "removeSuccess": "Xóa tag thành công",
       "removeError": "Lỗi khi xóa tag",
       "loadError": "Lỗi khi tải danh sách tags",
-      "detailLoadError": "Lỗi khi tải chi tiết tag"
+      "detailLoadError": "Lỗi khi tải chi tiết tag",
+      "pinError": "Không thể ghim hoặc bỏ ghim tag"
     },
     "cell": {
       "noTags": "Chưa có",

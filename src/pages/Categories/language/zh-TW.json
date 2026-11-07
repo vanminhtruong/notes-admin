@@ -82,5 +82,9 @@
     "title": "第 {{currentPage}} 頁 / 共 {{totalPages}} 頁",
     "prev": "上一頁",
     "next": "下一頁"
+  },
+  "toasts": {
+    "noEditPermission": "您沒有修改分類的權限",
+    "detailLoadError": "無法載入分類詳細資料"
   }
 }

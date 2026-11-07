@@ -82,5 +82,9 @@
     "title": "Trang {{currentPage}} / {{totalPages}}",
     "prev": "Trước",
     "next": "Sau"
+  },
+  "toasts": {
+    "noEditPermission": "Bạn không có quyền sửa danh mục",
+    "detailLoadError": "Không thể tải chi tiết danh mục"
   }
 }

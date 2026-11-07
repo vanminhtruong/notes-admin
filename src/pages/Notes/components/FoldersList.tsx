@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -95,6 +96,10 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
     const handleFolderEvent = () => {
       loadFolders();
     };
+    const noteEvents = ['user_note_created', 'user_note_updated', 'user_note_deleted',
+      'user_note_archived', 'note_created_by_admin', 'note_updated_by_admin',
+      'note_deleted_by_admin', 'note_moved_to_folder', 'admin_note_moved_to_folder'];
+    noteEvents.forEach(event => s.on(event, handleFolderEvent));
     
     s.on('admin_folder_created', handleFolderEvent);
     s.on('admin_folder_updated', handleFolderEvent);
@@ -107,6 +112,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
 
     return () => {
       try {
+        noteEvents.forEach(event => s.off(event, handleFolderEvent));
         s.off('admin_folder_created', handleFolderEvent);
         s.off('admin_folder_updated', handleFolderEvent);
         s.off('admin_folder_deleted', handleFolderEvent);
@@ -162,7 +168,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,
@@ -326,7 +332,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                     </td>
                     <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap">
                       <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                        {folder.notesCount} {t('title')}
+                        {folder.notesCount} {t('folders.detail.notesCount')}
                       </span>
                     </td>
                     <td className="px-3 py-3 xl-down:px-2 xl-down:py-2 whitespace-nowrap lg-down:hidden">
@@ -418,7 +424,7 @@ const FoldersList: React.FC<FoldersListProps> = ({ embedded: _embedded }) => {
                     badges={
                       <>
                         <span className="px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                          {folder.notesCount} {t('title')}
+                          {folder.notesCount} {t('folders.detail.notesCount')}
                         </span>
                         {folder.isPinned && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 xl-down:px-1.5 xl-down:py-0.5 text-xs xl-down:text-2xs font-medium rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">

@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
 import type { Admin, AdminFilters } from '../../interfaces/admin.types';
@@ -67,7 +68,7 @@ export const useAdminsListHandlers = ({
         total: data?.pagination?.total ?? 0,
       });
     } catch (error: any) {
-      toast.error(error.message || 'Không thể tải danh sách admin');
+      toast.error(error.message || toastI18n.t('admins:loadAdminsError'));
     } finally {
       setLoading(false);
     }

@@ -21,7 +21,7 @@
     "user": "User"
   },
   "filters": {
-    "role": "Role", 
+    "role": "Role",
     "status": "Status",
     "userType": "User Type",
     "only": "- Only showing",
@@ -258,7 +258,10 @@
     "recallError": "Unable to recall message",
     "confirmDelete": "Are you sure you want to delete this message?",
     "deleteSuccess": "Message deleted successfully",
-    "deleteError": "Unable to delete message"
+    "deleteError": "Unable to delete message",
+    "editEmpty": "Message cannot be empty",
+    "editSuccess": "Message updated",
+    "editError": "Unable to edit message"
   },
   "edit": {
     "title": "Edit User Information",
@@ -358,5 +361,7 @@
   },
   "common": {
     "close": "Close"
-  }
+  },
+  "delete": "Delete",
+  "cancel": "Cancel"
 }

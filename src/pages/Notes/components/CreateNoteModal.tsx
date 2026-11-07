@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -181,7 +182,7 @@ const CreateNoteModal: React.FC<CreateNoteModalProps> = ({ show, onClose, onSucc
   // Check permission
   useEffect(() => {
     if (show && !hasPermission('manage_notes.create')) {
-      toast.error('Bạn không có quyền tạo ghi chú');
+      toast.error(toastI18n.t('notes:toasts.noCreatePermission'));
       onClose();
       return;
     }

@@ -2,6 +2,7 @@ import React, { useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import adminService from '@services/adminService';
+import { toYMD } from '@utils/date';
 
 interface Props {
   data: {
@@ -31,7 +32,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
     name: data.name || '',
     avatar: data.avatar || '',
     phone: data.phone || '',
-    birthDate: data.birthDate || '',
+    birthDate: toYMD(data.birthDate),
     gender: data.gender || 'unspecified',
     theme: data.theme || 'light',
     language: data.language || 'vi',
@@ -124,7 +125,7 @@ const AdminProfileEditForm: React.FC<Props> = ({ data, saving, onCancel, onSubmi
                 src={form.avatar} 
                 alt="Avatar" 
                 className="w-full h-full object-cover" 
-                onError={(e) => {
+                onError={() => {
                   console.error('Failed to load avatar image:', form.avatar);
                   // Reset avatar on error instead of manipulating DOM
                   setForm((prev) => ({ ...prev, avatar: '' }));

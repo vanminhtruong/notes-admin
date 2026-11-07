@@ -250,7 +250,7 @@
         "label": "공유 노트 관리",
         "description": "시스템의 공유 노트 관리",
         "view": {
-          "label": "공유 노트 보기", 
+          "label": "공유 노트 보기",
           "description": "공유 노트 목록 및 세부 정보 보기"
         },
         "edit": {
@@ -492,5 +492,9 @@
     "adminAccessRevoked": "관리자 접근 권한이 취소되었습니다",
     "adminAccountDeactivated": "관리자 계정이 비활성화되었습니다",
     "permissionRevokedGeneric": "\"{{permission}}\" 권한이 취소되었습니다"
-  }
+  },
+  "loadProfileError": "관리자 프로필을 불러오지 못했습니다",
+  "updateProfileSuccess": "프로필을 수정했습니다",
+  "updateProfileError": "프로필을 수정하지 못했습니다",
+  "loadAdminsError": "관리자 목록을 불러오지 못했습니다"
 }

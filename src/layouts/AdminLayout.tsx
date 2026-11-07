@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -126,7 +127,7 @@ const AdminLayout: React.FC = () => {
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,
@@ -251,6 +252,9 @@ const AdminLayout: React.FC = () => {
         ...(hasPermission('manage_notes.view') ? [
           { id: 'notes-list', label: t('navigation.notesList'), path: '/notes' }
         ] : []),
+        ...(hasPermission('manage_notes.view') ? [
+          { id: 'notes-trash', label: t('navigation.noteTrash', { defaultValue: 'Thùng rác ghi chú' }), path: '/notes/trash' }
+        ] : []),
         ...(hasPermission('manage_notes.categories.view') ? [
           { id: 'categories', label: t('navigation.categories', { defaultValue: 'Categories' }), path: '/categories' }
         ] : []),
@@ -294,6 +298,10 @@ const AdminLayout: React.FC = () => {
   const isActiveRoute = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
+
+  const pageTitle = location.pathname === '/profile' ? t('profile:title') : menuItems.flatMap(item => [item, ...(item.submenu || [])])
+    .filter(item => isActiveRoute(item.path))
+    .sort((a, b) => b.path.length - a.path.length)[0]?.label || t('navigation.dashboard');
 
   // Khởi tạo/đồng bộ openMenus theo route hiện tại để tự động mở menu cha đang active
   useEffect(() => {
@@ -542,7 +550,7 @@ const AdminLayout: React.FC = () => {
             <span className="text-xl">☰</span>
           </button>
           <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate">
-            {menuItems.find(item => isActiveRoute(item.path))?.label || t('navigation.dashboard')}
+            {pageTitle}
           </h1>
           <div className="w-10"></div> {/* Spacer for centering */}
         </div>
@@ -551,7 +559,7 @@ const AdminLayout: React.FC = () => {
         <header className="bg-white dark:bg-neutral-900 shadow-sm border-b border-gray-200 dark:border-neutral-700 px-6 xl-down:px-4 sm-down:px-3 py-4 xl-down:py-3 sm-down:py-2 lg-down:hidden xl-down:relative xl-down:z-50">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl xl-down:text-xl sm-down:text-lg font-semibold text-gray-800 dark:text-gray-200 truncate">
-              {menuItems.find(item => isActiveRoute(item.path))?.label || t('navigation.dashboard')}
+              {pageTitle}
             </h2>
 
             <div className="flex items-center space-x-4 xl-down:space-x-3 sm-down:space-x-2">

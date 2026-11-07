@@ -5,6 +5,7 @@ import adminService from '@services/adminService';
 import { getAdminSocket } from '@services/socket';
 import { toast } from 'react-toastify';
 import AdminProfileEditForm from './components/AdminProfileEditForm';
+import { formatDateOnly } from '@utils/date';
 import ImagePreviewModal from '@components/ImagePreviewModal';
 import { hasPermission, isSuperAdmin } from '@utils/auth';
 
@@ -212,7 +213,7 @@ const AdminProfile: React.FC = () => {
               </div>
               <div className="bg-gray-50 dark:bg-neutral-800/50 rounded-xl xl-down:rounded-lg p-4 xl-down:p-3">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">{t('birthDate', { defaultValue: 'Ngày sinh' })}</p>
-                <p className="font-semibold text-gray-900 dark:text-gray-100 text-base xl-down:text-sm">{data.birthDate || '-'}</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-base xl-down:text-sm">{formatDateOnly(data.birthDate) || '-'}</p>
               </div>
               <div className="bg-gray-50 dark:bg-neutral-800/50 rounded-xl xl-down:rounded-lg p-4 xl-down:p-3">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">{t('gender.title', { defaultValue: 'Giới tính' })}</p>

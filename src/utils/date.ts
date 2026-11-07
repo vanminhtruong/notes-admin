@@ -8,6 +8,10 @@ export function toYMD(dateStr: string | null | undefined): string {
   if (!dateStr) return '';
   const raw = String(dateStr).trim();
   const ymd = raw.includes('T') ? raw.split('T')[0] : raw; // YYYY-MM-DD
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return '';
+  const [year, month, day] = ymd.split('-').map(Number);
+  const parsed = new Date(`${ymd}T00:00:00Z`);
+  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() + 1 !== month || parsed.getUTCDate() !== day) return '';
   return ymd;
 }
 

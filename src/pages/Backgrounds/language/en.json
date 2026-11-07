@@ -103,5 +103,12 @@
     "title": "Page {{currentPage}} / {{totalPages}}",
     "prev": "Previous",
     "next": "Next"
+  },
+  "toasts": {
+    "loadError": "Unable to load backgrounds",
+    "noDeletePermission": "You do not have permission to delete backgrounds",
+    "noEditPermission": "You do not have permission to edit backgrounds",
+    "statusSuccess": "Background status updated",
+    "statusError": "Unable to update background status"
   }
 }

@@ -42,7 +42,7 @@ export const useUserActivityHandlers = ({
         search: searchTerm || undefined,
         limit: 20
       });
-      const data = response.data || response;
+      const data = response;
       setUsers(data.users || []);
     } catch (error: any) {
       console.error('Error loading users:', error);

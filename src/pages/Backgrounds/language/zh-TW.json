@@ -103,5 +103,12 @@
     "title": "第 {{currentPage}} 頁 / 共 {{totalPages}} 頁",
     "prev": "上一頁",
     "next": "下一頁"
+  },
+  "toasts": {
+    "loadError": "無法載入背景",
+    "noDeletePermission": "您沒有刪除背景的權限",
+    "noEditPermission": "您沒有修改背景的權限",
+    "statusSuccess": "背景狀態已更新",
+    "statusError": "無法更新背景狀態"
   }
 }

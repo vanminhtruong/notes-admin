@@ -10,6 +10,7 @@ import UsersList from '@pages/Users/UsersList'
 import UserActivity from '@pages/Users/UserActivity'
 import ChatSettings from '@pages/Users/ChatSettings/ChatSettings'
 import NotesList from '@pages/Notes/NotesList'
+import AdminNoteTrashPage from '@pages/NoteTrash/AdminNoteTrashPage'
 import CategoriesList from '@pages/Categories/CategoriesList'
 import BackgroundsList from '@pages/Backgrounds/BackgroundsList'
 import AdminsList from '@pages/Admins/AdminsList'
@@ -93,6 +94,11 @@ const router = createBrowserRouter([
             <NotesList />
           </PermissionRoute>
         )
+      },
+
+      {
+        path: 'notes/trash',
+        element: <PermissionRoute permission="manage_notes.view" redirectTo="/no-permission"><AdminNoteTrashPage /></PermissionRoute>,
       },
 
       // Categories

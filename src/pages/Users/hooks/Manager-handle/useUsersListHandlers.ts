@@ -44,10 +44,10 @@ export const useUsersListHandlers = ({
       if (filters.activeFilter) params.isActive = filters.activeFilter === 'true';
 
       const response = await adminService.getAllUsers(params);
-      const data = response.data || response;
+      const data = response;
       setUsers(data.users || []);
       setTotalPages(data.totalPages || 1);
-      setTotalItems(data.totalItems || 0);
+      setTotalItems(data.totalUsers || 0);
     } catch (error: any) {
       console.error('Error loading users:', error);
       toast.error(error?.message || t('alerts.loadError'));

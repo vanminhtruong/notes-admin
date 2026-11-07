@@ -82,5 +82,9 @@
     "title": "페이지 {{currentPage}} / {{totalPages}}",
     "prev": "이전",
     "next": "다음"
+  },
+  "toasts": {
+    "noEditPermission": "카테고리를 수정할 권한이 없습니다",
+    "detailLoadError": "카테고리 정보를 불러오지 못했습니다"
   }
 }

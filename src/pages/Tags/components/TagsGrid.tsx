@@ -1,6 +1,6 @@
 import React from 'react';
-import CategoryCard from './CategoryCard';
-import type { Category } from '../interface/category.types';
+import CategoryCard from './TagsCard';
+import type { Category } from '../interface/Tags.types';
 
 interface CategoriesGridProps {
   categories: Category[];

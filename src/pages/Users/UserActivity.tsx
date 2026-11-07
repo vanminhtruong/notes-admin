@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -187,7 +188,7 @@ const UserActivity: React.FC = () => {
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,
@@ -270,7 +271,7 @@ const UserActivity: React.FC = () => {
         </div>
       </div>
     );
-    toast.info(<Editor />, {
+    toast.info(<Editor />, { transition: ToastConfirmTransition,
       position: 'top-center',
       autoClose: false,
       closeOnClick: false,

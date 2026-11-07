@@ -1,3 +1,4 @@
+import toastI18n from 'i18next';
 import React from 'react';
 import { toast } from 'react-toastify';
 import Pagination from '@components/common/Pagination';
@@ -47,7 +48,7 @@ const CategoriesList: React.FC = () => {
   // Handle edit with permission check
   const handleEdit = (category: Category) => {
     if (!handlers.canEdit) {
-      toast.error('No permission to edit');
+      toast.error(toastI18n.t('categories:toasts.noEditPermission'));
       return;
     }
     modals.openEditModal(category);

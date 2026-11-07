@@ -258,7 +258,10 @@
     "recallError": "无法撤回消息",
     "confirmDelete": "确定要删除此消息吗？",
     "deleteSuccess": "消息删除成功",
-    "deleteError": "无法删除消息"
+    "deleteError": "无法删除消息",
+    "editEmpty": "消息内容不能为空",
+    "editSuccess": "消息已修改",
+    "editError": "无法修改消息"
   },
   "edit": {
     "title": "编辑用户信息",
@@ -358,5 +361,7 @@
   },
   "common": {
     "close": "关闭"
-  }
+  },
+  "delete": "删除",
+  "cancel": "取消"
 }

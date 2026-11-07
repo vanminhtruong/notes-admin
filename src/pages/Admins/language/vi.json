@@ -250,7 +250,7 @@
         "label": "Quản lý ghi chú chia sẻ",
         "description": "Quản lý các ghi chú được chia sẻ trong hệ thống",
         "view": {
-          "label": "Xem ghi chú chia sẻ", 
+          "label": "Xem ghi chú chia sẻ",
           "description": "Xem danh sách và chi tiết ghi chú chia sẻ"
         },
         "edit": {
@@ -492,5 +492,9 @@
     "adminAccessRevoked": "Quyền truy cập admin đã bị thu hồi",
     "adminAccountDeactivated": "Tài khoản admin đã bị vô hiệu hóa",
     "permissionRevokedGeneric": "Quyền \"{{permission}}\" đã bị thu hồi"
-  }
+  },
+  "loadProfileError": "Không thể tải hồ sơ quản trị viên",
+  "updateProfileSuccess": "Đã cập nhật hồ sơ",
+  "updateProfileError": "Không thể cập nhật hồ sơ",
+  "loadAdminsError": "Không thể tải danh sách quản trị viên"
 }

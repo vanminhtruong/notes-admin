@@ -82,5 +82,9 @@
     "title": "第 {{currentPage}} 页 / 共 {{totalPages}} 页",
     "prev": "上一页",
     "next": "下一页"
+  },
+  "toasts": {
+    "noEditPermission": "您没有修改分类的权限",
+    "detailLoadError": "无法加载分类详情"
   }
 }

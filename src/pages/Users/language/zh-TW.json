@@ -258,7 +258,10 @@
     "recallError": "無法收回訊息",
     "confirmDelete": "確定要刪除此訊息嗎？",
     "deleteSuccess": "訊息刪除成功",
-    "deleteError": "無法刪除訊息"
+    "deleteError": "無法刪除訊息",
+    "editEmpty": "訊息內容不可為空",
+    "editSuccess": "訊息已修改",
+    "editError": "無法修改訊息"
   },
   "edit": {
     "title": "編輯使用者資訊",
@@ -358,5 +361,7 @@
   },
   "common": {
     "close": "關閉"
-  }
+  },
+  "delete": "刪除",
+  "cancel": "取消"
 }

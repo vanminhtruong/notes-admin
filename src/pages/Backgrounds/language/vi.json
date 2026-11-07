@@ -103,5 +103,12 @@
     "title": "Trang {{currentPage}} / {{totalPages}}",
     "prev": "Trước",
     "next": "Sau"
+  },
+  "toasts": {
+    "loadError": "Không thể tải danh sách hình nền",
+    "noDeletePermission": "Bạn không có quyền xóa hình nền",
+    "noEditPermission": "Bạn không có quyền sửa hình nền",
+    "statusSuccess": "Đã cập nhật trạng thái hình nền",
+    "statusError": "Không thể cập nhật trạng thái hình nền"
   }
 }

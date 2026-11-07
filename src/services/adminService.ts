@@ -1,5 +1,14 @@
 import axios, { type AxiosInstance, type AxiosError } from 'axios';
 import { getAdminToken, setAdminToken } from '@utils/auth';
+import type { User } from '../pages/Users/interfaces';
+
+interface UsersListResponse {
+  success: boolean;
+  users: User[];
+  totalUsers: number;
+  totalPages: number;
+  currentPage: number;
+}
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
 
@@ -118,7 +127,8 @@ class AdminService {
     sortBy?: string;
     sortOrder?: string;
   } = {}) {
-    return this.axiosInstance.get('/admin/users', { params });
+    // The response interceptor above already unwraps AxiosResponse.data.
+    return this.axiosInstance.get<UsersListResponse, UsersListResponse>('/admin/users', { params });
   }
 
   async createUser(userData: {
@@ -228,6 +238,22 @@ class AdminService {
 
   async deleteUserNote(noteId: number) {
     return this.axiosInstance.delete(`/admin/notes/${noteId}`);
+  }
+
+  async getNoteTrash(params?: { page?: number; limit?: number; search?: string; userId?: string }) {
+    return this.axiosInstance.get('/admin/notes-trash', { params });
+  }
+  async restoreTrashedNote(id: number) {
+    return this.axiosInstance.post('/admin/notes-trash/' + id + '/restore');
+  }
+  async deleteTrashedNote(id: number) {
+    return this.axiosInstance.delete('/admin/notes-trash/' + id);
+  }
+  async deleteSelectedTrashedNotes(ids: number[]) {
+    return this.axiosInstance.post('/admin/notes-trash/delete-selected', { ids });
+  }
+  async emptyNoteTrash(userId?: number) {
+    return this.axiosInstance.delete('/admin/notes-trash', { data: userId ? { userId } : {} });
   }
 
   // Shared Notes Management

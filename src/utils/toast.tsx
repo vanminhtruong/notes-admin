@@ -1,6 +1,7 @@
 import React from 'react';
 import { toast as toastify, type ToastOptions, type Id } from 'react-toastify';
 import ToastConfirm, { type ToastConfirmProps } from '@components/common/ToastConfirm';
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 
 // Default toast options
 const defaultOptions: ToastOptions = {
@@ -79,6 +80,7 @@ export const toast = {
         ),
         {
           position: 'top-center',
+          transition: ToastConfirmTransition,
           autoClose: false,
           closeButton: false,
           draggable: false,

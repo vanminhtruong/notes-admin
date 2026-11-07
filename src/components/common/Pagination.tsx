@@ -14,8 +14,6 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  totalItems,
-  itemsPerPage,
   showInfo = true
 }) => {
   const { t } = useTranslation('common');
@@ -44,16 +42,6 @@ const Pagination: React.FC<PaginationProps> = ({
       onPageChange(page);
     }
   };
-
-  const pageSize = itemsPerPage || 10;
-  const startItem =
-    typeof totalItems === 'number'
-      ? (totalItems === 0 ? 0 : Math.min((currentPage - 1) * pageSize + 1, totalItems))
-      : null;
-  const endItem =
-    typeof totalItems === 'number'
-      ? Math.min(currentPage * pageSize, totalItems)
-      : null;
 
   return (
     <div className="flex items-center justify-between border-t border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-4 py-3 sm:px-6">

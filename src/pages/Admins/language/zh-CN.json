@@ -492,5 +492,9 @@
     "adminAccessRevoked": "管理员权限已被撤销",
     "adminAccountDeactivated": "管理员账户已被停用",
     "permissionRevokedGeneric": "权限 \"{{permission}}\" 已被撤销"
-  }
+  },
+  "loadProfileError": "无法加载管理员资料",
+  "updateProfileSuccess": "资料更新成功",
+  "updateProfileError": "无法更新资料",
+  "loadAdminsError": "无法加载管理员列表"
 }

@@ -1,3 +1,4 @@
+import ToastConfirmTransition from '@components/common/ToastConfirmTransition';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -104,6 +105,8 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
     const handleUpdate = () => {
       loadFolderDetail();
     };
+    const membershipEvents = ['user_note_archived', 'note_moved_to_folder', 'admin_note_moved_to_folder'];
+    membershipEvents.forEach(event => s.on(event, handleUpdate));
     
     s.on('admin_folder_updated', handleUpdate);
     s.on('admin_folder_deleted', handleUpdate);
@@ -117,6 +120,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
 
     return () => {
       try {
+        membershipEvents.forEach(event => s.off(event, handleUpdate));
         s.off('admin_folder_updated', handleUpdate);
         s.off('admin_folder_deleted', handleUpdate);
         s.off('user_folder_updated', handleUpdate);
@@ -190,7 +194,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,
@@ -242,7 +246,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
           </button>
         </div>
       </div>,
-      {
+      { transition: ToastConfirmTransition,
         position: 'top-center',
         autoClose: false,
         closeOnClick: false,

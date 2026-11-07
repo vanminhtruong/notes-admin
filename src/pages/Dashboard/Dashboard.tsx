@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => window.location.href = '/notes/create'}
+              onClick={() => window.location.href = '/notes?create=true'}
             className="p-4 xl-down:p-3 sm-down:p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-left"
           >
             <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">✨</div>
