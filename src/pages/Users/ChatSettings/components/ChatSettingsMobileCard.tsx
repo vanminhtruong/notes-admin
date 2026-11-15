@@ -27,27 +27,21 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onChange, disabled
 interface ChatSettingsMobileCardProps {
   users: UserChatSettings[];
   canEdit: boolean;
-  canViewPin: boolean;
   formatDate: (date: string) => string;
-  onToggleE2EE: (userId: number, currentValue: boolean) => void;
   onToggleReadStatus: (userId: number, currentValue: boolean) => void;
   onToggleNonFriends: (userId: number, currentValue: boolean) => void;
   onToggleHidePhone: (userId: number, currentValue: boolean) => void;
   onToggleHideBirthDate: (userId: number, currentValue: boolean) => void;
-  onViewPin: (user: UserChatSettings) => void;
 }
 
 const ChatSettingsMobileCard: React.FC<ChatSettingsMobileCardProps> = ({
   users,
   canEdit,
-  canViewPin,
   formatDate,
-  onToggleE2EE,
   onToggleReadStatus,
   onToggleNonFriends,
   onToggleHidePhone,
   onToggleHideBirthDate,
-  onViewPin,
 }) => {
   const { t } = useTranslation('chatSettings');
 
@@ -77,27 +71,12 @@ const ChatSettingsMobileCard: React.FC<ChatSettingsMobileCardProps> = ({
                 <div className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400">
                   {user.email}
                 </div>
-                {user.e2eePinHash && (
-                  <div className="text-xs xl-down:text-2xs text-blue-600 dark:text-blue-400 mt-0.5">
-                    🔐 {t('table.hasPIN')}
-                  </div>
-                )}
               </div>
             </div>
           </div>
 
           {/* Settings Grid */}
           <div className="grid grid-cols-2 gap-3 xl-down:gap-2 mb-3 xl-down:mb-2">
-            <div className="flex items-center justify-between p-2 xl-down:p-1.5 bg-white dark:bg-neutral-900 rounded">
-              <span className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400">
-                {t('table.e2ee')}
-              </span>
-              <ToggleSwitch
-                enabled={user.e2eeEnabled}
-                onChange={() => onToggleE2EE(user.id, user.e2eeEnabled)}
-                disabled={!canEdit}
-              />
-            </div>
             <div className="flex items-center justify-between p-2 xl-down:p-1.5 bg-white dark:bg-neutral-900 rounded">
               <span className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400">
                 {t('table.readStatus')}
@@ -143,14 +122,6 @@ const ChatSettingsMobileCard: React.FC<ChatSettingsMobileCardProps> = ({
           {/* Footer */}
           <div className="flex items-center justify-between text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400">
             <span>{formatDate(user.createdAt)}</span>
-            {user.e2eePinHash && canViewPin && (
-              <button
-                onClick={() => onViewPin(user)}
-                className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
-              >
-                🔐 {t('table.viewPin', 'Xem PIN')}
-              </button>
-            )}
           </div>
         </div>
       ))}

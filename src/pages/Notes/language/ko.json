@@ -1,6 +1,13 @@
 {
   "title": "노트 관리",
   "subtitle": "모든 사용자 노트 보기 및 관리",
+  "e2ee": {
+    "privateTitle": "비공개 메모",
+    "badgeTitle": "종단 간 암호화됨 — 관리자는 복호화할 수 없음",
+    "ownerOnly": "키를 가진 소유자만 내용을 읽을 수 있습니다",
+    "encryptedContent": "내용이 종단 간 암호화되어 있습니다",
+    "detailNotice": "내용이 종단 간 암호화되어 있어 관리자는 복호화할 수 없습니다."
+  },
   "createNote": "노트 생성",
   "modal": {
     "detailTitle": "노트 상세",

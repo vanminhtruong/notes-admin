@@ -18,12 +18,10 @@ export interface UserChatSettings {
   avatar?: string;
   isActive: boolean;
   // Chat Settings
-  e2eeEnabled: boolean;
   readStatusEnabled: boolean;
   allowMessagesFromNonFriends: boolean;
   hidePhone: boolean;
   hideBirthDate: boolean;
-  e2eePinHash?: string | null;
   // Additional info
   phone?: string;
   birthDate?: string;
@@ -36,7 +34,6 @@ export interface UserChatSettings {
 export interface ChatSettingsFilters {
   searchTerm: string;
   currentPage: number;
-  e2eeFilter?: string; // 'enabled' | 'disabled' | ''
   readStatusFilter?: string; // 'enabled' | 'disabled' | ''
 }
 

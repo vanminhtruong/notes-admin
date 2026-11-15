@@ -1,7 +1,8 @@
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import * as LucideIcons from 'lucide-react';
-import { Tag } from 'lucide-react';
+import { Tag, LockKeyhole } from 'lucide-react';
 import { hasPermission } from '@utils/auth';
 import UserAvatar from './UserAvatar';
 import PriorityBadge from './PriorityBadge';
@@ -35,6 +36,7 @@ const NoteMobileCard: React.FC<NoteMobileCardProps> = ({
   formatDate
 }) => {
   useAdminPermissions();
+  const { t } = useTranslation('notes');
   return (
     <div 
       className={`bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3 sm-down:p-2 border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 ${
@@ -45,10 +47,11 @@ const NoteMobileCard: React.FC<NoteMobileCardProps> = ({
       <div className="flex items-start justify-between mb-3 xl-down:mb-2">
         <div className="flex-1 min-w-0">
           <h4 className="text-sm xl-down:text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
-            {truncateWords(note.title, 5)}
+            {note.isEncrypted ? t('e2ee.privateTitle') : truncateWords(note.title, 5)}
+            {note.isEncrypted && <span title={t('e2ee.badgeTitle')} className="ml-1 inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-300"><LockKeyhole size={12} /> E2EE</span>}
           </h4>
           <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-            {truncateWords(getPlainText(note.content || ''), 5)}
+            {note.isEncrypted ? t('e2ee.encryptedContent') : truncateWords(getPlainText(note.content || ''), 5)}
           </div>
         </div>
       </div>

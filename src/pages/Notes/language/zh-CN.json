@@ -1,6 +1,13 @@
 {
   "title": "笔记管理",
   "subtitle": "查看和管理所有用户笔记",
+  "e2ee": {
+    "privateTitle": "私人笔记",
+    "badgeTitle": "端到端加密 — 管理员无法解密",
+    "ownerOnly": "只有持有密钥的所有者才能读取内容",
+    "encryptedContent": "内容已进行端到端加密",
+    "detailNotice": "内容已进行端到端加密，管理员无法解密。"
+  },
   "createNote": "创建笔记",
   "modal": {
     "detailTitle": "笔记详情",

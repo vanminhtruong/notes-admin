@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Eye } from 'lucide-react';
 import type { UserChatSettings } from '../interfaces';
 
 interface ToggleSwitchProps {
@@ -28,27 +27,21 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onChange, disabled
 interface ChatSettingsDesktopTableProps {
   users: UserChatSettings[];
   canEdit: boolean;
-  canViewPin: boolean;
   formatDate: (date: string) => string;
-  onToggleE2EE: (userId: number, currentValue: boolean) => void;
   onToggleReadStatus: (userId: number, currentValue: boolean) => void;
   onToggleNonFriends: (userId: number, currentValue: boolean) => void;
   onToggleHidePhone: (userId: number, currentValue: boolean) => void;
   onToggleHideBirthDate: (userId: number, currentValue: boolean) => void;
-  onViewPin: (user: UserChatSettings) => void;
 }
 
 const ChatSettingsDesktopTable: React.FC<ChatSettingsDesktopTableProps> = ({
   users,
   canEdit,
-  canViewPin,
   formatDate,
-  onToggleE2EE,
   onToggleReadStatus,
   onToggleNonFriends,
   onToggleHidePhone,
   onToggleHideBirthDate,
-  onViewPin,
 }) => {
   const { t } = useTranslation('chatSettings');
 
@@ -59,9 +52,6 @@ const ChatSettingsDesktopTable: React.FC<ChatSettingsDesktopTableProps> = ({
           <tr>
             <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               {t('table.user')}
-            </th>
-            <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              {t('table.e2ee')}
             </th>
             <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               {t('table.readStatus')}
@@ -77,9 +67,6 @@ const ChatSettingsDesktopTable: React.FC<ChatSettingsDesktopTableProps> = ({
             </th>
             <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-left text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider md-down:hidden">
               {t('table.createdAt')}
-            </th>
-            <th className="px-6 py-3 xl-down:px-4 xl-down:py-2 text-center text-xs xl-down:text-2xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              {t('table.actions', 'Hành động')}
             </th>
           </tr>
         </thead>
@@ -100,20 +87,8 @@ const ChatSettingsDesktopTable: React.FC<ChatSettingsDesktopTableProps> = ({
                   <div className="ml-4 xl-down:ml-3">
                     <div className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100">{user.name}</div>
                     <div className="text-sm xl-down:text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
-                    {user.e2eePinHash && (
-                      <div className="text-xs xl-down:text-2xs text-blue-600 dark:text-blue-400 mt-1">
-                        🔐 {t('table.hasPIN')}
-                      </div>
-                    )}
                   </div>
                 </div>
-              </td>
-              <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
-                <ToggleSwitch
-                  enabled={user.e2eeEnabled}
-                  onChange={() => onToggleE2EE(user.id, user.e2eeEnabled)}
-                  disabled={!canEdit}
-                />
               </td>
               <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
                 <ToggleSwitch
@@ -145,23 +120,6 @@ const ChatSettingsDesktopTable: React.FC<ChatSettingsDesktopTableProps> = ({
               </td>
               <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-sm xl-down:text-xs text-gray-500 dark:text-gray-400 md-down:hidden">
                 {formatDate(user.createdAt)}
-              </td>
-              <td className="px-6 py-4 xl-down:px-4 xl-down:py-3 whitespace-nowrap text-center">
-                {user.e2eePinHash ? (
-                  <button
-                    onClick={() => onViewPin(user)}
-                    disabled={!canViewPin}
-                    className="inline-flex items-center gap-2 xl-down:gap-1.5 px-3 py-1.5 xl-down:px-2.5 xl-down:py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm xl-down:text-xs rounded-lg xl-down:rounded-md transition-colors"
-                    title={t('table.viewPin', 'Xem PIN Hash')}
-                  >
-                    <Eye size={16} className="xl-down:w-4 xl-down:h-4" />
-                    <span className="hidden md:inline">{t('table.viewPin', 'Xem PIN')}</span>
-                  </button>
-                ) : (
-                  <span className="text-gray-400 dark:text-gray-500 text-sm xl-down:text-xs">
-                    {t('table.noPin', 'Chưa có PIN')}
-                  </span>
-                )}
               </td>
             </tr>
           ))}

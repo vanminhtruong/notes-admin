@@ -486,10 +486,6 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ open, user, onClose, 
                 <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-medium text-gray-900 dark:text-gray-100">{user.language || 'en'}</p>
               </div>
               <div className="space-y-1 xl-down:space-y-0.5">
-                <p className="text-xs xl-down:text-[10px] sm-down:text-[9px] uppercase tracking-wide text-gray-500 dark:text-gray-400">{t('e2eeEnabled')}</p>
-                <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-medium text-gray-900 dark:text-gray-100">{user.e2eeEnabled ? t('enabled') : t('disabled')}</p>
-              </div>
-              <div className="space-y-1 xl-down:space-y-0.5">
                 <p className="text-xs xl-down:text-[10px] sm-down:text-[9px] uppercase tracking-wide text-gray-500 dark:text-gray-400">{t('readStatusEnabled')}</p>
                 <p className="text-sm xl-down:text-xs sm-down:text-[11px] font-medium text-gray-900 dark:text-gray-100">{user.readStatusEnabled ? t('enabled') : t('disabled')}</p>
               </div>

@@ -302,7 +302,6 @@
   "role": "역할",
   "theme": "테마",
   "language": "언어",
-  "e2eeEnabled": "종단간 암호화",
   "readStatusEnabled": "읽음 상태",
   "hidePhone": "전화번호 숨기기",
   "hideBirthDate": "생년월일 숨기기",

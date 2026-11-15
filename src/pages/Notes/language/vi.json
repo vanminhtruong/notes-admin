@@ -1,6 +1,13 @@
 {
   "title": "Quản lý ghi chú",
   "subtitle": "Xem và quản lý tất cả ghi chú của người dùng",
+  "e2ee": {
+    "privateTitle": "Ghi chú riêng tư",
+    "badgeTitle": "Mã hóa đầu cuối — quản trị viên không thể giải mã",
+    "ownerOnly": "Chỉ chủ sở hữu có khóa mới đọc được nội dung",
+    "encryptedContent": "Nội dung đã được mã hóa đầu cuối",
+    "detailNotice": "Nội dung đã được mã hóa đầu cuối. Quản trị viên không thể giải mã."
+  },
   "createNote": "Tạo ghi chú",
   "modal": {
     "detailTitle": "Chi tiết ghi chú",

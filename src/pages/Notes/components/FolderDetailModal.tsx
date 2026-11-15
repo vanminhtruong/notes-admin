@@ -21,6 +21,7 @@ interface User {
 
 interface Note {
   id: number;
+  isEncrypted?: boolean;
   title: string;
   content?: string;
   imageUrl?: string;
@@ -354,9 +355,11 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <h4 className="text-base md-down:text-sm sm-down:text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                        {note.title}
+                        {note.isEncrypted ? t('e2ee.privateTitle') : note.title}
                       </h4>
-                      {note.content && (
+                      {note.isEncrypted ? (
+                        <p className="text-sm md-down:text-xs text-gray-600 dark:text-gray-400 mb-2">{t('e2ee.encryptedContent')}</p>
+                      ) : note.content && (
                         <div className="text-sm md-down:text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
                           <RichTextContent content={note.content} />
                         </div>
@@ -364,7 +367,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
                       
                       {/* Media indicators */}
                       <div className="flex items-center gap-2 mb-2">
-                        {note.imageUrl && (
+                        {!note.isEncrypted && note.imageUrl && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded text-xs">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -372,7 +375,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
                             Hình ảnh
                           </span>
                         )}
-                        {note.videoUrl && (
+                        {!note.isEncrypted && note.videoUrl && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded text-xs">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -380,7 +383,7 @@ const FolderDetailModal: React.FC<FolderDetailModalProps> = ({ show, folderId, o
                             Video
                           </span>
                         )}
-                        {note.youtubeUrl && (
+                        {!note.isEncrypted && note.youtubeUrl && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded text-xs">
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>

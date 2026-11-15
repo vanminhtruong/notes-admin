@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 
 interface Note {
   id: number;
+  isEncrypted?: boolean;
   title: string;
   content?: string;
   priority: string;
@@ -150,9 +151,11 @@ const TagDetailModal: React.FC<TagDetailModalProps> = ({ hook }) => {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <h5 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-white truncate">
-                          {note.title}
+                          {note.isEncrypted ? t('e2ee.privateTitle') : note.title}
                         </h5>
-                        {note.content && (
+                        {note.isEncrypted ? (
+                          <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{t('e2ee.encryptedContent')}</p>
+                        ) : note.content && (
                           <p className="text-xs xl-down:text-2xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
                             {note.content.replace(/<[^>]*>/g, '').substring(0, 100)}...
                           </p>

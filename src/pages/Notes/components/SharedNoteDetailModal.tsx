@@ -17,6 +17,7 @@ interface User {
 
 interface Note {
   id: number;
+  isEncrypted?: boolean;
   title: string;
   content?: string;
   imageUrl?: string;
@@ -210,11 +211,14 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                       {t('form.title.label', { defaultValue: 'Tiêu đề' })}
                     </label>
                     <p className="text-sm xl-down:text-xs text-gray-900 dark:text-gray-100">
-                      {sharedNote.note.title}
+                      {sharedNote.note.isEncrypted ? t('e2ee.privateTitle') : sharedNote.note.title}
                     </p>
                   </div>
 
-                  {sharedNote.note.content && (
+                  {sharedNote.note.isEncrypted && (
+                    <p className="text-sm text-slate-600 dark:text-slate-300">{t('e2ee.detailNotice')}</p>
+                  )}
+                  {!sharedNote.note.isEncrypted && sharedNote.note.content && (
                     <div>
                       <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {t('form.content.label', { defaultValue: 'Nội dung' })}
@@ -247,7 +251,7 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                     </div>
                   </div>
 
-                  {sharedNote.note.videoUrl && (
+                  {!sharedNote.note.isEncrypted && sharedNote.note.videoUrl && (
                     <div>
                       <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
                         {t('form.videoUrl.label', { defaultValue: 'Video' })}
@@ -264,7 +268,7 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                     </div>
                   )}
 
-                  {sharedNote.note.imageUrl && !sharedNote.note.videoUrl && (
+                  {!sharedNote.note.isEncrypted && sharedNote.note.imageUrl && !sharedNote.note.videoUrl && (
                     <div>
                       <label className="block text-sm xl-down:text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 xl-down:mb-1">
                         {t('form.imageUrl.label', { defaultValue: 'Hình ảnh' })}
@@ -280,7 +284,7 @@ const SharedNoteDetailModal: React.FC<SharedNoteDetailModalProps> = ({
                     </div>
                   )}
 
-                  {sharedNote.note.youtubeUrl && (() => {
+                  {!sharedNote.note.isEncrypted && sharedNote.note.youtubeUrl && (() => {
                     const embed = getYouTubeEmbedUrl(String(sharedNote.note.youtubeUrl));
                     return embed ? (
                       <div>

@@ -302,7 +302,6 @@
   "role": "角色",
   "theme": "主題",
   "language": "語言",
-  "e2eeEnabled": "端對端加密",
   "readStatusEnabled": "已讀狀態",
   "hidePhone": "隱藏電話",
   "hideBirthDate": "隱藏生日",

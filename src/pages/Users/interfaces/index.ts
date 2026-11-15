@@ -22,7 +22,6 @@ export interface User {
   theme?: 'light' | 'dark';
   language?: string;
   rememberLogin?: boolean;
-  e2eeEnabled?: boolean;
   readStatusEnabled?: boolean;
   // Admin fields (if applicable)
   adminLevel?: 'super_admin' | 'sub_admin' | 'dev' | 'mod' | null;

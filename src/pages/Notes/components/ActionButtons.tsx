@@ -40,7 +40,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   return (
     <div className={`flex items-center ${gap}`}>
-      {hasPermission('manage_notes.edit') && (
+      {!note.isEncrypted && hasPermission('manage_notes.edit') && (
         <button
           onClick={(e) => {
             e.stopPropagation();

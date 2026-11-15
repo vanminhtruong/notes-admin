@@ -1,15 +1,13 @@
+import React from 'react';
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
-import React, { useState } from 'react';
 import { hasPermission } from '@utils/auth';
 import type { UserChatSettings } from '../interfaces';
-import E2EEPinModal from './E2EEPinModal';
 import ChatSettingsDesktopTable from './ChatSettingsDesktopTable';
 import ChatSettingsMobileCard from './ChatSettingsMobileCard';
 
 interface UserChatSettingsTableProps {
   users: UserChatSettings[];
   loading: boolean;
-  onToggleE2EE: (userId: number, currentValue: boolean) => void;
   onToggleReadStatus: (userId: number, currentValue: boolean) => void;
   onToggleNonFriends: (userId: number, currentValue: boolean) => void;
   onToggleHidePhone: (userId: number, currentValue: boolean) => void;
@@ -20,7 +18,6 @@ interface UserChatSettingsTableProps {
 const UserChatSettingsTable: React.FC<UserChatSettingsTableProps> = ({
   users,
   loading,
-  onToggleE2EE,
   onToggleReadStatus,
   onToggleNonFriends,
   onToggleHidePhone,
@@ -28,18 +25,7 @@ const UserChatSettingsTable: React.FC<UserChatSettingsTableProps> = ({
   formatDate,
 }) => {
   useAdminPermissions();
-  const [selectedUser, setSelectedUser] = useState<UserChatSettings | null>(null);
-  const [showPinModal, setShowPinModal] = useState(false);
-
   const canEdit = hasPermission('manage_users.chat_settings.edit');
-  const canViewPin = hasPermission('manage_users.chat_settings.view');
-
-  const handleViewPin = (user: UserChatSettings) => {
-    if (user.e2eePinHash) {
-      setSelectedUser(user);
-      setShowPinModal(true);
-    }
-  };
 
   if (loading) {
     return (
@@ -66,42 +52,23 @@ const UserChatSettingsTable: React.FC<UserChatSettingsTableProps> = ({
       <ChatSettingsDesktopTable
         users={users}
         canEdit={canEdit}
-        canViewPin={canViewPin}
         formatDate={formatDate}
-        onToggleE2EE={onToggleE2EE}
         onToggleReadStatus={onToggleReadStatus}
         onToggleNonFriends={onToggleNonFriends}
         onToggleHidePhone={onToggleHidePhone}
         onToggleHideBirthDate={onToggleHideBirthDate}
-        onViewPin={handleViewPin}
       />
 
       {/* Mobile Card View */}
       <ChatSettingsMobileCard
         users={users}
         canEdit={canEdit}
-        canViewPin={canViewPin}
         formatDate={formatDate}
-        onToggleE2EE={onToggleE2EE}
         onToggleReadStatus={onToggleReadStatus}
         onToggleNonFriends={onToggleNonFriends}
         onToggleHidePhone={onToggleHidePhone}
         onToggleHideBirthDate={onToggleHideBirthDate}
-        onViewPin={handleViewPin}
       />
-
-      {/* E2EE Pin Modal */}
-      {selectedUser && selectedUser.e2eePinHash && (
-        <E2EEPinModal
-          isOpen={showPinModal}
-          onClose={() => setShowPinModal(false)}
-          user={{
-            name: selectedUser.name,
-            email: selectedUser.email,
-            e2eePinHash: selectedUser.e2eePinHash
-          }}
-        />
-      )}
     </>
   );
 };

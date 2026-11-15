@@ -20,6 +20,7 @@ interface User {
 
 interface Note {
   id: number;
+  isEncrypted?: boolean;
   title: string;
   content?: string;
   imageUrl?: string;
@@ -363,10 +364,10 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                         <td className="px-6 py-4 xl-down:px-4 xl-down:py-3">
                           <div className="flex-1 min-w-0">
                             <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
-                              {truncateWords(sharedNote.note.title, 5)}
+                              {sharedNote.note.isEncrypted ? t('e2ee.privateTitle') : truncateWords(sharedNote.note.title, 5)}
                             </h4>
                             <div className="text-sm xl-down:text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-                              {truncateWords(getPlainText(sharedNote.note.content || ''), 5)}
+                              {sharedNote.note.isEncrypted ? t('e2ee.encryptedContent') : truncateWords(getPlainText(sharedNote.note.content || ''), 5)}
                             </div>
                           </div>
                         </td>
@@ -534,8 +535,8 @@ const SharedNotesList: React.FC<SharedNotesListProps> = ({ embedded }) => {
                     {sharedNotes.map((sharedNote) => (
                     <MobileCard
                       key={sharedNote.id}
-                      title={truncateWords(sharedNote.note.title, 6)}
-                      subtitle={truncateWords(getPlainText(sharedNote.note.content || ''), 8)}
+                      title={sharedNote.note.isEncrypted ? t('e2ee.privateTitle') : truncateWords(sharedNote.note.title, 6)}
+                      subtitle={sharedNote.note.isEncrypted ? t('e2ee.encryptedContent') : truncateWords(getPlainText(sharedNote.note.content || ''), 8)}
                       icon={
                         <div className="flex-shrink-0 h-10 w-10 xl-down:h-8 xl-down:w-8">
                           {sharedNote.sharedByUser.avatar ? (

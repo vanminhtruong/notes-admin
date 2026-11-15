@@ -1,5 +1,7 @@
 import { useAdminPermissions } from '@hooks/useAdminPermissions';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { LockKeyhole } from 'lucide-react';
 import { hasPermission } from '@utils/auth';
 import UserAvatar from './UserAvatar';
 import CategoryBadge from './CategoryBadge';
@@ -37,6 +39,7 @@ const NoteTableRow: React.FC<NoteTableRowProps> = ({
   formatDate
 }) => {
   useAdminPermissions();
+  const { t } = useTranslation('notes');
 
   return (
     <tr 
@@ -49,10 +52,11 @@ const NoteTableRow: React.FC<NoteTableRowProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <h4 className="text-sm xl-down:text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
-              {truncateWords(note.title, 4)}
+              {note.isEncrypted ? t('e2ee.privateTitle') : truncateWords(note.title, 4)}
+              {note.isEncrypted && <span title={t('e2ee.badgeTitle')} className="ml-2 inline-flex items-center gap-1 rounded-md border border-slate-300 px-1.5 py-0.5 text-[10px] text-slate-600 dark:border-slate-600 dark:text-slate-300"><LockKeyhole size={11} /> E2EE</span>}
             </h4>
             <div className="text-xs xl-down:text-2xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-              {truncateWords(getPlainText(note.content || ''), 4)}
+              {note.isEncrypted ? t('e2ee.ownerOnly') : truncateWords(getPlainText(note.content || ''), 4)}
             </div>
           </div>
         </div>

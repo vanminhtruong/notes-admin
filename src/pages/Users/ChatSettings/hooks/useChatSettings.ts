@@ -19,7 +19,6 @@ export const useChatSettings = () => {
   const [filters, setFilters] = useState<ChatSettingsFilters>({
     searchTerm: '',
     currentPage: 1,
-    e2eeFilter: '',
     readStatusFilter: ''
   });
 
@@ -42,8 +41,6 @@ export const useChatSettings = () => {
       };
 
       // Add filters
-      if (filters.e2eeFilter === 'enabled') params.e2eeEnabled = true;
-      if (filters.e2eeFilter === 'disabled') params.e2eeEnabled = false;
       if (filters.readStatusFilter === 'enabled') params.readStatusEnabled = true;
       if (filters.readStatusFilter === 'disabled') params.readStatusEnabled = false;
 
@@ -56,12 +53,10 @@ export const useChatSettings = () => {
         email: user.email,
         avatar: user.avatar,
         isActive: user.isActive,
-        e2eeEnabled: user.e2eeEnabled || false,
         readStatusEnabled: user.readStatusEnabled !== false, // default true
         allowMessagesFromNonFriends: user.allowMessagesFromNonFriends || false,
         hidePhone: user.hidePhone || false,
         hideBirthDate: user.hideBirthDate || false,
-        e2eePinHash: user.e2eePinHash,
         phone: user.phone,
         birthDate: user.birthDate,
         createdAt: user.createdAt,
@@ -83,21 +78,8 @@ export const useChatSettings = () => {
     setFilters({
       searchTerm: '',
       currentPage: 1,
-      e2eeFilter: '',
       readStatusFilter: ''
     });
-  };
-
-  // Toggle E2EE
-  const handleToggleE2EE = async (userId: number, currentValue: boolean) => {
-    try {
-      await adminService.editUserChatSettings(userId, { e2eeEnabled: !currentValue });
-      toast.success(t('actions.updateSuccess') || 'Cập nhật thành công');
-      await loadChatSettings();
-    } catch (error: any) {
-      console.error('Error toggling E2EE:', error);
-      toast.error(error?.message || t('actions.updateFailed') || 'Không thể cập nhật');
-    }
   };
 
   // Toggle Read Status
@@ -150,7 +132,7 @@ export const useChatSettings = () => {
   // Load settings when filters change
   useEffect(() => {
     loadChatSettings();
-  }, [filters.currentPage, filters.searchTerm, filters.e2eeFilter, filters.readStatusFilter]);
+  }, [filters.currentPage, filters.searchTerm, filters.readStatusFilter]);
 
   // Real-time updates
   useEffect(() => {
@@ -164,19 +146,15 @@ export const useChatSettings = () => {
     socket.on('admin_user_updated', onUpdate);
     
     // Listen when user changes their own settings
-    socket.on('e2ee_status', onUpdate);
-    socket.on('e2ee_pin_updated', onUpdate);
     socket.on('read_status_updated', onUpdate);
     socket.on('privacy_updated', onUpdate);
     
     return () => {
       socket.off('admin_user_updated', onUpdate);
-      socket.off('e2ee_status', onUpdate);
-      socket.off('e2ee_pin_updated', onUpdate);
       socket.off('read_status_updated', onUpdate);
       socket.off('privacy_updated', onUpdate);
     };
-  }, [filters.currentPage, filters.searchTerm, filters.e2eeFilter, filters.readStatusFilter]);
+  }, [filters.currentPage, filters.searchTerm, filters.readStatusFilter]);
 
   return {
     users,
@@ -186,7 +164,6 @@ export const useChatSettings = () => {
     filters,
     updateFilters,
     clearFilters,
-    handleToggleE2EE,
     handleToggleReadStatus,
     handleToggleNonFriends,
     handleToggleHidePhone,

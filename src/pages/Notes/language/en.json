@@ -1,6 +1,13 @@
 {
   "title": "Notes Management",
   "subtitle": "View and manage all user notes",
+  "e2ee": {
+    "privateTitle": "Private note",
+    "badgeTitle": "End-to-end encrypted — administrators cannot decrypt",
+    "ownerOnly": "Only the owner with the key can read the content",
+    "encryptedContent": "Content is end-to-end encrypted",
+    "detailNotice": "This content is end-to-end encrypted. Administrators cannot decrypt it."
+  },
   "createNote": "Create Note",
   "modal": {
     "detailTitle": "Note Details",

@@ -1,12 +1,11 @@
 {
   "title": "Quản lý Chat Settings",
-  "subtitle": "Quản lý cài đặt chat của người dùng (E2EE, Read Status, Privacy...)",
+  "subtitle": "Quản lý cài đặt chat của người dùng (Read Status, Privacy...)",
   "noPermission": "Bạn không có quyền truy cập trang này",
   "noData": "Không có dữ liệu",
   "filters": {
     "search": "Tìm kiếm",
     "searchPlaceholder": "Tìm theo tên hoặc email người dùng...",
-    "e2ee": "End-to-end Encryption",
     "readStatus": "Read Status",
     "all": "Tất cả",
     "enabled": "Đã bật",
@@ -15,16 +14,11 @@
   },
   "table": {
     "user": "Người dùng",
-    "e2ee": "E2EE",
     "readStatus": "Read Status",
     "allowNonFriends": "Tin nhắn từ người lạ",
     "hidePhone": "Ẩn số điện thoại",
     "hideBirthDate": "Ẩn ngày sinh",
-    "createdAt": "Ngày tạo",
-    "actions": "Hành động",
-    "hasPIN": "Đã đặt PIN",
-    "viewPin": "Xem PIN",
-    "noPin": "Chưa có PIN"
+    "createdAt": "Ngày tạo"
   },
   "actions": {
     "updateSuccess": "Cập nhật thành công",
@@ -32,19 +26,5 @@
   },
   "errors": {
     "loadFailed": "Không thể tải dữ liệu chat settings"
-  },
-  "pinModal": {
-    "title": "E2EE PIN Hash",
-    "infoTitle": "Thông tin quan trọng",
-    "infoText": "Đây là PIN hash đã được mã hóa bằng bcrypt. PIN gốc không thể giải mã được từ hash này. Hash này được sử dụng để xác thực khi user nhập PIN.",
-    "hashLabel": "PIN Hash (Bcrypt)",
-    "copied": "Đã sao chép",
-    "copy": "Sao chép",
-    "hashAlgorithm": "Thuật toán mã hóa",
-    "hashLength": "Độ dài hash",
-    "characters": "ký tự",
-    "warningTitle": "Cảnh báo bảo mật",
-    "warningText": "Không chia sẻ hash này cho người dùng. Nếu cần reset PIN, hãy sử dụng chức năng reset PIN trong hệ thống.",
-    "close": "Đóng"
   }
 }

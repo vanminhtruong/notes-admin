@@ -302,7 +302,6 @@
   "role": "Role",
   "theme": "Theme",
   "language": "Language",
-  "e2eeEnabled": "End-to-End Encryption",
   "readStatusEnabled": "Read Status",
   "hidePhone": "Hide Phone",
   "hideBirthDate": "Hide Birth Date",

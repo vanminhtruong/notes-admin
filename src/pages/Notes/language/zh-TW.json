@@ -1,6 +1,13 @@
 {
   "title": "筆記管理",
   "subtitle": "檢視和管理所有使用者筆記",
+  "e2ee": {
+    "privateTitle": "私人筆記",
+    "badgeTitle": "端對端加密 — 管理員無法解密",
+    "ownerOnly": "只有持有金鑰的擁有者才能讀取內容",
+    "encryptedContent": "內容已進行端對端加密",
+    "detailNotice": "內容已進行端對端加密，管理員無法解密。"
+  },
   "createNote": "建立筆記",
   "modal": {
     "detailTitle": "筆記詳情",

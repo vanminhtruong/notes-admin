@@ -18,7 +18,6 @@ const ChatSettings: React.FC = () => {
     filters,
     updateFilters,
     clearFilters,
-    handleToggleE2EE,
     handleToggleReadStatus,
     handleToggleNonFriends,
     handleToggleHidePhone,
@@ -70,10 +69,8 @@ const ChatSettings: React.FC = () => {
       {/* Filters */}
       <FilterBar
         searchTerm={filters.searchTerm}
-        e2eeFilter={filters.e2eeFilter || ''}
         readStatusFilter={filters.readStatusFilter || ''}
         onSearchChange={(value) => updateFilters({ searchTerm: value, currentPage: 1 })}
-        onE2eeFilterChange={(value) => updateFilters({ e2eeFilter: value, currentPage: 1 })}
         onReadStatusFilterChange={(value) => updateFilters({ readStatusFilter: value, currentPage: 1 })}
         onClearFilters={clearFilters}
       />
@@ -83,7 +80,6 @@ const ChatSettings: React.FC = () => {
         <UserChatSettingsTable
           users={users}
           loading={loading}
-          onToggleE2EE={handleToggleE2EE}
           onToggleReadStatus={handleToggleReadStatus}
           onToggleNonFriends={handleToggleNonFriends}
           onToggleHidePhone={handleToggleHidePhone}

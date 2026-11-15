@@ -22,6 +22,7 @@ interface NoteCategory {
 
 interface Note {
   id: number;
+  isEncrypted?: boolean;
   title: string;
   content?: string;
   imageUrl?: string;
@@ -133,7 +134,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                 </span>
               </div>
               <h1 className="text-xl xl-down:text-lg md-down:text-base sm-down:text-sm font-bold leading-tight truncate">
-                {note.title}
+                {note.isEncrypted ? t('e2ee.privateTitle') : note.title}
               </h1>
             </div>
             <button
@@ -205,7 +206,9 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                     {t('form.content.label')}
                   </h3>
                   <div className="bg-gray-50 dark:bg-neutral-800 rounded-lg xl-down:rounded-md p-4 xl-down:p-3.5 sm-down:p-3 border border-gray-200 dark:border-neutral-700 min-h-[120px] xl-down:min-h-[100px] sm-down:min-h-[80px]">
-                    {note.content ? (
+                    {note.isEncrypted ? (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">{t('e2ee.detailNotice')}</p>
+                    ) : note.content ? (
                       <div className="text-gray-900 dark:text-gray-100 text-sm xl-down:text-xs sm-down:text-[11px]">
                         <RichTextContent content={note.content} />
                       </div>
@@ -218,7 +221,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                 </div>
 
                 {/* Video */}
-                {note.videoUrl && (
+                {!note.isEncrypted && note.videoUrl && (
                   <div>
                     <h3 className="text-lg xl-down:text-base md-down:text-sm sm-down:text-xs font-medium text-gray-900 dark:text-gray-100 mb-3 xl-down:mb-2.5 sm-down:mb-2">
                       {t('form.videoUrl.label', { defaultValue: 'Video' })}
@@ -235,7 +238,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                 )}
 
                 {/* Image */}
-                {note.imageUrl && !note.videoUrl && (
+                {!note.isEncrypted && note.imageUrl && !note.videoUrl && (
                   <div>
                     <h3 className="text-lg xl-down:text-base md-down:text-sm sm-down:text-xs font-medium text-gray-900 dark:text-gray-100 mb-3 xl-down:mb-2.5 sm-down:mb-2">
                       {t('form.imageUrl.label')}
@@ -251,7 +254,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({ show, note, onClose }
                 )}
 
                 {/* YouTube */}
-                {note.youtubeUrl && (() => {
+                {!note.isEncrypted && note.youtubeUrl && (() => {
                   const embed = getYouTubeEmbedUrl(String(note.youtubeUrl));
                   return embed ? (
                     <div>

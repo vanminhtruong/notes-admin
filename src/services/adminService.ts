@@ -122,7 +122,6 @@ class AdminService {
     search?: string;
     role?: string;
     isActive?: boolean;
-    e2eeEnabled?: boolean;
     readStatusEnabled?: boolean;
     sortBy?: string;
     sortOrder?: string;
@@ -148,7 +147,6 @@ class AdminService {
     avatar?: string;
     password?: string;
     // Chat settings
-    e2eeEnabled?: boolean;
     readStatusEnabled?: boolean;
     allowMessagesFromNonFriends?: boolean;
     hidePhone?: boolean;
@@ -158,7 +156,6 @@ class AdminService {
   }
 
   async editUserChatSettings(userId: number, chatSettings: {
-    e2eeEnabled?: boolean;
     readStatusEnabled?: boolean;
     allowMessagesFromNonFriends?: boolean;
     hidePhone?: boolean;
