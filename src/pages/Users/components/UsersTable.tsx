@@ -153,7 +153,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                   <div className="flex items-center gap-2 xl-down:gap-1">
                     {hasPermission('manage_users.view') && (
                       <button
-                        onClick={(e) => { e.stopPropagation(); window.location.href = `/users/${user.id}/activity`; }}
+                        onClick={(e) => { e.stopPropagation(); window.location.href = `${import.meta.env.BASE_URL}users/${user.id}/activity`; }}
                         className="p-2 xl-down:p-1.5 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors"
                         title="Xem hoạt động"
                       >
@@ -165,7 +165,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     )}
                     {hasPermission('manage_notes.shared.edit') && (
                       <button
-                        onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
+                        onClick={(e) => { e.stopPropagation(); window.location.href = `${import.meta.env.BASE_URL}notes?userId=${user.id}`; }}
                         className="p-2 xl-down:p-1.5 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors"
                         title="Xem ghi chú"
                       >
@@ -278,7 +278,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
               <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                 {hasPermission('manage_users.view') && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); window.location.href = `/users/${user.id}/activity`; }}
+                    onClick={(e) => { e.stopPropagation(); window.location.href = `${import.meta.env.BASE_URL}users/${user.id}/activity`; }}
                     className="p-1.5 sm-down:p-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
                     title="Xem hoạt động"
                   >
@@ -290,7 +290,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                 )}
                 {hasPermission('manage_notes.shared.edit') && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); window.location.href = `/notes?userId=${user.id}`; }}
+                    onClick={(e) => { e.stopPropagation(); window.location.href = `${import.meta.env.BASE_URL}notes?userId=${user.id}`; }}
                     className="p-1.5 sm-down:p-1 text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded transition-colors"
                     title="Xem ghi chú"
                   >

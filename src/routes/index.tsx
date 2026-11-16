@@ -138,6 +138,6 @@ const router = createBrowserRouter([
 
   // Catch all
   { path: '*', element: <Navigate to="/login" replace /> },
-])
+], { basename: import.meta.env.BASE_URL })
 
 export default router

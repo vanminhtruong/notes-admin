@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local configuration is never committed to public frontend repositories.
+.env
+.env.*
+!.env.example

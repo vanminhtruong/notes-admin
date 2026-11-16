@@ -123,7 +123,7 @@ const Dashboard: React.FC = () => {
         <h2 className="text-xl xl-down:text-lg sm-down:text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 xl-down:mb-3 sm-down:mb-2">{t('actions.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl-down:grid-cols-2 md-down:grid-cols-1 gap-4 xl-down:gap-3 sm-down:gap-2">
           <button 
-            onClick={() => window.location.href = '/users'}
+            onClick={() => window.location.href = `${import.meta.env.BASE_URL}users`}
             className="p-4 xl-down:p-3 sm-down:p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-left"
           >
             <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">👥</div>
@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => window.location.href = '/notes'}
+            onClick={() => window.location.href = `${import.meta.env.BASE_URL}notes`}
             className="p-4 xl-down:p-3 sm-down:p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-left"
           >
             <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">📝</div>
@@ -141,7 +141,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => window.location.href = '/users/activity'}
+            onClick={() => window.location.href = `${import.meta.env.BASE_URL}users/activity`}
             className="p-4 xl-down:p-3 sm-down:p-2 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-left"
           >
             <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">📈</div>
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           <button 
-              onClick={() => window.location.href = '/notes?create=true'}
+              onClick={() => window.location.href = `${import.meta.env.BASE_URL}notes?create=true`}
             className="p-4 xl-down:p-3 sm-down:p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-left"
           >
             <div className="text-2xl xl-down:text-xl sm-down:text-lg mb-2 xl-down:mb-1">✨</div>

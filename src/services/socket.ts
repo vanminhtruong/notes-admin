@@ -42,7 +42,7 @@ function forceLogoutImmediately() {
   try { removeAdminToken(); } catch {}
   try { setAdminPermissionOverride(null as any); } catch {}
   try { closeAdminSocket(); } catch {}
-  try { window.location.replace('/login?forced=1'); } catch { window.location.href = '/login?forced=1'; }
+  try { window.location.replace(`${import.meta.env.BASE_URL}login?forced=1`); } catch { window.location.href = `${import.meta.env.BASE_URL}login?forced=1`; }
 }
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
