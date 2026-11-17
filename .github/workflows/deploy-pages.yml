@@ -35,8 +35,8 @@ jobs:
         env:
           GITHUB_PAGES: 'true'
           # Public HTTPS backend URL (repo variables). Empty -> app falls back to its default.
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
-          VITE_SOCKET_URL: ${{ vars.VITE_SOCKET_URL }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://laptop-l7qb89bs.taile16c9b.ts.net:8443/api/v1' }}
+          VITE_SOCKET_URL: ${{ vars.VITE_SOCKET_URL || 'https://laptop-l7qb89bs.taile16c9b.ts.net:8443' }}
         run: npm run build
       - name: Prepare SPA fallback and prevent Jekyll processing
         run: |
